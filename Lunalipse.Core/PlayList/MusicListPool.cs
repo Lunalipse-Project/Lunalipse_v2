@@ -44,13 +44,16 @@ namespace Lunalipse.Core.PlayList
         private MusicListPool()
         {
             CPool = CataloguePool.INSATNCE;
-            AllMusic = new Catalogue("CORE_CATALOGUE_AllMusic", true);
-            CPool.AddCatalogue(AllMusic);
+            if (!CPool.Exists(x => x.MainCatalogue == true || x.Name.Equals("CORE_CATALOGUE_AllMusic")))
+                CPool.AddCatalogue(new Catalogue("CORE_CATALOGUE_AllMusic", true));
+            AllMusic = CPool.MainCatalogue;
             ConsoleAdapter.INSTANCE.RegisterComponent("lpslist", this);
         }
 
         public void AddToPool(string dirpath, IMediaMetadataReader immr)
         {
+            if (CPool.Exists(x => x.isLocationClassified == true && x.Name.Equals(dirpath)))
+                return;
             Catalogue pathCatalogue = new Catalogue(dirpath)
             {
                 isLocationClassified = true
@@ -71,6 +74,8 @@ namespace Lunalipse.Core.PlayList
         {
             foreach(string s in pathes)
             {
+                if (CPool.Exists(x => x.isLocationClassified == true && x.Name.Equals(s)))
+                    continue;
                 Catalogue pathCatalogue = new Catalogue(s)
                 {
                     isLocationClassified = true
@@ -100,6 +105,8 @@ namespace Lunalipse.Core.PlayList
                     if (!searchedAlb.Exists((x) => alb == x.Trim()))
                     {
                         searchedAlb.Add(alb);
+                        if (CPool.Exists(x => x.isAlbumClassified == true && x.Name.Equals(alb)))
+                            continue;
                         cat = new Catalogue(alb)
                         {
                             isAlbumClassified = true
@@ -119,6 +126,7 @@ namespace Lunalipse.Core.PlayList
         }
         public void CreateArtistClasses()
         {
+            if (CPool.Exists(x => x.isArtistClassified == true)) return;
             if (AllMusic.MusicList.Count != 0)
             {
                 List<string> searchedArt = new List<string>();
@@ -129,6 +137,8 @@ namespace Lunalipse.Core.PlayList
                     if (!searchedArt.Exists((x) => alb == x.Trim()))
                     {
                         searchedArt.Add(alb);
+                        if (CPool.Exists(x => x.isAlbumClassified == true && x.Name.Equals(alb)))
+                            continue;
                         cat = new Catalogue(alb)
                         {
                             isArtistClassified = true

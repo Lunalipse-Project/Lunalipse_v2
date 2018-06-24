@@ -22,5 +22,6 @@ namespace Lunalipse.Common.Interfaces.IPlayList
         void RemoveMusic(string uuid, MusicEntity music);
         void RemoveMusic(string uuid, string MusicUUID);
         void RemoveMusicRange(string uuid, string Name);
+        bool Exists(Func<T, bool> condition);
     }
 }

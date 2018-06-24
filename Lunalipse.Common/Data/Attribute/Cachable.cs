@@ -12,4 +12,9 @@ namespace Lunalipse.Common.Data.Attribute
     public class Cachable : System.Attribute
     {
     }
+
+    public class CacheInfomation : System.Attribute
+    {
+
+    }
 }

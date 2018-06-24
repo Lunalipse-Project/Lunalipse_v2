@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Lunalipse.Common.Data;
 using Lunalipse.Core.Cache;
-using Lunalipse.Core.Communicator;
 using Lunalipse.Core.I18N;
 using Lunalipse.Core.Metadata;
 using Lunalipse.Core.PlayList;
 using LunalipseCoreTest.Support;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
+using static Lunalipse.Common.Generic.Cache.SerializeInfo;
 
 namespace LunalipseCoreTest
 {
@@ -26,24 +28,7 @@ namespace LunalipseCoreTest
             //mlp.AddToPool(@"F:\M2\", mmdr);
         }
 
-        [TestMethod]
-        public void ExporterTest()
-        {
-            GeneralExporter<CataloguePool> exporter = new GeneralExporter<CataloguePool>("export.ld");
-            Assert.IsTrue(exporter.Export(cpl));
-        }
-
-        [TestMethod]
-        public void ImporterTest()
-        {
-            GeneralImporter<CataloguePool> importer = new GeneralImporter<CataloguePool>("export.ld");
-            CataloguePool cp = importer.Import();
-            Assert.IsNotNull(cp);
-            foreach(MusicEntity me in cp.GetCatalogue(0).MusicList)
-            {
-                PrintClass(typeof(MusicEntity), me);
-            }
-        }
+        
 
         [TestMethod]
         public void I18NTest()
@@ -59,11 +44,28 @@ namespace LunalipseCoreTest
         public void TestCache()
         {
             string str = Compressed.readCompressed("json.txt", false);
-            Caches ch = new Caches();
+            CacheSerializor ch = new CacheSerializor();
             Catalogue c = ch.RestoreTo<Catalogue>(str);
             Assert.IsNotNull(c);
         }
 
+        [TestMethod]
+        public void DictionaryInspect()
+        {
+            JSONExportTestSet jets = new JSONExportTestSet();
+            CacheSerializor ch = new CacheSerializor();
+            WinterWrapUp wwu = new WinterWrapUp()
+            {
+                createDate = "00-00-00",
+                deletable = true,
+                markName = "TestSet",
+                uid = "No"
+            };
+            string res;
+            Console.Write(res=ch.CacheTo(jets, wwu));
+            JSONExportTestSet jets_res = ch.RestoreTo<JSONExportTestSet>(JObject.Parse(res)["ctx"]);
+            Assert.IsNotNull(jets_res);
+        }
 
         private void PrintClass(Type t, object instance)
         {

@@ -35,6 +35,8 @@ namespace Lunalipse.Core.PlayList
 
         public void AddCatalogue(Catalogue catalogue)
         {
+            if (CatalogueBase.FindIndex(x => x.MainCatalogue == catalogue.MainCatalogue || x.Name == catalogue.Name) != -1)
+                return;
             CatalogueBase.Add(catalogue);
         }
 
@@ -115,6 +117,19 @@ namespace Lunalipse.Core.PlayList
             return lc;
         }
 
+        public Catalogue MainCatalogue
+        {
+            get
+            {
+                return CatalogueBase.Find(x => x.MainCatalogue);
+            }
+        }
+
         public List<Catalogue> All { get => CatalogueBase; }
+
+        public bool Exists(Func<Catalogue, bool> condition)
+        {
+            return CatalogueBase.Exists(x => condition(x));
+        }
     }
 }

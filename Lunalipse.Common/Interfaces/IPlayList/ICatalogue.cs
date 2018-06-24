@@ -11,6 +11,7 @@ namespace Lunalipse.Common.Interfaces.IPlayList
 {
     public interface ICatalogue
     {
+        string UID();
         bool AddMusic(MusicEntity ME);
         bool DeleteMusic(MusicEntity ME);
         bool DeleteMusic(string name);
@@ -25,5 +26,6 @@ namespace Lunalipse.Common.Interfaces.IPlayList
         void SortByAlbum();
         void SortByName();
         BitmapSource GetCatalogueCover();
+        IEnumerable<MusicEntity> GetAll();
     }
 }

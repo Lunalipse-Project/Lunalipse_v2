@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lunalipse.Common.Generic.Cache
 {
-    public class CacheInfo
+    public class SerializeInfo
     {
         public const string CACHE_FILE_EXT = ".lce";
 
@@ -22,6 +22,11 @@ namespace Lunalipse.Common.Generic.Cache
             public string createDate;
             public bool deletable;
             public object uid;
+        }
+
+        public struct SettingWrapUp
+        {
+            public string Version;
         }
     }
 }

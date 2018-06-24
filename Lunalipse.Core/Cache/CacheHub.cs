@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Lunalipse.Common.Generic.Cache.CacheInfo;
+using static Lunalipse.Common.Generic.Cache.SerializeInfo;
 
 namespace Lunalipse.Core.Cache
 {
@@ -16,7 +16,7 @@ namespace Lunalipse.Core.Cache
         static volatile CacheHub CHH_INSTANCE;
         static readonly object CHH_LOCK = new object();
 
-        public static CacheHub INSTANCE(string Basedir)
+        public static CacheHub INSTANCE(string Basedir = "")
         {
             if (CHH_INSTANCE == null)
             {
@@ -57,19 +57,26 @@ namespace Lunalipse.Core.Cache
 
         public bool CacheObjects<T>(List<T> obj, CacheType type) where T : ICachable
         {
-            Operators[type].InvokeOperator(CacheResponseType.BLUCK_CACHE, obj);
+            Operators[type].InvokeOperator(CacheResponseType.BULK_CACHE, obj);
+            return true;
+        }
+
+        public bool CacheField<T>(T ancestor, CacheType type, string FieldName)
+        {
+            Operators[type].InvokeOperator(CacheResponseType.FIELD_CACHE, ancestor, FieldName);
             return true;
         }
 
         public T RestoreObject<T>(Func<WinterWrapUp, bool> Conditions, CacheType type)
         {
-            throw new NotImplementedException();
+            return (T)Operators[type].InvokeOperator(CacheResponseType.SINGLE_RESTORE,
+                CacheWraps.Find(x => Conditions(x)));
         }
 
         public IEnumerable<T> RestoreObjects<T>(Func<WinterWrapUp, bool> Conditions, CacheType type)
         {
             List<T> returns = (List<T>)Operators[type]
-                .InvokeOperator(CacheResponseType.BLUCK_RESTORE, 
+                .InvokeOperator(CacheResponseType.BULK_RESTORE, 
                     CacheWraps.FindAll(
                         x => Conditions(x)
                     )
@@ -78,6 +85,12 @@ namespace Lunalipse.Core.Cache
             {
                 yield return (T)o;
             }
+        }
+
+        public object RestoreField<T>(Func<WinterWrapUp, bool> Conditions, CacheType type, string FieldName)
+        {
+            return Operators[type].InvokeOperator(CacheResponseType.FIELD_RESTORE,
+                CacheWraps.Find(x => Conditions(x)));
         }
 
         private void ReflushCaches()
@@ -95,6 +108,13 @@ namespace Lunalipse.Core.Cache
             }
         }
 
+        public bool ComponentCacheExists(CacheType ctype,params string[] suffies)
+        {
+            if (!Operators.ContainsKey(ctype)) return false;
+            string markName = CacheUtils.GenerateMarkName(Operators[ctype].OperatorUID(), suffies);
+            return CacheWraps.FindIndex(x => x.markName.StartsWith(markName)) != -1;
+        }
+
         public void DeleteCaches(bool forced = false)
         {
             foreach (WinterWrapUp WWU in CacheWraps.FindAll(x => forced ? true : !x.deletable))
@@ -103,5 +123,7 @@ namespace Lunalipse.Core.Cache
             }
             CacheWraps.RemoveAll(x => forced ? true : !x.deletable);
         }
+
+        
     }
 }

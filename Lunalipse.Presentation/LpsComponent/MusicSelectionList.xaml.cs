@@ -1,6 +1,7 @@
 ﻿using Lunalipse.Common.Data;
 using Lunalipse.Common.Generic;
 using Lunalipse.Common.Interfaces.II18N;
+using Lunalipse.Common.Interfaces.IPlayList;
 using Lunalipse.Presentation.Generic;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace Lunalipse.Presentation.LpsComponent
 {
@@ -18,8 +20,9 @@ namespace Lunalipse.Presentation.LpsComponent
     /// </summary>
     public partial class MusicSelectionList : UserControl, ITranslatable, IWaitable
     {
+        private ICatalogue DisplayedCatalogue;
+        private ICatalogue CatalogueInUse;
         private ObservableCollection<MusicEntity> Items = new ObservableCollection<MusicEntity>();
-        private ObservableCollection<MusicEntity> Cache = new ObservableCollection<MusicEntity>();
         private int __index = -1;
         public event OnItemSelected<MusicEntity> ItemSelectionChanged;
 
@@ -67,18 +70,28 @@ namespace Lunalipse.Presentation.LpsComponent
             };
         }
 
-        public void Add(MusicEntity mie) => Items.Add(mie);
-        public void AddToCache(MusicEntity mie) => Cache.Add(mie);
+        private void Add(MusicEntity mie) => Items.Add(mie);
         public void Clear()
         {
             TipMessage.Visibility = Visibility.Hidden;
             Items.Clear();
         }
         public List<MusicEntity> CurrentItems => Items.ToList();
-        public void UseCache(bool isuse)
+
+        public ICatalogue Catalogue
         {
-            if (isuse) ITEMS.DataContext = Cache;
-            else ITEMS.DataContext = Items;
+            get => DisplayedCatalogue;
+            set
+            {
+                if (DisplayedCatalogue == null || value.UID() != DisplayedCatalogue.UID())
+                {
+                    Items.Clear();
+                    DisplayedCatalogue = value;
+                    if (CatalogueInUse == null) CatalogueInUse = value;
+                    foreach (MusicEntity me in DisplayedCatalogue.GetAll())
+                        Add(me);
+                }
+            }
         }
 
         public bool IsMotherCatalogue
@@ -94,31 +107,41 @@ namespace Lunalipse.Presentation.LpsComponent
             get => __index;
             set
             {
-                if (__index == -1)
+                if (CatalogueInUse.UID() == DisplayedCatalogue.UID())
                 {
-                    for(int i=0;i<ITEMS.Items.Count;i++)
+                    if (__index == -1)
                     {
-                        MusicSelectionListItem Container = GetContainer(i);
-                        if ((Boolean)Container.Tag != false)
+                        for (int i = 0; i < ITEMS.Items.Count; i++)
                         {
-                            Container.RemoveChosen();
-                            break;
+                            MusicSelectionListItem Container = GetContainer(i);
+                            if ((Boolean)Container.Tag != false)
+                            {
+                                Container.RemoveChosen();
+                                break;
+                            }
                         }
+                    }
+                    else
+                    {
+                        MusicSelectionListItem Temp = GetContainer(__index);
+                        Temp.RemoveChosen();
+                        Temp = GetContainer(__index = value);
+                        Temp.SetChosen();
+                        ItemSelectionChanged(Temp.DataContext as MusicEntity);
                     }
                 }
                 else
                 {
-                    MusicSelectionListItem Temp = GetContainer(__index);
-                    Temp.RemoveChosen();
-                    Temp = GetContainer(__index = value);
-                    Temp.SetChosen();
-                    ItemSelectionChanged(Temp.DataContext as MusicEntity);
+                    ItemSelectionChanged?.Invoke(CatalogueInUse.getMusic(__index = value));
                 }
             }
         }
 
         private void ItemConatiner_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (DisplayedCatalogue.UID() != CatalogueInUse.UID())
+                CatalogueInUse = DisplayedCatalogue;
+
             MusicSelectionListItem Item = (MusicSelectionListItem)sender;
             MusicSelectionListItem Temp;
             MusicEntity selected = Item.DataContext as MusicEntity;
@@ -150,12 +173,17 @@ namespace Lunalipse.Presentation.LpsComponent
 
         public void StartWait()
         {
-            Dispatcher.Invoke(()=> Loading.Visibility = Visibility.Visible);
+            Loading.Visibility = Visibility.Visible;
         }
 
         public void StopWait()
         {
-            Dispatcher.Invoke(() => Loading.Visibility = Visibility.Hidden);
+            Loading.Visibility = Visibility.Hidden;
+        }
+         
+        public Dispatcher GetDispatcher()
+        {
+            return Dispatcher;
         }
     }
 }

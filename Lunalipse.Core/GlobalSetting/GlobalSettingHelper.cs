@@ -1,9 +1,11 @@
 ﻿using Lunalipse.Common.Data.Attribute;
 using Lunalipse.Common.Data.Errors;
+using Lunalipse.Common.Interfaces.ICache;
 using Lunalipse.Common.Interfaces.IConsole;
 using Lunalipse.Common.Interfaces.ISetting;
-using Lunalipse.Core.Communicator;
+using Lunalipse.Core.Cache;
 using Lunalipse.Core.Console;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,46 +17,48 @@ using System.Xml;
 
 namespace Lunalipse.Core.GlobalSetting
 {
-    public class GlobalSettingHelper<GS> : ComponentHandler, ISettingHelper<GS> where GS : IGlobalSetting
+    public class GlobalSettingHelper<T> : ComponentHandler, ISettingHelper<T> where T : IGlobalSetting
     {
-        static volatile GlobalSettingHelper<GS> GSH_INSTANCE;
+        static volatile GlobalSettingHelper<T> GSH_INSTANCE;
         static readonly object GSH_LOCK = new object();
-        public static GlobalSettingHelper<GS> INSTANCE
+        public static GlobalSettingHelper<T> INSTANCE
         {
             get
             {
                 if (GSH_INSTANCE == null)
                     lock (GSH_LOCK)
-                        GSH_INSTANCE = GSH_INSTANCE ?? new GlobalSettingHelper<GS>();
+                        GSH_INSTANCE = GSH_INSTANCE ?? new GlobalSettingHelper<T>();
                 return GSH_INSTANCE;
             }
         }
 
+        UniversalSerializor<Setting, ICachable> USerializor;
         string VERSION;
         public string OutputFile { get; set; }
+        public bool UseLZ78Compress { get; set; }
         private GlobalSettingHelper()
         {
             VERSION = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             ConsoleAdapter.INSTANCE.RegisterComponent("lpsseting", this);
+            //Set default value
             OutputFile = "config.lps";
+            UseLZ78Compress = true;
+            USerializor = new UniversalSerializor<Setting, ICachable>();
         }
 
-        public GS ReadSetting(string path)
+        public T ReadSetting(string path)
         {
-            GeneralImporter<GS> importer = new GeneralImporter<GS>(path);
-            string ver = importer.GetExtra()[1];
-            if (!VERSION.Equals(ver))
-            {
-                ErrorDelegation.OnErrorRaisedGSH?.Invoke("CORE_GSH_DamagedSave", -1, VERSION, ver);
-                return default(GS);
-            }
-            return importer.Import();
+            JObject jo = JObject.Parse(Compressed.readCompressed(path, UseLZ78Compress));
+
+            return (T)USerializor.ReadNested(typeof(T), jo["ctx"] as JObject);
         }
 
-        public bool SaveSetting(GS instance)
+        public bool SaveSetting(T instance)
         {
-            GeneralExporter<GS> exporter = new GeneralExporter<GS>(OutputFile, "version", VERSION);
-            return exporter.Export(instance);
+            JObject jo = new JObject();
+            jo["version"] = VERSION;
+            jo["ctx"] = USerializor.WriteNested(instance);
+            return Compressed.writeCompressed(Encoding.UTF8.GetBytes(jo.ToString()), OutputFile, UseLZ78Compress);
         }
 
         #region Command Handler

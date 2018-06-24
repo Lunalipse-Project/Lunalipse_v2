@@ -196,5 +196,15 @@ namespace Lunalipse.Core.PlayList
             }
             return bs;
         }
+
+        public IEnumerable<MusicEntity> GetAll()
+        {
+            foreach(MusicEntity me in Entities)
+            {
+                yield return me;
+            }
+        }
+
+        public string UID() => UUID;
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using Lunalipse.Core.PlayList;
 using Lunalipse.Core.Metadata;
@@ -9,20 +8,17 @@ using Lunalipse.Common.Data;
 using Lunalipse.Core.BehaviorScript;
 using Lunalipse.Presentation.LpsWindow;
 using System.Windows.Threading;
-using Lunalipse.Presentation.LpsComponent;
 using System.Collections.Generic;
 using Lunalipse.Common.Generic.AudioControlPanel;
 using System.Windows.Media;
 using Lunalipse.I18N;
 using Lunalipse.Core.I18N;
-using Lunalipse.Utilities;
 using System.Windows.Media.Imaging;
 using Lunalipse.Common.Interfaces.IPlayList;
 using Lunalipse.Common.Generic.Catalogue;
 using Lunalipse.Presentation.Utils;
 using Lunalipse.Core.Cache;
 using Lunalipse.Common.Generic.Cache;
-using static Lunalipse.Common.Generic.Cache.CacheInfo;
 
 namespace Lunalipse
 {
@@ -52,6 +48,9 @@ namespace Lunalipse
             dipMusic.Translate(converter);
         }
 
+        /// <summary>
+        /// 初始化Lunalipse运行时必需组件
+        /// </summary>
         private void InitializeModules()
         {
             mlp = MusicListPool.INSATNCE;
@@ -79,12 +78,13 @@ namespace Lunalipse
             ControlPanel.OnVolumeChanged += ControlPanel_OnVolumeChanged;
             CATALOGUES.OnSelectionChange += CATALOGUES_OnSelectionChange;
             CATALOGUES.TheMainCatalogue = mlp.ToCatalogue();
-            cacheSystem.RegisterOperator(CacheType.MUSIC_CATALOGUE_CACHE, new MusicCacheIndexer()
-            {
-                UseLZ78Compress = true
-            });
         }
 
+        /// <summary>
+        /// 侧边栏音乐归类选择列表选项变化回调事件
+        /// </summary>
+        /// <param name="selected">选择的归类</param>
+        /// <param name="tag">附加参数</param>
         private void CATALOGUES_OnSelectionChange(ICatalogue selected, object tag)
         {
             Catalogue cat = selected as Catalogue;
@@ -92,19 +92,17 @@ namespace Lunalipse
             switch (TAG)
             {
                 case CatalogueSections.ALL_MUSIC:
-                    dipMusic.Clear();
-                    dipMusic.UseCache(true);
+                    dipMusic.AsyncExecute(() =>
+                    {
+                        dipMusic.Catalogue = cat;
+                    });
                     break;
                 case CatalogueSections.INDIVIDUAL:
                     dipMusic.Clear();
-                    dipMusic.WaitOnUI(() =>
+                    dipMusic.AsyncExecute(() =>
                     {
-                        foreach (MusicEntity me in cat.MusicList)
-                        {
-                            Dispatcher.Invoke(() => dipMusic.Add(me));
-                        }
+                        dipMusic.Catalogue = cat;
                     });
-                    dipMusic.UseCache(false);
                     break;
                 case CatalogueSections.USER_PLAYLISTS:
                     CATALOGUES.EmptyContent();
@@ -138,16 +136,29 @@ namespace Lunalipse
             }
         }
 
+        /// <summary>
+        /// 音量更改回调事件
+        /// </summary>
+        /// <param name="value">修改的音量</param>
         private void ControlPanel_OnVolumeChanged(double value)
         {
             laudio.Volume = (float)value;
         }
 
+        /// <summary>
+        /// 进度非自然更改回调事件
+        /// </summary>
+        /// <param name="value"></param>
         private void ControlPanel_OnProgressChanged(double value)
         {
             laudio.MoveTo(value);
         }
 
+        /// <summary>
+        /// 音乐控制面板开关选项发生状态改变触发事件
+        /// </summary>
+        /// <param name="identifier">改变的开关选项</param>
+        /// <param name="args">附加参数</param>
         private void ControlPanel_OnTrigging(AudioPanelTrigger identifier, object args)
         {
             switch (identifier)
@@ -163,6 +174,10 @@ namespace Lunalipse
             }
         }
 
+        /// <summary>
+        /// 当音乐播放进度更改时（由<see cref="LpsAudio"/>的CountTimerDelegate方法定时触发
+        /// </summary>
+        /// <param name="curPos"></param>
         private void NotifyChanged(TimeSpan curPos)
         {
             Dispatcher.Invoke(()=>
@@ -172,6 +187,11 @@ namespace Lunalipse
             });
         }
 
+        /// <summary>
+        /// 告知当音乐已经准备好播放（加载完成）
+        /// </summary>
+        /// <param name="Music">音乐实体</param>
+        /// <param name="mTrack">音轨信息</param>
         private void MusicPerpeared(MusicEntity Music, Track mTrack)
         {
             Dispatcher.Invoke(() =>
@@ -181,6 +201,11 @@ namespace Lunalipse
             });
         }
 
+        /// <summary>
+        /// 歌曲目录选项更改事件，当用户人为选定歌曲时触发
+        /// </summary>
+        /// <param name="selected">选择的音乐实体</param>
+        /// <param name="tag">附加信息</param>
         private void DipMusic_ItemSelectionChanged(MusicEntity selected, object tag)
         {
             if (laudio.Playing) laudio.Stop();
@@ -199,24 +224,14 @@ namespace Lunalipse
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //this.EnableBlur();
-            foreach (Catalogue c in cacheSystem.RestoreObjects<Catalogue>(
-                x => x.markName == "CATALOGUE",
-                CacheType.MUSIC_CATALOGUE_CACHE
-                ))
-            {
-                CPOOL.AddCatalogue(c);
-            }
             DoTranslate();
             CATALOGUES.SelectedIndex = -1;
             //cacheSystem.CacheObject(CPOOL, CacheType.MUSIC_CATALOGUE_CACHE);
-            dipMusic.WaitOnUI(() =>
+            dipMusic.AsyncExecute(() =>
             {
                 mlp.CreateAlbumClasses();
                 mlp.CreateArtistClasses();
-                foreach (MusicEntity me in mlp.Musics)
-                {
-                    this.Dispatcher.Invoke(() => dipMusic.AddToCache(me));
-                }
+                dipMusic.Catalogue = mlp.ToCatalogue();
             });
         }
 
@@ -235,6 +250,9 @@ namespace Lunalipse
             laudio.Dispose();
         }
 
+        /// <summary>
+        /// 播放完成时的回调方法
+        /// </summary>
         private void PlayFinished()
         {
             MusicEntity MEnt = null;
@@ -242,11 +260,14 @@ namespace Lunalipse
                 MEnt = intp.Stepping();
             else
             {
-                Next(true);
+                Next();
             }
         }
 
-        private void Next(bool proccedNext)
+        /// <summary>
+        /// 列表自动递增
+        /// </summary>
+        private void Next()
         {
             Dispatcher.Invoke(() => dipMusic.SelectedIndex++);
         }

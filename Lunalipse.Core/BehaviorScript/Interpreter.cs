@@ -1,8 +1,8 @@
 ﻿using Lunalipse.Common.Data;
+using Lunalipse.Common.Data.Attribute;
 using Lunalipse.Common.Data.BehaviorScript;
 using Lunalipse.Common.Interfaces.IBehaviorScript;
 using Lunalipse.Common.Interfaces.IConsole;
-using Lunalipse.Core.Communicator;
 using Lunalipse.Core.Console;
 using Lunalipse.Core.PlayList;
 using System;
@@ -37,6 +37,7 @@ namespace Lunalipse.Core.BehaviorScript
         CataloguePool CataPool;
         KeyboardProxy KbProxy;
 
+        [Cachable]
         public List<ActionToken> Actions;
         public string BasePath
         {
@@ -184,8 +185,9 @@ namespace Lunalipse.Core.BehaviorScript
 
         public bool SaveAs(string path)
         {
-            GeneralExporter<Interpreter> ge = new GeneralExporter<Interpreter>(path);
-            return ge.Export(this, "Actions");
+            //GeneralExporter<Interpreter> ge = new GeneralExporter<Interpreter>(path);
+            //return ge.Export(this, "Actions");
+            throw new NotImplementedException();
         }
 
         private bool LoadFinal()

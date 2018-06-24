@@ -73,7 +73,7 @@
     <Compile Include="Generic\Audio\ChannelType.cs" />
     <Compile Include="Generic\Audio\Misc.cs" />
     <Compile Include="Generic\Audio\ScalingStrategy.cs" />
-    <Compile Include="Generic\Cache\CacheInfo.cs" />
+    <Compile Include="Generic\Cache\SerializeInfo.cs" />
     <Compile Include="Generic\Cache\CacheType.cs" />
     <Compile Include="Generic\Catalogue\CatalogueSections.cs" />
     <Compile Include="Generic\IWaitable.cs" />

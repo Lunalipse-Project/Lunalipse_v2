@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace Lunalipse.Common.Generic
 {
@@ -10,5 +11,7 @@ namespace Lunalipse.Common.Generic
     {
         void StartWait();
         void StopWait();
+
+        Dispatcher GetDispatcher();
     }
 }

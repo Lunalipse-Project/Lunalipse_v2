@@ -9,13 +9,16 @@ namespace Lunalipse.Presentation.Utils
 {
     public static class WaitingUI
     {
-        public static void WaitOnUI(this IWaitable comp,Action task)
+        public static void AsyncExecute(this IWaitable comp,Action task)
         {
             Task.Run(() =>
             {
-                comp.StartWait();
-                task.Invoke();
-                comp.StopWait();
+                comp.GetDispatcher().Invoke(() =>
+                {
+                    comp.StartWait();
+                    task.Invoke();
+                    comp.StopWait();
+                });
             });
         } 
     }
