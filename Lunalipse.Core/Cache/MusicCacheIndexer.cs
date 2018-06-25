@@ -92,12 +92,12 @@ namespace Lunalipse.Core.Cache
                 case CacheResponseType.SINGLE_CACHE:
                     CacheCataloguesObject((CataloguePool)args[0]);
                     break;
-                case CacheResponseType.BLUCK_CACHE:
+                case CacheResponseType.BULK_CACHE:
                     CacheCatalogues((List<Catalogue>)args[0]);
                     break;
                 case CacheResponseType.SINGLE_RESTORE:
                     return RestoreCatalogue((WinterWrapUp)args[0]);
-                case CacheResponseType.BLUCK_RESTORE:
+                case CacheResponseType.BULK_RESTORE:
                     return RestoreCatalogues((List<WinterWrapUp>)args[0]);
             }
             return null;

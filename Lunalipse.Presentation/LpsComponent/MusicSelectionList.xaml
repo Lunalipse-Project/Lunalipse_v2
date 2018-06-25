@@ -10,6 +10,9 @@
     <Grid>
         <Label x:Name="TipMessage" Foreground="{Binding Path=Foreground,ElementName=MUSIC_LIST}" FontSize="{StaticResource FontNormal}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                    Content="CORE_CATALOGUE_NO_ITEMS" Opacity=".75" Visibility="Hidden"/>
+        <Grid x:Name="SongsEmpty">
+            <Label Opacity="0.75" x:Name="NoSongsHint" Content="CORE_MUSICLIST_NO_ITEMS" Foreground="{Binding Path=Foreground,ElementName=MUSIC_LIST}" FontSize="{StaticResource FontNormal}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        </Grid>
         <Grid x:Name="Loading" Visibility="Visible">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.5*"/>
@@ -34,7 +37,7 @@
                     </EventTrigger>
                 </Label.Triggers>
             </Label>
-            <Label Grid.Row="1" x:Name="WaitingHint" Content="CORE_LOADING" Foreground="{Binding Path=Foreground,ElementName=MUSIC_LIST}" FontSize="{StaticResource FontNormal}" VerticalContentAlignment="Top" HorizontalContentAlignment="Center"/>
+            <Label Grid.Row="1" x:Name="Hint" Content="CORE_LOADING" Margin="0,0,0,0" Foreground="{Binding Path=Foreground,ElementName=MUSIC_LIST}" FontSize="{StaticResource FontNormal}" VerticalContentAlignment="Top" HorizontalContentAlignment="Center"/>
         </Grid>
         <ScrollViewer>
             <ItemsControl x:Name="ITEMS" ItemsSource="{Binding}">

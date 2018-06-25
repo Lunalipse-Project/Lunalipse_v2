@@ -14,6 +14,7 @@
           <Key name="CORE_CATALOGUE_PLAYLIST">所有歌单</Key>
           <Key name="CORE_CATALOGUE_ARTSIT">所有艺术家</Key>
           <Key name="CORE_CATALOGUE_NO_ITEMS">没有任何的歌单或专辑</Key>
+          <Key name="CORE_MUSICLIST_NO_ITEMS">此歌单中暂无歌曲</Key>
 
           <!-- Music Presentor Area -->
           <Key name="CORE_PRESENTOR_UNKNOW_ARTIST">未知艺术家</Key>

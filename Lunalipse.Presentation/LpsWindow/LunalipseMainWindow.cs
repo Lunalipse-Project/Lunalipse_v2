@@ -1,4 +1,6 @@
-﻿using Lunalipse.Utilities;
+﻿using Lunalipse.Common.Generic.Themes;
+using Lunalipse.Common.Interfaces.Themes;
+using Lunalipse.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +12,10 @@ using System.Windows.Shapes;
 
 namespace Lunalipse.Presentation.LpsWindow
 {
-    public class LunalipseMainWindow : Window
+    public class LunalipseMainWindow : Window , IThemeCustomizable
     {
+        const string UI_COMPONENT_THEME_UID = "UICOMP_LPS_MAINWINDOW";
+
         public event RoutedEventHandler OnSettingClicked;
         public event RoutedEventHandler OnMinimizClicked;
 
@@ -55,6 +59,16 @@ namespace Lunalipse.Presentation.LpsWindow
         protected void TitleBarMove(object sender, EventArgs args)
         {
             this.DragMove();
+        }
+
+        public virtual void ThemeOverriding(ThemeTuple themeTuple)
+        {
+            
+        }
+
+        public string ComponentUID()
+        {
+            return UI_COMPONENT_THEME_UID;
         }
     }
 }

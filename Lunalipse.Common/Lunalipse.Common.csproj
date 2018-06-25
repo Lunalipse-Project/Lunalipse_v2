@@ -77,6 +77,8 @@
     <Compile Include="Generic\Cache\CacheType.cs" />
     <Compile Include="Generic\Catalogue\CatalogueSections.cs" />
     <Compile Include="Generic\IWaitable.cs" />
+    <Compile Include="Interfaces\Themes\IThemeCustomizable.cs" />
+    <Compile Include="Generic\Themes\ThemeTuple.cs" />
     <Compile Include="Interfaces\IAudio\ILpsAudio.cs" />
     <Compile Include="Interfaces\IAudio\ILpsFFTProvider.cs" />
     <Compile Include="Interfaces\IAudio\ILpsFftWarp.cs" />

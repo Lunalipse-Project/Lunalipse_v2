@@ -17,7 +17,7 @@
                         <Grid Height="auto" VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="45"/>
-                                <ColumnDefinition Width="45"/>
+                                <ColumnDefinition Width="15"/>
                                 <ColumnDefinition Width="45"/>
                                 <ColumnDefinition Width="45"/>
                             </Grid.ColumnDefinitions>

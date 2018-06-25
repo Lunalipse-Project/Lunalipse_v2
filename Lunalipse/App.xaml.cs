@@ -21,10 +21,11 @@ namespace Lunalipse
     {
         I18NTokenizer I18T;
         CacheHub cacheSystem;
+        CataloguePool cp;
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             I18T = new I18NTokenizer();
-            CataloguePool cp = CataloguePool.INSATNCE;
+            cp = CataloguePool.INSATNCE;
             cacheSystem = CacheHub.INSTANCE(Environment.CurrentDirectory);
 
             InitializeI18NEnvironemnt();
@@ -64,7 +65,7 @@ namespace Lunalipse
                 {
                     cp.AddCatalogue(cat);
                 }
-}
+            }
         }
     }
 }

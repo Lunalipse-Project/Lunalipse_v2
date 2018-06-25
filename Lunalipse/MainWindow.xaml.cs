@@ -19,6 +19,7 @@ using Lunalipse.Common.Generic.Catalogue;
 using Lunalipse.Presentation.Utils;
 using Lunalipse.Core.Cache;
 using Lunalipse.Common.Generic.Cache;
+using Lunalipse.Common.Generic.Themes;
 
 namespace Lunalipse
 {
@@ -58,6 +59,7 @@ namespace Lunalipse
             laudio = LpsAudio.INSTANCE();
             cacheSystem = CacheHub.INSTANCE(Environment.CurrentDirectory);
             converter = I18NConvertor.INSTANCE(I18NPages.INSTANCE);
+            #region duplicated
             //mmdr = new MediaMetaDataReader(converter);
             //mlp.AddToPool("F:/M2", mmdr);
 
@@ -67,6 +69,7 @@ namespace Lunalipse
             //    PlayFinished();
             //}
             //alb.Source = mlp.ToCatalogue().GetCatalogueCover();
+            #endregion
             AudioDelegations.PlayingFinished += PlayFinished;
             AudioDelegations.MusicLoaded += MusicPerpeared;
             dipMusic.ItemSelectionChanged += DipMusic_ItemSelectionChanged;
@@ -272,8 +275,9 @@ namespace Lunalipse
             Dispatcher.Invoke(() => dipMusic.SelectedIndex++);
         }
 
-        private void EventTrigger_MouseEnter(object sender, MouseEventArgs e)
+        public override void ThemeOverriding(ThemeTuple themeTuple)
         {
+            base.ThemeOverriding(themeTuple);
 
         }
     }

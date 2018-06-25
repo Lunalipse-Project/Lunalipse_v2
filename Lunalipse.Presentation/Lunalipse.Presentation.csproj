@@ -53,10 +53,17 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicUI\SettingPanel.xaml.cs">
+      <DependentUpon>SettingPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\WaitingUI.cs" />
     <Page Include="BasicUI\CommonDialogue.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="BasicUI\SettingPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="font\MaterialIcon.xaml">
       <SubType>Designer</SubType>

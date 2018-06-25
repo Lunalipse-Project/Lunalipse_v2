@@ -11,11 +11,11 @@
 
 
     <Grid>
-        <h:HelixViewport3D x:Name="View">
+        <!--<h:HelixViewport3D x:Name="View">
             <h:HelixViewport3D.Camera>
                 <PerspectiveCamera Position = "-5,-5,4" LookDirection = "0,1.4,-1"/>
             </h:HelixViewport3D.Camera>
-        </h:HelixViewport3D>
+        </h:HelixViewport3D>-->
 
     </Grid>
 </Page>

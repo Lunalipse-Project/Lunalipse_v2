@@ -45,7 +45,7 @@ namespace Lunalipse.Core.BehaviorScript
 
         public bool SaveTo(string fileName)
         {
-
+            throw new NotImplementedException();
         }
 
         public void SetCacheDir(string BaseDir)

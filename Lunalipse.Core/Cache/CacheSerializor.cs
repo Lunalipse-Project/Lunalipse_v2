@@ -26,10 +26,9 @@ namespace Lunalipse.Core.Cache
             final["name"] = cw.markName;
             final["date"] = cw.createDate;
             final["clean"] = cw.deletable;
-            final["ctx"] = 
-                fieldName == null ? 
-                    USerializor.WriteNested(instance) : 
-                    USerializor.WriteSingleField(instance, fieldName);
+            final["ctx"] = fieldName == null ?
+                    USerializor.WriteNested(instance).ToString() : 
+                    USerializor.WriteSingleField(instance, fieldName).ToString();
             return final.ToString();
         }
 

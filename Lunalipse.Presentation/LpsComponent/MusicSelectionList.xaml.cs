@@ -25,7 +25,6 @@ namespace Lunalipse.Presentation.LpsComponent
         private ObservableCollection<MusicEntity> Items = new ObservableCollection<MusicEntity>();
         private int __index = -1;
         public event OnItemSelected<MusicEntity> ItemSelectionChanged;
-
         public static readonly DependencyProperty ITEM_HOVER =
             DependencyProperty.Register("MUSICLST_HOVERCOLOR",
                                         typeof(Brush),
@@ -52,6 +51,10 @@ namespace Lunalipse.Presentation.LpsComponent
         {
             InitializeComponent();
             ITEMS.DataContext = Items;
+            Items.CollectionChanged += (x, y) =>
+            {
+                
+            };
             Delegation.RemovingItem += dctx =>
             {
                 MusicEntity removed = dctx as MusicEntity;
@@ -70,6 +73,7 @@ namespace Lunalipse.Presentation.LpsComponent
             };
         }
 
+        [Obsolete]
         private void Add(MusicEntity mie) => Items.Add(mie);
         public void Clear()
         {
@@ -83,13 +87,15 @@ namespace Lunalipse.Presentation.LpsComponent
             get => DisplayedCatalogue;
             set
             {
+                if (value == null) return;
                 if (DisplayedCatalogue == null || value.UID() != DisplayedCatalogue.UID())
                 {
                     Items.Clear();
                     DisplayedCatalogue = value;
                     if (CatalogueInUse == null) CatalogueInUse = value;
                     foreach (MusicEntity me in DisplayedCatalogue.GetAll())
-                        Add(me);
+                        Items.Add(me);
+                    CheckElemets();
                 }
             }
         }
@@ -168,7 +174,8 @@ namespace Lunalipse.Presentation.LpsComponent
         public void Translate(II18NConvertor i8c)
         {
             TipMessage.Content = i8c.ConvertTo("CORE_FUNC", (string)TipMessage.Content);
-            WaitingHint.Content = i8c.ConvertTo("CORE_FUNC", (string)WaitingHint.Content);
+            Hint.Content = i8c.ConvertTo("CORE_FUNC", Hint.Content as string);
+            NoSongsHint.Content = i8c.ConvertTo("CORE_FUNC", NoSongsHint.Content as string);
         }
 
         public void StartWait()
@@ -184,6 +191,18 @@ namespace Lunalipse.Presentation.LpsComponent
         public Dispatcher GetDispatcher()
         {
             return Dispatcher;
+        }
+
+        private void CheckElemets()
+        {
+            if (Items.Count == 0)
+            {
+                SongsEmpty.Visibility = Visibility.Visible;
+            }
+            else if (Items.Count != 0 && SongsEmpty.Visibility == Visibility.Visible)
+            {
+                SongsEmpty.Visibility = Visibility.Hidden;
+            }
         }
     }
 }
