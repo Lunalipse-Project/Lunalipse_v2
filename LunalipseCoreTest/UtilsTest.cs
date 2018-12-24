@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Windows.Media;
 using Lunalipse.Common;
 using Lunalipse.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -44,6 +45,12 @@ namespace LunalipseCoreTest
             //    }
             //    Console.WriteLine(")");
             //}
+        }
+        [TestMethod]
+        public void ForegroundPredict()
+        {
+            Color c = Color.FromRgb(255,255,255);
+            Console.WriteLine(c.GetForeground());
         }
     }
 }

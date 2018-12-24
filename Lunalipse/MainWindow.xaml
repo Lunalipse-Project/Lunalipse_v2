@@ -6,27 +6,27 @@
         xmlns:local="clr-namespace:Lunalipse"
         xmlns:LpsComponent="clr-namespace:Lunalipse.Presentation.LpsComponent;assembly=Lunalipse.Presentation"
         xmlns:base1="clr-namespace:Lunalipse.Presentation.LpsWindow;assembly=Lunalipse.Presentation"
-        x:Class="Lunalipse.MainWindow" AllowsTransparency="True" Foreground="White"
-        WindowStyle="None" Background="#E6233C7C"
+        x:Class="Lunalipse.MainWindow" AllowsTransparency="True"
+        WindowStyle="None"
         mc:Ignorable="d" EnableBlur="True"
-        Title="MainWindow" Height="600" Width="1040" Loaded="Window_Loaded" ResizeMode="NoResize" MouseMove="Window_MouseMove" Closed="Window_Closed">
+        Title="MainWindow" Height="600" Width="1040" Loaded="Window_Loaded" MouseMove="Window_MouseMove" Closed="Window_Closed">
 
     <Grid MouseDown="Grid_MouseDown">
         <Grid.RowDefinitions>
             <RowDefinition Height="10"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="80"/>
+            <RowDefinition Height="110"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <LpsComponent:MusicSelectionList Grid.Column="1" x:Name="dipMusic"/>
             <Grid Grid.Column="0">
-                <LpsComponent:CatalogueSelectionList x:Name="CATALOGUES"></LpsComponent:CatalogueSelectionList>
+                <LpsComponent:CatalogueSelectionList x:Name="CATALOGUES" Width="200"></LpsComponent:CatalogueSelectionList>
             </Grid>
+            <LpsComponent:FramePresentor x:Name="FPresentor" Grid.Column="1"/>
         </Grid>
-        <LpsComponent:AudioControlPanel x:Name="ControlPanel" Grid.Row="2" HorizontalAlignment="Left" Width="1039" Height="80"/>
+        <LpsComponent:AudioControlPanel x:Name="ControlPanel" Grid.Row="2" HorizontalAlignment="Stretch" Width="Auto" Margin="0,0,1,0" Height="110" VerticalAlignment="Bottom"/>
     </Grid>
 </base1:LunalipseMainWindow>

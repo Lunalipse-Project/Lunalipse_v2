@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Lunalipse.Core.BehaviorScript;
 using Lunalipse.Common.Data.BehaviorScript;
 using Lunalipse.Core;
+using Lunalipse.Core.Theme;
 
 namespace LunalipseCoreTest
 {
@@ -48,6 +49,14 @@ namespace LunalipseCoreTest
                 Console.WriteLine("Command: {0} | Args:[ {1} ]", st.SuffixType, string.Join(",", st.st_args));
                 Console.WriteLine();
             }
+        }
+
+        [TestMethod]
+        public void ThemeJsonParserTest()
+        {
+            LThemeParser jtp = new LThemeParser();
+            //jtp.LoadTheme("test");
+            Assert.IsNotNull(jtp.Tuples);
         }
 
         [TestMethod]

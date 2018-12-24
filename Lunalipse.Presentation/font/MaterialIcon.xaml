@@ -45,6 +45,8 @@
     <System:String x:Key="ExitFullScreen">&#xf16c;</System:String>
 
     <System:String x:Key="Disabled">&#xf118;</System:String>
+    
+    <System:String x:Key="Menu">&#xf197;</System:String>
 
     <!-- Play Mode -->
     <System:String x:Key="RepeatList">&#xf3ae;</System:String>
@@ -72,6 +74,18 @@
     <System:String x:Key="Artist">&#xf209;</System:String>
 
     <System:String x:Key="Spinner">&#xf3ec;</System:String>
+
+    <System:String x:Key="SETTING_GENERAL">&#xf1ed;</System:String>
+
+    <System:String x:Key="SETTING_PERFORMANCE">&#xf11f;</System:String>
+
+    <System:String x:Key="SETTING_NETWORKING">&#xf21c;</System:String>
+    
+    <System:String x:Key="SETTING_DEVELOPER">&#xf13a;</System:String>
+    
+    <System:String x:Key="SETTING_SECURITY">&#xf1c8;</System:String>
+
+    <System:String x:Key="Music_Collection">&#xf14c;</System:String>
 
 
     <!-- Icon Size-->

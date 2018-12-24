@@ -1,22 +1,12 @@
 ﻿using Lunalipse.Common.Interfaces.II18N;
-using Lunalipse.Common.Interfaces.IPlayList;
 using Lunalipse.Common.Generic.Catalogue;
-using Lunalipse.Presentation.Generic;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Lunalipse.Common.Generic.Themes;
+using Lunalipse.Utilities;
 
 namespace Lunalipse.Presentation.LpsComponent
 {
@@ -27,18 +17,27 @@ namespace Lunalipse.Presentation.LpsComponent
     {
         private int __index = -5;
         private CatalogueSections TAG;
-        private ObservableCollection<ICatalogue> Items = new ObservableCollection<ICatalogue>();
+
+        const string UI_COMPONENT_THEME_UID = "PR_COMP_CatalogueSelectionList";
 
         /// <summary>
         /// 选项更改事件。参数tag的类型是<see cref="CatalogueSections"/>
         /// </summary>
-        public event OnItemSelected<ICatalogue> OnSelectionChange;
+        public event Action<CatalogueSections> OnSelectionChange;
+
+        public event Action OnConfigClicked;
+
+        public event Action OnMenuButtonClicked;
 
         public CatalogueSelectionList()
         {
             InitializeComponent();
-            ITEMS.DataContext = Items;
+            ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
+            ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
         }
+
+
+
         public static readonly DependencyProperty ITEM_HOVER =
             DependencyProperty.Register("CATALIST_HOVERCOLOR",
                                         typeof(Brush),
@@ -53,35 +52,12 @@ namespace Lunalipse.Presentation.LpsComponent
         public SolidColorBrush ItemHovered
         {
             get => (SolidColorBrush)GetValue(ITEM_HOVER);
-            set => SetValue(ITEM_HOVER, value);
+            private set => SetValue(ITEM_HOVER, value);
         }
         public SolidColorBrush ItemUnhovered
         {
             get => (SolidColorBrush)GetValue(ITEM_UNHOVER);
-            set => SetValue(ITEM_UNHOVER, value);
-        }
-
-        public void Reset()
-        {
-            Items.Clear();
-            TipMessage.Visibility = Visibility.Hidden;
-        }
-        public void Add(ICatalogue catalogue) => Items.Add(catalogue);
-        public void RemoveAt(int index) => Items.RemoveAt(index);
-
-        /// <summary>
-        /// 当没有东西能被添加到List里时调用此方法。
-        /// </summary>
-        public void EmptyContent()
-        {
-            Items.Clear();
-            TipMessage.Visibility = Visibility.Visible;
-        }
-
-        public ICatalogue TheMainCatalogue
-        {
-            set => MainCatalogue.DataContext = value;
-            get => MainCatalogue.DataContext as ICatalogue;
+            private set => SetValue(ITEM_UNHOVER, value);
         }
 
         public int SelectedIndex
@@ -93,7 +69,7 @@ namespace Lunalipse.Presentation.LpsComponent
                 if (value == -1)
                 {
                     csli = MainCatalogue;
-                    TAG = CatalogueSections.ALL_MUSIC;
+                    TAG = CatalogueSections.BY_LOCATION;
                 }
                 else if (value == -2)
                 {
@@ -110,49 +86,28 @@ namespace Lunalipse.Presentation.LpsComponent
                     csli = ArtistCollection;
                     TAG = CatalogueSections.ARTIST_COLLECTIONS;
                 }
-                else if (value >= 0)
-                {
-                    csli = GetContainer(value);
-                }
-                if (csli != null)
-                {
-                    ICatalogue ict = csli.DataContext as ICatalogue;
-                    if (__index != -5)
-                    {
-                        // For Item in listbox
-                        if (__index >= 0)
-                        {
-                            GetContainer(__index).SetUnselected();
-                        }
-                        else if (__index == -1)
-                            MainCatalogue.SetUnselected();
-                        else if (__index == -2)
-                            AlbumCollection.SetUnselected();
-                        else if (__index == -3)
-                            UserPlaylist.SetUnselected();
-                        else if (__index == -4)
-                            ArtistCollection.SetUnselected();
-                    }
-                    csli.SetSelected();
-                    __index = value;
-                    OnSelectionChange?.Invoke(SelectedItem = ict, TAG);
-                }
             }
         }
-        public ICatalogue SelectedItem { get; private set; }
+
+        private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
+        {
+            if (obj == null) return;
+            ItemHovered = obj.Primary.ToLuna();
+            ItemUnhovered = ItemHovered;
+            ItemUnhovered.Opacity = 0;
+            Foreground = obj.Foreground;
+        }
 
         private void ItemConatiner_MouseDown(object sender, MouseButtonEventArgs args)
         {
             CatalogueSelectionListItem csli = (CatalogueSelectionListItem)sender;
-            ICatalogue ict = csli.DataContext as ICatalogue;
+
             if (csli != null)
             {
                 if (__index != -5)
                 {
                     // For Item in listbox
-                    if (__index >=0)
-                        GetContainer(__index).SetUnselected();
-                    else if (__index == -1)
+                    if (__index == -1)
                         MainCatalogue.SetUnselected();
                     else if (__index == -2)
                         AlbumCollection.SetUnselected();
@@ -161,53 +116,52 @@ namespace Lunalipse.Presentation.LpsComponent
                     else if (__index == -4)
                         ArtistCollection.SetUnselected();
                 }
-                //MAINCATA FOR INDEX -1
-                if (csli.Tag != null)
+                switch ((string)csli.Tag)
                 {
-                    switch ((string)csli.Tag)
-                    {
-                        case "MAINCATA":
-                            __index = -1;
-                            TAG = CatalogueSections.ALL_MUSIC;
-                            break;
-                        case "ALBUM_COLLECTION":
-                            __index = -2;
-                            TAG = CatalogueSections.ALBUM_COLLECTIONS;
-                            break;
-                        case "USER_PLAYLIST":
-                            __index = -3;
-                            TAG = CatalogueSections.USER_PLAYLISTS;
-                            break;
-                        case "ARTIST_COLLECTION":
-                            __index = -4;
-                            TAG = CatalogueSections.ARTIST_COLLECTIONS;
-                            break;
-                    }
-                }
-                else
-                {
-                    __index = Items.IndexOf(ict);
-                    TAG = CatalogueSections.INDIVIDUAL;
+                    case "MAINCATA":
+                        __index = -1;
+                        TAG = CatalogueSections.BY_LOCATION;
+                        break;
+                    case "ALBUM_COLLECTION":
+                        __index = -2;
+                        TAG = CatalogueSections.ALBUM_COLLECTIONS;
+                        break;
+                    case "USER_PLAYLIST":
+                        __index = -3;
+                        TAG = CatalogueSections.USER_PLAYLISTS;
+                        break;
+                    case "ARTIST_COLLECTION":
+                        __index = -4;
+                        TAG = CatalogueSections.ARTIST_COLLECTIONS;
+                        break;
                 }
                 csli.SetSelected();
-                OnSelectionChange?.Invoke(SelectedItem = ict, TAG);
+                OnSelectionChange?.Invoke(TAG);
             }
-        }
-
-        private CatalogueSelectionListItem GetContainer(int index)
-        {
-            var container = (ITEMS.ItemContainerGenerator
-                        .ContainerFromIndex(index) as FrameworkElement);
-            return ITEMS.ItemTemplate.FindName("ItemConatiner", container) as CatalogueSelectionListItem;
         }
 
         public void Translate(II18NConvertor i8c)
         {
-            MainCatalogue.CatalogueText = i8c.ConvertTo("CORE_FUNC", MainCatalogue.CatalogueText);
+            MainCatalogue.CatalogueText = i8c.ConvertTo("CORE_FUNC", "CORE_CATALOGUE_LOCATION");
             AlbumCollection.CatalogueText = i8c.ConvertTo("CORE_FUNC", "CORE_CATALOGUE_ALBUM");
             UserPlaylist.CatalogueText = i8c.ConvertTo("CORE_FUNC", "CORE_CATALOGUE_PLAYLIST");
-            TipMessage.Content = i8c.ConvertTo("CORE_FUNC", (string)TipMessage.Content);
             ArtistCollection.CatalogueText = i8c.ConvertTo("CORE_FUNC", "CORE_CATALOGUE_ARTSIT");
+            ConfigEntry.CatalogueText = i8c.ConvertTo("CORE_FUNC", "CORE_CATALOGUE_CONFIG");
+            DetailedMenu.CatalogueText = "";
+        }
+
+        private void GenericButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            CatalogueSelectionListItem csli = (CatalogueSelectionListItem)sender;
+            switch(csli.Tag as string)
+            {
+                case "GENERAL_CONFIG":
+                    OnConfigClicked?.Invoke();
+                    break;
+                case "MENU_DETAIL":
+                    OnMenuButtonClicked?.Invoke();
+                    break;
+            }
         }
     }
 }

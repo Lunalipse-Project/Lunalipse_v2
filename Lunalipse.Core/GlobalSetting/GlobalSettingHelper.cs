@@ -32,7 +32,7 @@ namespace Lunalipse.Core.GlobalSetting
             }
         }
 
-        UniversalSerializor<Setting, ICachable> USerializor;
+        UniversalSerializor<ConfigField, IGlobalSetting> USerializor;
         string VERSION;
         public string OutputFile { get; set; }
         public bool UseLZ78Compress { get; set; }
@@ -41,13 +41,15 @@ namespace Lunalipse.Core.GlobalSetting
             VERSION = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             ConsoleAdapter.INSTANCE.RegisterComponent("lpsseting", this);
             //Set default value
-            OutputFile = "config.lps";
+            OutputFile = Environment.CurrentDirectory+"/config.lps";
             UseLZ78Compress = true;
-            USerializor = new UniversalSerializor<Setting, ICachable>();
+            USerializor = new UniversalSerializor<ConfigField, IGlobalSetting>();
         }
 
-        public T ReadSetting(string path)
+        public T ReadSetting(string path="")
         {
+            if (path == "")
+                path = OutputFile;
             JObject jo = JObject.Parse(Compressed.readCompressed(path, UseLZ78Compress));
 
             return (T)USerializor.ReadNested(typeof(T), jo["ctx"] as JObject);

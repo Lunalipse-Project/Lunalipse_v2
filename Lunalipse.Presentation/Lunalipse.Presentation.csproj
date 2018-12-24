@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -53,17 +54,36 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasicUI\SettingPanel.xaml.cs">
-      <DependentUpon>SettingPanel.xaml</DependentUpon>
+    <Compile Include="Generic\ContentManager.cs" />
+    <Compile Include="Generic\VisualParser\IndexingFile.cs" />
+    <Compile Include="LpsComponent\Base\LpsDetailedItem.xaml.cs">
+      <DependentUpon>LpsDetailedItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LpsComponent\Base\LpsDetailedListView.xaml.cs">
+      <DependentUpon>LpsDetailedListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LpsComponent\FramePresentor.xaml.cs">
+      <DependentUpon>FramePresentor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LpsComponent\HintableLable.xaml.cs">
+      <DependentUpon>HintableLable.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LpsComponent\LpsDropDown.xaml.cs">
+      <DependentUpon>LpsDropDown.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LpsComponent\LpsGridList.xaml.cs">
+      <DependentUpon>LpsGridList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LpsComponent\Parts\PART_CatalogueCard.xaml.cs">
+      <DependentUpon>PART_CatalogueCard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LpsComponent\LpsToggleSwitch.xaml.cs">
+      <DependentUpon>LpsToggleSwitch.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\WaitingUI.cs" />
     <Page Include="BasicUI\CommonDialogue.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="BasicUI\SettingPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="font\MaterialIcon.xaml">
       <SubType>Designer</SubType>
@@ -81,6 +101,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="LpsComponent\Base\LpsDetailedItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LpsComponent\Base\LpsDetailedListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="LpsComponent\CatalogueSelectionList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -89,7 +117,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="LpsComponent\LpsToggleBox.xaml">
+    <Page Include="LpsComponent\FramePresentor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LpsComponent\HintableLable.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LpsComponent\LpsDropDown.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LpsComponent\LpsGridList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -105,7 +145,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="LpsComponent\Parts\PART_CatalogueCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="LpsComponent\ScrollBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LpsComponent\LpsToggleSwitch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -144,6 +192,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Themes\Resources\StyleOverriding.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\Resources\ValueDefine.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -160,9 +212,6 @@
     </Compile>
     <Compile Include="LpsComponent\CatalogueSelectionListItem.xaml.cs">
       <DependentUpon>CatalogueSelectionListItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="LpsComponent\LpsToggleBox.xaml.cs">
-      <DependentUpon>LpsToggleBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="LpsComponent\MusicProgressBar.xaml.cs">
       <DependentUpon>MusicProgressBar.xaml</DependentUpon>
@@ -219,5 +268,6 @@
       <Name>Lunalipse.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

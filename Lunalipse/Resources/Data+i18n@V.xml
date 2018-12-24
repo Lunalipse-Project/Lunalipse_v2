@@ -9,18 +9,32 @@
           <Key name="CORE_LBS_DataTypeOverflow">数据结构溢出</Key>
           <Key name="CORE_LBS_InvalidCommandExecutor">使用了非法的指令执行器定义</Key>
           
-          <Key name="CORE_CATALOGUE_AllMusic">所有歌曲</Key>
+          <Key name="CORE_CATALOGUE_LOCATION">所有分类</Key>
+          <Key name="CORE_CATALOGUE_AllMusic">所有位置</Key>
           <Key name="CORE_CATALOGUE_ALBUM">所有专辑</Key>
-          <Key name="CORE_CATALOGUE_PLAYLIST">所有歌单</Key>
+          <Key name="CORE_CATALOGUE_PLAYLIST">我的歌单</Key>
           <Key name="CORE_CATALOGUE_ARTSIT">所有艺术家</Key>
           <Key name="CORE_CATALOGUE_NO_ITEMS">没有任何的歌单或专辑</Key>
+          <Key name="CORE_CATALOGUE_CONFIG">设置</Key>
           <Key name="CORE_MUSICLIST_NO_ITEMS">此歌单中暂无歌曲</Key>
+
+          <Key name="CORE_SETTING">配置 Lunalipse</Key>
+          <Key name="CORE_SETTING_SETTING_GENERAL">通用</Key>
+          <Key name="CORE_SETTING_SETTING_PERFORMANCE">外观与性能</Key>
+          <Key name="CORE_SETTING_SETTING_NETWORKING">网络</Key>
+          <Key name="CORE_SETTING_SETTING_DEVELOPER">开发者</Key>
+          <Key name="CORE_SETTING_SETTING_SECURITY">安全</Key>       
 
           <!-- Music Presentor Area -->
           <Key name="CORE_PRESENTOR_UNKNOW_ARTIST">未知艺术家</Key>
           <Key name="CORE_PRESENTOR_UNKNOW_ALBUM">未知专辑</Key>
           
           <Key name="CORE_LOADING">正在加载 ...</Key>
+        </Page>
+      
+      <!-- Online Music Library -->
+        <Page key="CORE_CLOUD_LIB">
+          
         </Page>
     </Lang>
 </LpsI18N>

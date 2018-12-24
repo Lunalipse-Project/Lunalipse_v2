@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lunalipse.Common.Interfaces.Themes
+namespace Lunalipse.Common.Interfaces.ITheme
 {
     public interface IThemeCustomizable
     {

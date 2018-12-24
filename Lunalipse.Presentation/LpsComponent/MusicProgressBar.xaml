@@ -23,7 +23,7 @@
                         <DropShadowEffect BlurRadius="10" Direction="0" Color="{Binding BarColor.Color, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MusicProgressBar}}}" Opacity="0.8"/>
                     </Border.Effect>
                 </Border>
-                <Border Grid.Column="1" x:Name="Thumb" HorizontalAlignment="Left" Width="8" Height="8" Background="{Binding BarColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MusicProgressBar}}}" Margin="-4,0,0,0" RenderTransformOrigin="0.5,0.5" CornerRadius="4">
+                <Border Grid.Column="1" x:Name="Thumb" VerticalAlignment="Center" HorizontalAlignment="Left" Width="8" Height="8" Background="{Binding BarColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MusicProgressBar}}}" Margin="-4,0,0,0" RenderTransformOrigin="0.5,0.5" CornerRadius="4">
                     <Border.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform x:Name="SCALETRANSF" ScaleX="1" ScaleY="1"/>

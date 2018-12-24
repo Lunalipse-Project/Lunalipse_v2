@@ -13,6 +13,7 @@ namespace Lunalipse.Core.Cache
     {
         string interfaceName;
         const BindingFlags FieldFilter = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+
         public UniversalSerializor()
         {
             interfaceName = typeof(IInterface).Name;
@@ -135,9 +136,11 @@ namespace Lunalipse.Core.Cache
                 level.Add(WriteToNode(fi, ancestor));
         }
 
+
+
         public object ReadNested(Type insType, JObject layer)
         {
-            object instance = Activator.CreateInstance(insType);
+            object instance = insType.GetConstructors(FieldFilter)[0].Invoke(null);
             foreach (JProperty jp in layer.Properties())
             {
                 FieldInfo fi = insType.GetField(jp.Name, FieldFilter);
@@ -162,7 +165,7 @@ namespace Lunalipse.Core.Cache
                 {
                     ArrayList varo = null;
                     IList list = null;
-                    bool isGeneric = vartype.IsGenericType && vartype.GetGenericArguments()[0].IsCachable(interfaceName);
+                    bool isGeneric = vartype.IsGenericType && (vartype.GetGenericArguments()[0].IsCachable(interfaceName) || vartype.GetGenericArguments()[0].Equals(typeof(String)));
                     Type elementType = isGeneric ? vartype.GetGenericArguments()[0] : vartype.GetElementType();
                     if (!isGeneric) varo = new ArrayList();
                     else list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
@@ -170,7 +173,14 @@ namespace Lunalipse.Core.Cache
                     {
                         if (isGeneric)
                         {
-                            list.Add(ReadNested(elementType, (JObject)jo));
+                            if(!elementType.IsNonValueType())
+                            {
+                                list.Add(AppliedValue(jo));
+                            }
+                            else
+                            {
+                                list.Add(ReadNested(elementType, (JObject)jo));
+                            }
                         }
                         else
                         {

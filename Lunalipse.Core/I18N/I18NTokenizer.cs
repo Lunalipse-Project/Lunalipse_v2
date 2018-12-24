@@ -1,4 +1,5 @@
-﻿using Lunalipse.Common.Data;
+﻿using Lunalipse.Common;
+using Lunalipse.Common.Data;
 using Lunalipse.Common.Data.Errors;
 using Lunalipse.Utilities;
 using System.Xml;
@@ -10,17 +11,20 @@ namespace Lunalipse.Core.I18N
     {
         XmlDocument xd;
         XmlReaderSettings xrs;
+        LunalipseLogger Log;
         public I18NTokenizer()
         {
             xd = new XmlDocument();
             xrs = new XmlReaderSettings();
             xrs.IgnoreComments = true;
+            Log = LunalipseLogger.GetLogger();
         }
 
         public bool LoadFromFile(string path)
         {
             if (!path.DExist(FType.FILE))
             {
+                Log.Error("i18n config file not found");
                 ErrorDelegation.OnErrorRaisedI18N?.Invoke(ErrorI18N.I18N_FILE_NOT_FOUND, path);
                 return false;
             }
@@ -28,10 +32,12 @@ namespace Lunalipse.Core.I18N
             {
                 XmlReader xr = XmlReader.Create(path, xrs);
                 xd.Load(xr);
+                Log.Debug("i18n config file loaded, with {0} nodes".FormateEx(xd.ChildNodes.Count));
                 return true;
             }
             catch(XmlException xex)
             {
+                Log.Error(xex.Message, xex.StackTrace);
                 ErrorDelegation.OnErrorRaisedI18N?.Invoke(ErrorI18N.INVALID_INPUT_CONTENT, xex.Message);
                 return false;
             }
@@ -46,6 +52,7 @@ namespace Lunalipse.Core.I18N
             }
             catch (XmlException xex)
             {
+                Log.Error(xex.Message, xex.StackTrace);
                 ErrorDelegation.OnErrorRaisedI18N?.Invoke(ErrorI18N.INVALID_INPUT_CONTENT, xex.Message);
                 return false;
             }
@@ -56,6 +63,7 @@ namespace Lunalipse.Core.I18N
             I18NPages i18np = I18NPages.INSTANCE;
             if (!xd.HasChildNodes)
             {
+                Log.Error("config file is empty or damaged");
                 ErrorDelegation.OnErrorRaisedI18N?.Invoke(ErrorI18N.DAMAGED_FILE_EMPTY);
                 return;
             }
@@ -71,9 +79,11 @@ namespace Lunalipse.Core.I18N
                     }
                     i18np.AddPage(page.Attributes["key"].Value, icl);
                 }
+                Log.Info("Using Language \"{0}\"".FormateEx(Lang.ToString()));
             }
             else
             {
+                Log.Error("config file is empty or damaged");
                 ErrorDelegation.OnErrorRaisedI18N?.Invoke(ErrorI18N.DAMAGED_FILE_LANG_MISSING, Lang.ToString());
             }
             return;

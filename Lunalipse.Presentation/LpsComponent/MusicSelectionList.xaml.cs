@@ -1,14 +1,17 @@
 ﻿using Lunalipse.Common.Data;
 using Lunalipse.Common.Generic;
+using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Common.Interfaces.IPlayList;
 using Lunalipse.Presentation.Generic;
+using Lunalipse.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -24,7 +27,10 @@ namespace Lunalipse.Presentation.LpsComponent
         private ICatalogue CatalogueInUse;
         private ObservableCollection<MusicEntity> Items = new ObservableCollection<MusicEntity>();
         private int __index = -1;
+
         public event OnItemSelected<MusicEntity> ItemSelectionChanged;
+        public event Action<GeneratorStatus> OnListStatusChanged;
+
         public static readonly DependencyProperty ITEM_HOVER =
             DependencyProperty.Register("MUSICLST_HOVERCOLOR",
                                         typeof(Brush),
@@ -51,6 +57,7 @@ namespace Lunalipse.Presentation.LpsComponent
         {
             InitializeComponent();
             ITEMS.DataContext = Items;
+            Loading.Visibility = Visibility.Hidden;
             Items.CollectionChanged += (x, y) =>
             {
                 
@@ -62,7 +69,7 @@ namespace Lunalipse.Presentation.LpsComponent
                 {
                     if (!IsMotherCatalogue)
                     {
-                        Delegation.CatalogueUpdated(removed);
+                        Delegation.CatalogueUpdated?.Invoke(removed);
                         Items.Remove(removed);
                     }
                     else
@@ -71,6 +78,16 @@ namespace Lunalipse.Presentation.LpsComponent
                     }
                 }
             };
+            ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
+            ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
+            ITEMS.ItemContainerGenerator.StatusChanged += (a, b) => OnListStatusChanged?.Invoke(ITEMS.ItemContainerGenerator.Status);
+        }
+
+        private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
+        {
+            if (obj == null) return;
+            ItemUnhovered = obj.Foreground.SetOpacity(0);
+            ItemHovered = obj.Foreground.SetOpacity(0.15);
         }
 
         [Obsolete]
@@ -88,7 +105,7 @@ namespace Lunalipse.Presentation.LpsComponent
             set
             {
                 if (value == null) return;
-                if (DisplayedCatalogue == null || value.UID() != DisplayedCatalogue.UID())
+                if (DisplayedCatalogue == null || value.Uid() != DisplayedCatalogue.Uid())
                 {
                     Items.Clear();
                     DisplayedCatalogue = value;
@@ -113,39 +130,32 @@ namespace Lunalipse.Presentation.LpsComponent
             get => __index;
             set
             {
-                if (CatalogueInUse.UID() == DisplayedCatalogue.UID())
+                if (__index == -1)
                 {
-                    if (__index == -1)
+                    for (int i = 0; i < ITEMS.Items.Count; i++)
                     {
-                        for (int i = 0; i < ITEMS.Items.Count; i++)
+                        MusicSelectionListItem Container = GetContainer(i);
+                        if (Container.Tag as Boolean? != false)
                         {
-                            MusicSelectionListItem Container = GetContainer(i);
-                            if ((Boolean)Container.Tag != false)
-                            {
-                                Container.RemoveChosen();
-                                break;
-                            }
+                            Container.RemoveChosen();
+                            break;
                         }
-                    }
-                    else
-                    {
-                        MusicSelectionListItem Temp = GetContainer(__index);
-                        Temp.RemoveChosen();
-                        Temp = GetContainer(__index = value);
-                        Temp.SetChosen();
-                        ItemSelectionChanged(Temp.DataContext as MusicEntity);
                     }
                 }
                 else
                 {
-                    ItemSelectionChanged?.Invoke(CatalogueInUse.getMusic(__index = value));
+                    MusicSelectionListItem Temp = GetContainer(__index);
+                    Temp.RemoveChosen();
+                    Temp = GetContainer(__index = value);
+                    Temp.SetChosen();
+                    ItemSelectionChanged(Temp.DataContext as MusicEntity);
                 }
             }
         }
 
         private void ItemConatiner_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (DisplayedCatalogue.UID() != CatalogueInUse.UID())
+            if (DisplayedCatalogue.Uid() != CatalogueInUse.Uid())
                 CatalogueInUse = DisplayedCatalogue;
 
             MusicSelectionListItem Item = (MusicSelectionListItem)sender;

@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Lunalipse.Presentation.BasicUI
+namespace Lunalipse.Presentation.LpsComponent
 {
     /// <summary>
-    /// SettingPanel.xaml 的交互逻辑
+    /// LpsDropDown.xaml 的交互逻辑
     /// </summary>
-    public partial class SettingPanel : Page
+    public partial class LpsDropDown : UserControl
     {
-        public SettingPanel()
+        public LpsDropDown()
         {
             InitializeComponent();
         }

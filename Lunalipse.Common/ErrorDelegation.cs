@@ -5,16 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lunalipse.Core
+namespace Lunalipse.Common
 {
     public class ErrorDelegation
     {
-        public delegate void ErrorRaisedGSH(string error, int indicateNum, params string[] args);
         public delegate void ErrorRaisedI18N(ErrorI18N error, params string[] args);
         public delegate void ErrorRaisedBSI(string key, string context, int indicateNum);
 
-        public static ErrorRaisedGSH OnErrorRaisedGSH;
         public static ErrorRaisedI18N OnErrorRaisedI18N;
         public static ErrorRaisedBSI OnErrorRaisedBSI;
+
+        public static event Action<string, string, string> GenericError;
+
+        public static void OnRaisedGenericException(string componentID, string ExceptionMsg, string ExceptionStackTrace)
+        {
+            GenericError(componentID, ExceptionMsg, ExceptionStackTrace);
+        }
     }
 }

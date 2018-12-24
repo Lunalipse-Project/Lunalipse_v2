@@ -11,6 +11,8 @@ namespace Lunalipse.Utilities.Win32
     {
         private const string ClassName = "Shell_TrayWnd";
 
+        APPBARDATA data;
+
         public Rectangle Bounds
         {
             get;
@@ -51,11 +53,19 @@ namespace Lunalipse.Utilities.Win32
             private set;
         }
 
+        public APPBARDATA TaskBarData
+        {
+            get
+            {
+                return data;
+            }
+        }
+
         public Taskbar()
         {
             IntPtr taskbarHandle = NativeMethods.FindWindow(Taskbar.ClassName, null);
 
-            APPBARDATA data = new APPBARDATA();
+            data = new APPBARDATA();
             data.cbSize = (uint)Marshal.SizeOf(typeof(APPBARDATA));
             data.hWnd = taskbarHandle;
             IntPtr result = NativeMethods.SHAppBarMessage(ABM.GetTaskbarPos, ref data);

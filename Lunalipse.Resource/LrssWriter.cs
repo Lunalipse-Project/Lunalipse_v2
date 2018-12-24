@@ -55,9 +55,9 @@ namespace Lunalipse.Resource
                     fs.Write(lve.ToBytes(len_verified).XorCrypt(magic), 0, len_verified);
                 for (int i = 0; i < Resources.Count;)
                 {
+                    OnSingleEndpointReached?.Invoke(Resources[i].ResourcePath);
                     _writeHeader(Resources[i], ref i);
                     Resources[i - 1] = null;
-                    OnSingleEndpointReached?.Invoke();
                 }
                 Resources.Clear();
                 fs.Seek(0, SeekOrigin.Begin);

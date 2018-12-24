@@ -28,13 +28,13 @@ namespace Lunalipse.Core.Cache
         private List<WinterWrapUp> CacheWraps;
         private Dictionary<CacheType, ICacheOperator> Operators;
 
-        public string baseDir { get; set; }
+        public string baseDir = "";
 
         public CacheHub(string dir)
         {
             Operators = new Dictionary<CacheType, ICacheOperator>();
             CacheWraps = new List<WinterWrapUp>();
-            baseDir = dir;
+            baseDir = dir == "" ? baseDir : dir;
             ReflushCaches();
         }
 

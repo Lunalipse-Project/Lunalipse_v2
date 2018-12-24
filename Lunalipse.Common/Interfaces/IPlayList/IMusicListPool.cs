@@ -11,10 +11,11 @@ namespace Lunalipse.Common.Interfaces.IPlayList
 {
     public interface IMusicListPool
     {
-        void AddToPool(string path, IMediaMetadataReader immr);
-        void AddToPool(string[] pathes, IMediaMetadataReader immr);
+        void LoadAllMusics();
+        void AddToPool(string path);
+        void AddToPool(string[] pathes);
         void DeleteMusic(MusicEntity entity, bool complete);
-        bool AddFileToPool(string MediaPath, IMediaMetadataReader immr);
+        bool AddFileToPool(string MediaPath);
         List<MusicEntity> GetMusics(string any, MusicEntityType metyn);
         MusicEntity GetMusic(int index);
         ICatalogue ToCatalogue();

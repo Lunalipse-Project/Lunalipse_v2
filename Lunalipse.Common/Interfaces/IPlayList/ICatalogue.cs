@@ -11,7 +11,8 @@ namespace Lunalipse.Common.Interfaces.IPlayList
 {
     public interface ICatalogue
     {
-        string UID();
+        string Uid();
+        string Name();
         bool AddMusic(MusicEntity ME);
         bool DeleteMusic(MusicEntity ME);
         bool DeleteMusic(string name);

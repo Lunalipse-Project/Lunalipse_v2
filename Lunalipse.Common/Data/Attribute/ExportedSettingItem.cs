@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lunalipse.Common.Data.Attribute
 {
-    public class Setting : System.Attribute
+    public class ConfigField : System.Attribute
     {
         
     }

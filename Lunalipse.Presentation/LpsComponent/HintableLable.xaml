@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="Lunalipse.Presentation.LpsComponent.HintableLable"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Lunalipse.Presentation.LpsComponent"
+             mc:Ignorable="d" x:Name="NHintableLable"
+             d:DesignHeight="50" d:DesignWidth="300" Width="auto" Height="auto">
+    <Grid>
+        <Label x:Name="GenericLabel" Foreground="{Binding Path=Foreground,ElementName=NHintableLable}"
+               Background="{Binding Path=Background,ElementName=NHintableLable}"
+               FontSize="{Binding Path=FontSize,ElementName=HintableLable}" HorizontalContentAlignment="Left"
+               VerticalContentAlignment="Center"></Label>
+        <Popup Placement="Bottom" PlacementTarget="{Binding ElementName=GenericLable}" Width="auto" x:Name="_hint">
+            <Border CornerRadius="4" Margin="0,5,0,0" x:Name="Hint" Background="Transparent">
+                <Label x:Name="HintContent" Foreground="{Binding Path=Foreground,ElementName=NHintableLable}" Background="Transparent"></Label>
+            </Border>
+        </Popup>
+    </Grid>
+</UserControl>

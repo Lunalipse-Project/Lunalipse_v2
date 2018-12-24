@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -52,6 +53,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppConst.cs" />
     <Compile Include="Data\Attribute\Cachable.cs" />
     <Compile Include="Data\Attribute\ExportedSettingItem.cs" />
     <Compile Include="Data\BehaviorScript\ActionToken.cs" />
@@ -68,6 +70,7 @@
     <Compile Include="Data\SupportFormat.cs" />
     <Compile Include="Data\SupportLanguages.cs" />
     <Compile Include="Data\Track.cs" />
+    <Compile Include="ErrorDelegation.cs" />
     <Compile Include="Generic\AudioControlPanel\PanelTrigger.cs" />
     <Compile Include="Generic\AudioControlPanel\PlayMode.cs" />
     <Compile Include="Generic\Audio\ChannelType.cs" />
@@ -76,8 +79,15 @@
     <Compile Include="Generic\Cache\SerializeInfo.cs" />
     <Compile Include="Generic\Cache\CacheType.cs" />
     <Compile Include="Generic\Catalogue\CatalogueSections.cs" />
+    <Compile Include="Generic\GeneralSetting\ControlList.cs" />
+    <Compile Include="Generic\GeneralSetting\SettingCatalogue.cs" />
+    <Compile Include="Generic\GeneralSetting\SettingCatalogues.cs" />
     <Compile Include="Generic\IWaitable.cs" />
-    <Compile Include="Interfaces\Themes\IThemeCustomizable.cs" />
+    <Compile Include="Generic\Themes\ThemeContainer.cs" />
+    <Compile Include="Generic\Themes\ThemeManagerBase.cs" />
+    <Compile Include="Interfaces\ILpsUI\LpsDetailedListItem.cs" />
+    <Compile Include="Interfaces\IThemes\IJThemeParser.cs" />
+    <Compile Include="Interfaces\IThemes\IThemeCustomizable.cs" />
     <Compile Include="Generic\Themes\ThemeTuple.cs" />
     <Compile Include="Interfaces\IAudio\ILpsAudio.cs" />
     <Compile Include="Interfaces\IAudio\ILpsFFTProvider.cs" />

@@ -8,10 +8,9 @@ namespace Lunalipse.Common.Generic.Catalogue
 {
     public enum CatalogueSections
     {
-        ALL_MUSIC,
+        BY_LOCATION,
         ALBUM_COLLECTIONS,
         ARTIST_COLLECTIONS,
-        USER_PLAYLISTS,
-        INDIVIDUAL
+        USER_PLAYLISTS
     }
 }

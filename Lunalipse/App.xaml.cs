@@ -1,15 +1,13 @@
 ﻿using Lunalipse.Common.Data;
 using Lunalipse.Common.Generic.Cache;
+using Lunalipse.Core;
 using Lunalipse.Core.BehaviorScript;
 using Lunalipse.Core.Cache;
 using Lunalipse.Core.I18N;
 using Lunalipse.Core.PlayList;
+using Lunalipse.Core.Theme;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Reflection;
 using System.Windows;
 
 namespace Lunalipse
@@ -22,20 +20,28 @@ namespace Lunalipse
         I18NTokenizer I18T;
         CacheHub cacheSystem;
         CataloguePool cp;
+        ResourcesHandler resourcesHandler;
+        string currentFolder = Environment.CurrentDirectory;
+        LunalipseLogger Log;
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             I18T = new I18NTokenizer();
             cp = CataloguePool.INSATNCE;
             cacheSystem = CacheHub.INSTANCE(Environment.CurrentDirectory);
+            Log = LunalipseLogger.GetLogger();
+            resourcesHandler = new ResourcesHandler(Assembly.GetEntryAssembly().GetName().Version);
 
+            CheckResources();
             InitializeI18NEnvironemnt();
             RegisterOperators();
 
             RestoringCaches();
+            PerpearThemeColor();
         }
 
         void RegisterOperators()
         {
+            Log.Info("Registering cache operators..");
             cacheSystem.RegisterOperator(CacheType.MUSIC_CATALOGUE_CACHE, new MusicCacheIndexer()
             {
                 UseLZ78Compress = true
@@ -48,8 +54,12 @@ namespace Lunalipse
 
         void InitializeI18NEnvironemnt()
         {
-            if (!I18T.LoadFromFile(@"Data\i18n.lang"))
+            Log.Info("Perpearing i18n environemnt");
+            if (!I18T.LoadFromFile(string.Format(@"Data\i18n{0}{1}", 
+                resourcesHandler.version, 
+                ResourcesHandler.LUNALIPSE_DATA_FILE_EXTENSION)))
             {
+                Log.Warning("Unable to load i18n environment, shutting down Lunalipse");
                 Current.Shutdown();
             }
             I18T.GetPages(SupportLanguages.CHINESE_SIM);
@@ -57,15 +67,21 @@ namespace Lunalipse
 
         void RestoringCaches()
         {
-            if (cacheSystem.ComponentCacheExists(CacheType.MUSIC_CATALOGUE_CACHE))
-            {
-                foreach (Catalogue cat in cacheSystem.RestoreObjects<Catalogue>(
-                    x => x.markName == "CATALOGUE", 
-                    CacheType.MUSIC_CATALOGUE_CACHE))
-                {
-                    cp.AddCatalogue(cat);
-                }
-            }
+            
+        }
+
+        void CheckResources()
+        {
+            Log.Info("Checking and releasing external resources");
+            resourcesHandler.ReleaseResources(Assembly.GetExecutingAssembly().GetManifestResourceNames(),
+                currentFolder,
+                Assembly.GetExecutingAssembly());
+        }
+
+        void PerpearThemeColor()
+        {
+            Log.Info("Loaidng themes");
+            LThemeManager.Instance.SelectTheme(0);
         }
     }
 }

@@ -16,13 +16,14 @@ using Lunalipse.Core.Lyric;
 using Lunalipse.Common.Interfaces.ILyric;
 using Lunalipse.Common.Interfaces.IConsole;
 using Lunalipse.Core.Console;
+using System.Windows;
 
 namespace Lunalipse.Core.LpsAudio
 {
     public class LpsAudio : ComponentHandler, ILpsAudio, IDisposable
     {
-        public volatile static LpsAudio LA_instance;
-        public readonly static object LA_lock = new object();
+        volatile static LpsAudio LA_instance;
+        readonly static object LA_lock = new object();
 
         public static LpsAudio INSTANCE(bool immersed = false)
         {
@@ -156,9 +157,10 @@ namespace Lunalipse.Core.LpsAudio
 
         public void Stop()
         {
-            Counter?.Abort();
             isPlaying = false;
+            isLoaded = false;
             wasapiOut.Stop();
+            Counter?.Abort();
         }
 
         public void SetEqualizer(double[] data)
@@ -239,7 +241,7 @@ namespace Lunalipse.Core.LpsAudio
                 Thread.Sleep(1000);
             }
             isPlaying = false;
-            AudioDelegations.PlayingFinished?.Invoke();
+            Application.Current.Dispatcher.Invoke(() => AudioDelegations.PlayingFinished?.Invoke());
         }
 
         #region Command Handler

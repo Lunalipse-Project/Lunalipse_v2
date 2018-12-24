@@ -1,20 +1,15 @@
 ﻿using Lunalipse.Common.Generic.Themes;
-using Lunalipse.Common.Interfaces.Themes;
+using Lunalipse.Common.Interfaces.ITheme;
 using Lunalipse.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Shapes;
 
 namespace Lunalipse.Presentation.LpsWindow
 {
-    public class LunalipseMainWindow : Window , IThemeCustomizable
+    public class LunalipseMainWindow : Window
     {
-        const string UI_COMPONENT_THEME_UID = "UICOMP_LPS_MAINWINDOW";
+        const string UI_COMPONENT_THEME_UID = "PR_WND_LunalipseMainWindow";
 
         public event RoutedEventHandler OnSettingClicked;
         public event RoutedEventHandler OnMinimizClicked;
@@ -29,6 +24,15 @@ namespace Lunalipse.Presentation.LpsWindow
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             this.Style = (Style)Application.Current.Resources["LunalipseMainWindow"];
             Loaded += MainWindowLoaded;
+            ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
+            ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
+        }
+
+        private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
+        {
+            if (obj == null) return;
+            Foreground = obj.Foreground;
+            Background = obj.Primary.SetOpacity(0.85).ToLuna();
         }
 
         public bool EnableBlur
@@ -59,16 +63,6 @@ namespace Lunalipse.Presentation.LpsWindow
         protected void TitleBarMove(object sender, EventArgs args)
         {
             this.DragMove();
-        }
-
-        public virtual void ThemeOverriding(ThemeTuple themeTuple)
-        {
-            
-        }
-
-        public string ComponentUID()
-        {
-            return UI_COMPONENT_THEME_UID;
         }
     }
 }

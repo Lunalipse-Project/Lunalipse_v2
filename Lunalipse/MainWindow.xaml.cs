@@ -3,9 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using Lunalipse.Core.PlayList;
 using Lunalipse.Core.Metadata;
-using Lunalipse.Core.LpsAudio;
 using Lunalipse.Common.Data;
-using Lunalipse.Core.BehaviorScript;
 using Lunalipse.Presentation.LpsWindow;
 using System.Windows.Threading;
 using System.Collections.Generic;
@@ -14,12 +12,16 @@ using System.Windows.Media;
 using Lunalipse.I18N;
 using Lunalipse.Core.I18N;
 using System.Windows.Media.Imaging;
-using Lunalipse.Common.Interfaces.IPlayList;
 using Lunalipse.Common.Generic.Catalogue;
-using Lunalipse.Presentation.Utils;
 using Lunalipse.Core.Cache;
-using Lunalipse.Common.Generic.Cache;
 using Lunalipse.Common.Generic.Themes;
+using Lunalipse.Core;
+using Lunalipse.Pages;
+using System.Windows.Media.Animation;
+using System.Reflection;
+using System.IO;
+using System.Threading.Tasks;
+using Lunalipse.Windows;
 
 namespace Lunalipse
 {
@@ -29,36 +31,62 @@ namespace Lunalipse
     /// </summary>
     public partial class MainWindow : LunalipseMainWindow
     {
+        const int sliderSize = 200;
+
         MusicListPool mlp;
         CataloguePool CPOOL;
         MediaMetaDataReader mmdr;
         I18NConvertor converter;
-        LpsAudio laudio;
-        Interpreter intp;
         Dialogue dia;
         CacheHub cacheSystem;
+
+        LpsCore core;
+
+        CatalogueShowCase showcase;
+        MusicSelected musicList;
+
+        Duration elapseTime = new Duration(TimeSpan.FromMilliseconds(250));
+        DoubleAnimation ExpandPanel;
+        DoubleAnimation MinimizePanel;
+
+        List<Catalogue> ByLocation, ByArtist, ByAlbum;
+
         public MainWindow() : base()
         {
             InitializeComponent();
             InitializeModules();
+            ExpandPanel = new DoubleAnimation(48, sliderSize, elapseTime);
+            MinimizePanel = new DoubleAnimation(sliderSize, 48, elapseTime);
+
+            Task.Factory.StartNew(() =>
+            {
+                ByLocation = CPOOL.GetLocationClassified();
+                ByAlbum = CPOOL.GetAlbumClassfied();
+                ByArtist = CPOOL.GetArtistClassfied();
+            });
         }
 
         private void DoTranslate()
         {
             CATALOGUES.Translate(converter);
-            dipMusic.Translate(converter);
+            //dipMusic.Translate(converter);
         }
 
         /// <summary>
         /// 初始化Lunalipse运行时必需组件
         /// </summary>
         private void InitializeModules()
-        {
-            mlp = MusicListPool.INSATNCE;
+        {          
             CPOOL = CataloguePool.INSATNCE;
-            laudio = LpsAudio.INSTANCE();
+            core = LpsCore.Session();
             cacheSystem = CacheHub.INSTANCE(Environment.CurrentDirectory);
             converter = I18NConvertor.INSTANCE(I18NPages.INSTANCE);
+            mlp = MusicListPool.INSATNCE(mmdr = new MediaMetaDataReader(converter));
+
+            mlp.AddToPool(@"F:/M2");
+            mlp.CreateAlbumClasses();
+            mlp.CreateArtistClasses();
+
             #region duplicated
             //mmdr = new MediaMetaDataReader(converter);
             //mlp.AddToPool("F:/M2", mmdr);
@@ -70,17 +98,79 @@ namespace Lunalipse
             //}
             //alb.Source = mlp.ToCatalogue().GetCatalogueCover();
             #endregion
-            AudioDelegations.PlayingFinished += PlayFinished;
-            AudioDelegations.MusicLoaded += MusicPerpeared;
-            dipMusic.ItemSelectionChanged += DipMusic_ItemSelectionChanged;
-            ControlPanel.OnTrigging += ControlPanel_OnTrigging;
-            AudioDelegations.PostionChanged += NotifyChanged;
+
+            core.OnMusicComplete += PlayFinished;
+            core.OnMusicPrepared += MusicPerpeared;
+            core.OnMusicProgressChanged += NotifyChanged;
+
             ControlPanel.Value = 0;
-            laudio.Volume = (float)ControlPanel.Value;
+            core.CurrentMusicVolume = 70;
+
             ControlPanel.OnProgressChanged += ControlPanel_OnProgressChanged;
             ControlPanel.OnVolumeChanged += ControlPanel_OnVolumeChanged;
+            ControlPanel.OnTrigging += ControlPanel_OnTrigging;
+            ControlPanel.OnProfilePictureClicked += ControlPanel_OnProfilePictureClicked;
+            ControlPanel.OnModeChange += (mode, @object) => core.MusicPlayMode = mode;
+
             CATALOGUES.OnSelectionChange += CATALOGUES_OnSelectionChange;
-            CATALOGUES.TheMainCatalogue = mlp.ToCatalogue();
+            CATALOGUES.OnMenuButtonClicked += CATALOGUES_OnMenuButtonClicked;
+            CATALOGUES.OnConfigClicked += CATALOGUES_OnConfigClicked;
+
+            showcase = new CatalogueShowCase(converter);
+            showcase.CatalogueSelected += Showcase_CatalogueSelected;
+
+            musicList = new MusicSelected();
+            musicList.OnSelectedMusicChange += MusicList_OnSelectedMusicChange;
+
+            this.OnMinimizClicked += MainWindow_OnMinimizClicked;
+        }
+
+        private void CATALOGUES_OnConfigClicked()
+        {
+            //TestPage tp = new TestPage();
+            //tp.Show();
+            Settings settings = new Settings();
+            settings.Translate(converter);
+            settings.ShowDialog();
+        }
+
+        private void CATALOGUES_OnMenuButtonClicked()
+        {
+            if (CATALOGUES.Width < sliderSize)
+            {
+                CATALOGUES.BeginAnimation(WidthProperty, ExpandPanel);
+            }
+            else
+            {
+                CATALOGUES.BeginAnimation(WidthProperty, MinimizePanel);
+            }
+        }
+
+        private void MainWindow_OnMinimizClicked(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void ControlPanel_OnProfilePictureClicked()
+        {
+            if (musicList.SelectedCatalogue != null)
+            {
+                musicList.SetCatalogue(core.currentCatalogue, true);
+                FPresentor.ShowContent(musicList);
+            }
+        }
+
+        private void MusicList_OnSelectedMusicChange(MusicEntity arg1, object arg2)
+        {
+            if (core.CurrentPlaying == arg1) return;
+            core.SetCatalogue(musicList.SelectedCatalogue);
+            core.PerpareMusic(arg1);
+        }
+
+        private void Showcase_CatalogueSelected(Catalogue obj)
+        {
+            if (obj == null) return;
+            FPresentor.ShowContent(musicList,false, () => musicList.SetCatalogue(obj));
         }
 
         /// <summary>
@@ -88,53 +178,22 @@ namespace Lunalipse
         /// </summary>
         /// <param name="selected">选择的归类</param>
         /// <param name="tag">附加参数</param>
-        private void CATALOGUES_OnSelectionChange(ICatalogue selected, object tag)
+        private void CATALOGUES_OnSelectionChange(CatalogueSections tag)
         {
-            Catalogue cat = selected as Catalogue;
-            CatalogueSections TAG = (CatalogueSections)tag;
+            CatalogueSections TAG = tag;
             switch (TAG)
             {
-                case CatalogueSections.ALL_MUSIC:
-                    dipMusic.AsyncExecute(() =>
-                    {
-                        dipMusic.Catalogue = cat;
-                    });
-                    break;
-                case CatalogueSections.INDIVIDUAL:
-                    dipMusic.Clear();
-                    dipMusic.AsyncExecute(() =>
-                    {
-                        dipMusic.Catalogue = cat;
-                    });
+                case CatalogueSections.BY_LOCATION:
+                    FPresentor.ShowContent(showcase, false, () => showcase.SetCatalogues(ByLocation));
                     break;
                 case CatalogueSections.USER_PLAYLISTS:
-                    CATALOGUES.EmptyContent();
+                    FPresentor.ShowContent(showcase);
                     break;
                 case CatalogueSections.ALBUM_COLLECTIONS:
-                    CATALOGUES.Reset();
-                    List<Catalogue> catas = CPOOL.GetAlbumClassfied();
-                    if (catas.Count == 0)
-                    {
-                        CATALOGUES.EmptyContent();
-                    }
-                    else
-                    {
-                        foreach (Catalogue c in catas)
-                            CATALOGUES.Add(c);
-                    }
+                    FPresentor.ShowContent(showcase, false, () => showcase.SetCatalogues(ByAlbum));
                     break;
                 case CatalogueSections.ARTIST_COLLECTIONS:
-                    CATALOGUES.Reset();
-                    List<Catalogue> art_catas = CPOOL.GetArtistClassfied();
-                    if (art_catas.Count == 0)
-                    {
-                        CATALOGUES.EmptyContent();
-                    }
-                    else
-                    {
-                        foreach (Catalogue c in art_catas)
-                            CATALOGUES.Add(c);
-                    }
+                    FPresentor.ShowContent(showcase, false, () => showcase.SetCatalogues(ByArtist));
                     break;
             }
         }
@@ -145,7 +204,7 @@ namespace Lunalipse
         /// <param name="value">修改的音量</param>
         private void ControlPanel_OnVolumeChanged(double value)
         {
-            laudio.Volume = (float)value;
+            core.CurrentMusicVolume = (float)value;
         }
 
         /// <summary>
@@ -154,7 +213,7 @@ namespace Lunalipse
         /// <param name="value"></param>
         private void ControlPanel_OnProgressChanged(double value)
         {
-            laudio.MoveTo(value);
+            core.PositionMoveTo(value);
         }
 
         /// <summary>
@@ -164,15 +223,19 @@ namespace Lunalipse
         /// <param name="args">附加参数</param>
         private void ControlPanel_OnTrigging(AudioPanelTrigger identifier, object args)
         {
+            if (!core.AudioOut.isLoaded) return;
             switch (identifier)
             {
                 case AudioPanelTrigger.PausePlay:
                     bool isPaused = (bool)args;
-                    if (laudio.isLoaded)
-                    {
-                        if (isPaused) laudio.Pause();
-                        else laudio.Resume();
-                    }
+                    if (isPaused) core.Pause();
+                    else core.Resume();
+                    break;
+                case AudioPanelTrigger.SkipNext:
+                    core.PerpareMusic(core.currentCatalogue.getNext());
+                    break;
+                case AudioPanelTrigger.SkipPrev:
+                    core.PerpareMusic(core.currentCatalogue.getPrevious());
                     break;
             }
         }
@@ -183,7 +246,7 @@ namespace Lunalipse
         /// <param name="curPos"></param>
         private void NotifyChanged(TimeSpan curPos)
         {
-            Dispatcher.Invoke(()=>
+            Dispatcher.Invoke(() =>
             {
                 ControlPanel.Value = curPos.TotalSeconds;
                 ControlPanel.Current = curPos;
@@ -199,8 +262,14 @@ namespace Lunalipse
         {
             Dispatcher.Invoke(() =>
             {
+                BitmapSource source;
+                ControlPanel.AlbumProfile = (source = MediaMetaDataReader.GetPicture(Music.Path)) == null ? null : new ImageBrush(source);
+                ControlPanel.StartPlaying();
                 ControlPanel.MaxValue = mTrack.Duration.TotalSeconds;
                 ControlPanel.Value = 0;
+                musicList.PlayingIndex = musicList.SelectedCatalogue.CurrentIndex;
+                ControlPanel.CurrentMusic = Music.Artist[0] +" - "+ Music.Name;
+                ControlPanel.TotalLength = mTrack.Duration;
             });
         }
 
@@ -211,31 +280,26 @@ namespace Lunalipse
         /// <param name="tag">附加信息</param>
         private void DipMusic_ItemSelectionChanged(MusicEntity selected, object tag)
         {
-            if (laudio.Playing) laudio.Stop();
-            BitmapSource source;
-            ControlPanel.AlbumProfile = (source = MediaMetaDataReader.GetPicture(selected.Path)) == null ? null : new ImageBrush(source);
-            laudio.Load(selected);
-            ControlPanel.StartPlaying();
-            laudio.Play();
+            #region disposed
             //if (dia == null)
             //{
             //    dia = new Dialogue(new _3DVisualize(), "3D");
             //    dia.Show();
             //}
+            #endregion
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //this.EnableBlur();
             DoTranslate();
             CATALOGUES.SelectedIndex = -1;
+            LunalipseLogger.GetLogger().Info("Loaded complete, rendering UI");
             //cacheSystem.CacheObject(CPOOL, CacheType.MUSIC_CATALOGUE_CACHE);
-            dipMusic.AsyncExecute(() =>
-            {
-                mlp.CreateAlbumClasses();
-                mlp.CreateArtistClasses();
-                dipMusic.Catalogue = mlp.ToCatalogue();
-            });
+            //dipMusic.AsyncExecute(() =>
+            //{
+            //    
+            //    dipMusic.Catalogue = mlp.ToCatalogue();
+            //});
         }
 
 
@@ -246,39 +310,23 @@ namespace Lunalipse
 
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            
+
         }
         private void Window_Closed(object sender, EventArgs e)
         {
-            laudio.Dispose();
+            LunalipseLogger.GetLogger().Info("Terminating Lunalipse.....");
+            core.Dispose();
+            LunalipseLogger.GetLogger().Release();
         }
+
+        
 
         /// <summary>
         /// 播放完成时的回调方法
         /// </summary>
         private void PlayFinished()
         {
-            MusicEntity MEnt = null;
-            if (intp.LBSLoaded)
-                MEnt = intp.Stepping();
-            else
-            {
-                Next();
-            }
-        }
-
-        /// <summary>
-        /// 列表自动递增
-        /// </summary>
-        private void Next()
-        {
-            Dispatcher.Invoke(() => dipMusic.SelectedIndex++);
-        }
-
-        public override void ThemeOverriding(ThemeTuple themeTuple)
-        {
-            base.ThemeOverriding(themeTuple);
-
+            //Dispatcher.Invoke(() => dipMusic.SelectedIndex = core.getCurrentPlayingIndex);
         }
     }
 }

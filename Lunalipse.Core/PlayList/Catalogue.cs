@@ -3,6 +3,7 @@ using Lunalipse.Common.Data.Attribute;
 using Lunalipse.Common.Interfaces.ICache;
 using Lunalipse.Common.Interfaces.IPlayList;
 using Lunalipse.Core.Metadata;
+using Lunalipse.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
@@ -16,7 +17,7 @@ namespace Lunalipse.Core.PlayList
         private List<MusicEntity> Entities;
 
         [Cachable]
-        private int Currently = -1;
+        private int Currently = 0;
 
         [Cachable]
         private string name;
@@ -24,11 +25,13 @@ namespace Lunalipse.Core.PlayList
         private string uid;
         [Cachable]
         private bool AlbumClassified, ArtistClassified, LocationClassified, mainCatalogue;
+        [Cachable]
+        private int ImageIndex = 0;
 
         /// <summary>
         /// Store the name of catalogue
         /// </summary>
-        
+
         public string Name { get => name; }
 
         /// <summary>
@@ -54,6 +57,9 @@ namespace Lunalipse.Core.PlayList
         /// Show whether this catalogue is the "Mother Catalogue" of all songs (inherit from <see cref="MusicListPool.Musics"/>). Each invidual catalogue or "Son Catalogue" inherit the songs from "Mother"
         /// </summary>
         public bool MainCatalogue { get=> mainCatalogue; }
+
+        public int CurrentIndex { get => Currently; }
+
         public List<MusicEntity> MusicList
         {
             get
@@ -173,26 +179,41 @@ namespace Lunalipse.Core.PlayList
             return me;
         }
 
+        public void SetMusic(MusicEntity entity)
+        {
+            int index = MusicList.IndexOf(entity);
+            if (index == -1) throw new InvalidOperationException("Entity {0} does not contains in {1}".FormateEx(entity.MusicName, UUID));
+            Currently = index;
+        }
+
         public MusicEntity getNext()
         {
             Currently++;
-            if (Currently < Entities.Count)
+            if (Currently >= Entities.Count)
             {
-                return Entities[Currently];
+                Currently = 0;
             }
-            Currently = -1;
-            return null;
+            return Entities[Currently];
+        }
+
+        public MusicEntity getPrevious()
+        {
+            Currently--;
+            if (Currently < 0)
+            {
+                Currently = 0;
+            }
+            return Entities[Currently];
         }
 
         public BitmapSource GetCatalogueCover()
         {
             Random r = new Random();
-            int failTime = 0;
-            MusicEntity randomed = Entities[r.Next(0, Entities.Count)];
-            BitmapSource bs;
-            while((bs = MediaMetaDataReader.GetPicture(randomed.Path))==null && failTime<3)
+            MusicEntity randomed = Entities[0];
+            BitmapSource bs = null;
+            for (int i = 0; i < Entities.Count && (bs = MediaMetaDataReader.GetPicture(randomed.Path)) == null; i++)
             {
-                failTime++;
+                randomed = Entities[ImageIndex = i];
             }
             return bs;
         }
@@ -205,6 +226,8 @@ namespace Lunalipse.Core.PlayList
             }
         }
 
-        public string UID() => UUID;
+        public string Uid() => UUID;
+
+        string ICatalogue.Name() => name;
     }
 }

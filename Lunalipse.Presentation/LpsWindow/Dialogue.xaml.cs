@@ -29,5 +29,11 @@ namespace Lunalipse.Presentation.LpsWindow
         {
 
         }
+
+        public Page RenderContent
+        {
+            get => Display.Content as Page;
+            set => Display.Content = value;
+        }
     }
 }

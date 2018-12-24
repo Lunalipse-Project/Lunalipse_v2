@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Lunalipse.Utilities
 {
@@ -31,6 +32,11 @@ namespace Lunalipse.Utilities
             }
             if (inx > Prefixes.Length - 1) throw new OverflowException("values for given scale:{0} is too big to convert".FormateEx(scale.ToString()));
             return "{0}{1}".FormateEx(size, Prefixes[inx]);
+        }
+
+        public static IEnumerable<T> GetValues<T>()
+        {
+            return Enum.GetValues(typeof(T)).Cast<T>();
         }
 
         public static string Second2Str(long sec, string seperator = ":")

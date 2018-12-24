@@ -1,5 +1,8 @@
 ﻿using Lunalipse.Common.Generic.AudioControlPanel;
+using Lunalipse.Common.Generic.Themes;
+using Lunalipse.Common.Interfaces.IPlayList;
 using Lunalipse.Presentation.Generic;
+using Lunalipse.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +31,7 @@ namespace Lunalipse.Presentation.LpsComponent
         bool LyricEnabled = true;
         bool SpectrumEnabled = true;
         PlayMode Mode = PlayMode.RepeatList;
+        Duration elapseTime = new Duration(TimeSpan.FromMilliseconds(100));
 
         /// <summary>
         /// 开关类事件触发，对于<see cref="AudioPanelTrigger.PausePlay"/>事件，<see cref="object"/>为<see cref="bool"/>，表示是否已暂停。
@@ -36,10 +40,30 @@ namespace Lunalipse.Presentation.LpsComponent
         public event AudioPanelDelegation<PlayMode, object> OnModeChange;
         public event ProgressChange OnProgressChanged;
         public event ProgressChange OnVolumeChanged;
+        public event Action OnProfilePictureClicked;
+        private DoubleAnimation FadeIn,FadeOut;
+
+        private const string UI_COMPONENT_THEME_UID = "PR_COMP_AudioControlPanel";
+
+        /* TODO 新的架构调整：
+         * 音乐播放顺序现在由该类掌管。
+         * 在专辑页面中选中一个专辑，相应的catalogue类将会传递到此类的ICatalogue字段，用于进行播放。
+         * 当专辑改变时，catalogue类改变，播放新的catalogue。
+         * 如用户使用LPScript时，通过Script组建一个catalogue。
+         */
+        //private ICatalogue SelectedCatalogue = null;
+        //private bool isUsingScript = false;
+        //// object是MusicEntity
+        //private Func<object> ScriptSteppingFunc;
 
         public AudioControlPanel()
         {
             InitializeComponent();
+
+            FadeIn = new DoubleAnimation(0, 1, elapseTime);
+            FadeOut = new DoubleAnimation(1, 0, elapseTime);
+            FadeOut.Completed += (a, b) => VolumePlanePopup.IsOpen = false;
+
             MusicProgress.OnProgressChanged += x => OnProgressChanged?.Invoke(x);
             VolumeBar.OnValueChanged += x =>
             {
@@ -61,6 +85,28 @@ namespace Lunalipse.Presentation.LpsComponent
                 }
                 OnVolumeChanged?.Invoke(x);
             };
+            VolumeAdj.Click += VolumeAdj_Click;
+            VolumePlanePopup.MouseLeave += VolumePlanePopup_MouseLeave;
+            ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
+            ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
+        }
+
+        private void VolumePlanePopup_MouseLeave(object sender, MouseEventArgs e)
+        {
+            VolumeBar.BeginAnimation(OpacityProperty, FadeOut);
+        }
+
+        private void VolumeAdj_Click(object sender, RoutedEventArgs e)
+        {
+            if (VolumePlanePopup.IsOpen)
+            {
+                VolumeBar.BeginAnimation(OpacityProperty, FadeOut);
+            }
+            else
+            {
+                VolumePlanePopup.IsOpen = true;
+                VolumeBar.BeginAnimation(OpacityProperty, FadeIn);
+            }
         }
 
         public Brush AlbumProfile
@@ -96,6 +142,26 @@ namespace Lunalipse.Presentation.LpsComponent
             set
             {
                 Time.Content = value.ToString(@"hh\:mm\:ss");
+            }
+        }
+
+        public TimeSpan TotalLength
+        {
+            set
+            {
+                TotalTime.Content = value.ToString(@"hh\:mm\:ss");
+            }
+        }
+
+        public string CurrentMusic
+        {
+            get
+            {
+                return CurrentPlaying.Text;
+            }
+            set
+            {
+                CurrentPlaying.Text = value;
             }
         }
 
@@ -211,13 +277,22 @@ namespace Lunalipse.Presentation.LpsComponent
             VolumeBar.Value = 70;
         }
 
-        private void VolumePlanePopup_MouseLeave(object sender, MouseEventArgs e)
+        private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (!VolumeBar.IsHold)
-            {
-                VolumeBar.BeginAnimation(OpacityProperty, new DoubleAnimation(1, 0, new Duration(TimeSpan.FromSeconds(0.3))));
-                VolumePlanePopup.IsOpen = false;
-            }
+            OnProfilePictureClicked?.Invoke();
+        }
+
+        private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
+        {
+            if (obj == null) return;
+            this.Foreground = obj.Foreground;
+            MusicProgress.BarColor = obj.Secondary;
+            MusicProgress.TrackColor = obj.Primary.SetOpacity(0.7).ToLuna();
+
+            VolumeBar.BarTrackColor = obj.Primary.SetOpacity(0.7).ToLuna();
+            VolumeBar.BarColor = obj.Secondary;
+            VolumeBar.FontColor = obj.Foreground;
+            VolumeBar.Background = obj.Primary.ToLuna();
         }
     }
 }

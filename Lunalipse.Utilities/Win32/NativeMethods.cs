@@ -1,9 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace Lunalipse.Utilities.Win32
 {
+    public delegate int HookProc(int nCode, Int32 wParam, IntPtr lParam);
+
     public static class NativeMethods
     {
         [DllImport("user32.dll")]
@@ -36,7 +39,7 @@ namespace Lunalipse.Utilities.Win32
         [DllImport("gdi32")]
         public static extern int DeleteObject(IntPtr o);
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall,SetLastError =true)]
         public static extern int SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hInstance, int threadId);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
@@ -68,5 +71,15 @@ namespace Lunalipse.Utilities.Win32
 
         [DllImport("user32.dll")]
         public static extern bool UnregisterDeviceNotification(IntPtr handle);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern IntPtr LoadLibraryEx(string lpFileName, IntPtr hReservedNull, LoadLibraryFlags dwFlags);
+        public static IntPtr LoadWin32Library(string libPath)
+        {
+            System.IntPtr moduleHandle = LoadLibraryEx(libPath, IntPtr.Zero, 0);
+            if (moduleHandle == IntPtr.Zero)
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+            return moduleHandle;
+        }
     }
 }

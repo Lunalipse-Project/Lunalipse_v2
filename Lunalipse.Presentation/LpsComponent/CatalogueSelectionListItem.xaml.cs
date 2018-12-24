@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Lunalipse.Common.Generic.Themes;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Lunalipse.Presentation.LpsComponent
 {
@@ -29,6 +19,17 @@ namespace Lunalipse.Presentation.LpsComponent
             InitializeComponent();
             SelectedColor = new BrushConverter().ConvertFromString("#ff233c7c") as SolidColorBrush;
             DefaultColor = Brushes.Transparent;
+            ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
+            ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
+        }
+
+        private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
+        {
+            if (obj == null) return;
+            Foreground = obj.Foreground;
+            SelectedColor = obj.Secondary;
+            if (isSelected)
+                TagIcon.Background = SelectedColor;
         }
 
         public string CatalogueText
@@ -62,6 +63,15 @@ namespace Lunalipse.Presentation.LpsComponent
                         break;
                     case "ARTIST_COLLECTION":
                         TagIcon.Content = FindResource("Artist");
+                        break;
+                    case "GENERAL_CONFIG":
+                        TagIcon.Content = FindResource("Setting");
+                        break;
+                    case "MENU_DETAIL":
+                        TagIcon.Content = FindResource("Menu");
+                        break;
+                    default:
+                        TagIcon.Content = FindResource("Music_Collection");
                         break;
                 }
             }

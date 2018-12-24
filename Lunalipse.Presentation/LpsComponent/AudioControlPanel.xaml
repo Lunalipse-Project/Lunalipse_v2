@@ -6,14 +6,14 @@
              xmlns:local="clr-namespace:Lunalipse.Presentation.LpsComponent"
              mc:Ignorable="d" x:Name="AudioPanelControl"
              Foreground="White"
-             d:DesignHeight="80" d:DesignWidth="800" Loaded="UserControl_Loaded">
+             d:DesignHeight="110" d:DesignWidth="800" Loaded="UserControl_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="110"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
-            <Border CornerRadius="5" Width="70" Height="70" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="AlbProfile">
+        <Grid Grid.Column="0" MouseLeftButtonDown="Grid_MouseLeftButtonDown">
+            <Border CornerRadius="5" Width="100" Height="100" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="AlbProfile">
                 <Label x:Name="FallBackPic" BorderBrush="{x:Null}" Visibility="Visible" Opacity="0.7" Content="{StaticResource AlbumDefault}" FontFamily="../font/#Material-Design-Iconic-Font" FontSize="{StaticResource IconLargeVI}" HorizontalContentAlignment="Center" VerticalAlignment="Center" Foreground="{Binding Path=Foreground, ElementName=AudioPanelControl}"/>
             </Border>
         </Grid>
@@ -21,17 +21,25 @@
             <Grid.RowDefinitions>
                 <!-- TODO Add & Restyling ProgressBar -->
                 <RowDefinition Height="0.3*"/>
-                <RowDefinition Height="0.7*"/>
+                <RowDefinition Height="0.2*"/>
+                <RowDefinition Height="0.5*"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.9*"/>
-                    <ColumnDefinition Width="0.1*"/>
-                </Grid.ColumnDefinitions>
-                <local:MusicProgressBar Grid.Column="0" x:Name="MusicProgress" Width="auto" Background="Transparent" TrackColor="#FFBB3737" BarColor="Red"/>
-                <Label Grid.Column="1" Content="00:00:00" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" x:Name="Time" Foreground="{Binding Path=Foreground, ElementName=AudioPanelControl}"/>
+            <Grid Grid.Column="0">
+                <Label FontSize="{StaticResource IconSmall}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MaxWidth="400">
+                    <TextBlock TextTrimming="CharacterEllipsis"  x:Name="CurrentPlaying" Foreground="{Binding Path=Foreground, ElementName=AudioPanelControl}"></TextBlock>
+                </Label>
             </Grid>
             <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.1*"/>
+                    <ColumnDefinition Width="0.8*"/>
+                    <ColumnDefinition Width="0.1*"/>
+                </Grid.ColumnDefinitions>
+                <local:MusicProgressBar Grid.Column="1" x:Name="MusicProgress" Width="auto" Background="Transparent" TrackColor="#FFBB3737" BarColor="Red"/>
+                <Label Grid.Column="0" Content="00:00:00" HorizontalContentAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" x:Name="Time" Foreground="{Binding Path=Foreground, ElementName=AudioPanelControl}"/>
+                <Label Grid.Column="2" Content="00:00:00" HorizontalContentAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" x:Name="TotalTime" Foreground="{Binding Path=Foreground, ElementName=AudioPanelControl}"/>
+            </Grid>
+            <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.25*"/>
                     <ColumnDefinition Width="0.50*"/>
@@ -64,7 +72,7 @@
                         <Grid Grid.Column="3">
                             <Button x:Name="VolumeAdj" Style="{StaticResource IconButton}" Height="45" Width="45" Content="{StaticResource Volume_0}" FontSize="{StaticResource IconMedium}" Foreground="{Binding Path=Foreground, ElementName=AudioPanelControl}">
                             </Button>
-                            <Popup PlacementTarget="{Binding ElementName=VolumeAdj}" Placement="Top" IsOpen="False" x:Name="VolumePlanePopup" AllowsTransparency="True" Width="45" Height="150" MouseLeave="VolumePlanePopup_MouseLeave">
+                            <Popup PlacementTarget="{Binding ElementName=VolumeAdj}" Placement="Top" IsOpen="False" x:Name="VolumePlanePopup" AllowsTransparency="True" Width="45" Height="150">
                                 <local:VolumePanel Width="45" Height="150" Background="#BF000000" x:Name="VolumeBar" Opacity="0">
                                     <!--<local:VolumePanel.Triggers>
                                         <EventTrigger RoutedEvent="MouseLeave">
@@ -81,7 +89,7 @@
                                     </local:VolumePanel.Triggers>-->
                                 </local:VolumePanel>
                             </Popup>
-                            <Grid.Triggers>
+                            <!--<Grid.Triggers>
                                 <EventTrigger RoutedEvent="MouseEnter">
                                     <BeginStoryboard>
                                         <Storyboard>
@@ -93,7 +101,7 @@
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </EventTrigger>
-                            </Grid.Triggers>
+                            </Grid.Triggers>-->
                         </Grid>
                     </Grid>
                 </Grid>

@@ -54,14 +54,14 @@ namespace Lunalipse.Presentation.LpsComponent
                                         typeof(double),
                                         typeof(MusicProgressBar),
                                         new PropertyMetadata(100d));
-        public Brush BarColor
+        public SolidColorBrush BarColor
         {
-            get => (Brush)GetValue(PRG_BG);
+            get => (SolidColorBrush)GetValue(PRG_BG);
             set => SetValue(PRG_BG, value);
         }
-        public Brush TrackColor
+        public SolidColorBrush TrackColor
         {
-            get => (Brush)GetValue(TRACK_BG);
+            get => (SolidColorBrush)GetValue(TRACK_BG);
             set => SetValue(TRACK_BG, value);
         }
 

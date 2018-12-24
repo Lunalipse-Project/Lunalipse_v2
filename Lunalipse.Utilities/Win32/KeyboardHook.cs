@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Lunalipse.Utilities.Win32
 {
-    public delegate int HookProc(int nCode, Int32 wParam, IntPtr lParam);
+    
     public class KeyboardHook
     {
         /// <summary>
@@ -26,7 +26,6 @@ namespace Lunalipse.Utilities.Win32
         public event KeyEventHandler KeyUpEvent;
         
         static int hKeyboardHook = 0;
-        public const int WH_KEYBOARD_LL = 13;
         HookProc KeyboardHookProcedure;
 
         public void Start()
@@ -35,8 +34,8 @@ namespace Lunalipse.Utilities.Win32
             if (hKeyboardHook == 0)
             {
                 KeyboardHookProcedure = new HookProc(KeyboardHookProc);
-                hKeyboardHook = NativeMethods.SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardHookProcedure, NativeMethods.GetModuleHandle(System.Diagnostics.Process.GetCurrentProcess().MainModule.ModuleName), 0);
-                NativeMethods.SetWindowsHookEx(13, KeyboardHookProcedure, Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]), 0);
+                hKeyboardHook = NativeMethods.SetWindowsHookEx(HOOK.WH_KEYBOARD_LL, KeyboardHookProcedure, NativeMethods.GetModuleHandle(System.Diagnostics.Process.GetCurrentProcess().MainModule.ModuleName), 0);
+                NativeMethods.SetWindowsHookEx(HOOK.WH_KEYBOARD_LL, KeyboardHookProcedure, Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]), 0);
                 if (hKeyboardHook == 0)
                 {
                     Stop();

@@ -35,7 +35,7 @@ namespace Lunalipse.Core.PlayList
 
         public void AddCatalogue(Catalogue catalogue)
         {
-            if (CatalogueBase.FindIndex(x => x.MainCatalogue == catalogue.MainCatalogue || x.Name == catalogue.Name) != -1)
+            if (CatalogueBase.FindIndex(x => x.MainCatalogue == catalogue.MainCatalogue && x.MainCatalogue == true) != -1)
                 return;
             CatalogueBase.Add(catalogue);
         }
@@ -112,6 +112,17 @@ namespace Lunalipse.Core.PlayList
             foreach (Catalogue c in CatalogueBase)
             {
                 if (c.isArtistClassified)
+                    lc.Add(c);
+            }
+            return lc;
+        }
+
+        public List<Catalogue> GetLocationClassified()
+        {
+            List<Catalogue> lc = new List<Catalogue>();
+            foreach (Catalogue c in CatalogueBase)
+            {
+                if (c.isLocationClassified)
                     lc.Add(c);
             }
             return lc;

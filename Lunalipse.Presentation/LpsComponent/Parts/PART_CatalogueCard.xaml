@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="Lunalipse.Presentation.LpsComponent.Parts.PART_CatalogueCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Lunalipse.Presentation.LpsComponent.Parts"
+             mc:Ignorable="d" Name="PART_CARD"
+             d:DesignHeight="450" d:DesignWidth="800" Width="210" Height="210">
+    <Grid x:Name="Outliner">
+        <Border CornerRadius="4" BorderThickness="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.7*"/>
+                    <RowDefinition Height="0.2*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Image Grid.Row="0" x:Name="cata_cover"></Image>
+                    <Label FontFamily="../../font/#Material-Design-Iconic-Font" Content="{StaticResource PlayList}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="{StaticResource IconLargeVI}" x:Name="default"
+                           Foreground="{Binding Path=Foreground,ElementName=PART_CARD}" Background="{Binding ElementName=PART_CARD,Path=Background}"></Label>
+                    <Button HorizontalAlignment="Right" Margin="2,2,2,2" Style="{StaticResource IconButton}" VerticalAlignment="Top" 
+                            Content="{StaticResource Close}" FontSize="{StaticResource FontNormal}" Foreground="{Binding Path=Foreground,ElementName=PART_CARD}" Click="OnCatalogueDelete">
+                        <Button.Effect>
+                            <DropShadowEffect Color="#000" Direction="0" ShadowDepth="0" BlurRadius="4"/>
+                        </Button.Effect>
+                    </Button>
+                </Grid>
+                <Label x:Name="cata_card_bottom_strip" Grid.Row="1" VerticalContentAlignment="Center" Padding="10,0,0,0" FontSize="{StaticResource FontNormal}"
+                       Foreground="{Binding Path=Foreground,ElementName=PART_CARD}">
+                    <TextBlock TextTrimming="CharacterEllipsis" x:Name="cata_name" MaxWidth="150">
+                    </TextBlock>
+                </Label>
+            </Grid>
+        </Border>
+        <Grid.Effect>
+            <DropShadowEffect Color="{Binding ElementName=PART_CARD,Path=Background.Color}" BlurRadius="7" Direction="0" ShadowDepth="0"/>
+        </Grid.Effect>
+    </Grid>
+</UserControl>

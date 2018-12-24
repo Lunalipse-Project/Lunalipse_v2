@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Lunalipse.Common.Data;
+using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Presentation.Generic;
 
 namespace Lunalipse.Presentation.LpsComponent
@@ -13,49 +14,34 @@ namespace Lunalipse.Presentation.LpsComponent
     /// </summary>
     public partial class MusicSelectionListItem : UserControl
     {
-        public static readonly DependencyProperty ITEM_SONGS =
-            DependencyProperty.Register("MUSICLST_ITEM_SONGSTNAME",
-                                        typeof(Brush),
-                                        typeof(MusicSelectionList),
-                                        new PropertyMetadata(Application.Current.FindResource("MusicName_List")));
-        public static readonly DependencyProperty ITEM_ARTIST =
-            DependencyProperty.Register("MUSICLST_ITEM_ARTISTNAME",
-                                        typeof(Brush),
-                                        typeof(MusicSelectionList),
-                                        new PropertyMetadata(Application.Current.FindResource("ArtistName_List")));
         public static readonly DependencyProperty ITEM_SELECTED_MARK =
             DependencyProperty.Register("MUSICLST_ITEM_SELECTED_MARK",
                                         typeof(Brush),
-                                        typeof(MusicSelectionList),
+                                        typeof(MusicSelectionListItem),
                                         new PropertyMetadata(Application.Current.FindResource("ArtistName_List")));
-
-        public SolidColorBrush PrimaryColor
-        {
-            get => (SolidColorBrush)GetValue(ITEM_SONGS);
-            set => SetValue(ITEM_SONGS, value);
-        }
-        public SolidColorBrush SecondaryColor
-        {
-            get => (SolidColorBrush)GetValue(ITEM_ARTIST);
-            set => SetValue(ITEM_ARTIST, value);
-        }
         /// <summary>
         /// 选中标识颜色
         /// </summary>
         public SolidColorBrush MarkColor
         {
             get => (SolidColorBrush)GetValue(ITEM_SELECTED_MARK);
-            set => SetValue(ITEM_ARTIST, value);
+            set => SetValue(ITEM_SELECTED_MARK, value);
         }
 
         public MusicSelectionListItem()
         {
             InitializeComponent();
+            ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
+            ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
         }
 
-        private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
         {
-            Delegation.RemovingItem?.Invoke((sender as Button).DataContext);
+            if (obj == null) return;
+            Foreground = obj.Foreground;
+            MarkColor = obj.Foreground;
+            if (SelectedMark.Background != null)
+                SetChosen();
         }
 
         public void SetChosen()
@@ -70,5 +56,14 @@ namespace Lunalipse.Presentation.LpsComponent
             SelectedMark.Background = null;
         }
 
+        private void MusicRemove(object sender, RoutedEventArgs e)
+        {
+            Delegation.RemovingItem?.Invoke((sender as Button).DataContext);
+        }
+
+        private void AddCatalogueBelonging(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Delegation.AddToNewCatalogue?.Invoke((sender as Button).DataContext);
+        }
     }
 }

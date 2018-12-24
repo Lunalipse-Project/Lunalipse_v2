@@ -6,6 +6,12 @@ using Lunalipse.Common.Interfaces.IMetadata;
 using Lunalipse.Core.Console;
 using Lunalipse.Common.Interfaces.IConsole;
 using Lunalipse.Common.Interfaces.ICache;
+using Lunalipse.Core.Cache;
+using System;
+using Lunalipse.Core.Metadata;
+using Lunalipse.Core.I18N;
+using Lunalipse.Common.Generic.Cache;
+using Lunalipse.Utilities;
 
 namespace Lunalipse.Core.PlayList
 {
@@ -16,19 +22,22 @@ namespace Lunalipse.Core.PlayList
         static readonly object mlpLock = new object();
         internal static event MusicDeleted OnMusicDeleted;
 
-        public static MusicListPool INSATNCE
+        CacheHub cacheSystem = CacheHub.INSTANCE();
+
+        LunalipseLogger Log;
+
+        IMediaMetadataReader immdr = null;
+
+        public static MusicListPool INSATNCE(IMediaMetadataReader immdr = null)
         {
-            get
+            if (mlpInstance == null)
             {
-                if(mlpInstance == null)
+                lock (mlpLock)
                 {
-                    lock(mlpLock)
-                    {
-                        mlpInstance = mlpInstance ?? new MusicListPool();
-                    }
+                    mlpInstance = mlpInstance ?? new MusicListPool(immdr);
                 }
-                return mlpInstance;
             }
+            return mlpInstance;
         }
 
         private CataloguePool CPool;
@@ -41,16 +50,18 @@ namespace Lunalipse.Core.PlayList
             }
         }
 
-        private MusicListPool()
+        private MusicListPool(IMediaMetadataReader immdr)
         {
             CPool = CataloguePool.INSATNCE;
+            this.immdr = immdr ?? this.immdr;
             if (!CPool.Exists(x => x.MainCatalogue == true || x.Name.Equals("CORE_CATALOGUE_AllMusic")))
                 CPool.AddCatalogue(new Catalogue("CORE_CATALOGUE_AllMusic", true));
             AllMusic = CPool.MainCatalogue;
             ConsoleAdapter.INSTANCE.RegisterComponent("lpslist", this);
+            Log = LunalipseLogger.GetLogger();
         }
 
-        public void AddToPool(string dirpath, IMediaMetadataReader immr)
+        public void AddToPool(string dirpath)
         {
             if (CPool.Exists(x => x.isLocationClassified == true && x.Name.Equals(dirpath)))
                 return;
@@ -58,19 +69,21 @@ namespace Lunalipse.Core.PlayList
             {
                 isLocationClassified = true
             };
+            Log.Info("Loading path \"{0}\"".FormateEx(dirpath));
             foreach(string fi in Directory.GetFiles(dirpath))
             {
                 if(SupportFormat.AllQualified(Path.GetExtension(fi)))
                 {
-                    MusicEntity me = immr.CreateEntity(fi);
+                    MusicEntity me = immdr.CreateEntity(fi);
                     AllMusic.AddMusic(me);
                     pathCatalogue.AddMusic(me);
                 }
             }
+            Log.Debug("{0} musics loaded".FormateEx(pathCatalogue.GetCount()));
             CPool.AddCatalogue(pathCatalogue);
         }
 
-        public void AddToPool(string[] pathes, IMediaMetadataReader immr)
+        public void AddToPool(string[] pathes)
         {
             foreach(string s in pathes)
             {
@@ -84,7 +97,7 @@ namespace Lunalipse.Core.PlayList
                 {
                     if (SupportFormat.AllQualified(Path.GetExtension(fi)))
                     {
-                        MusicEntity me = immr.CreateEntity(fi);
+                        MusicEntity me = immdr.CreateEntity(fi);
                         AllMusic.AddMusic(me);
                         pathCatalogue.AddMusic(me);
                     }
@@ -164,11 +177,11 @@ namespace Lunalipse.Core.PlayList
             AllMusic.DeleteMusic(entity);
         }
 
-        public bool AddFileToPool(string MediaPath, IMediaMetadataReader immr)
+        public bool AddFileToPool(string MediaPath)
         {
             if (SupportFormat.AllQualified(Path.GetExtension(MediaPath)))
             {
-                AllMusic.AddMusic(immr.CreateEntity(MediaPath));
+                AllMusic.AddMusic(immdr.CreateEntity(MediaPath));
                 return true;
             }
             return false;
@@ -205,6 +218,24 @@ namespace Lunalipse.Core.PlayList
         public List<MusicEntity> getListObject()
         {
             return Musics;
+        }
+
+        public void LoadAllMusics()
+        {
+            if (cacheSystem.ComponentCacheExists(CacheType.MUSIC_CATALOGUE_CACHE))
+            {
+                foreach (Catalogue cat in cacheSystem.RestoreObjects<Catalogue>(
+                    x => x.markName == "CATALOGUE",
+                    CacheType.MUSIC_CATALOGUE_CACHE))
+                {
+                    CPool.AddCatalogue(cat);
+                }
+            }
+            else
+            {
+                //查看是否存在用户设置
+                //if(cacheSystem.ComponentCacheExists(CacheType.))
+            }
         }
     }
 }

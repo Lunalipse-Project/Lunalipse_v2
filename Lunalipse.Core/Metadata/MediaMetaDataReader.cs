@@ -24,7 +24,7 @@ namespace Lunalipse.Core.Metadata
                 Album = media.Tag.Album,
                 Artist = media.Tag.Performers,
                 Extension = Path.GetExtension(path),
-                Name = Path.GetFileNameWithoutExtension(path),
+                Name = string.IsNullOrEmpty(media.Tag.Title) ? Path.GetFileNameWithoutExtension(path) : media.Tag.Title,
                 Year = media.Tag.Year.ToString(),
                 Path = path,
             };

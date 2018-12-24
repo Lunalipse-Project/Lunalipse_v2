@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Lunalipse.Common.Data;
 using Lunalipse.Core.Cache;
+using Lunalipse.Core.GlobalSetting;
 using Lunalipse.Core.I18N;
 using Lunalipse.Core.Metadata;
 using Lunalipse.Core.PlayList;
@@ -22,7 +23,7 @@ namespace LunalipseCoreTest
         [TestInitialize]
         public void Initialize()
         {
-            mlp = MusicListPool.INSATNCE;
+            //mlp = MusicListPool.INSATNCE();
             //cpl = CataloguePool.INSATNCE;
             mmdr = new MediaMetaDataReader(new I18NConvertor());
             //mlp.AddToPool(@"F:\M2\", mmdr);
@@ -65,6 +66,23 @@ namespace LunalipseCoreTest
             Console.Write(res=ch.CacheTo(jets, wwu));
             JSONExportTestSet jets_res = ch.RestoreTo<JSONExportTestSet>(JObject.Parse(res)["ctx"]);
             Assert.IsNotNull(jets_res);
+        }
+
+        [TestMethod]
+        public void SettingSaving()
+        {
+            //GSetting gs = GSetting.INSTANCE;
+            //gs.MusicBaseDir.Add(@"F:\M2");
+            //GlobalSettingHelper<GSetting>.INSTANCE.UseLZ78Compress = false;
+            //GlobalSettingHelper<GSetting>.INSTANCE.SaveSetting(gs);
+        }
+        [TestMethod]
+        public void SettingReading()
+        {
+            GlobalSettingHelper<GSetting>.INSTANCE.UseLZ78Compress = false;
+            GSetting gs = GlobalSettingHelper<GSetting>.INSTANCE.ReadSetting();
+            Assert.IsNotNull(gs);
+            PrintClass(gs.GetType(),gs);
         }
 
         private void PrintClass(Type t, object instance)

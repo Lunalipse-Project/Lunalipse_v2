@@ -19,16 +19,16 @@
                 <RowDefinition Height="0.6*"></RowDefinition>
                 <RowDefinition Height="0.4*"></RowDefinition>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" Content="{Binding MusicName}" FontSize="{StaticResource FontNormal}"  Margin="5,2,0,0" Padding="0" VerticalAlignment="Bottom" Foreground="{Binding PrimaryColor, ElementName=MUSICLST_ITEM}"></Label>
-            <Label Grid.Row="1" Content="{Binding ArtistFrist}" FontSize="{StaticResource FontSmall}" Margin="10,2,0,0" Padding="0" VerticalAlignment="Top" Foreground="{Binding SecondaryColor, ElementName=MUSICLST_ITEM}"></Label>
+            <Label Grid.Row="0" Content="{Binding MusicName}" FontSize="{StaticResource FontNormal}"  Margin="5,2,0,0" Padding="0" VerticalAlignment="Bottom" Foreground="{Binding Foreground, ElementName=MUSICLST_ITEM}" Opacity="0.85"></Label>
+            <Label Grid.Row="1" Content="{Binding ArtistFrist}" FontSize="{StaticResource FontSmall}" Margin="10,2,0,0" Padding="0" VerticalAlignment="Top" Foreground="{Binding Foreground, ElementName=MUSICLST_ITEM}" Opacity="0.7"></Label>
         </Grid>
         <Grid Grid.Column="2" VerticalAlignment="Center" Height="auto">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.5*"></ColumnDefinition>
                 <ColumnDefinition Width="0.5*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Width="35" Height="35" Foreground="{Binding Path=Foreground, ElementName=MUSICLST_ITEM}" Style="{StaticResource IconButton}" Content="{StaticResource AddToList}" FontSize="{StaticResource IconLarge}" Click="Button_Click"></Button>
-            <Button Grid.Column="1" Width="35" Height="35" Foreground="{Binding Path=Foreground, ElementName=MUSICLST_ITEM}" Style="{StaticResource IconButton}" Content="{StaticResource Delete}" FontSize="{StaticResource IconLarge}"></Button>
+            <Button Grid.Column="0" Width="35" Height="35" Foreground="{Binding Path=Foreground, ElementName=MUSICLST_ITEM}" Style="{StaticResource IconButton}" Content="{StaticResource AddToList}" FontSize="{StaticResource IconLarge}" Click="AddCatalogueBelonging"></Button>
+            <Button Grid.Column="1" Width="35" Height="35" Foreground="{Binding Path=Foreground, ElementName=MUSICLST_ITEM}" Style="{StaticResource IconButton}" Content="{StaticResource Close}" FontSize="{StaticResource IconLarge}" Click="MusicRemove"></Button>
         </Grid>
         <Grid Grid.Column="0" x:Name="SelectedMark">
         </Grid>
