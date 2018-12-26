@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Lunalipse.Common.Data;
 
 namespace Lunalipse.Core.I18N
 {
@@ -13,24 +14,7 @@ namespace Lunalipse.Core.I18N
     /// </summary>
     public class I18NPages : II18NPages
     {
-        static volatile I18NPages p_insatnce;
-        static readonly object p_lock = new object();
-
-        public static I18NPages INSTANCE
-        {
-            get
-            {
-                if (p_insatnce == null)
-                {
-                    lock (p_lock)
-                    {
-                        p_insatnce = p_insatnce ?? new I18NPages();
-                    }
-                }
-                return p_insatnce;
-            }
-        }
-        private I18NPages() {}
+        public I18NPages() {}
         private Dictionary<string, II18NCollection> Pages = new Dictionary<string, II18NCollection>();
         public bool AddPage(string name, II18NCollection pageCollection)
         {
@@ -42,9 +26,14 @@ namespace Lunalipse.Core.I18N
             return Pages.Remove(name);
         }
 
-        public II18NCollection GetPage(string pageName)
+        public void Clear()
         {
-            if (Pages.ContainsKey(pageName)) return Pages[pageName];
+            Pages.Clear();
+        }
+
+        public II18NCollection GetPage(SupportedPages pageName)
+        {
+            if (Pages.ContainsKey(pageName.ToString())) return Pages[pageName.ToString()];
             return null;
         }
     }

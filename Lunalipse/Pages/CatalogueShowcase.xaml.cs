@@ -1,5 +1,6 @@
 ﻿using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Core.PlayList;
+using Lunalipse.I18N;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,11 +28,12 @@ namespace Lunalipse.Pages
 
         public event Action<Catalogue> CatalogueSelected;
 
-        public CatalogueShowCase(II18NConvertor converter)
+        public CatalogueShowCase()
         {
             InitializeComponent();
             showcase.OnCatalogueSelectChanged += Showcase_OnCatalogueSelectChanged;
-            this.converter = converter;
+            converter = TranslationManager.AquireConverter();
+            TranslationManager.OnI18NEnvironmentChanged += showcase.Translate;
             showcase.Translate(converter);
         }
 

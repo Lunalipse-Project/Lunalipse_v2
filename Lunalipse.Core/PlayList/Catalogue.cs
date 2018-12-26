@@ -116,6 +116,16 @@ namespace Lunalipse.Core.PlayList
             }
         }
 
+        public TimeSpan getTotalElapse()
+        {
+            TimeSpan total = new TimeSpan();
+            foreach(MusicEntity me in Entities)
+            {
+                total += me.EstimateDurSecond;
+            }
+            return total;
+        }
+
         public void SortByName()
         {
             Entities.Sort((a, b) => a.Name.CompareTo(b.Name));

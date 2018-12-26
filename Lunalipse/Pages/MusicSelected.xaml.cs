@@ -1,5 +1,7 @@
 ﻿using Lunalipse.Common.Data;
+using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Core.PlayList;
+using Lunalipse.I18N;
 using System;
 using System.Windows.Controls;
 
@@ -8,7 +10,7 @@ namespace Lunalipse.Pages
     /// <summary>
     /// MusicSelected.xaml 的交互逻辑
     /// </summary>
-    public partial class MusicSelected : Page
+    public partial class MusicSelected : Page, ITranslatable
     {
         public Catalogue SelectedCatalogue { get; private set; } = null;
 
@@ -16,10 +18,14 @@ namespace Lunalipse.Pages
 
         bool isRecovery = false;
 
+        II18NConvertor convertor;
+
         public MusicSelected()
         {
             InitializeComponent();
             musicListbox.ItemSelectionChanged += MusicListbox_ItemSelectionChanged;
+            convertor = TranslationManager.AquireConverter();
+            TranslationManager.OnI18NEnvironmentChanged += Translate;
             //musicListbox.OnListStatusChanged += MusicListbox_OnListStatusChanged;
         }
 
@@ -45,8 +51,14 @@ namespace Lunalipse.Pages
                 SelectedCatalogue = cata;
                 musicListbox.Catalogue = cata;
                 isRecovery = recovered;
+                musicListbox.TranslateList(convertor);
             }
             //musicListbox.SelectedIndex = cata.CurrentIndex;
+        }
+
+        public void Translate(II18NConvertor i8c)
+        {
+            musicListbox.Translate(i8c);
         }
 
         public int PlayingIndex

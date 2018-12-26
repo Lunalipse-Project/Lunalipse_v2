@@ -1,4 +1,5 @@
-﻿using Lunalipse.Common.Interfaces.II18N;
+﻿using Lunalipse.Common.Data;
+using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Common.Interfaces.IPlayList;
 using Lunalipse.Presentation.Generic;
 using Lunalipse.Presentation.LpsComponent.Parts;
@@ -167,13 +168,13 @@ namespace Lunalipse.Presentation.LpsComponent
 
         public void Translate(II18NConvertor i8c)
         {
-            EmptyTip.Content = i8c.ConvertTo("CORE_FUNC", EmptyTip.Content.ToString());
+            EmptyTip.Content = i8c.ConvertTo(SupportedPages.CORE_FUNC, EmptyTip.Content.ToString());
             IteratingCard((card) =>
             {
                 string name = card.CatalogueTitle;
                 if(name.Equals("CORE_CATALOGUE_AllMusic"))
                 {
-                    card.CatalogueTitle = i8c.ConvertTo("CORE_FUNC", "CORE_CATALOGUE_AllMusic");
+                    card.CatalogueTitle = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_AllMusic");
                     return true;
                 }
                 return false;

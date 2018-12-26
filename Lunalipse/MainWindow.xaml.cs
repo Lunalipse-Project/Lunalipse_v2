@@ -22,6 +22,7 @@ using System.Reflection;
 using System.IO;
 using System.Threading.Tasks;
 using Lunalipse.Windows;
+using Lunalipse.Common.Interfaces.II18N;
 
 namespace Lunalipse
 {
@@ -29,14 +30,13 @@ namespace Lunalipse
     /// MainWindow.xaml 的交互逻辑
     /// （测试界面）
     /// </summary>
-    public partial class MainWindow : LunalipseMainWindow
+    public partial class MainWindow : LunalipseMainWindow, ITranslatable
     {
         const int sliderSize = 200;
 
         MusicListPool mlp;
         CataloguePool CPOOL;
         MediaMetaDataReader mmdr;
-        I18NConvertor converter;
         Dialogue dia;
         CacheHub cacheSystem;
 
@@ -64,12 +64,13 @@ namespace Lunalipse
                 ByAlbum = CPOOL.GetAlbumClassfied();
                 ByArtist = CPOOL.GetArtistClassfied();
             });
+            TranslationManager.OnI18NEnvironmentChanged += Translate;
+            Translate(TranslationManager.AquireConverter());
         }
 
-        private void DoTranslate()
+        public void Translate(II18NConvertor converter)
         {
             CATALOGUES.Translate(converter);
-            //dipMusic.Translate(converter);
         }
 
         /// <summary>
@@ -80,8 +81,7 @@ namespace Lunalipse
             CPOOL = CataloguePool.INSATNCE;
             core = LpsCore.Session();
             cacheSystem = CacheHub.INSTANCE(Environment.CurrentDirectory);
-            converter = I18NConvertor.INSTANCE(I18NPages.INSTANCE);
-            mlp = MusicListPool.INSATNCE(mmdr = new MediaMetaDataReader(converter));
+            mlp = MusicListPool.INSATNCE(mmdr = new MediaMetaDataReader());
 
             mlp.AddToPool(@"F:/M2");
             mlp.CreateAlbumClasses();
@@ -116,7 +116,7 @@ namespace Lunalipse
             CATALOGUES.OnMenuButtonClicked += CATALOGUES_OnMenuButtonClicked;
             CATALOGUES.OnConfigClicked += CATALOGUES_OnConfigClicked;
 
-            showcase = new CatalogueShowCase(converter);
+            showcase = new CatalogueShowCase();
             showcase.CatalogueSelected += Showcase_CatalogueSelected;
 
             musicList = new MusicSelected();
@@ -130,7 +130,6 @@ namespace Lunalipse
             //TestPage tp = new TestPage();
             //tp.Show();
             Settings settings = new Settings();
-            settings.Translate(converter);
             settings.ShowDialog();
         }
 
@@ -291,7 +290,6 @@ namespace Lunalipse
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            DoTranslate();
             CATALOGUES.SelectedIndex = -1;
             LunalipseLogger.GetLogger().Info("Loaded complete, rendering UI");
             //cacheSystem.CacheObject(CPOOL, CacheType.MUSIC_CATALOGUE_CACHE);

@@ -64,6 +64,7 @@
     <Compile Include="Data\Errors\ErrorAudio.cs" />
     <Compile Include="Data\Errors\ErrorI18N.cs" />
     <Compile Include="Data\KeyEventProc.cs" />
+    <Compile Include="Data\SupportedPages.cs" />
     <Compile Include="Data\LyricToken.cs" />
     <Compile Include="Data\MusicEntity.cs" />
     <Compile Include="Data\MusicEntityType.cs" />

@@ -1,6 +1,8 @@
-﻿using Lunalipse.Common.Generic.GeneralSetting;
+﻿using Lunalipse.Common.Data;
+using Lunalipse.Common.Generic.GeneralSetting;
 using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Common.Interfaces.II18N;
+using Lunalipse.I18N;
 using Lunalipse.Pages.ConfigPage;
 using Lunalipse.Presentation.LpsWindow;
 using Lunalipse.Utilities;
@@ -19,6 +21,8 @@ namespace Lunalipse.Windows
             SPlanelSlider.OnSelectionChanged += SPlanelSlider_OnSelectionChanged;
             ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
             ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
+            TranslationManager.OnI18NEnvironmentChanged += Translate;
+            Translate(TranslationManager.AquireConverter());
         }
 
         private void SPlanelSlider_OnSelectionChanged(Common.Interfaces.ILpsUI.LpsDetailedListItem selected, object tag = null)
@@ -36,12 +40,13 @@ namespace Lunalipse.Windows
         {
             if (obj == null) return;
             Background = obj.Primary.SetOpacity(0.9).ToLuna();
+            SPlanelSlider.Background = obj.Primary.SetOpacity(1).ToLuna();
         }
 
         public void Translate(II18NConvertor i8c)
         {
             SPlanelSlider.Translate(i8c);
-            Title = i8c.ConvertTo("CORE_FUNC", Title);
+            Title = i8c.ConvertTo(SupportedPages.CORE_FUNC, Title);
         }
 
         void RegistCatas()
@@ -52,7 +57,8 @@ namespace Lunalipse.Windows
                 {
                     CLASS = sc,
                     DetailedIcon = sc.ToString(),
-                    DetailedDescription = "CORE_SETTING_" + sc.ToString()
+                    I18NDescription = "CORE_SETTING_" + sc.ToString(),
+                    DetailedDescription = ""
                 });
             }
         }

@@ -10,5 +10,6 @@ namespace Lunalipse.Common.Interfaces.ILpsUI
     {
         public string DetailedIcon { get; set; }
         public string DetailedDescription { get; set; }
+        public string I18NDescription { get; set; }
     }
 }

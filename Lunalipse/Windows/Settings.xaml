@@ -14,7 +14,7 @@
             <ColumnDefinition Width=".25*"/>
             <ColumnDefinition Width=".75*"/>
         </Grid.ColumnDefinitions>
-        <LpsComponentBase:LpsDetailedListView Grid.Column="0" Name="SPlanelSlider" ListIconSize="{StaticResource IconLarge}" FontSize="{StaticResource FontNormal}"/>
+        <LpsComponentBase:LpsDetailedListView Grid.Column="0" Name="SPlanelSlider" ListIconSize="{StaticResource IconLarge}" FontSize="{StaticResource FontNormal}" Background="Transparent"/>
         <ScrollViewer Grid.Column="1" Margin="5,0,0,0">
             <LpsComponent:FramePresentor x:Name="SPanleViewer"></LpsComponent:FramePresentor>
         </ScrollViewer>

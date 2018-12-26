@@ -11,10 +11,8 @@ namespace Lunalipse.Core.Metadata
 {
     public class MediaMetaDataReader : IMediaMetadataReader
     {
-        II18NConvertor Converter;
-        public MediaMetaDataReader(II18NConvertor Converter)
+        public MediaMetaDataReader()
         {
-            this.Converter = Converter;
         }
         public MusicEntity CreateEntity(string path)
         {
@@ -27,14 +25,17 @@ namespace Lunalipse.Core.Metadata
                 Name = string.IsNullOrEmpty(media.Tag.Title) ? Path.GetFileNameWithoutExtension(path) : media.Tag.Title,
                 Year = media.Tag.Year.ToString(),
                 Path = path,
+                EstDuration = media.Properties.Duration
             };
             if(me.Artist==null || me.Artist.Length == 0)
             {
-                me.Artist = new string[] { Converter.ConvertTo("CORE_FUNC", "CORE_PRESENTOR_UNKNOW_ARTIST") };
+                me.Artist = new string[1] { "" };
+                me.DefaultArtist = "CORE_PRESENTOR_UNKNOW_ARTIST";
             }
             if(string.IsNullOrEmpty(me.Album))
             {
-                me.Album = Converter.ConvertTo("CORE_FUNC", "CORE_PRESENTOR_UNKNOW_ALBUM");
+                me.DefaultAlbum = "CORE_PRESENTOR_UNKNOW_ALBUM";
+                me.Album = "";
             }
             media.Dispose();
             return me;

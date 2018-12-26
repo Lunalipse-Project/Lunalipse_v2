@@ -1,5 +1,6 @@
 ﻿using Lunalipse.Common.Data.Attribute;
 using Lunalipse.Common.Interfaces.ICache;
+using System;
 using System.Runtime.Serialization;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -12,6 +13,8 @@ namespace Lunalipse.Common.Data
         public string Album, Name, ID3Name, Extension, Path, Year;
         [Cachable]
         public string[] Artist;
+        [Cachable]
+        public TimeSpan EstDuration;
 
         public string ArtistFrist
         {
@@ -37,6 +40,23 @@ namespace Lunalipse.Common.Data
             {
                 return ID3Name;
             }
+        }
+
+        public string DefaultArtist
+        {
+            get;
+            set;
+        }
+
+        public string DefaultAlbum
+        {
+            get;
+            set;
+        }
+
+        public TimeSpan EstimateDurSecond
+        {
+            get => EstDuration;
         }
     }
 }

@@ -183,9 +183,25 @@ namespace Lunalipse.Presentation.LpsComponent
 
         public void Translate(II18NConvertor i8c)
         {
-            TipMessage.Content = i8c.ConvertTo("CORE_FUNC", (string)TipMessage.Content);
-            Hint.Content = i8c.ConvertTo("CORE_FUNC", Hint.Content as string);
-            NoSongsHint.Content = i8c.ConvertTo("CORE_FUNC", NoSongsHint.Content as string);
+            TipMessage.Content = i8c.ConvertTo(SupportedPages.CORE_FUNC, (string)TipMessage.Content);
+            Hint.Content = i8c.ConvertTo(SupportedPages.CORE_FUNC, Hint.Content as string);
+            NoSongsHint.Content = i8c.ConvertTo(SupportedPages.CORE_FUNC, NoSongsHint.Content as string);
+            TranslateList(i8c);
+        }
+
+        public void TranslateList(II18NConvertor i8c)
+        {
+            foreach(MusicEntity me in Items)
+            {
+                if(!string.IsNullOrEmpty(me.DefaultAlbum))
+                {
+                    me.Album = i8c.ConvertTo(SupportedPages.CORE_FUNC, me.DefaultAlbum);
+                }
+                if(!string.IsNullOrEmpty(me.DefaultArtist))
+                {
+                    me.Artist[0] = i8c.ConvertTo(SupportedPages.CORE_FUNC, me.DefaultArtist);
+                }
+            }
         }
 
         public void StartWait()

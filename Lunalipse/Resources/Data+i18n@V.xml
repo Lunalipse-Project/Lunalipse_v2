@@ -1,40 +1,48 @@
 <LpsI18N>
     <Lang lang="CHINESE_SIM">
-        <Page key="CORE_FUNC">
-          <Key name="CORE_LBS_SynatxError">一个常规的语法错误</Key>
-          <Key name="CORE_LBS_InfiniteCall">检测到循环调用</Key>
-          <Key name="CORE_LBS_PragmaNotFound">宏未定义</Key>
-          <Key name="CORE_LBS_FileNotFound">没有这个文件</Key>
-          <Key name="CORE_LBS_NoSuchPara">请提供{0}所对应的形参</Key>
-          <Key name="CORE_LBS_DataTypeOverflow">数据结构溢出</Key>
-          <Key name="CORE_LBS_InvalidCommandExecutor">使用了非法的指令执行器定义</Key>
+      <Page key="CORE_FUNC">
+        <Key name="CORE_LBS_SynatxError">一个常规的语法错误</Key>
+        <Key name="CORE_LBS_InfiniteCall">检测到循环调用</Key>
+        <Key name="CORE_LBS_PragmaNotFound">宏未定义</Key>
+        <Key name="CORE_LBS_FileNotFound">没有这个文件</Key>
+        <Key name="CORE_LBS_NoSuchPara">请提供{0}所对应的形参</Key>
+        <Key name="CORE_LBS_DataTypeOverflow">数据结构溢出</Key>
+        <Key name="CORE_LBS_InvalidCommandExecutor">使用了非法的指令执行器定义</Key>
           
-          <Key name="CORE_CATALOGUE_LOCATION">所有分类</Key>
-          <Key name="CORE_CATALOGUE_AllMusic">所有位置</Key>
-          <Key name="CORE_CATALOGUE_ALBUM">所有专辑</Key>
-          <Key name="CORE_CATALOGUE_PLAYLIST">我的歌单</Key>
-          <Key name="CORE_CATALOGUE_ARTSIT">所有艺术家</Key>
-          <Key name="CORE_CATALOGUE_NO_ITEMS">没有任何的歌单或专辑</Key>
-          <Key name="CORE_CATALOGUE_CONFIG">设置</Key>
-          <Key name="CORE_MUSICLIST_NO_ITEMS">此歌单中暂无歌曲</Key>
+        <Key name="CORE_CATALOGUE_ALL_LOCATION">所有分类</Key>
+        <Key name="CORE_CATALOGUE_AllMusic">所有位置</Key>
+        <Key name="CORE_CATALOGUE_ALBUM_COLLECTION">所有专辑</Key>
+        <Key name="CORE_CATALOGUE_USER_PLAYLIST">我的歌单</Key>
+        <Key name="CORE_CATALOGUE_ARTIST_COLLECTION">所有艺术家</Key>
+        <Key name="CORE_CATALOGUE_NO_ITEMS">没有任何的歌单或专辑</Key>
+        <Key name="CORE_CATALOGUE_GENERAL_CONFIG">设置</Key>
+        <Key name="CORE_MUSICLIST_NO_ITEMS">此歌单中暂无歌曲</Key>
 
-          <Key name="CORE_SETTING">配置 Lunalipse</Key>
-          <Key name="CORE_SETTING_SETTING_GENERAL">通用</Key>
-          <Key name="CORE_SETTING_SETTING_PERFORMANCE">外观与性能</Key>
-          <Key name="CORE_SETTING_SETTING_NETWORKING">网络</Key>
-          <Key name="CORE_SETTING_SETTING_DEVELOPER">开发者</Key>
-          <Key name="CORE_SETTING_SETTING_SECURITY">安全</Key>       
+        <Key name="CORE_SETTING">配置 Lunalipse</Key>
+        <Key name="CORE_SETTING_SETTING_GENERAL">通用</Key>
+        <Key name="CORE_SETTING_SETTING_PERFORMANCE">外观与性能</Key>
+        <Key name="CORE_SETTING_SETTING_NETWORKING">网络</Key>
+        <Key name="CORE_SETTING_SETTING_DEVELOPER">开发者</Key>
+        <Key name="CORE_SETTING_SETTING_SECURITY">安全</Key>
 
-          <!-- Music Presentor Area -->
-          <Key name="CORE_PRESENTOR_UNKNOW_ARTIST">未知艺术家</Key>
-          <Key name="CORE_PRESENTOR_UNKNOW_ALBUM">未知专辑</Key>
+        <!-- Music Presentor Area -->
+        <Key name="CORE_PRESENTOR_UNKNOW_ARTIST">未知艺术家</Key>
+        <Key name="CORE_PRESENTOR_UNKNOW_ALBUM">未知专辑</Key>
           
-          <Key name="CORE_LOADING">正在加载 ...</Key>
-        </Page>
-      
+        <Key name="CORE_LOADING">正在加载 ...</Key>
+      </Page>
+      <Page key="CORE_GENERAL_SETTING">
+        <Key name="CORE_SETTING_MUSIC_SOURCES">我们将会在以下地方查找音乐</Key>
+        <Key name="CORE_SETTING_FILE_COUNT">音乐文件个数：</Key>
+        <Key name="CORE_SETTING_TOTAL_DUR">估计的总时长：</Key>
+        <Key name="CORE_SETTING_BTN_ADDNEW">增加位置</Key>
+        <Key name="CORE_SETTING_BTN_REMOVE">删除所选位置</Key>
+        <Key name="CORE_SETTING_FULL_PATH">完整路径</Key>
+        
+      </Page>
       <!-- Online Music Library -->
-        <Page key="CORE_CLOUD_LIB">
+      <Page key="CORE_CLOUD_LIB">
           
-        </Page>
+      </Page>
     </Lang>
 </LpsI18N>

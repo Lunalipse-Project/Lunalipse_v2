@@ -21,7 +21,7 @@
                 <RowDefinition Height="48"/>
             </Grid.RowDefinitions>
             <local:CatalogueSelectionListItem Grid.Row="0" x:Name="MainCatalogue" Background="{StaticResource ItemUnhoverColorDefault}" Foreground="{Binding Path=Foreground, ElementName=CATA_LIST}"
-                                              Width="auto" Height="48" MouseDown="ItemConatiner_MouseDown" Tag="MAINCATA">
+                                              Width="auto" Height="48" MouseDown="ItemConatiner_MouseDown" Tag="ALL_LOCATION">
                 <local:CatalogueSelectionListItem.Triggers>
                     <EventTrigger RoutedEvent="UIElement.MouseEnter">
                         <EventTrigger.Actions>

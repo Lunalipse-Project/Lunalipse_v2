@@ -1,4 +1,5 @@
-﻿using Lunalipse.Common.Generic.Themes;
+﻿using Lunalipse.Common.Data;
+using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Common.Interfaces.ILpsUI;
 using Lunalipse.Presentation.Generic;
@@ -54,15 +55,6 @@ namespace Lunalipse.Presentation.LpsComponent.Base
             InitializeComponent();
             DataContext = this;
             ITEMS.ItemsSource = Classes;
-
-            ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
-            ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
-        }
-
-        private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
-        {
-            if (obj == null) return;
-            ITEMS.Background = obj.Primary.SetOpacity(1).ToLuna();
         }
 
         public SolidColorBrush ItemHovered
@@ -85,7 +77,8 @@ namespace Lunalipse.Presentation.LpsComponent.Base
         {
             foreach (LpsDetailedListItem ldi in Classes)
             {
-                ldi.DetailedDescription = i8c.ConvertTo("CORE_FUNC", ldi.DetailedDescription);
+                if (string.IsNullOrEmpty(ldi.I18NDescription)) continue;
+                ldi.DetailedDescription = i8c.ConvertTo(SupportedPages.CORE_FUNC, ldi.I18NDescription);
             }
             ITEMS.UpdateLayout();
         }

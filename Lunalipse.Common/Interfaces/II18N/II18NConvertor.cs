@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lunalipse.Common.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Lunalipse.Common.Interfaces.II18N
 {
     public interface II18NConvertor
     {
-        string ConvertTo(string page, string key);
+        string ConvertTo(SupportedPages page, string key);
     }
 }

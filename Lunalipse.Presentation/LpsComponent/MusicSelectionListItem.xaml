@@ -20,7 +20,7 @@
                 <RowDefinition Height="0.4*"></RowDefinition>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Content="{Binding MusicName}" FontSize="{StaticResource FontNormal}"  Margin="5,2,0,0" Padding="0" VerticalAlignment="Bottom" Foreground="{Binding Foreground, ElementName=MUSICLST_ITEM}" Opacity="0.85"></Label>
-            <Label Grid.Row="1" Content="{Binding ArtistFrist}" FontSize="{StaticResource FontSmall}" Margin="10,2,0,0" Padding="0" VerticalAlignment="Top" Foreground="{Binding Foreground, ElementName=MUSICLST_ITEM}" Opacity="0.7"></Label>
+            <Label Grid.Row="1" Tag="{Binding DefaultArtist}" Content="{Binding ArtistFrist}" FontSize="{StaticResource FontSmall}" Margin="10,2,0,0" Padding="0" VerticalAlignment="Top" Foreground="{Binding Foreground, ElementName=MUSICLST_ITEM}" Opacity="0.7"></Label>
         </Grid>
         <Grid Grid.Column="2" VerticalAlignment="Center" Height="auto">
             <Grid.ColumnDefinitions>

@@ -58,14 +58,14 @@ namespace Lunalipse.Core.I18N
             }
         }
 
-        public void GetPages(SupportLanguages Lang)
+        public I18NPages GetPages(SupportLanguages Lang)
         {
-            I18NPages i18np = I18NPages.INSTANCE;
+            I18NPages i18np = new I18NPages();
             if (!xd.HasChildNodes)
             {
                 Log.Error("config file is empty or damaged");
                 ErrorDelegation.OnErrorRaisedI18N?.Invoke(ErrorI18N.DAMAGED_FILE_EMPTY);
-                return;
+                return null;
             }
             XmlNode xn = xd.SelectSingleNode("/LpsI18N/Lang[@lang='{0}']".FormateEx(Lang.ToString()));
             if(xn != null)
@@ -86,7 +86,7 @@ namespace Lunalipse.Core.I18N
                 Log.Error("config file is empty or damaged");
                 ErrorDelegation.OnErrorRaisedI18N?.Invoke(ErrorI18N.DAMAGED_FILE_LANG_MISSING, Lang.ToString());
             }
-            return;
+            return i18np;
         } 
     }
 }

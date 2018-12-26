@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Utilities;
+using Lunalipse.Common.Data;
 
 namespace Lunalipse.Presentation.LpsComponent
 {
@@ -118,7 +119,7 @@ namespace Lunalipse.Presentation.LpsComponent
                 }
                 switch ((string)csli.Tag)
                 {
-                    case "MAINCATA":
+                    case "ALL_LOCATION":
                         __index = -1;
                         TAG = CatalogueSections.BY_LOCATION;
                         break;
@@ -142,11 +143,11 @@ namespace Lunalipse.Presentation.LpsComponent
 
         public void Translate(II18NConvertor i8c)
         {
-            MainCatalogue.CatalogueText = i8c.ConvertTo("CORE_FUNC", "CORE_CATALOGUE_LOCATION");
-            AlbumCollection.CatalogueText = i8c.ConvertTo("CORE_FUNC", "CORE_CATALOGUE_ALBUM");
-            UserPlaylist.CatalogueText = i8c.ConvertTo("CORE_FUNC", "CORE_CATALOGUE_PLAYLIST");
-            ArtistCollection.CatalogueText = i8c.ConvertTo("CORE_FUNC", "CORE_CATALOGUE_ARTSIT");
-            ConfigEntry.CatalogueText = i8c.ConvertTo("CORE_FUNC", "CORE_CATALOGUE_CONFIG");
+            MainCatalogue.CatalogueText = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_"+MainCatalogue.Tag);
+            AlbumCollection.CatalogueText = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_" + AlbumCollection.Tag);
+            UserPlaylist.CatalogueText = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_" + UserPlaylist.Tag);
+            ArtistCollection.CatalogueText = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_" + ArtistCollection.Tag);
+            ConfigEntry.CatalogueText = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_" + ConfigEntry.Tag);
             DetailedMenu.CatalogueText = "";
         }
 

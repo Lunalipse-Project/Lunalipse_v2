@@ -6,6 +6,7 @@ using Lunalipse.Core.Cache;
 using Lunalipse.Core.I18N;
 using Lunalipse.Core.PlayList;
 using Lunalipse.Core.Theme;
+using Lunalipse.I18N;
 using System;
 using System.Reflection;
 using System.Windows;
@@ -55,14 +56,7 @@ namespace Lunalipse
         void InitializeI18NEnvironemnt()
         {
             Log.Info("Perpearing i18n environemnt");
-            if (!I18T.LoadFromFile(string.Format(@"Data\i18n{0}{1}", 
-                resourcesHandler.version, 
-                ResourcesHandler.LUNALIPSE_DATA_FILE_EXTENSION)))
-            {
-                Log.Warning("Unable to load i18n environment, shutting down Lunalipse");
-                Current.Shutdown();
-            }
-            I18T.GetPages(SupportLanguages.CHINESE_SIM);
+            TranslationManager.Instance.SetLanguage(SupportLanguages.CHINESE_SIM);
         }
 
         void RestoringCaches()

@@ -2,11 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Lunalipse.Presentation.Themes">
     <Style TargetType="{x:Type Button}" x:Key="GenericButton">
-        <Setter Property="BorderBrush">
-            <Setter.Value>
-                <SolidColorBrush Color="Transparent"></SolidColorBrush>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Opacity" Value="0.7"/>
         <Setter Property="BorderThickness">
             <Setter.Value>
                 <Thickness>0,0,0,0</Thickness>
@@ -16,18 +12,18 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border Background="{TemplateBinding Background}">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                               Width="{TemplateBinding Width}" Padding="{TemplateBinding Padding}"
+                               Foreground="{TemplateBinding Foreground}">
+                            <ContentPresenter/>
+                        </Label>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background">
-                    <Setter.Value>
-                        <SolidColorBrush Opacity="0.3"></SolidColorBrush>
-                    </Setter.Value>
-                </Setter>
+                <Setter Property="Opacity" Value="1"></Setter>
             </Trigger>
         </Style.Triggers>
     </Style>

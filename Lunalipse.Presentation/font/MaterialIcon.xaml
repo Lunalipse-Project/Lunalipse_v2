@@ -47,6 +47,8 @@
     <System:String x:Key="Disabled">&#xf118;</System:String>
     
     <System:String x:Key="Menu">&#xf197;</System:String>
+    
+    <System:String x:Key="FolderStar">&#xf227;</System:String>
 
     <!-- Play Mode -->
     <System:String x:Key="RepeatList">&#xf3ae;</System:String>
