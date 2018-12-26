@@ -54,6 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConst.cs" />
+    <Compile Include="Bus\Event\EventBus.cs" />
+    <Compile Include="Bus\Event\EventBusTypes.cs" />
     <Compile Include="Data\Attribute\Cachable.cs" />
     <Compile Include="Data\Attribute\ExportedSettingItem.cs" />
     <Compile Include="Data\BehaviorScript\ActionToken.cs" />

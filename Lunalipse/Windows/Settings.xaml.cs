@@ -33,6 +33,10 @@ namespace Lunalipse.Windows
                 case SettingCatalogues.SETTING_GENERAL:
                     SPanleViewer.ShowContent(new GeneralConfig(), true);
                     break;
+
+                case SettingCatalogues.SETTING_ACTION_SAVE_CFG:
+                    SPanleViewer.ShowContent(new SaveAndApply(), true);
+                    break;
             }
         }
 

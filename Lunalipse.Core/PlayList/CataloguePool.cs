@@ -33,15 +33,25 @@ namespace Lunalipse.Core.PlayList
         [Cachable]
         List<Catalogue> CatalogueBase = new List<Catalogue>();
 
+        Dictionary<string, string> LocationTable = new Dictionary<string, string>();
+
+
         public void AddCatalogue(Catalogue catalogue)
         {
             if (CatalogueBase.FindIndex(x => x.MainCatalogue == catalogue.MainCatalogue && x.MainCatalogue == true) != -1)
                 return;
             CatalogueBase.Add(catalogue);
+
+            if (catalogue.isLocationClassified)
+            {
+                LocationTable.Add(catalogue.Name, catalogue.UUID);
+            }
         }
 
         public bool RemoveCatalogue(Catalogue catalogue)
         {
+            if (catalogue.isLocationClassified)
+                LocationTable.Remove(catalogue.Name);
             return CatalogueBase.Remove(catalogue);
         }
 
@@ -52,7 +62,15 @@ namespace Lunalipse.Core.PlayList
 
         public void RemoveCatalogue(string Uuid)
         {
-            CatalogueBase.RemoveAll(x => x.UUID.Equals(Uuid) && !x.MainCatalogue);
+            Catalogue removing = CatalogueBase.Find(x => x.UUID.Equals(Uuid));
+            if (removing.isLocationClassified)
+                LocationTable.Remove(removing.Name);
+            CatalogueBase.Remove(removing);
+        }
+
+        public void RemoveChildrenCatalogue(string ParentUuid)
+        {
+            CatalogueBase.RemoveAll(x => x.ParentUUID.Equals(ParentUuid));
         }
 
         public List<Catalogue> SearchCatalogue(string Name)
@@ -141,6 +159,16 @@ namespace Lunalipse.Core.PlayList
         public bool Exists(Func<Catalogue, bool> condition)
         {
             return CatalogueBase.Exists(x => condition(x));
+        }
+
+        public string getUuidByLocation(string location)
+        {
+            return LocationTable[location];
+        }
+
+        public void AddLocation(string location,string Uuid)
+        {
+            LocationTable.Add(location, Uuid);
         }
     }
 }

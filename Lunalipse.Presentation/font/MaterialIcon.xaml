@@ -87,6 +87,8 @@
     
     <System:String x:Key="SETTING_SECURITY">&#xf1c8;</System:String>
 
+    <System:String x:Key="SETTING_ACTION_SAVE_CFG">&#xf297;</System:String>
+
     <System:String x:Key="Music_Collection">&#xf14c;</System:String>
 
 

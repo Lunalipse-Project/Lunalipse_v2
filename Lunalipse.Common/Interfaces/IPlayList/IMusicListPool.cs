@@ -12,8 +12,8 @@ namespace Lunalipse.Common.Interfaces.IPlayList
     public interface IMusicListPool
     {
         void LoadAllMusics();
-        void AddToPool(string path);
-        void AddToPool(string[] pathes);
+        string AddToPool(string path);
+        List<string> AddToPool(string[] pathes);
         void DeleteMusic(MusicEntity entity, bool complete);
         bool AddFileToPool(string MediaPath);
         List<MusicEntity> GetMusics(string any, MusicEntityType metyn);

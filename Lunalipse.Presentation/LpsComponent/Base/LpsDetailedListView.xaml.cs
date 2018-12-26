@@ -138,6 +138,16 @@ namespace Lunalipse.Presentation.LpsComponent.Base
             Classes.Add(sc);
         }
 
+        public void Clear()
+        {
+            Classes.Clear();
+        }
+
+        public void Remove(LpsDetailedListItem sc)
+        {
+            Classes.Remove(sc);
+        }
+
         public LpsDetailedItem GetContainer(int index)
         {
             var container = (ITEMS.ItemContainerGenerator

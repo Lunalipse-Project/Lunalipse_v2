@@ -1,4 +1,5 @@
-﻿using Lunalipse.Common.Data;
+﻿using Lunalipse.Common.Bus.Event;
+using Lunalipse.Common.Data;
 using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Core.PlayList;
@@ -19,6 +20,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WinForms = System.Windows.Forms;
 
 namespace Lunalipse.Pages.ConfigPage
 {
@@ -27,25 +29,39 @@ namespace Lunalipse.Pages.ConfigPage
     /// </summary>
     public partial class GeneralConfig : Page, ITranslatable
     {
-        CataloguePool cp;
+        CataloguePool CP;
         GLS GlobalSetting;
+        MusicListPool MLP;
+        EventBus Bus;
 
         const int BUTTON_NUM = 2;
         const int Label_NUM = 4;
+
+        // 保存增加的Catalogue的UUID, 方便用户撤销操作
+        List<string> AddedCatalogues;
 
         public GeneralConfig()
         {
             InitializeComponent();
 
-            cp = CataloguePool.INSATNCE;
+            //获取关键部件的实例
+            CP = CataloguePool.INSATNCE;
+            MLP = MusicListPool.INSATNCE();
             GlobalSetting = GLS.INSTANCE;
+            Bus = EventBus.Instance;
 
+            //变量初始化
+            AddedCatalogues = new List<string>();
+
+            //主题监听器订阅
             ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
             ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
 
+            //界面语言监听器订阅
             TranslationManager.OnI18NEnvironmentChanged += Translate;
             Translate(TranslationManager.AquireConverter());
 
+            //其他监听器
             MusicPath.OnSelectionChanged += MusicPath_OnSelectionChanged;
 
             
@@ -73,16 +89,22 @@ namespace Lunalipse.Pages.ConfigPage
             }
         }
 
+        /// <summary>
+        /// 读取现有的配置，用于更新界面上的设置项
+        /// </summary>
         void ReadManifest()
         {
-            foreach(Catalogue c in cp.GetLocationClassified())
+            MusicPath.Clear();
+            foreach(Catalogue c in CP.GetLocationClassified())
             {
                 MusicPath.Add(new MusicPathSturc()
                 {
                     TotalTime = c.getTotalElapse(),
                     DetailedDescription = c.Name,
+                    UUID = c.UUID,
                     FileCount = c.GetCount()
                 });
+                AddedCatalogues.Add(c.UUID);
             }
             //MusicPath.SelectedIndex = 0;
         }
@@ -100,6 +122,43 @@ namespace Lunalipse.Pages.ConfigPage
         private void GeneralConfigPage_Loaded(object sender, RoutedEventArgs e)
         {
             ReadManifest();
+        }
+
+        // Add a new location
+        private void ST_TN_F5_Click(object sender, RoutedEventArgs e)
+        {
+            WinForms.FolderBrowserDialog folderBrowser = new WinForms.FolderBrowserDialog();
+            if(folderBrowser.ShowDialog() == WinForms.DialogResult.OK)
+            {
+                string folderChoice = folderBrowser.SelectedPath;
+                if (!GlobalSetting.MusicBaseDirs.Exists((x) => folderChoice == x))
+                {
+                    GlobalSetting.MusicBaseDirs.Add(folderChoice);
+                    // 保存新增的Catalogue的uuid。
+                    AddedCatalogues.Add(MLP.AddToPool(folderChoice));
+                    ReadManifest();
+                    // 发送全局广播，标志着添加动作已完成
+                    // C_UPD : Catalogues以添加，其他界面可以进行刷新。
+                    Bus.BoardcastAction(EventBusTypes.ON_ACTION_COMPLETE, "C_UPD");
+                }
+            }
+        }
+
+        // 移除一个位置
+        private void ST_TN_F6_Click(object sender, RoutedEventArgs e)
+        {
+            MusicPathSturc mps = MusicPath.SelectedItem as MusicPathSturc;
+            AddedCatalogues.Remove(mps.UUID);
+            string directory = mps.DetailedDescription;
+            // 从所有歌曲结合中移除
+            MLP.Musics.RemoveAll(x => System.IO.Path.GetDirectoryName(x.Path).Equals(directory));
+            // 移除所有派生对象
+            CP.RemoveChildrenCatalogue(mps.UUID);
+            // 从所有Catalogue集合中移除
+            CP.RemoveCatalogue(mps.UUID);
+            // 从列表中移除
+            MusicPath.Remove(mps);
+            Bus.BoardcastAction(EventBusTypes.ON_ACTION_COMPLETE, "C_UPD");
         }
     }
 }

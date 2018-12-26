@@ -15,6 +15,10 @@ namespace Lunalipse.Common.Data
         public string[] Artist;
         [Cachable]
         public TimeSpan EstDuration;
+        [Cachable]
+        public bool AlbumClassfied = false;
+        [Cachable]
+        public bool ArtistClassfied = false;
 
         public string ArtistFrist
         {
@@ -58,5 +62,6 @@ namespace Lunalipse.Common.Data
         {
             get => EstDuration;
         }
+
     }
 }

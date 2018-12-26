@@ -24,6 +24,7 @@
         <Key name="CORE_SETTING_SETTING_NETWORKING">网络</Key>
         <Key name="CORE_SETTING_SETTING_DEVELOPER">开发者</Key>
         <Key name="CORE_SETTING_SETTING_SECURITY">安全</Key>
+        <Key name="CORE_SETTING_SETTING_ACTION_SAVE_CFG">应用并保存</Key>
 
         <!-- Music Presentor Area -->
         <Key name="CORE_PRESENTOR_UNKNOW_ARTIST">未知艺术家</Key>

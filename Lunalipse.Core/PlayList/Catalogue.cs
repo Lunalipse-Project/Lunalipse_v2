@@ -60,6 +60,12 @@ namespace Lunalipse.Core.PlayList
 
         public int CurrentIndex { get => Currently; }
 
+        /// <summary>
+        /// 父对象的UUID。
+        /// 该对象是从另一个对象中派生过来的。
+        /// </summary>
+        public string ParentUUID { get; set; }
+
         public List<MusicEntity> MusicList
         {
             get

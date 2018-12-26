@@ -61,10 +61,10 @@ namespace Lunalipse.Core.PlayList
             Log = LunalipseLogger.GetLogger();
         }
 
-        public void AddToPool(string dirpath)
+        public string AddToPool(string dirpath)
         {
             if (CPool.Exists(x => x.isLocationClassified == true && x.Name.Equals(dirpath)))
-                return;
+                return "";
             Catalogue pathCatalogue = new Catalogue(dirpath)
             {
                 isLocationClassified = true
@@ -81,10 +81,12 @@ namespace Lunalipse.Core.PlayList
             }
             Log.Debug("{0} musics loaded".FormateEx(pathCatalogue.GetCount()));
             CPool.AddCatalogue(pathCatalogue);
+            return pathCatalogue.UUID;
         }
 
-        public void AddToPool(string[] pathes)
+        public List<string> AddToPool(string[] pathes)
         {
+            List<string> uuids = new List<string>();
             foreach(string s in pathes)
             {
                 if (CPool.Exists(x => x.isLocationClassified == true && x.Name.Equals(s)))
@@ -102,71 +104,81 @@ namespace Lunalipse.Core.PlayList
                         pathCatalogue.AddMusic(me);
                     }
                 }
+                uuids.Add(pathCatalogue.UUID);
                 CPool.AddCatalogue(pathCatalogue);
             }
+            return uuids;
         }
 
         public void CreateAlbumClasses()
         {
-            if (AllMusic.MusicList.Count != 0)
+            if (AllMusic.MusicList.Count == 0) return;
+            List<MusicEntity> TemporaryList;
+            foreach (MusicEntity me in TemporaryList = AllMusic.MusicList.FindAll(x => !x.AlbumClassfied))
             {
-                List<string> searchedAlb = new List<string>();
-                foreach(MusicEntity me in AllMusic.MusicList)
+                Catalogue cat;
+                bool isNewCatalogue = false;
+                string alb = me.Album.Trim();
+                string location = Path.GetDirectoryName(me.Path);
+                if (!CPool.All.Exists(x => x.Name.Trim().Equals(alb) && x.isAlbumClassified))
                 {
-                    Catalogue cat;
-                    string alb = me.Album.Trim();
-                    if (!searchedAlb.Exists((x) => alb == x.Trim()))
+                    cat = new Catalogue(alb)
                     {
-                        searchedAlb.Add(alb);
-                        if (CPool.Exists(x => x.isAlbumClassified == true && x.Name.Equals(alb)))
-                            continue;
-                        cat = new Catalogue(alb)
-                        {
-                            isAlbumClassified = true
-                        };
-                    }
-                    else continue;
-                    foreach(MusicEntity me_ in AllMusic.MusicList)
-                    {
-                        if(me_.Album.Trim() == alb)
-                        {
-                            cat.AddMusic(me_);
-                        }
-                    }
-                    CPool.AddCatalogue(cat);
+                        isAlbumClassified = true,
+                        ParentUUID = CPool.getUuidByLocation(location)
+                    };
+                    isNewCatalogue = true;
                 }
+                else
+                {
+                    cat = CPool.All.Find((c) => c.isAlbumClassified && c.Name == alb);
+                }
+                foreach (MusicEntity me_ in TemporaryList)
+                {
+                    if (me_.Album.Trim() == alb)
+                    {
+                        cat.AddMusic(me_);
+                        me_.AlbumClassfied = true;
+                    }
+                }
+                if (isNewCatalogue)
+                    CPool.AddCatalogue(cat);
             }
         }
         public void CreateArtistClasses()
         {
-            if (CPool.Exists(x => x.isArtistClassified == true)) return;
-            if (AllMusic.MusicList.Count != 0)
+            //if (CPool.Exists(x => x.isArtistClassified == true)) return;
+            if (AllMusic.MusicList.Count == 0) return;
+            List<MusicEntity> TemporaryList;
+            foreach (MusicEntity me in TemporaryList = AllMusic.MusicList.FindAll(x => x.ArtistClassfied))
             {
-                List<string> searchedArt = new List<string>();
-                foreach (MusicEntity me in AllMusic.MusicList)
+                Catalogue cat;
+                string art = me.ArtistFrist.Trim();
+                bool isNewCatalogue = false;
+                string location = Path.GetDirectoryName(me.Path);
+                if (!CPool.All.Exists(x => x.Name.Trim().Equals(art) && x.isArtistClassified))
                 {
-                    Catalogue cat;
-                    string alb = me.ArtistFrist.Trim();
-                    if (!searchedArt.Exists((x) => alb == x.Trim()))
+                    cat = new Catalogue(art)
                     {
-                        searchedArt.Add(alb);
-                        if (CPool.Exists(x => x.isAlbumClassified == true && x.Name.Equals(alb)))
-                            continue;
-                        cat = new Catalogue(alb)
-                        {
-                            isArtistClassified = true
-                        };
-                    }
-                    else continue;
-                    foreach (MusicEntity me_ in AllMusic.MusicList)
-                    {
-                        if (me_.ArtistFrist.Trim() == alb)
-                        {
-                            cat.AddMusic(me_);
-                        }
-                    }
-                    CPool.AddCatalogue(cat);
+                        isArtistClassified = true,
+                        ParentUUID = CPool.getUuidByLocation(location)
+                    };
+                    isNewCatalogue = true;
                 }
+                else
+                {
+                    cat = CPool.All.Find((c) => c.Name.Equals(art) && c.isArtistClassified);
+                }
+                foreach (MusicEntity me_ in TemporaryList)
+                {
+                    if (me_.ArtistFrist.Trim() == art)
+                    {
+                        cat.AddMusic(me_);
+                        me_.ArtistClassfied = true;
+                    }
+                }
+                if (isNewCatalogue)
+                    CPool.AddCatalogue(cat);
             }
         }
 

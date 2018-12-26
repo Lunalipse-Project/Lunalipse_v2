@@ -23,6 +23,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Lunalipse.Windows;
 using Lunalipse.Common.Interfaces.II18N;
+using Lunalipse.Common.Bus.Event;
 
 namespace Lunalipse
 {
@@ -39,6 +40,7 @@ namespace Lunalipse
         MediaMetaDataReader mmdr;
         Dialogue dia;
         CacheHub cacheSystem;
+        EventBus Bus;
 
         LpsCore core;
 
@@ -58,14 +60,39 @@ namespace Lunalipse
             ExpandPanel = new DoubleAnimation(48, sliderSize, elapseTime);
             MinimizePanel = new DoubleAnimation(sliderSize, 48, elapseTime);
 
+            EventBus.OnActionProcced += EventBus_OnActionProcced; ;
+            
+            TranslationManager.OnI18NEnvironmentChanged += Translate;
+            Translate(TranslationManager.AquireConverter());
+
+            CataloguesReflesh();
+        }
+
+        private void EventBus_OnActionProcced(EventBusTypes busTypes, object Tag)
+        {
+            if(busTypes == EventBusTypes.ON_ACTION_COMPLETE)
+            {
+                switch(Tag)
+                {
+                    // 广播源：GenralConfig
+                    // 信息：Catalogue已完成添加
+                    case "C_UPD":
+                        CataloguesReflesh();
+                        break;
+                }
+            }
+        }
+
+        public void CataloguesReflesh()
+        {
             Task.Factory.StartNew(() =>
             {
+                mlp.CreateAlbumClasses();
+                mlp.CreateArtistClasses();
                 ByLocation = CPOOL.GetLocationClassified();
                 ByAlbum = CPOOL.GetAlbumClassfied();
                 ByArtist = CPOOL.GetArtistClassfied();
             });
-            TranslationManager.OnI18NEnvironmentChanged += Translate;
-            Translate(TranslationManager.AquireConverter());
         }
 
         public void Translate(II18NConvertor converter)
@@ -82,10 +109,9 @@ namespace Lunalipse
             core = LpsCore.Session();
             cacheSystem = CacheHub.INSTANCE(Environment.CurrentDirectory);
             mlp = MusicListPool.INSATNCE(mmdr = new MediaMetaDataReader());
+            Bus = EventBus.Instance;
 
-            mlp.AddToPool(@"F:/M2");
-            mlp.CreateAlbumClasses();
-            mlp.CreateArtistClasses();
+            mlp.AddToPool(@"F:\M2");
 
             #region duplicated
             //mmdr = new MediaMetaDataReader(converter);

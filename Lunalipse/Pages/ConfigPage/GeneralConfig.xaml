@@ -88,16 +88,16 @@
                             <RowDefinition Height="5px"/>
                             <RowDefinition Height=".5*"/>
                         </Grid.RowDefinitions>
-                        <Button Grid.Row="0" Style="{StaticResource GenericButton}" Name="ST_TN_F5" VerticalAlignment="Center"
+                        <Button Grid.Row="2" Style="{StaticResource GenericButton}" Name="ST_TN_F5" VerticalAlignment="Center"
                                 Foreground="{Binding Foreground,ElementName=GeneralConfigPage}"
                                 Background="#00FFFFFF" Width="150" Padding="0,5,0,5"
                                 Tag="CORE_SETTING_BTN_ADDNEW" Content="c" FontSize="{StaticResource FontNormal}" 
-                                HorizontalAlignment="Center"/>
-                        <Button Grid.Row="2" Style="{StaticResource GenericButton}" Name="ST_TN_F6" VerticalAlignment="Center" 
+                                HorizontalAlignment="Center" Click="ST_TN_F5_Click"/>
+                        <Button Grid.Row="0" Style="{StaticResource GenericButton}" Name="ST_TN_F6" VerticalAlignment="Center" 
                                 Foreground="{Binding Foreground,ElementName=GeneralConfigPage}"
                                 Background="#00FFFFFF" Width="150" Padding="0,5,0,5"
                                 Tag="CORE_SETTING_BTN_REMOVE" Content="c" FontSize="{StaticResource FontNormal}" 
-                                HorizontalAlignment="Center"/>
+                                HorizontalAlignment="Center" Click="ST_TN_F6_Click" />
                     </Grid>
                 </Grid>
             </Grid>

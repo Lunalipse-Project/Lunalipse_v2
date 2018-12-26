@@ -11,6 +11,8 @@ namespace Lunalipse.Pages.ConfigPage.Structures
     {
         public TimeSpan TotalTime { get; set; }
         public int FileCount { get; set; }
+
+        public string UUID { get; set; }
         public MusicPathSturc()
         {
             base.DetailedIcon = "FolderStar";
