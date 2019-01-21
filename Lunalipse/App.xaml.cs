@@ -3,6 +3,7 @@ using Lunalipse.Common.Generic.Cache;
 using Lunalipse.Core;
 using Lunalipse.Core.BehaviorScript;
 using Lunalipse.Core.Cache;
+using Lunalipse.Core.GlobalSetting;
 using Lunalipse.Core.I18N;
 using Lunalipse.Core.PlayList;
 using Lunalipse.Core.Theme;
@@ -36,13 +37,13 @@ namespace Lunalipse
             InitializeI18NEnvironemnt();
             RegisterOperators();
 
-            RestoringCaches();
+            RestoringConfig();
             PerpearThemeColor();
         }
 
         void RegisterOperators()
         {
-            Log.Info("Registering cache operators..");
+            Log.Info("Registering caching operators..");
             cacheSystem.RegisterOperator(CacheType.MUSIC_CATALOGUE_CACHE, new MusicCacheIndexer()
             {
                 UseLZ78Compress = true
@@ -59,9 +60,9 @@ namespace Lunalipse
             TranslationManager.Instance.SetLanguage(SupportLanguages.CHINESE_SIM);
         }
 
-        void RestoringCaches()
+        void RestoringConfig()
         {
-            
+            GLS.SetINSTANCE(GlobalSettingHelper<GLS>.INSTANCE.ReadSetting());
         }
 
         void CheckResources()

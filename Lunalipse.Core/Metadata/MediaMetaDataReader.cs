@@ -25,7 +25,8 @@ namespace Lunalipse.Core.Metadata
                 Name = string.IsNullOrEmpty(media.Tag.Title) ? Path.GetFileNameWithoutExtension(path) : media.Tag.Title,
                 Year = media.Tag.Year.ToString(),
                 Path = path,
-                EstDuration = media.Properties.Duration
+                EstDuration = media.Properties.Duration,
+                HasImage = media.Tag.Pictures.Length != 0
             };
             if(me.Artist==null || me.Artist.Length == 0)
             {

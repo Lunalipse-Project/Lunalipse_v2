@@ -50,7 +50,8 @@ namespace Lunalipse.Core.GlobalSetting
         {
             if (path == "")
                 path = OutputFile;
-            JObject jo = JObject.Parse(Compressed.readCompressed(path, UseLZ78Compress));
+            if (!File.Exists(path)) return default(T);
+            JObject jo = JObject.Parse(Encoding.UTF8.GetString(Compression.Decompress(path, UseLZ78Compress)));
 
             return (T)USerializor.ReadNested(typeof(T), jo["ctx"] as JObject);
         }
@@ -60,7 +61,7 @@ namespace Lunalipse.Core.GlobalSetting
             JObject jo = new JObject();
             jo["version"] = VERSION;
             jo["ctx"] = USerializor.WriteNested(instance);
-            return Compressed.writeCompressed(Encoding.UTF8.GetBytes(jo.ToString()), OutputFile, UseLZ78Compress);
+            return Compression.Compress(Encoding.UTF8.GetBytes(jo.ToString()), OutputFile, UseLZ78Compress);
         }
 
         #region Command Handler

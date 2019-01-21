@@ -9,6 +9,6 @@ namespace NetEaseHijacker.Types
     public class MetadataNE
     {
         public int total = 0;
-        public List<SDetail> list;
+        public List<SongDetail> list;
     }
 }

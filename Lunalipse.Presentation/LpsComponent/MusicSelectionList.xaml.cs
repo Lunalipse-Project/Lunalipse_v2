@@ -1,4 +1,5 @@
-﻿using Lunalipse.Common.Data;
+﻿using Lunalipse.Common.Bus.Event;
+using Lunalipse.Common.Data;
 using Lunalipse.Common.Generic;
 using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Common.Interfaces.II18N;
@@ -27,6 +28,7 @@ namespace Lunalipse.Presentation.LpsComponent
         private ICatalogue CatalogueInUse;
         private ObservableCollection<MusicEntity> Items = new ObservableCollection<MusicEntity>();
         private int __index = -1;
+        private Point startPoint;
 
         public event OnItemSelected<MusicEntity> ItemSelectionChanged;
         public event Action<GeneratorStatus> OnListStatusChanged;
@@ -53,6 +55,8 @@ namespace Lunalipse.Presentation.LpsComponent
             set => SetValue(ITEM_UNHOVER, value);
         }
 
+
+
         public MusicSelectionList()
         {
             InitializeComponent();
@@ -60,8 +64,9 @@ namespace Lunalipse.Presentation.LpsComponent
             Loading.Visibility = Visibility.Hidden;
             Items.CollectionChanged += (x, y) =>
             {
-                
+                ITEMS.UpdateLayout();
             };
+            //DragDrop.DoDragDrop
             Delegation.RemovingItem += dctx =>
             {
                 MusicEntity removed = dctx as MusicEntity;
@@ -69,7 +74,7 @@ namespace Lunalipse.Presentation.LpsComponent
                 {
                     if (!IsMotherCatalogue)
                     {
-                        Delegation.CatalogueUpdated?.Invoke(removed);
+                        EventBus.Instance.Multicast(EventBusTypes.ON_ACTION_REQ_DELETE, dctx, DisplayedCatalogue.Uid());
                         Items.Remove(removed);
                     }
                     else
@@ -229,6 +234,73 @@ namespace Lunalipse.Presentation.LpsComponent
             {
                 SongsEmpty.Visibility = Visibility.Hidden;
             }
+        }
+
+        private void ITEMS_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent("MusicEntity"))
+            {
+                dragStart = false;
+                MusicEntity data = e.Data.GetData("MusicEntity") as MusicEntity;
+                MusicSelectionListItem musicSelectionListItem = 
+                    FindAncestor<MusicSelectionListItem>(e.OriginalSource as DependencyObject);
+                int oldIndex = Items.IndexOf(data);
+                int newIndex = Items.IndexOf(musicSelectionListItem.DataContext as MusicEntity);
+                if (oldIndex == newIndex) return;
+                Items.RemoveAt(oldIndex);
+                Items.Insert(newIndex, data);
+                EventBus.Instance.Multicast(EventBusTypes.ON_ACTION_UPDATE, new Tuple<int, int>(oldIndex, newIndex), CatalogueInUse.Uid());
+            }
+        }
+
+        private void ITEMS_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            startPoint = e.GetPosition(null);
+        }
+
+        bool dragStart = false;
+        private void ITEMS_MouseMove(object sender, MouseEventArgs e)
+        {
+            Point MovedPoint = e.GetPosition(null);
+            Point MovePointInList = e.GetPosition(this);
+            Vector diff = startPoint - MovedPoint;
+            if (e.LeftButton == MouseButtonState.Pressed &&
+                Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance &&
+                Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)
+            {
+                dragStart = true;
+                MusicSelectionListItem musicSelectionListItem = 
+                    FindAncestor<MusicSelectionListItem>((DependencyObject)e.OriginalSource);
+                DataObject data = new DataObject("MusicEntity",musicSelectionListItem.DataContext);
+                DragDrop.DoDragDrop(musicSelectionListItem, data, DragDropEffects.Move | DragDropEffects.Scroll);
+            }
+            //Console.WriteLine(MovePointInList);
+            //if (MovePointInList.Y < 55 && dragStart)
+            //{
+            //    double offset = 0;
+            //    if (ScrollV.VerticalOffset - 10 >= 0) offset = ScrollV.VerticalOffset - 10;
+            //    ScrollV.ScrollToVerticalOffset(offset);
+            //}
+            //else if (MovePointInList.Y > this.ActualHeight - 55 && dragStart)
+            //{
+            //    double offset = 0;
+            //    if (ScrollV.VerticalOffset + 10 >= ScrollV.ScrollableHeight) offset = ScrollV.VerticalOffset + 10;
+            //    ScrollV.ScrollToVerticalOffset(offset);
+            //}
+        }
+
+        private static T FindAncestor<T>(DependencyObject current)  where T : DependencyObject
+        {
+            do
+            {
+                if (current is T)
+                {
+                    return (T)current;
+                }
+                current = VisualTreeHelper.GetParent(current);
+            }
+            while (current != null);
+            return null;
         }
     }
 }

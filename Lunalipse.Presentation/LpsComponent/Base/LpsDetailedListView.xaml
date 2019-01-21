@@ -7,6 +7,11 @@
              mc:Ignorable="d" x:Name="LPS_DETAILED_LV" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="Transparent">
+        <Grid x:Name="NoItem" Visibility="Hidden">
+            <Label Foreground="{Binding Foreground,ElementName=LPS_DETAILED_LV}" HorizontalAlignment="Center"
+                   VerticalAlignment="Center" FontSize="{StaticResource FontNormal}" Background="Transparent"
+                   Tag="CORE_UI_DETAILEDLISTVIEW_NOITEMS" x:Name="NoItemHint" Opacity="0.75"/>
+        </Grid>
         <ItemsControl x:Name="ITEMS" Background="{Binding Background,ElementName=LPS_DETAILED_LV}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>

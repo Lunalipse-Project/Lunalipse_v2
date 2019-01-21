@@ -60,10 +60,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Auxiliary\PlaylistGuard.cs" />
     <Compile Include="I18N\TranslationManager.cs" />
+    <Compile Include="Pages\AddCatalogues.xaml.cs">
+      <DependentUpon>AddCatalogues.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ChooseCatalogues.xaml.cs">
+      <DependentUpon>ChooseCatalogues.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\ConfigPage\GeneralConfig.xaml.cs">
       <DependentUpon>GeneralConfig.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ConfigPage\Structures\PlaylistStruc.cs" />
     <Compile Include="Pages\ConfigPage\Structures\MusicPathSturc.cs" />
     <Compile Include="TestPage.xaml.cs">
       <DependentUpon>TestPage.xaml</DependentUpon>
@@ -95,7 +103,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\AddCatalogues.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\CatalogueShowcase.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ChooseCatalogues.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -181,9 +197,7 @@
       <Name>Lunalipse.Presentation</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Planning\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

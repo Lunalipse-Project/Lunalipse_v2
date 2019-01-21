@@ -13,7 +13,14 @@ namespace Lunalipse.Core.Cache
     {
         public static string GenerateName(this WinterWrapUp cw)
         {
-            return "cch_{3}_{0}_{1}{2}".FormateEx(cw.deletable ? "t" : "f", cw.uid, CACHE_FILE_EXT, cw.markName);
+            //return "cch_{3}_{0}_{1}{2}".FormateEx(cw.deletable ? "t" : "f", cw.uid, CACHE_FILE_EXT, cw.markName);
+            return "cch_{0}_{1}_{2}_{3}_{4}{5}".FormateEx(
+                cw.markName, 
+                cw.deletable ? "t" : "f",
+                cw.FileType, 
+                cw.LZ78Enc ? "t" : "f", 
+                cw.HashCode, 
+                CACHE_FILE_EXT);
         }
 
         public static WinterWrapUp ConvertToWWU(string name)
@@ -23,7 +30,9 @@ namespace Lunalipse.Core.Cache
             {
                 markName = sequence[1],
                 deletable = sequence[2] == "t" ? true : false,
-                uid = sequence[3]
+                FileType = sequence[3],
+                LZ78Enc = sequence[4] == "t" ? true : false,
+                HashCode = sequence[5]
             };
         }
 

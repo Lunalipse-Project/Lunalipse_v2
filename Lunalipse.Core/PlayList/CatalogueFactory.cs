@@ -10,11 +10,29 @@ namespace Lunalipse.Core.PlayList
 {
     public class CatalogueFactory
     {
-        public static ICatalogue Create(string Name, bool isAlbumClassified)
+        public static ICatalogue Create(string Name)
+        {
+            return new Catalogue(Name);
+        }
+        public static ICatalogue CreateAlbum(string Name)
         {
             return new Catalogue(Name)
             {
-                isAlbumClassified = isAlbumClassified
+                isAlbumClassified = true
+            };
+        }
+        public static ICatalogue CreateArtist(string Name)
+        {
+            return new Catalogue(Name)
+            {
+                isArtistClassified = true
+            };
+        }
+        public static ICatalogue CreateUser(string Name)
+        {
+            return new Catalogue(Name)
+            {
+                isUserDefined = true
             };
         }
     }

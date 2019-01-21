@@ -68,4 +68,10 @@
         <Setter Property="Opacity" Value="0.8"/>
         <Setter Property="Padding" Value="0"/>
     </Style>
+
+    <Style TargetType="{x:Type TextBox}" x:Key="LpsTextBox">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="FontSize" Value="{StaticResource FontNormal}"/>
+    </Style>
 </ResourceDictionary>

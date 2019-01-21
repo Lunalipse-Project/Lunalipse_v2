@@ -146,6 +146,17 @@ namespace Lunalipse.Core.PlayList
             return lc;
         }
 
+        public List<Catalogue> GetUserDefined()
+        {
+            List<Catalogue> lc = new List<Catalogue>();
+            foreach (Catalogue c in CatalogueBase)
+            {
+                if (c.isUserDefined)
+                    lc.Add(c);
+            }
+            return lc;
+        }
+
         public Catalogue MainCatalogue
         {
             get

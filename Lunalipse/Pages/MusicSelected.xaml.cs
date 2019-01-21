@@ -1,7 +1,10 @@
 ﻿using Lunalipse.Common.Data;
+using Lunalipse.Common.Generic.I18N;
 using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Core.PlayList;
 using Lunalipse.I18N;
+using Lunalipse.Presentation.Generic;
+using Lunalipse.Presentation.LpsWindow;
 using System;
 using System.Windows.Controls;
 
@@ -18,15 +21,27 @@ namespace Lunalipse.Pages
 
         bool isRecovery = false;
 
+        string AddToCatalogueTitle = "CORE_ADDPLAYLIST_TITLE";
+
         II18NConvertor convertor;
 
         public MusicSelected()
         {
             InitializeComponent();
             musicListbox.ItemSelectionChanged += MusicListbox_ItemSelectionChanged;
-            convertor = TranslationManager.AquireConverter();
-            TranslationManager.OnI18NEnvironmentChanged += Translate;
+            convertor = TranslationManagerBase.AquireConverter();
+            TranslationManagerBase.OnI18NEnvironmentChanged += Translate;
+            Delegation.AddToNewCatalogue += MusicAddedRequest;
+            Translate(convertor);
             //musicListbox.OnListStatusChanged += MusicListbox_OnListStatusChanged;
+        }
+
+        private void MusicAddedRequest(object obj)
+        {
+            ChooseCatalogues chooseCataloguesPage = new ChooseCatalogues(obj as MusicEntity);
+            UniversalDailogue ShowPage = new UniversalDailogue(chooseCataloguesPage,
+                AddToCatalogueTitle, System.Windows.MessageBoxButton.OK);
+            ShowPage.ShowDialog();
         }
 
         //private void MusicListbox_OnListStatusChanged(GeneratorStatus status)
@@ -34,7 +49,7 @@ namespace Lunalipse.Pages
         //    if(status == GeneratorStatus.ContainersGenerated && isRecovery)
         //    {
         //        musicListbox.SelectedIndex = SelectedCatalogue.CurrentIndex;
-                
+
         //    }
         //    isRecovery = false;
         //}
@@ -59,6 +74,7 @@ namespace Lunalipse.Pages
         public void Translate(II18NConvertor i8c)
         {
             musicListbox.Translate(i8c);
+            AddToCatalogueTitle = i8c.ConvertTo(SupportedPages.CORE_FUNC, AddToCatalogueTitle);
         }
 
         public int PlayingIndex

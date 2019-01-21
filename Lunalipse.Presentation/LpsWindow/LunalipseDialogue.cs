@@ -29,6 +29,9 @@ namespace Lunalipse.Presentation.LpsWindow
 
         }
 
+        protected const int HeightBias = 55;
+        protected const int WidthBias = 20;
+
         private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
         {
             if (obj == null) return;

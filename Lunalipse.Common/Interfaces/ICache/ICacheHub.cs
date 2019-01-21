@@ -15,7 +15,7 @@ namespace Lunalipse.Common.Interfaces.ICache
         bool CacheField<T>(T ancestor, CacheType type, string FieldName);
 
         T RestoreObject<T>(Func<WinterWrapUp, bool> Conditions, CacheType type);
-        object RestoreField<T>(Func<WinterWrapUp, bool> Conditions, CacheType type, string FieldName);
+        object RestoreField(Func<WinterWrapUp, bool> Conditions, CacheType type, string FieldName);
         IEnumerable<T> RestoreObjects<T>(Func<WinterWrapUp, bool> Conditions, CacheType type);
 
         void DeleteCaches(bool forced = false);

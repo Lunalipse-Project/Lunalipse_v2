@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetEaseHijacker.Types
 {
-    public class SDetail
+    public class SongDetail
     {
         public string id, name, ar_name, al_pic,al_name;
         //Store as <bitRate>|<size>

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -94,6 +96,41 @@ namespace Lunalipse.Utilities
                 return (T)parent;
             else
                 return null;
+        }
+
+        public static string DigitPadding(this int digit, int places)
+        {
+            string stringDigit = digit.ToString();
+            string padding = "";
+            if (stringDigit.Length >= places) return stringDigit;
+            for (int j = 0; j < places - stringDigit.Length; j++)
+            {
+                padding += "0";
+            }
+            return padding + stringDigit;
+        }
+
+        public static string ComputeHash(this object obj)
+        {
+            MemoryStream ms = new MemoryStream();
+            MD5 md5 = MD5.Create();
+            BinaryFormatter bf = new BinaryFormatter();
+            bf.Serialize(ms, obj);
+            ms.Seek(0, SeekOrigin.Begin);
+            byte[] hash = md5.ComputeHash(ms);
+            ms.Close();
+            md5.Clear();
+            return Convert.ToBase64String(hash);
+        }
+
+        public static string ComputeHash(this byte[] bytes)
+        {
+            string hashcode;
+            using (MD5 md5 = MD5.Create())
+            {
+                hashcode = BitConverter.ToString(md5.ComputeHash(bytes)).Replace("-", "");
+            }
+            return hashcode;
         }
 
         public enum FType

@@ -65,12 +65,12 @@ namespace NetEaseHijacker
                 MetadataNE mne = new MetadataNE()
                 {
                     total = jo["result"]["songCount"].ToObject<int>(),
-                    list = new List<SDetail>()
+                    list = new List<SongDetail>()
                 };
                 
                 foreach (var v in jo["result"]["songs"])
                 {
-                    SDetail sd = new SDetail();
+                    SongDetail sd = new SongDetail();
                     sd.id = v["id"].ToString();
                     sd.name = v["name"].ToString();
                     sd.al_pic = v["al"]["picUrl"].ToString();

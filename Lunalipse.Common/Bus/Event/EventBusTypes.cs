@@ -8,8 +8,25 @@ namespace Lunalipse.Common.Bus.Event
 {
     public enum EventBusTypes
     {
+        /// <summary>
+        /// 一个动作的开始
+        /// </summary>
         ON_ACTION_START,
+        /// <summary>
+        /// 更新动作状态
+        /// </summary>
         ON_ACTION_UPDATE,
-        ON_ACTION_COMPLETE
+        /// <summary>
+        /// 一个动作结束
+        /// </summary>
+        ON_ACTION_COMPLETE,
+        /// <summary>
+        /// 动作请求的删除操作
+        /// </summary>
+        ON_ACTION_REQ_DELETE,
+        /// <summary>
+        /// 动作请求的添加/新建操作
+        /// </summary>
+        ON_ACTION_REQ_NEW
     }
 }

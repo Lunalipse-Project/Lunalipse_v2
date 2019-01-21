@@ -44,7 +44,7 @@ namespace LunalipseCoreTest
         [TestMethod]
         public void TestCache()
         {
-            string str = Compressed.readCompressed("json.txt", false);
+            string str = Compression.Decompress("json.txt", false);
             CacheSerializor ch = new CacheSerializor();
             Catalogue c = ch.RestoreTo<Catalogue>(str);
             Assert.IsNotNull(c);
@@ -60,7 +60,7 @@ namespace LunalipseCoreTest
                 createDate = "00-00-00",
                 deletable = true,
                 markName = "TestSet",
-                uid = "No"
+                HashCode = "No"
             };
             string res;
             Console.Write(res=ch.CacheTo(jets, wwu));

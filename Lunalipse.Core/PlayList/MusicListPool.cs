@@ -150,7 +150,7 @@ namespace Lunalipse.Core.PlayList
             //if (CPool.Exists(x => x.isArtistClassified == true)) return;
             if (AllMusic.MusicList.Count == 0) return;
             List<MusicEntity> TemporaryList;
-            foreach (MusicEntity me in TemporaryList = AllMusic.MusicList.FindAll(x => x.ArtistClassfied))
+            foreach (MusicEntity me in TemporaryList = AllMusic.MusicList.FindAll(x => !x.ArtistClassfied))
             {
                 Catalogue cat;
                 string art = me.ArtistFrist.Trim();

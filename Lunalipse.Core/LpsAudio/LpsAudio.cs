@@ -227,13 +227,14 @@ namespace Lunalipse.Core.LpsAudio
         private void CountTimerDelegate()
         {
             double totalMS = iws.GetLength().TotalMilliseconds;
-            while(iws.GetPosition().TotalMilliseconds < totalMS)
+            TimeSpan position;
+            while ((position = iws.GetPosition()).TotalMilliseconds < totalMS)
             {
                 if (isPlaying)
                 {
-                    AudioDelegations.PostionChanged?.Invoke(iws.GetPosition());
+                    AudioDelegations.PostionChanged?.Invoke(position);
                     LyricToken lt;
-                    if((lt = lEnum.Enumerating(iws.GetPosition()))!= null)
+                    if((lt = lEnum.Enumerating(position))!= null)
                     {
                         AudioDelegations.LyricUpdated?.Invoke(lt);
                     }

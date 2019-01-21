@@ -1,0 +1,22 @@
+﻿<Page x:Class="Lunalipse.Pages.AddCatalogues"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Lunalipse.Pages"
+      mc:Ignorable="d" Width="450" Height="70"
+      x:Name="CreatePlaylist"
+      Title="AddCatalogues">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" FontSize="{StaticResource FontNormal}" Padding="10,10,0,0" Tag="CORE_ADDPLAYLIST_CREATE_HINT" VerticalAlignment="Center"
+               Foreground="{Binding Foreground,ElementName=CreatePlaylist}" Background="Transparent" x:Name="Hint"/>
+        <TextBox Style="{StaticResource LpsTextBox}" Grid.Row="1" VerticalAlignment="Center" Margin="10,0,10,0" FontSize="{StaticResource FontLarge}"
+                  Padding="5,0,0,2" FontWeight="Light" HorizontalContentAlignment="Center" x:Name="PlayListName"
+                 Foreground="{Binding Foreground,ElementName=CreatePlaylist}" BorderBrush="{Binding Foreground,ElementName=CreatePlaylist}"/>
+    </Grid>
+</Page>

@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 
 namespace Lunalipse.Core.Cache
 {
-    public class Compressed
+    public class Compression
     {
-        public static bool writeCompressed(byte[] b, string path,bool enableCompress = true)
+        public static bool Compress(byte[] b, string path,bool enableCompress = true)
         {
+            if (File.Exists(path)) return true;
             try
             {
                 using (FileStream fs = new FileStream(path, FileMode.Create))
@@ -30,20 +31,19 @@ namespace Lunalipse.Core.Cache
                 }
                 return true;
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 return false;
             }
         }
-        public static string readCompressed(string path, bool isCompress = true)
+        public static byte[] Decompress(string path, bool isCompressed = true)
         {
             try
             {
                 MemoryStream ms = new MemoryStream();
-                string str;
                 using (FileStream fs = new FileStream(path, FileMode.Open))
                 {
-                    if (isCompress)
+                    if (isCompressed)
                     {
                         using (GZipStream gzs = new GZipStream(fs, CompressionMode.Decompress, false))
                         {
@@ -55,17 +55,11 @@ namespace Lunalipse.Core.Cache
                         fs.CopyTo(ms);
                     }
                 }
-                ms.Seek(0, SeekOrigin.Begin);
-                using (StreamReader sr = new StreamReader(ms))
-                {
-                    str = sr.ReadToEnd();
-                }
-                ms.Close();
-                return str;
+                return ms.ToArray();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return string.Empty;
+                return new byte[0];
             }
         }
     }

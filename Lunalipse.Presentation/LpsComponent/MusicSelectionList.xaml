@@ -39,8 +39,8 @@
             </Label>
             <Label Grid.Row="1" x:Name="Hint" Content="CORE_LOADING" Margin="0,0,0,0" Foreground="{Binding Path=Foreground,ElementName=MUSIC_LIST}" FontSize="{StaticResource FontNormal}" VerticalContentAlignment="Top" HorizontalContentAlignment="Center"/>
         </Grid>
-        <ScrollViewer>
-            <ItemsControl x:Name="ITEMS" ItemsSource="{Binding}">
+        <ScrollViewer x:Name="ScrollV">
+            <ItemsControl x:Name="ITEMS" ItemsSource="{Binding}" AllowDrop="True" Drop="ITEMS_Drop" PreviewMouseDown="ITEMS_PreviewMouseDown" MouseMove="ITEMS_MouseMove">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <local:MusicSelectionListItem x:Name="ItemConatiner" 

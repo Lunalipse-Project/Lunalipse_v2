@@ -46,5 +46,6 @@
         <Setter Property="WindowStyle" Value="None"/>
         <Setter Property="Background" Value="#222"/>
         <Setter Property="BorderThickness" Value="0,0,0,0"/>
+        <Setter Property="WindowState" Value="Normal"/>
     </Style>
 </ResourceDictionary>

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Lunalipse
 {
+    [Serializable]
     public class GLS : IGlobalSetting
     {
         static volatile GLS GS_Instance;
@@ -25,6 +26,11 @@ namespace Lunalipse
                 }
                 return GS_Instance;
             }
+        }
+
+        public static void SetINSTANCE(GLS Instance)
+        {
+            GS_Instance = Instance;
         }
 
         private GLS()

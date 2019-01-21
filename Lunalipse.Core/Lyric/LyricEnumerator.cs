@@ -27,18 +27,38 @@ namespace Lunalipse.Core.Lyric
         {
             if (tokens != null)
             {
-                for (int i = 0; i < tokens.Count; i++)
+                //for (int i = 0; i < tokens.Count; i++)
+                //{
+                //    if (i == tokens.Count - 1)
+                //    {
+                //        return tokens[i];
+                //    }
+                //    else if (isInRangeBetween(tokens[i].TimeStamp, tokens[i + 1].TimeStamp, current))
+                //    {
+                //        return tokens[i];
+                //    }
+                //}
+
+                int middle = (int)Math.Floor(tokens.Count / 2.0);
+                int last = tokens.Count - 1;
+                int first = 0;
+                while (!isInRangeBetween(tokens[middle].TimeStamp, tokens[middle + 1].TimeStamp, current))
                 {
-                    if (i == tokens.Count - 1)
+                    if (last - first == 0)
                     {
-                        return tokens[i];
+                        return null;
                     }
-                    else if (isInRangeBetween(tokens[i].TimeStamp, tokens[i + 1].TimeStamp, current))
+                    if (current > tokens[middle].TimeStamp)
                     {
-                        return tokens[i];
+                        first = middle + 1;
                     }
+                    else
+                    {
+                        last = middle - 1;
+                    }
+                    middle = (int)Math.Floor((last - first) / 2.0) + first;
                 }
-                return null;
+                return tokens[middle];
             }
             return null;
         }

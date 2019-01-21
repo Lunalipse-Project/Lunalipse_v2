@@ -58,7 +58,7 @@
     <Compile Include="Raw.cs" />
     <Compile Include="SearchType.cs" />
     <Compile Include="Types\MetadataNE.cs" />
-    <Compile Include="Types\SDetail.cs" />
+    <Compile Include="Types\SongDetail.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>

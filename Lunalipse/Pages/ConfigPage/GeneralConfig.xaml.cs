@@ -1,5 +1,6 @@
 ﻿using Lunalipse.Common.Bus.Event;
 using Lunalipse.Common.Data;
+using Lunalipse.Common.Generic.I18N;
 using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Core.PlayList;
@@ -38,7 +39,7 @@ namespace Lunalipse.Pages.ConfigPage
         const int Label_NUM = 4;
 
         // 保存增加的Catalogue的UUID, 方便用户撤销操作
-        List<string> AddedCatalogues;
+        //List<string> AddedCatalogues;
 
         public GeneralConfig()
         {
@@ -51,15 +52,15 @@ namespace Lunalipse.Pages.ConfigPage
             Bus = EventBus.Instance;
 
             //变量初始化
-            AddedCatalogues = new List<string>();
+            //AddedCatalogues = new List<string>();
 
             //主题监听器订阅
             ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
             ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
 
             //界面语言监听器订阅
-            TranslationManager.OnI18NEnvironmentChanged += Translate;
-            Translate(TranslationManager.AquireConverter());
+            TranslationManagerBase.OnI18NEnvironmentChanged += Translate;
+            Translate(TranslationManagerBase.AquireConverter());
 
             //其他监听器
             MusicPath.OnSelectionChanged += MusicPath_OnSelectionChanged;
@@ -104,7 +105,7 @@ namespace Lunalipse.Pages.ConfigPage
                     UUID = c.UUID,
                     FileCount = c.GetCount()
                 });
-                AddedCatalogues.Add(c.UUID);
+                //AddedCatalogues.Add(c.UUID);
             }
             //MusicPath.SelectedIndex = 0;
         }
@@ -135,11 +136,11 @@ namespace Lunalipse.Pages.ConfigPage
                 {
                     GlobalSetting.MusicBaseDirs.Add(folderChoice);
                     // 保存新增的Catalogue的uuid。
-                    AddedCatalogues.Add(MLP.AddToPool(folderChoice));
+                    MLP.AddToPool(folderChoice);
                     ReadManifest();
                     // 发送全局广播，标志着添加动作已完成
                     // C_UPD : Catalogues以添加，其他界面可以进行刷新。
-                    Bus.BoardcastAction(EventBusTypes.ON_ACTION_COMPLETE, "C_UPD");
+                    Bus.Boardcast(EventBusTypes.ON_ACTION_COMPLETE, "C_UPD");
                 }
             }
         }
@@ -148,7 +149,7 @@ namespace Lunalipse.Pages.ConfigPage
         private void ST_TN_F6_Click(object sender, RoutedEventArgs e)
         {
             MusicPathSturc mps = MusicPath.SelectedItem as MusicPathSturc;
-            AddedCatalogues.Remove(mps.UUID);
+            //AddedCatalogues.Remove(mps.UUID);
             string directory = mps.DetailedDescription;
             // 从所有歌曲结合中移除
             MLP.Musics.RemoveAll(x => System.IO.Path.GetDirectoryName(x.Path).Equals(directory));
@@ -158,7 +159,8 @@ namespace Lunalipse.Pages.ConfigPage
             CP.RemoveCatalogue(mps.UUID);
             // 从列表中移除
             MusicPath.Remove(mps);
-            Bus.BoardcastAction(EventBusTypes.ON_ACTION_COMPLETE, "C_UPD");
+            GlobalSetting.MusicBaseDirs.Remove(mps.DetailedDescription);
+            Bus.Boardcast(EventBusTypes.ON_ACTION_COMPLETE, "C_UPD");
         }
     }
 }

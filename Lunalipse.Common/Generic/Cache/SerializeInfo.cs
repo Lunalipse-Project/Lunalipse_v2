@@ -21,7 +21,13 @@ namespace Lunalipse.Common.Generic.Cache
             public string markName;
             public string createDate;
             public bool deletable;
-            public object uid;
+            public string HashCode;
+            public bool LZ78Enc;
+            /// <summary>
+            /// B : Binary Serialized;
+            /// S : Json Serialized
+            /// </summary>
+            public string FileType;
         }
 
         public struct SettingWrapUp

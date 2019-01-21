@@ -24,6 +24,9 @@ using System.Threading.Tasks;
 using Lunalipse.Windows;
 using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Common.Bus.Event;
+using Lunalipse.Common.Generic.I18N;
+using Lunalipse.Common.Generic.Cache;
+using Lunalipse.Auxiliary;
 
 namespace Lunalipse
 {
@@ -38,10 +41,10 @@ namespace Lunalipse
         MusicListPool mlp;
         CataloguePool CPOOL;
         MediaMetaDataReader mmdr;
-        Dialogue dia;
+        //Dialogue dia;
         CacheHub cacheSystem;
         EventBus Bus;
-
+        private PlaylistGuard playlistGuard;
         LpsCore core;
 
         CatalogueShowCase showcase;
@@ -51,7 +54,7 @@ namespace Lunalipse
         DoubleAnimation ExpandPanel;
         DoubleAnimation MinimizePanel;
 
-        List<Catalogue> ByLocation, ByArtist, ByAlbum;
+        List<Catalogue> ByLocation, ByArtist, ByAlbum, ByUserDefined;
 
         public MainWindow() : base()
         {
@@ -60,15 +63,25 @@ namespace Lunalipse
             ExpandPanel = new DoubleAnimation(48, sliderSize, elapseTime);
             MinimizePanel = new DoubleAnimation(sliderSize, 48, elapseTime);
 
-            EventBus.OnActionProcced += EventBus_OnActionProcced; ;
-            
-            TranslationManager.OnI18NEnvironmentChanged += Translate;
-            Translate(TranslationManager.AquireConverter());
+            EventBus.OnBoardcastRecieved += EventBus_OnBoardcastRecieved; ;
 
-            CataloguesReflesh();
+            TranslationManagerBase.OnI18NEnvironmentChanged += Translate;
+            Translate(TranslationManagerBase.AquireConverter());
+
+            foreach (string path in GLS.INSTANCE.MusicBaseDirs)
+            {
+                mlp.AddToPool(path);
+            }
+            if (cacheSystem.ComponentCacheExists(CacheType.MUSIC_CATALOGUE_CACHE))
+            {
+                playlistGuard.Restore();
+            }
+
+            CataloguesRefleshAll();
+
         }
 
-        private void EventBus_OnActionProcced(EventBusTypes busTypes, object Tag)
+        private void EventBus_OnBoardcastRecieved(EventBusTypes busTypes, object Tag)
         {
             if(busTypes == EventBusTypes.ON_ACTION_COMPLETE)
             {
@@ -77,13 +90,23 @@ namespace Lunalipse
                     // 广播源：GenralConfig
                     // 信息：Catalogue已完成添加
                     case "C_UPD":
-                        CataloguesReflesh();
+                        CataloguesRefleshAll();
+                        break;
+                    case "C_UPD_ALB":
+                        CataloguesRefleshAlbum();
+                        break;
+                    case "C_UPD_ART":
+                        CataloguesRefleshArtist();
+                        break;
+                    case "C_UPD_USR":
+                        CatalogueRefleshUser();
                         break;
                 }
             }
         }
 
-        public void CataloguesReflesh()
+        #region Reflesh the list
+        private void CataloguesRefleshAll()
         {
             Task.Factory.StartNew(() =>
             {
@@ -92,12 +115,41 @@ namespace Lunalipse
                 ByLocation = CPOOL.GetLocationClassified();
                 ByAlbum = CPOOL.GetAlbumClassfied();
                 ByArtist = CPOOL.GetArtistClassfied();
+                ByUserDefined = CPOOL.GetUserDefined();
             });
         }
+
+        private void CataloguesRefleshAlbum()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                mlp.CreateAlbumClasses();
+                ByAlbum = CPOOL.GetAlbumClassfied();
+            });
+        }
+
+        private void CataloguesRefleshArtist()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                mlp.CreateArtistClasses();
+                ByArtist = CPOOL.GetArtistClassfied();
+            });
+        }
+
+        private void CatalogueRefleshUser()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                ByUserDefined = CPOOL.GetUserDefined();
+            });
+        }
+        #endregion
 
         public void Translate(II18NConvertor converter)
         {
             CATALOGUES.Translate(converter);
+            //playlistGuard.Translate(converter);
         }
 
         /// <summary>
@@ -110,8 +162,7 @@ namespace Lunalipse
             cacheSystem = CacheHub.INSTANCE(Environment.CurrentDirectory);
             mlp = MusicListPool.INSATNCE(mmdr = new MediaMetaDataReader());
             Bus = EventBus.Instance;
-
-            mlp.AddToPool(@"F:\M2");
+            playlistGuard = new PlaylistGuard();
 
             #region duplicated
             //mmdr = new MediaMetaDataReader(converter);
@@ -212,7 +263,7 @@ namespace Lunalipse
                     FPresentor.ShowContent(showcase, false, () => showcase.SetCatalogues(ByLocation));
                     break;
                 case CatalogueSections.USER_PLAYLISTS:
-                    FPresentor.ShowContent(showcase);
+                    FPresentor.ShowContent(showcase, false, () => showcase.SetCatalogues(ByUserDefined));
                     break;
                 case CatalogueSections.ALBUM_COLLECTIONS:
                     FPresentor.ShowContent(showcase, false, () => showcase.SetCatalogues(ByAlbum));
@@ -338,12 +389,12 @@ namespace Lunalipse
         }
         private void Window_Closed(object sender, EventArgs e)
         {
+            LunalipseLogger.GetLogger().Debug("Save Playlist");
+            playlistGuard.SavePlaylist();
             LunalipseLogger.GetLogger().Info("Terminating Lunalipse.....");
             core.Dispose();
             LunalipseLogger.GetLogger().Release();
         }
-
-        
 
         /// <summary>
         /// 播放完成时的回调方法

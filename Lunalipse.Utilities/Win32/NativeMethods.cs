@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lunalipse.Utilities.Win32.Win32ThemeColor;
+using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
@@ -81,5 +82,16 @@ namespace Lunalipse.Utilities.Win32
                 throw new Win32Exception(Marshal.GetLastWin32Error());
             return moduleHandle;
         }
+
+        [DllImport("dwmapi.dll", EntryPoint = "#127")]
+        internal static extern void DwmGetColorizationParameters(ref DWMCOLORIZATIONPARAMS Params);
+
+        [DllImport("uxtheme.dll", EntryPoint = "#95")]
+        public static extern uint GetImmersiveColorFromColorSetEx(uint dwImmersiveColorSet, uint dwImmersiveColorType, bool bIgnoreHighContrast, uint dwHighContrastCacheMode);
+        [DllImport("uxtheme.dll", EntryPoint = "#96")]
+        public static extern uint GetImmersiveColorTypeFromName(IntPtr pName);
+        [DllImport("uxtheme.dll", EntryPoint = "#98")]
+        public static extern int GetImmersiveUserColorSetPreference(bool bForceCheckRegistry, bool bSkipCheckOnFail);
+
     }
 }

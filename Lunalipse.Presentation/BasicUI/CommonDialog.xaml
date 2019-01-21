@@ -1,0 +1,40 @@
+﻿<LpsDialogue:LunalipseDialogue x:Class="Lunalipse.Presentation.BasicUI.CommonDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Lunalipse.Presentation.BasicUI"
+        xmlns:LpsDialogue="clr-namespace:Lunalipse.Presentation.LpsWindow"
+        mc:Ignorable="d" Background="Transparent" AllowsTransparency="True"
+        x:Name="CommonDialogueTemplate" WindowStartupLocation="CenterScreen"
+        Height="auto" Width="460"
+        Title="CommonDialogue">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="45px"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="DetialContent" TextWrapping="Wrap" Text="TextBlock" Foreground="White"  Height="auto"
+                   Padding="15,10,15,10" FontFamily="Microsoft YaHei UI Light" FontSize="{StaticResource FontNormal}" Grid.Row="0" VerticalAlignment="Top"/>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10px"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="10px"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="0.25*"/>
+                    <ColumnDefinition Width="0.25*"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="Negative" Style="{StaticResource GenericButton}" Foreground="{Binding Foreground,ElementName=CommonDialogueTemplate}" 
+                        Height="25" 
+                    VerticalAlignment="Center" HorizontalAlignment="Center" Width="100" Grid.Column="1"/>
+                <Button x:Name="Positive"  Style="{StaticResource GenericButton}" Foreground="{Binding Foreground,ElementName=CommonDialogueTemplate}"
+                        Height="25" 
+                    VerticalAlignment="Center" HorizontalAlignment="Center" Width="100" Grid.Column="2"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</LpsDialogue:LunalipseDialogue>

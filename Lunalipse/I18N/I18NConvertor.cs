@@ -1,5 +1,6 @@
 ﻿using Lunalipse.Common.Data;
 using Lunalipse.Common.Interfaces.II18N;
+using Lunalipse.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,11 @@ namespace Lunalipse.I18N
         {
             if (Pages == null) return key;
             return Pages.GetPage(page).getContext(key);
+        }
+        public string ConvertTo(SupportedPages page, string key, params object[] replace)
+        {
+            if (Pages == null) return key;
+            return Pages.GetPage(page).getContext(key).FormateEx(replace);
         }
     }
 }

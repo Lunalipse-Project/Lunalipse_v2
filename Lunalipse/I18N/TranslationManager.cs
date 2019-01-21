@@ -1,4 +1,5 @@
 ﻿using Lunalipse.Common.Data;
+using Lunalipse.Common.Generic.I18N;
 using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Core;
 using Lunalipse.Core.I18N;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Lunalipse.I18N
 {
-    public class TranslationManager
+    public class TranslationManager : TranslationManagerBase
     {
         static volatile TranslationManager T_MANAGER;
         static readonly object T_MANAGER_LOCK = new object();
@@ -35,8 +36,7 @@ namespace Lunalipse.I18N
         I18NTokenizer I18T;
         I18NPages Pages;
 
-        public static event Action<II18NConvertor> OnI18NEnvironmentChanged;
-        protected static event Func<II18NConvertor> OnConvertorAcquired;
+        
 
         protected TranslationManager()
         {
@@ -63,12 +63,7 @@ namespace Lunalipse.I18N
             Pages.Clear();
             Pages = I18T.GetPages(language);
             convertor = new I18NConvertor(Pages);
-            OnI18NEnvironmentChanged?.Invoke(convertor);
-        }
-
-        public static II18NConvertor AquireConverter()
-        {
-            return OnConvertorAcquired?.Invoke();
+            ChangeI18NEnvironment(convertor);
         }
     }
 }

@@ -33,15 +33,17 @@ namespace Lunalipse.Core.Cache
                 createDate = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss"),
                 deletable = false,
                 markName = CacheUtils.GenerateMarkName(OP_UID, "ctlg"),
-                uid = Guid.NewGuid().ToString()
+                LZ78Enc = UseLZ78Compress,
+                FileType = "B"
             };
-            byte[] cstring = Encoding.UTF8.GetBytes(caches.CacheTo(cata, cw));
-            Compressed.writeCompressed(cstring, "{0}//{1}".FormateEx(CacheDir, cw.GenerateName()), UseLZ78Compress);
+            byte[] cdata = caches.CacheToBin(cata, cw);
+            cw.HashCode = cdata.ComputeHash();
+            Compression.Compress(cdata, "{0}//{1}".FormateEx(CacheDir, cw.GenerateName()), UseLZ78Compress);
         }
 
-        private Catalogue RestoreMusicCataloge(object obj)
+        private Catalogue RestoreMusicCataloge(byte[] bytes)
         {
-            return caches.RestoreTo<Catalogue>(obj);
+            return caches.BinRestoreTo<Catalogue>(bytes);
         }
 
         public void CacheCatalogues(List<Catalogue> catas)
@@ -66,11 +68,7 @@ namespace Lunalipse.Core.Cache
             foreach(WinterWrapUp cw in wwu)
             {
                 catas.Add(
-                    RestoreMusicCataloge(
-                        JObject.Parse(
-                            Compressed.readCompressed("{0}//{1}".FormateEx(CacheDir, cw.GenerateName()),UseLZ78Compress)
-                        )["ctx"]
-                    )
+                    RestoreMusicCataloge(Compression.Decompress("{0}//{1}".FormateEx(CacheDir, cw.GenerateName()), UseLZ78Compress))
                 );
             }
             return catas;
@@ -78,11 +76,7 @@ namespace Lunalipse.Core.Cache
 
         public Catalogue RestoreCatalogue(WinterWrapUp wwu)
         {
-            return RestoreMusicCataloge(
-                        JObject.Parse(
-                            Compressed.readCompressed("{0}//{1}".FormateEx(CacheDir, wwu.GenerateName()), UseLZ78Compress)
-                        )["ctx"]
-                    );
+            return RestoreMusicCataloge(Compression.Decompress("{0}//{1}".FormateEx(CacheDir, wwu.GenerateName()), UseLZ78Compress));
         }
 
         public object InvokeOperator(CacheResponseType crt, params object[] args)

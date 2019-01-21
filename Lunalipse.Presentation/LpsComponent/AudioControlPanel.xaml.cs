@@ -36,8 +36,8 @@ namespace Lunalipse.Presentation.LpsComponent
         /// <summary>
         /// 开关类事件触发，对于<see cref="AudioPanelTrigger.PausePlay"/>事件，<see cref="object"/>为<see cref="bool"/>，表示是否已暂停。
         /// </summary>
-        public event AudioPanelDelegation<AudioPanelTrigger, object> OnTrigging;
-        public event AudioPanelDelegation<PlayMode, object> OnModeChange;
+        public event Action<AudioPanelTrigger, object> OnTrigging;
+        public event Action<PlayMode, object> OnModeChange;
         public event ProgressChange OnProgressChanged;
         public event ProgressChange OnVolumeChanged;
         public event Action OnProfilePictureClicked;

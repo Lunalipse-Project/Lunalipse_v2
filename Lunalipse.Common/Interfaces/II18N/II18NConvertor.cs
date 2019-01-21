@@ -10,5 +10,6 @@ namespace Lunalipse.Common.Interfaces.II18N
     public interface II18NConvertor
     {
         string ConvertTo(SupportedPages page, string key);
+        string ConvertTo(SupportedPages page, string key, params object[] replace);
     }
 }

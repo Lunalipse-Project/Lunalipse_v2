@@ -7,18 +7,23 @@ using System.Windows.Media.Imaging;
 
 namespace Lunalipse.Common.Data
 {
+    [Serializable]
     public class MusicEntity :ICachable
     {
-        [Cachable]
-        public string Album, Name, ID3Name, Extension, Path, Year;
-        [Cachable]
+        [NonSerialized]
+        public string Album, ID3Name, Year;
+
+        public string Name, Path, Extension;
+        [NonSerialized]
         public string[] Artist;
-        [Cachable]
+        [NonSerialized]
         public TimeSpan EstDuration;
-        [Cachable]
+        [NonSerialized]
         public bool AlbumClassfied = false;
-        [Cachable]
+        [NonSerialized]
         public bool ArtistClassfied = false;
+        [NonSerialized]
+        public bool HasImage = false;
 
         public string ArtistFrist
         {
@@ -56,6 +61,10 @@ namespace Lunalipse.Common.Data
         {
             get;
             set;
+        }
+        public string AlbumProperty
+        {
+            get => Album;
         }
 
         public TimeSpan EstimateDurSecond

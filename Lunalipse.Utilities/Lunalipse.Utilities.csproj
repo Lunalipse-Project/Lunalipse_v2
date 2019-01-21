@@ -80,6 +80,8 @@
     <Compile Include="Win32\Win32Msg\POINT.cs" />
     <Compile Include="Win32\Win32Msg\tagMSG.cs" />
     <Compile Include="Win32\Win32Msg\WndMsgHook.cs" />
+    <Compile Include="Win32\Win32ThemeColor\DWMCOLORIZATIONPARAMS.cs" />
+    <Compile Include="Win32\Win32ThemeColor\WindowsThemeColor.cs" />
     <Compile Include="Win32\WindowCompositionAttribute.cs" />
     <Compile Include="Win32\WindowCompositionAttributeData.cs" />
     <Compile Include="Win32\WinHwndProc.cs" />

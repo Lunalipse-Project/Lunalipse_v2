@@ -54,6 +54,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicUI\CommonDialog.xaml.cs">
+      <DependentUpon>CommonDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Generic\Brush2Opacity.cs" />
     <Compile Include="Generic\ContentManager.cs" />
     <Compile Include="Generic\VisualParser\IndexingFile.cs" />
     <Compile Include="LpsComponent\Base\LpsDetailedItem.xaml.cs">
@@ -81,9 +85,9 @@
       <DependentUpon>LpsToggleSwitch.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\WaitingUI.cs" />
-    <Page Include="BasicUI\CommonDialogue.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="BasicUI\CommonDialog.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="font\MaterialIcon.xaml">
       <SubType>Designer</SubType>
@@ -165,7 +169,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="LpsWindow\Dialogue.xaml">
+    <Page Include="LpsWindow\UniversalDailogue.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -185,9 +189,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="BasicUI\CommonDialogue.xaml.cs">
-      <DependentUpon>CommonDialogue.xaml</DependentUpon>
-    </Compile>
     <Page Include="Themes\Resources\ColorDefinition.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -228,8 +229,8 @@
     <Compile Include="LpsComponent\VolumePanel.xaml.cs">
       <DependentUpon>VolumePanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LpsWindow\Dialogue.xaml.cs">
-      <DependentUpon>Dialogue.xaml</DependentUpon>
+    <Compile Include="LpsWindow\UniversalDailogue.xaml.cs">
+      <DependentUpon>UniversalDailogue.xaml</DependentUpon>
     </Compile>
     <Compile Include="LpsWindow\LunalipseMainWindow.cs" />
     <Compile Include="LpsWindow\LunalipseDialogue.cs" />

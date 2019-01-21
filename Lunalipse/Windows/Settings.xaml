@@ -7,7 +7,7 @@
         xmlns:LpsComponentBase="clr-namespace:Lunalipse.Presentation.LpsComponent.Base;assembly=Lunalipse.Presentation"
         xmlns:LpsComponent="clr-namespace:Lunalipse.Presentation.LpsComponent;assembly=Lunalipse.Presentation"
         xmlns:local="clr-namespace:Lunalipse.Windows"
-        mc:Ignorable="d"
+        mc:Ignorable="d" Closing="LunalipseDialogue_Closing"
         Title="CORE_SETTING" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
