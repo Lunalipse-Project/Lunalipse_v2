@@ -10,6 +10,8 @@ namespace Lunalipse.Common.Data
     {
         CORE_FUNC,
         CORE_GENERAL_SETTING,
-        CORE_CLOUD_LIB
+        CORE_CLOUD_LIB,
+        MULTI_LANG,
+        CORE_MUSICENTITY_EDITOR
     }
 }

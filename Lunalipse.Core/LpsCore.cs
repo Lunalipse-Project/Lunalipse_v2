@@ -3,6 +3,7 @@ using Lunalipse.Common.Data;
 using Lunalipse.Common.Generic.AudioControlPanel;
 using Lunalipse.Core.BehaviorScript;
 using Lunalipse.Core.LpsAudio;
+using Lunalipse.Core.Lyric;
 using Lunalipse.Core.PlayList;
 using Lunalipse.Utilities.Misc;
 
@@ -30,6 +31,8 @@ namespace Lunalipse.Core
             AudioDelegations.PlayingFinished += mComplete;
             AudioDelegations.PostionChanged += time => OnMusicProgressChanged?.Invoke(time);
             random = new UnrepeatedRandom();
+
+            AudioOut.LyricTokenzier = LyricTokenizer.INSTANCE;
         }
 
         private void mComplete()

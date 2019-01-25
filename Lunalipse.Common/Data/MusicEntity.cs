@@ -43,7 +43,7 @@ namespace Lunalipse.Common.Data
         }
 
         // Name stored in ID3v2 tag
-        public string IDv23Name
+        public string IDv3Name
         {
             get
             {

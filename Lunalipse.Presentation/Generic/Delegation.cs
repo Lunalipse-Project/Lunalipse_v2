@@ -10,5 +10,6 @@ namespace Lunalipse.Presentation.Generic
         public static Action<MusicEntity> CatalogueUpdated;
 
         public static Action<object> AddToNewCatalogue;
+        public static Action<MusicEntity> EditMetadata;
     }
 }

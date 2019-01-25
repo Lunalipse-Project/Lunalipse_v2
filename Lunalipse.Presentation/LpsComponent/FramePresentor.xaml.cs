@@ -60,6 +60,16 @@ namespace Lunalipse.Presentation.LpsComponent
             AnimatedSwitch(ui,step);
         }
 
+        public void BackWard()
+        {
+            Presentor.GoBack();
+        }
+
+        public void Forward()
+        {
+            Presentor.GoForward();
+        }
+
         private void AnimatedSwitch(object content, Action step)
         {
             _temp_content = content;

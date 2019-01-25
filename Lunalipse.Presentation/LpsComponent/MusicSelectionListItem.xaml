@@ -39,7 +39,7 @@
                     Foreground="{Binding Path=Foreground, ElementName=MUSICLST_ITEM}" 
                     Style="{StaticResource IconButton}" Content="{StaticResource AddToList}" 
                     FontSize="{StaticResource IconLarge}" Click="AddCatalogueBelonging"></Button>
-            <Button Grid.Column="1" Width="35" Height="35" Foreground="{Binding Path=Foreground, ElementName=MUSICLST_ITEM}" Style="{StaticResource IconButton}" Content="{StaticResource Edit}" FontSize="{StaticResource IconLarge}" Click="AddCatalogueBelonging"></Button>
+            <Button Grid.Column="1" Width="35" Height="35" Foreground="{Binding Path=Foreground, ElementName=MUSICLST_ITEM}" Style="{StaticResource IconButton}" Content="{StaticResource Edit}" FontSize="{StaticResource IconLarge}" Click="OpenMetadataEditor"></Button>
             <Button Grid.Column="2" Width="35" Height="35" Foreground="{Binding Path=Foreground, ElementName=MUSICLST_ITEM}" Style="{StaticResource IconButton}" Content="{StaticResource Close}" FontSize="{StaticResource IconLarge}" Click="MusicRemove"></Button>
         </Grid>
         <Grid Grid.Column="0" x:Name="SelectedMark">

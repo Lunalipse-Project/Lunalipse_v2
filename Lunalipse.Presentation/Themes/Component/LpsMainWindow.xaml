@@ -32,6 +32,7 @@
                             <!-- Here is Luna's Cutie Mark, In this case, set to fixed size -->
                             <ColumnDefinition Width="auto"/>
                             <!-- Text region set for rest -->
+                            <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" Width="64" Height="64">
@@ -48,6 +49,8 @@
                             </Viewbox>
                         </Grid>
                         <Label Grid.Column="1" FontFamily="{DynamicResource Equestria}" Content="Lunalipse" FontSize="60" Margin="10,0,0,0" Foreground="{TemplateBinding Foreground}"/>
+                        <Label Grid.Column="2" Content="Build-201901" FontSize="{DynamicResource FontSmall}" Margin="5,0,0,0" Foreground="{TemplateBinding Foreground}"
+                               HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
                     </Grid>
                 </Grid>
             </Border>

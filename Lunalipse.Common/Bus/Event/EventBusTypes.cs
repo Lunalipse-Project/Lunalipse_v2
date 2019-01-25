@@ -27,6 +27,14 @@ namespace Lunalipse.Common.Bus.Event
         /// <summary>
         /// 动作请求的添加/新建操作
         /// </summary>
-        ON_ACTION_REQ_NEW
+        ON_ACTION_REQ_NEW,
+        /// <summary>
+        /// 动作请求的启用操作
+        /// </summary>
+        ON_ACTION_REQ_ENABLE,
+        /// <summary>
+        /// 动作请求的禁用操作
+        /// </summary>
+        ON_ACTION_REQ_DISABLE
     }
 }

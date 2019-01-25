@@ -98,6 +98,7 @@ namespace Lunalipse.Core.LpsAudio
             wasapiOut = WasapiOut.IsSupportedOnCurrentPlatform ? GetWasapiSoundOut(immersed) : GetDirectSoundOut();
             lfw = LpsFftWarp.INSTANCE;
             lEnum = new LyricEnumerator();
+            lEnum.LyricDefaultDir = "Lyrics";
             ConsoleAdapter.INSTANCE.RegisterComponent("lpsa", this);
             
             wasapiOut.Stopped += (s, e) =>
@@ -116,7 +117,8 @@ namespace Lunalipse.Core.LpsAudio
         //Interface implements
         public void Load(MusicEntity music)
         {
-            AudioDelegations.LyricLoadStatus?.Invoke(lEnum.AcquireLyric(music));
+            bool LyrciPerpared = lEnum.AcquireLyric(music);
+            AudioDelegations.LyricLoadStatus?.Invoke(LyrciPerpared);
             initializeSoundSource(music);
             isLoaded = true;
             wasapiOut.Volume = _vol / 100;

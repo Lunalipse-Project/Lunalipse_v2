@@ -42,6 +42,11 @@ namespace Lunalipse.Common.Bus.Event
         /// </summary>
         Dictionary<Type, Action<EventBusTypes, object[]>> UnicastRegisterTable;
 
+
+        protected EventBus()
+        {
+            UnicastRegisterTable = new Dictionary<Type, Action<EventBusTypes, object[]>>();
+        }
         /// <summary>
         /// 向事件总线发送一个全局广播
         /// </summary>
@@ -72,6 +77,11 @@ namespace Lunalipse.Common.Bus.Event
         public void Unicast(EventBusTypes ActionStatus, Type Receiver, params object[] Message)
         {
             UnicastRegisterTable[Receiver]?.Invoke(ActionStatus, Message);
+        }
+
+        public void AddUnicastReciever(Type type, Action<EventBusTypes, object[]> action)
+        {
+            UnicastRegisterTable.Add(type, action);
         }
     }
 }

@@ -9,17 +9,12 @@ using System.Windows.Threading;
 using System.Collections.Generic;
 using Lunalipse.Common.Generic.AudioControlPanel;
 using System.Windows.Media;
-using Lunalipse.I18N;
-using Lunalipse.Core.I18N;
 using System.Windows.Media.Imaging;
 using Lunalipse.Common.Generic.Catalogue;
 using Lunalipse.Core.Cache;
-using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Core;
 using Lunalipse.Pages;
 using System.Windows.Media.Animation;
-using System.Reflection;
-using System.IO;
 using System.Threading.Tasks;
 using Lunalipse.Windows;
 using Lunalipse.Common.Interfaces.II18N;
@@ -27,6 +22,7 @@ using Lunalipse.Common.Bus.Event;
 using Lunalipse.Common.Generic.I18N;
 using Lunalipse.Common.Generic.Cache;
 using Lunalipse.Auxiliary;
+using Lunalipse.Core.LpsAudio;
 
 namespace Lunalipse
 {
@@ -46,6 +42,7 @@ namespace Lunalipse
         EventBus Bus;
         private PlaylistGuard playlistGuard;
         LpsCore core;
+        GLS GlobalSetting = GLS.INSTANCE;
 
         CatalogueShowCase showcase;
         MusicSelected musicList;
@@ -55,6 +52,7 @@ namespace Lunalipse
         DoubleAnimation MinimizePanel;
 
         List<Catalogue> ByLocation, ByArtist, ByAlbum, ByUserDefined;
+        private DesktopDisplay desktopDisplay;
 
         public MainWindow() : base()
         {
@@ -72,10 +70,7 @@ namespace Lunalipse
             {
                 mlp.AddToPool(path);
             }
-            if (cacheSystem.ComponentCacheExists(CacheType.MUSIC_CATALOGUE_CACHE))
-            {
-                playlistGuard.Restore();
-            }
+            playlistGuard.Restore();
 
             CataloguesRefleshAll();
 
@@ -164,18 +159,6 @@ namespace Lunalipse
             Bus = EventBus.Instance;
             playlistGuard = new PlaylistGuard();
 
-            #region duplicated
-            //mmdr = new MediaMetaDataReader(converter);
-            //mlp.AddToPool("F:/M2", mmdr);
-
-            //intp = Interpreter.INSTANCE(@"F:\Lunalipse\TestUnit\bin\Debug");
-            //if (intp.Load("prg2"))
-            //{
-            //    PlayFinished();
-            //}
-            //alb.Source = mlp.ToCatalogue().GetCatalogueCover();
-            #endregion
-
             core.OnMusicComplete += PlayFinished;
             core.OnMusicPrepared += MusicPerpeared;
             core.OnMusicProgressChanged += NotifyChanged;
@@ -229,10 +212,9 @@ namespace Lunalipse
 
         private void ControlPanel_OnProfilePictureClicked()
         {
-            if (musicList.SelectedCatalogue != null)
+            if(core.AudioOut.Playing)
             {
-                musicList.SetCatalogue(core.currentCatalogue, true);
-                FPresentor.ShowContent(musicList);
+                FPresentor.ShowContent(new MusicDetail(core.CurrentPlaying, ControlPanel.AlbumProfile));
             }
         }
 
@@ -281,6 +263,7 @@ namespace Lunalipse
         private void ControlPanel_OnVolumeChanged(double value)
         {
             core.CurrentMusicVolume = (float)value;
+            GlobalSetting.Volume = core.CurrentMusicVolume;
         }
 
         /// <summary>
@@ -312,6 +295,14 @@ namespace Lunalipse
                     break;
                 case AudioPanelTrigger.SkipPrev:
                     core.PerpareMusic(core.currentCatalogue.getPrevious());
+                    break;
+                case AudioPanelTrigger.Lyric:
+                    Bus.Unicast(
+                        GlobalSetting.LyricEnabled ?
+                            EventBusTypes.ON_ACTION_REQ_DISABLE :
+                            EventBusTypes.ON_ACTION_REQ_ENABLE,
+                        typeof(DesktopDisplay), "lyric");
+                    GlobalSetting.LyricEnabled = !GlobalSetting.LyricEnabled;
                     break;
             }
         }
@@ -346,6 +337,7 @@ namespace Lunalipse
                 musicList.PlayingIndex = musicList.SelectedCatalogue.CurrentIndex;
                 ControlPanel.CurrentMusic = Music.Artist[0] +" - "+ Music.Name;
                 ControlPanel.TotalLength = mTrack.Duration;
+                AudioDelegations.LyricUpdated?.Invoke(null);
             });
         }
 
@@ -368,13 +360,11 @@ namespace Lunalipse
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             CATALOGUES.SelectedIndex = -1;
+            LunalipseLogger.GetLogger().Info("Start Crossing Window");
+            desktopDisplay = new DesktopDisplay();
+            desktopDisplay.Show();
             LunalipseLogger.GetLogger().Info("Loaded complete, rendering UI");
-            //cacheSystem.CacheObject(CPOOL, CacheType.MUSIC_CATALOGUE_CACHE);
-            //dipMusic.AsyncExecute(() =>
-            //{
-            //    
-            //    dipMusic.Catalogue = mlp.ToCatalogue();
-            //});
+
         }
 
 
@@ -389,6 +379,7 @@ namespace Lunalipse
         }
         private void Window_Closed(object sender, EventArgs e)
         {
+            desktopDisplay.Close();
             LunalipseLogger.GetLogger().Debug("Save Playlist");
             playlistGuard.SavePlaylist();
             LunalipseLogger.GetLogger().Info("Terminating Lunalipse.....");

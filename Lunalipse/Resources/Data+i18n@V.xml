@@ -1,5 +1,11 @@
 <LpsI18N>
     <Lang lang="CHINESE_SIM">
+      <Page key="MULTI_LANG">
+        <Key name="LANG_CHN_SIM">简体中文</Key>
+        <Key name="LANG_CHN_TRD">繁體中文</Key>
+        <Key name="LANG_ENG">English</Key>
+        <Key name="LANG_RUS">Русский</Key>
+      </Page>
       <Page key="CORE_FUNC">
         <Key name="CORE_LBS_SynatxError">一个常规的语法错误</Key>
         <Key name="CORE_LBS_InfiniteCall">检测到循环调用</Key>
@@ -45,13 +51,15 @@
         <Key name="CORE_SETTING_SETTING_SECURITY">安全</Key>
         <Key name="CORE_SETTING_SETTING_ACTION_SAVE_CFG">应用并保存</Key>
         <Key name="CORE_SETTING_SAVE_SETTING_TITLE">是否保存配置</Key>
-        <Key name="CORE_SETTING_SAVE_SETTING_CONTENT">您以更改了配置，请问是否要保存？只有保存这些配置，Lunalipse才能保证下次启动时能够重新按照配置进行调整。</Key>
+        <Key name="CORE_SETTING_SAVE_SETTING_CONTENT">您更改了配置，请问是否要保存？只有保存这些配置，Lunalipse才能保证下次启动时能够重新按照此配置进行调整。</Key>
 
         <!-- Music Presentor Area -->
         <Key name="CORE_PRESENTOR_UNKNOW_ARTIST">未知艺术家</Key>
         <Key name="CORE_PRESENTOR_UNKNOW_ALBUM">未知专辑</Key>
           
         <Key name="CORE_LOADING">正在加载 ...</Key>
+
+        <Key name="CORE_MUSICENTITY_EDITOR_TITLE">编辑元数据</Key>
       </Page>
       <Page key="CORE_GENERAL_SETTING">
         <Key name="CORE_SETTING_MUSIC_SOURCES">我们将会在以下地方查找音乐</Key>
@@ -60,6 +68,13 @@
         <Key name="CORE_SETTING_BTN_ADDNEW">增加位置</Key>
         <Key name="CORE_SETTING_BTN_REMOVE">删除所选位置</Key>
         <Key name="CORE_SETTING_FULL_PATH">完整路径</Key>
+        
+      </Page>
+      <Page key="CORE_MUSICENTITY_EDITOR">
+        <Key name="CORE_MEEDITOR_NOTALLOWED">禁止编辑播放中的歌曲</Key>
+        <Key name="CORE_MEEDITOR_NAME">名称</Key>
+        <Key name="CORE_MEEDITOR_ABLUM">专辑</Key>
+        <Key name="CORE_MEEDITOR_ARTIST">艺术家</Key>
         
       </Page>
       <!-- Online Music Library -->

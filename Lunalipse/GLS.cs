@@ -41,7 +41,14 @@ namespace Lunalipse
 
         [ConfigField]
         public List<string> MusicBaseDirs;
+
         [ConfigField]
         public float Volume = 0.4f;
+
+        [ConfigField]
+        public bool LyricEnabled = true;
+
+        [ConfigField]
+        public bool FFTEnabled = true;
     }
 }

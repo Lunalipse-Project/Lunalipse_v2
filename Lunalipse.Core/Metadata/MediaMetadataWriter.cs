@@ -4,7 +4,7 @@ using TL = TagLib;
 
 namespace Lunalipse.Core.Metadata
 {
-    class MediaMetadataWriter : IMediaMetadataWriter
+    public class MediaMetadataWriter : IMediaMetadataWriter
     {
         TL.File mfile;
         public MediaMetadataWriter(string path)
@@ -29,8 +29,15 @@ namespace Lunalipse.Core.Metadata
 
         public bool SetArtist(int index, string artist)
         {
-            if (index > mfile.Tag.Performers.Length - 1) return false;
-            mfile.Tag.Performers[index] = artist;
+            string[] artists;
+            if (mfile.Tag.Performers.Length == 0)
+            {
+                artists = new string[1];
+            }
+            else artists = mfile.Tag.Performers;
+            if (index >= artists.Length) return false;
+            artists[index] = artist;
+            mfile.Tag.Performers = artists;
             return true;
         }
 

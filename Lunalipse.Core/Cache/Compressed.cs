@@ -12,7 +12,6 @@ namespace Lunalipse.Core.Cache
     {
         public static bool Compress(byte[] b, string path,bool enableCompress = true)
         {
-            if (File.Exists(path)) return true;
             try
             {
                 using (FileStream fs = new FileStream(path, FileMode.Create))

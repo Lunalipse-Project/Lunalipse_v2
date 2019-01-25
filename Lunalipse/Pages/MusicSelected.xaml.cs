@@ -6,6 +6,7 @@ using Lunalipse.I18N;
 using Lunalipse.Presentation.Generic;
 using Lunalipse.Presentation.LpsWindow;
 using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Lunalipse.Pages
@@ -22,6 +23,7 @@ namespace Lunalipse.Pages
         bool isRecovery = false;
 
         string AddToCatalogueTitle = "CORE_ADDPLAYLIST_TITLE";
+        string MetadataEditorTitle = "CORE_MUSICENTITY_EDITOR_TITLE";
 
         II18NConvertor convertor;
 
@@ -32,6 +34,7 @@ namespace Lunalipse.Pages
             convertor = TranslationManagerBase.AquireConverter();
             TranslationManagerBase.OnI18NEnvironmentChanged += Translate;
             Delegation.AddToNewCatalogue += MusicAddedRequest;
+            Delegation.EditMetadata += EditMetadataRequest;
             Translate(convertor);
             //musicListbox.OnListStatusChanged += MusicListbox_OnListStatusChanged;
         }
@@ -40,8 +43,15 @@ namespace Lunalipse.Pages
         {
             ChooseCatalogues chooseCataloguesPage = new ChooseCatalogues(obj as MusicEntity);
             UniversalDailogue ShowPage = new UniversalDailogue(chooseCataloguesPage,
-                AddToCatalogueTitle, System.Windows.MessageBoxButton.OK);
+                AddToCatalogueTitle, MessageBoxButton.OK);
             ShowPage.ShowDialog();
+        }
+
+        private void EditMetadataRequest(MusicEntity musicEntity)
+        {
+            EntityEditDialoguePage entityEditDialoguePage = new EntityEditDialoguePage(musicEntity);
+            UniversalDailogue MetadataEditor = new UniversalDailogue(entityEditDialoguePage, MetadataEditorTitle, MessageBoxButton.OKCancel);
+            MetadataEditor.ShowDialog();
         }
 
         //private void MusicListbox_OnListStatusChanged(GeneratorStatus status)
@@ -75,6 +85,7 @@ namespace Lunalipse.Pages
         {
             musicListbox.Translate(i8c);
             AddToCatalogueTitle = i8c.ConvertTo(SupportedPages.CORE_FUNC, AddToCatalogueTitle);
+            MetadataEditorTitle = i8c.ConvertTo(SupportedPages.CORE_FUNC, MetadataEditorTitle);
         }
 
         public int PlayingIndex

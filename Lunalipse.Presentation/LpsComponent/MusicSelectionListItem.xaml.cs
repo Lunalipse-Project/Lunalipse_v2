@@ -65,5 +65,10 @@ namespace Lunalipse.Presentation.LpsComponent
         {
             Delegation.AddToNewCatalogue?.Invoke((sender as Button).DataContext);
         }
+
+        private void OpenMetadataEditor(object sender, RoutedEventArgs e)
+        {
+            Delegation.EditMetadata?.Invoke((sender as Button).DataContext as MusicEntity);
+        }
     }
 }
