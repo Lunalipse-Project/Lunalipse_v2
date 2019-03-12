@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Lunalipse.Presentation.LpsComponent"
-             mc:Ignorable="d" Height="22"
+             mc:Ignorable="d" Height="22" x:Name="PROGRESSBAR"
              d:DesignHeight="8" d:DesignWidth="800">
     <Grid x:Name="Container" Height="22">
         <Grid.RowDefinitions>
@@ -12,43 +12,43 @@
             <RowDefinition Height="8"/>
             <RowDefinition Height="0.6*"/>
         </Grid.RowDefinitions>
-        <Border Grid.Row="1"  CornerRadius="4" Background="{Binding TrackColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MusicProgressBar}}}">
+        <Border Grid.Row="1"  CornerRadius="4" x:Name="BAR_TRACK">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Border Grid.Column="0" x:Name="CurrentProgress" HorizontalAlignment="Left" Background="{Binding BarColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MusicProgressBar}}}" CornerRadius="4,0,0,4" Height="8" Width="400">
+                <Border Grid.Column="0" x:Name="CurrentProgress" HorizontalAlignment="Left" CornerRadius="4,0,0,4" Height="8" Width="400" Background="{Binding Path=BarColor, ElementName=PROGRESSBAR}">
                     <Border.Effect>
-                        <DropShadowEffect BlurRadius="10" Direction="0" Color="{Binding BarColor.Color, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MusicProgressBar}}}" Opacity="0.8"/>
+                        <DropShadowEffect BlurRadius="10" Direction="0" Color="{Binding Path=BarColor.Color, ElementName=PROGRESSBAR}" Opacity="0.8"/>
                     </Border.Effect>
                 </Border>
-                <Border Grid.Column="1" x:Name="Thumb" VerticalAlignment="Center" HorizontalAlignment="Left" Width="8" Height="8" Background="{Binding BarColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MusicProgressBar}}}" Margin="-4,0,0,0" RenderTransformOrigin="0.5,0.5" CornerRadius="4">
+                <Border Grid.Column="1" x:Name="Thumb" VerticalAlignment="Center" HorizontalAlignment="Left" Width="8" Height="8" Background="{Binding Path=ThumbColor, ElementName=PROGRESSBAR}" Margin="-4,0,0,0" RenderTransformOrigin="0.5,0.5" CornerRadius="4">
                     <Border.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform x:Name="SCALETRANSF" ScaleX="1" ScaleY="1"/>
                         </TransformGroup>
                     </Border.RenderTransform>
-                    <Border.Triggers>
-                        <EventTrigger RoutedEvent="Border.MouseEnter">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetName="SCALETRANSF" Storyboard.TargetProperty="ScaleX" From="1" To="1.8" Duration="0:0:0.4"/>
-                                    <DoubleAnimation Storyboard.TargetName="SCALETRANSF" Storyboard.TargetProperty="ScaleY" From="1" To="1.8" Duration="0:0:0.4"/>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                        <EventTrigger RoutedEvent="Border.MouseLeave">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetName="SCALETRANSF" Storyboard.TargetProperty="ScaleX" From="1.8" To="1" Duration="0:0:0.4"/>
-                                    <DoubleAnimation Storyboard.TargetName="SCALETRANSF" Storyboard.TargetProperty="ScaleY" From="1.8" To="1" Duration="0:0:0.4"/>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                    </Border.Triggers>
                 </Border>
             </Grid>
+            <Border.Triggers>
+                <EventTrigger RoutedEvent="Border.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="SCALETRANSF" Storyboard.TargetProperty="ScaleX" From="1" To="1.8" Duration="0:0:0.4"/>
+                            <DoubleAnimation Storyboard.TargetName="SCALETRANSF" Storyboard.TargetProperty="ScaleY" From="1" To="1.8" Duration="0:0:0.4"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Border.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="SCALETRANSF" Storyboard.TargetProperty="ScaleX" From="1.8" To="1" Duration="0:0:0.4"/>
+                            <DoubleAnimation Storyboard.TargetName="SCALETRANSF" Storyboard.TargetProperty="ScaleY" From="1.8" To="1" Duration="0:0:0.4"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Border.Triggers>
         </Border>
     </Grid>
 </UserControl>

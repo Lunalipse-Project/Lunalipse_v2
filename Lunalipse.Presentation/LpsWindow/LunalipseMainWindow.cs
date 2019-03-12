@@ -14,6 +14,8 @@ namespace Lunalipse.Presentation.LpsWindow
         public event RoutedEventHandler OnSettingClicked;
         public event RoutedEventHandler OnMinimizClicked;
 
+        private Label VersionNumber;
+
         public static readonly DependencyProperty ENABLE_BLUR =
             DependencyProperty.Register("LPSMAINWND_ENABLEBLUR",
                                         typeof(bool),
@@ -32,7 +34,7 @@ namespace Lunalipse.Presentation.LpsWindow
         {
             if (obj == null) return;
             Foreground = obj.Foreground;
-            Background = obj.Primary.SetOpacity(0.85).ToLuna();
+            Background = obj.Primary.SetOpacity(0.85);
         }
 
         public bool EnableBlur
@@ -51,6 +53,7 @@ namespace Lunalipse.Presentation.LpsWindow
             (ct.FindName("BtnCloseWn", this) as Button).Click += CloseWnd ;
             (ct.FindName("BtnSetting", this) as Button).Click += (a, b) => OnSettingClicked?.Invoke(a, b);
             (ct.FindName("BtnMinimiz", this) as Button).Click += (a, b) => OnMinimizClicked?.Invoke(a, b);
+            VersionNumber = ct.FindName("VersionNumber", this) as Label;
             if (EnableBlur)
                 this.EnableBlur();
         }
@@ -63,6 +66,11 @@ namespace Lunalipse.Presentation.LpsWindow
         protected void TitleBarMove(object sender, EventArgs args)
         {
             this.DragMove();
+        }
+
+        public void SetVersion(string version)
+        {
+            VersionNumber.Content = version;
         }
     }
 }

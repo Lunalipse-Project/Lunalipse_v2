@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,9 +10,11 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Lunalipse.Common.Bus.Event;
+using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Core.LpsAudio;
 using Lunalipse.Utilities;
 using Lunalipse.Utilities.Win32;
@@ -24,6 +27,11 @@ namespace Lunalipse.Windows
     public partial class DesktopDisplay : Window
     {
         EventBus eventBus;
+        static event Action<string,int> OnToastSet;
+
+        DoubleAnimation PreFadeOut = new DoubleAnimation(1, 1, new Duration(TimeSpan.FromSeconds(5)));
+        DoubleAnimation FadeOut = new DoubleAnimation(1, 0, new Duration(TimeSpan.FromSeconds(2)));
+
         public DesktopDisplay()
         {
             InitializeComponent();
@@ -41,7 +49,29 @@ namespace Lunalipse.Windows
                         LyricDisplayArea.Content = "";
                 });
             };
+            OnToastSet += DesktopDisplay_OnToastSet;
+            PreFadeOut.Completed += (sender, eventArgs) => BorderDisplay.BeginAnimation(OpacityProperty, FadeOut);
+
+            ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
+            ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
+            this.Topmost = true;
         }
+
+        private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
+        {
+            Foreground = obj.Foreground;
+            BorderDisplay.Background = obj.Primary;
+        }
+
+        private void DesktopDisplay_OnToastSet(string Content, int ElapseTime)
+        {
+            BorderDisplay.Opacity = 1;
+            Toast.Content = Content;
+            PreFadeOut.Duration = new Duration(TimeSpan.FromMilliseconds(ElapseTime));
+            BorderDisplay.BeginAnimation(OpacityProperty, PreFadeOut);
+        }
+
+        public static void ShowToast(string Content, int ElapseTime) => OnToastSet?.Invoke(Content, ElapseTime);
 
         private void ReceiveAction(EventBusTypes eventBusTypes, object[] param)
         {

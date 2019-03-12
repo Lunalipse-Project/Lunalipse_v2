@@ -8,36 +8,44 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>Lunalipse</RootNamespace>
     <AssemblyName>Lunalipse</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;BUILD</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;BUILD</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Lunaxisky.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="policy.2.0.taglib-sharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
@@ -73,16 +81,26 @@
     <Compile Include="Pages\AddCatalogues.xaml.cs">
       <DependentUpon>AddCatalogues.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\CatalogueEditPage.xaml.cs">
+      <DependentUpon>CatalogueEditPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\ChooseCatalogues.xaml.cs">
       <DependentUpon>ChooseCatalogues.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ConfigPage\AppearanceConfig.xaml.cs">
+      <DependentUpon>AppearanceConfig.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\ConfigPage\GeneralConfig.xaml.cs">
       <DependentUpon>GeneralConfig.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ConfigPage\Structures\ThemeListStruc.cs" />
     <Compile Include="Pages\ConfigPage\Structures\PlaylistStruc.cs" />
     <Compile Include="Pages\ConfigPage\Structures\MusicPathSturc.cs" />
     <Compile Include="Pages\EntityEditDialoguePage.xaml.cs">
       <DependentUpon>EntityEditDialoguePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\LunalipseAbout.xaml.cs">
+      <DependentUpon>LunalipseAbout.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\MusicDetail.xaml.cs">
       <DependentUpon>MusicDetail.xaml</DependentUpon>
@@ -124,6 +142,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\CatalogueEditPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\CatalogueShowcase.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -132,11 +154,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\ConfigPage\AppearanceConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\ConfigPage\GeneralConfig.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\EntityEditDialoguePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\LunalipseAbout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -195,6 +225,7 @@
     <EmbeddedResource Include="Resources\Data+i18n%40V.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Lunaxisky.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -203,7 +234,9 @@
     <EmbeddedResource Include="Resources\Themes+TwilightSparkle.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSCore\CSCore.csproj">

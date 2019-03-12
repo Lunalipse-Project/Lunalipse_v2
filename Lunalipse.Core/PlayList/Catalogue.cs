@@ -19,7 +19,7 @@ namespace Lunalipse.Core.PlayList
         private int Currently = 0;
 
         private string name;
-        [NonSerialized]
+
         private string uid;
 
         private bool AlbumClassified, ArtistClassified, LocationClassified, mainCatalogue, UserDefined;
@@ -39,7 +39,12 @@ namespace Lunalipse.Core.PlayList
         /// Store the name of catalogue
         /// </summary>
 
-        public string Name { get => name; }
+        public string Name { get => name;
+            set {
+                name = value;
+                IsModified = true;
+            }
+        }
 
         /// <summary>
         /// The Unique ID of the catalogue (MUST UNIQUE!)
@@ -107,7 +112,18 @@ namespace Lunalipse.Core.PlayList
             }
         }
 
-        
+        public Catalogue(string Name,string Uid, bool isMainUses = false)
+            : this(isMainUses)
+        {
+            name = Name;
+            MusicList = new List<MusicEntity>();
+            if (!isMainUses)
+            {
+                MusicListPool.OnMusicDeleted += DeleteMusic;
+                EventBus.OnMulticastRecieved += EventBus_OnMulticastRecieved;
+            }
+            this.uid = Uid;
+        }
 
         public Catalogue(List<MusicEntity> list, string Name, bool isMainUses = false)
             : this(isMainUses)
@@ -283,6 +299,13 @@ namespace Lunalipse.Core.PlayList
 
         public string Uid() => UUID;
 
+        
+
         string ICatalogue.Name() => name;
+
+        public bool IsUserDefined()
+        {
+            return isUserDefined;
+        }
     }
 }

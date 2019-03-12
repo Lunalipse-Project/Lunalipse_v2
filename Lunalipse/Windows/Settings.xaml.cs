@@ -5,10 +5,12 @@ using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Core.GlobalSetting;
 using Lunalipse.I18N;
+using Lunalipse.Pages;
 using Lunalipse.Pages.ConfigPage;
 using Lunalipse.Presentation.BasicUI;
 using Lunalipse.Presentation.LpsWindow;
 using Lunalipse.Utilities;
+using System;
 
 namespace Lunalipse.Windows
 {
@@ -34,6 +36,13 @@ namespace Lunalipse.Windows
             SettingHash = GLS.INSTANCE.ComputeHash();
             globalSettingHelper = GlobalSettingHelper<GLS>.INSTANCE;
             globalSettingHelper.UseLZ78Compress = true;
+            this.Loaded += Settings_Loaded;
+        }
+
+        private void Settings_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            SPlanelSlider.UpdateLayout();
+            SPlanelSlider.SelectedIndex = 0;
         }
 
         private void SPlanelSlider_OnSelectionChanged(Common.Interfaces.ILpsUI.LpsDetailedListItem selected, object tag = null)
@@ -44,10 +53,15 @@ namespace Lunalipse.Windows
                 case SettingCatalogues.SETTING_GENERAL:
                     SPanleViewer.ShowContent(new GeneralConfig(), true);
                     break;
-
-                //case SettingCatalogues.SETTING_ACTION_SAVE_CFG:
-                //    SPanleViewer.ShowContent(new SaveAndApply(), true);
-                //    break;
+                case SettingCatalogues.SETTING_PERFORMANCE:
+                    SPanleViewer.ShowContent(new AppearanceConfig(), true);
+                    break;
+                case SettingCatalogues.SETTING_ABOUT:
+                    SPanleViewer.ShowContent(new LunalipseAbout(), true);
+                    break;
+                    //case SettingCatalogues.SETTING_ACTION_SAVE_CFG:
+                    //    SPanleViewer.ShowContent(new SaveAndApply(), true);
+                    //    break;
             }
         }
 
@@ -55,7 +69,7 @@ namespace Lunalipse.Windows
         {
             if (obj == null) return;
             Background = obj.Primary.SetOpacity(0.9).ToLuna();
-            SPlanelSlider.Background = obj.Primary.SetOpacity(1).ToLuna();
+            SPlanelSlider.Background = obj.Primary;
         }
 
         public void Translate(II18NConvertor i8c)

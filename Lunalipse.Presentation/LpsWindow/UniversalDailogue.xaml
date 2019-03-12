@@ -11,7 +11,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="45px"/>
         </Grid.RowDefinitions>
-        <Frame x:Name="Display" Grid.Row="0" Background="Transparent" Foreground="{Binding Foreground,ElementName=UniversalD}"/>
+        <Frame x:Name="Display" Grid.Row="0" Background="Transparent" Foreground="{Binding Foreground,ElementName=UniversalD}" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"/>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="10px"/>

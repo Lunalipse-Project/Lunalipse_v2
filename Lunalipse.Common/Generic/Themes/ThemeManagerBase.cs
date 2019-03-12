@@ -31,7 +31,7 @@ namespace Lunalipse.Common.Generic.Themes
 
         public IEnumerable<string> GetAvailableThemes()
         {
-            foreach(string fi in Directory.GetFiles(ENV_PATH + "/Themes"))
+            foreach (string fi in Directory.GetFiles(ENV_PATH + "/Themes"))
             {
                 yield return Path.GetFileNameWithoutExtension(fi);
             }

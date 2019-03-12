@@ -1,21 +1,12 @@
-﻿using Lunalipse.Common.Generic.I18N;
+﻿using Lunalipse.Common.Bus.Event;
+using Lunalipse.Common.Generic.I18N;
 using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Core.PlayList;
-using Lunalipse.I18N;
+using Lunalipse.Presentation.LpsWindow;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Lunalipse.Pages
 {
@@ -27,6 +18,8 @@ namespace Lunalipse.Pages
         List<Catalogue> catalogues;
         II18NConvertor converter;
 
+        private string EDIT_CATALOGUE_TITLE;
+
         public event Action<Catalogue> CatalogueSelected;
 
         public CatalogueShowCase()
@@ -34,12 +27,26 @@ namespace Lunalipse.Pages
             InitializeComponent();
             showcase.OnCatalogueSelectChanged += Showcase_OnCatalogueSelectChanged;
             converter = TranslationManagerBase.AquireConverter();
-            TranslationManagerBase.OnI18NEnvironmentChanged += showcase.Translate;
+            TranslationManagerBase.OnI18NEnvironmentChanged += TranslationManagerBase_OnI18NEnvironmentChanged;
+            TranslationManagerBase_OnI18NEnvironmentChanged(converter);
+            showcase.OnCatalogueEditRequest += Showcase_OnCatalogueEditRequest;
+        }
+
+        private void TranslationManagerBase_OnI18NEnvironmentChanged(II18NConvertor obj)
+        {
+            EDIT_CATALOGUE_TITLE = obj.ConvertTo(Common.Data.SupportedPages.CORE_FUNC, "CORE_CATALOGUE_INFO_TITLE");
             showcase.Translate(converter);
+        }
+
+        private void Showcase_OnCatalogueEditRequest(Common.Interfaces.IPlayList.ICatalogue obj)
+        {
+            UniversalDailogue EditCatalogue = new UniversalDailogue(new CatalogueEditPage(obj), EDIT_CATALOGUE_TITLE, MessageBoxButton.OK);
+            EditCatalogue.ShowDialog();
         }
 
         public void SetCatalogues(List<Catalogue> catalogues)
         {
+            
             this.catalogues = catalogues;
             showcase.ClearAll();
             if(catalogues!=null)

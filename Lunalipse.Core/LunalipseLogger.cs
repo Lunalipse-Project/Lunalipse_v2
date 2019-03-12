@@ -55,6 +55,20 @@ namespace Lunalipse.Core
                 logWriter.WriteLine(trace);
             }
         }
+        public void Exception(Exception e, string trace = "", string ID = "")
+        {
+            string name = ID == "" ? new StackFrame(1).GetMethod().ReflectedType.Name : ID;
+            Error(" ======= Exception =======", name);
+            Error(e.Message, name);
+            Error(e.Source, name);
+            Error(e.StackTrace, name);
+            if (e.InnerException == null) return;
+            Error(" ======= Inner Exception =======");
+            Error(e.InnerException.Message, name);
+            Error(e.InnerException.Source, name);
+            Error(e.InnerException.StackTrace, name);
+            Error(e.ToString());
+        }
 
         public void Debug(string message, string ID = "")
         {

@@ -10,6 +10,8 @@ namespace Lunalipse.Common.Generic.Themes
     {
         public string Name;
         public string Description;
+        public bool isBuildIn;
+        public string Uid;
         public ThemeTuple ColorBlend;
     }
 }

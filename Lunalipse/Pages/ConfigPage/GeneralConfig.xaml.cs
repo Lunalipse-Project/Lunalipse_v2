@@ -4,23 +4,10 @@ using Lunalipse.Common.Generic.I18N;
 using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Core.PlayList;
-using Lunalipse.I18N;
 using Lunalipse.Pages.ConfigPage.Structures;
 using Lunalipse.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using WinForms = System.Windows.Forms;
 
 namespace Lunalipse.Pages.ConfigPage
@@ -65,10 +52,7 @@ namespace Lunalipse.Pages.ConfigPage
             //其他监听器
             MusicPath.OnSelectionChanged += MusicPath_OnSelectionChanged;
 
-            
         }
-
-        
 
         private void MusicPath_OnSelectionChanged(Common.Interfaces.ILpsUI.LpsDetailedListItem selected, object tag = null)
         {
@@ -107,7 +91,6 @@ namespace Lunalipse.Pages.ConfigPage
                 });
                 //AddedCatalogues.Add(c.UUID);
             }
-            //MusicPath.SelectedIndex = 0;
         }
 
         public void Translate(II18NConvertor i8c)
@@ -123,6 +106,9 @@ namespace Lunalipse.Pages.ConfigPage
         private void GeneralConfigPage_Loaded(object sender, RoutedEventArgs e)
         {
             ReadManifest();
+            //在调用SelectedIndex前（内部使用ControlTemplate.FindName实现）,显式更新ItemControl的布局，以免引发 InvalidOperationException
+            MusicPath.UpdateLayout();
+            MusicPath.SelectedIndex = 0;
         }
 
         // Add a new location
@@ -153,7 +139,7 @@ namespace Lunalipse.Pages.ConfigPage
             string directory = mps.DetailedDescription;
             // 从所有歌曲结合中移除
             MLP.Musics.RemoveAll(x => System.IO.Path.GetDirectoryName(x.Path).Equals(directory));
-            // 移除所有派生对象
+            // 移除所有派生的歌单
             CP.RemoveChildrenCatalogue(mps.UUID);
             // 从所有Catalogue集合中移除
             CP.RemoveCatalogue(mps.UUID);

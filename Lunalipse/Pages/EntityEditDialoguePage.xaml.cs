@@ -4,6 +4,8 @@ using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Common.Interfaces.ILpsUI;
 using Lunalipse.Common.Interfaces.IMetadata;
 using Lunalipse.Core.Metadata;
+using Lunalipse.Presentation.BasicUI;
+using Lunalipse.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,6 +31,8 @@ namespace Lunalipse.Pages
     {
         MusicEntity musicEntity;
         IMediaMetadataWriter mediaMetadataWriter;
+        string FileInUseCaption = "";
+        string FileInUseMessage = "";
         public EntityEditDialoguePage(MusicEntity musicEntity)
         {
             InitializeComponent();
@@ -57,11 +61,13 @@ namespace Lunalipse.Pages
 
         void TranslateLables(II18NConvertor i8c)
         {
-            foreach (Label label in FindVisualChildren<Label>(this))
+            foreach (Label label in Utils.FindVisualChildren<Label>(this))
             {
                 if (label.Tag == null) continue;
                 label.Content = i8c.ConvertTo(SupportedPages.CORE_MUSICENTITY_EDITOR, label.Tag as string);
             }
+            FileInUseCaption = i8c.ConvertTo(SupportedPages.CORE_MUSICENTITY_EDITOR, "CORE_MEEDITOR_ERR_CAP");
+            FileInUseMessage = i8c.ConvertTo(SupportedPages.CORE_MUSICENTITY_EDITOR, "CORE_MEEDITOR_ERR_MSG");
         }
 
         public void UnifiedTheme(ThemeTuple themeTuple)
@@ -69,31 +75,18 @@ namespace Lunalipse.Pages
             Foreground = themeTuple.Foreground;
         }
 
-        public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
-        {
-            if (depObj != null)
-            {
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
-                {
-                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
-                    if (child != null && child is T)
-                    {
-                        yield return (T)child;
-                    }
-
-                    foreach (T childOfChild in FindVisualChildren<T>(child))
-                    {
-                        yield return childOfChild;
-                    }
-                }
-            }
-        }
+        
 
         void ApplyChange()
         {
             string name = MusicName.Text;
             string artist = MusicArtist.Text;
             string album = MusicAlbum.Text;
+            if(IsFileUsing(musicEntity.Path))
+            {
+                new CommonDialog(FileInUseCaption, FileInUseMessage, MessageBoxButton.OK).ShowDialog();
+                return;
+            }
             mediaMetadataWriter.SetArtist(0, artist);
             mediaMetadataWriter.SetAlbum(album);
             mediaMetadataWriter.SetTitle(name);

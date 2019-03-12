@@ -1,85 +1,112 @@
 <LpsI18N>
-    <Lang lang="CHINESE_SIM">
-      <Page key="MULTI_LANG">
-        <Key name="LANG_CHN_SIM">简体中文</Key>
-        <Key name="LANG_CHN_TRD">繁體中文</Key>
-        <Key name="LANG_ENG">English</Key>
-        <Key name="LANG_RUS">Русский</Key>
-      </Page>
-      <Page key="CORE_FUNC">
-        <Key name="CORE_LBS_SynatxError">一个常规的语法错误</Key>
-        <Key name="CORE_LBS_InfiniteCall">检测到循环调用</Key>
-        <Key name="CORE_LBS_PragmaNotFound">宏未定义</Key>
-        <Key name="CORE_LBS_FileNotFound">没有这个文件</Key>
-        <Key name="CORE_LBS_NoSuchPara">请提供{0}所对应的形参</Key>
-        <Key name="CORE_LBS_DataTypeOverflow">数据结构溢出</Key>
-        <Key name="CORE_LBS_InvalidCommandExecutor">使用了非法的指令执行器定义</Key>
-        
-        <Key name="CORE_DIALOG_OK">确认</Key>
-        <Key name="CORE_DIALOG_NO">取消</Key>
-        <Key name="CORE_DIALOG_YES">好的</Key>
-        <Key name="CORE_DIALOG_CANCEL">算了</Key>
-        
-        <Key name="CORE_PLAYLISTGUARD_MISSING_TITLE">丢失的条目</Key>
-        <Key name="CORE_PLAYLISTGUARD_MISSING_CONTENT">检测到先前保存的播放列表，但在恢复的时候出现了些问题：一些播放列表中保存的歌曲貌似在不在本地中。有可能该歌曲已更换名称或永久的移动到了新的路径。</Key>
-          
-        <Key name="CORE_CATALOGUE_ALL_LOCATION">所有位置</Key>
-        <Key name="CORE_CATALOGUE_AllMusic">所有位置</Key>
-        <Key name="CORE_CATALOGUE_ALBUM_COLLECTION">所有专辑</Key>
-        <Key name="CORE_CATALOGUE_USER_PLAYLIST">我的歌单</Key>
-        <Key name="CORE_CATALOGUE_ARTIST_COLLECTION">所有艺术家</Key>
-        <Key name="CORE_CATALOGUE_NO_ITEMS">没有任何的歌单或专辑</Key>
-        <Key name="CORE_CATALOGUE_GENERAL_CONFIG">设置</Key>
-        
-        <Key name="CORE_ADDPLAYLIST_NOFAVCATA">没有心仪的播放列表？</Key>
-        <Key name="CORE_ADDPLAYLIST_NEWONE">新建 ……</Key>
-        <Key name="CORE_ADDPLAYLIST_TITLE">添加至歌单</Key>
-        <Key name="CORE_ADDPLAYLIST_CREATE_TITLE">新建一个歌单</Key>
-        <Key name="CORE_ADDPLAYLIST_CREATE_HINT">为新增的歌单指定一个名字</Key>
-        <Key name="CORE_ADDPLAYLIST_EXIST_TITLE">播放列表已存在</Key>
-        <Key name="CORE_ADDPLAYLIST_EXIST_CONTENT">很遗憾，亟待创建的播放列表 {0} 已经存在。</Key>
-        
-        <Key name="CORE_MUSICLIST_NO_ITEMS">此歌单中暂无歌曲</Key>
-        
-        <Key name="CORE_UI_DETAILEDLISTVIEW_NOITEMS">这里空空如也</Key>
+  <Lang lang="CHINESE_SIM">
+    <Page key="MULTI_LANG">
+      <Key name="LANG_CHN_SIM">简体中文</Key>
+      <Key name="LANG_CHN_TRD">繁體中文</Key>
+      <Key name="LANG_ENG">English</Key>
+      <Key name="LANG_RUS">Русский</Key>
+    </Page>
+    <Page key="CORE_FUNC">
+      <Key name="CORE_LBS_SynatxError">一个常规的语法错误</Key>
+      <Key name="CORE_LBS_InfiniteCall">检测到循环调用</Key>
+      <Key name="CORE_LBS_PragmaNotFound">宏未定义</Key>
+      <Key name="CORE_LBS_FileNotFound">没有这个文件</Key>
+      <Key name="CORE_LBS_NoSuchPara">请提供{0}所对应的形参</Key>
+      <Key name="CORE_LBS_DataTypeOverflow">数据结构溢出</Key>
+      <Key name="CORE_LBS_InvalidCommandExecutor">使用了非法的指令执行器定义</Key>
 
-        <Key name="CORE_SETTING">配置 Lunalipse</Key>
-        <Key name="CORE_SETTING_SETTING_GENERAL">通用</Key>
-        <Key name="CORE_SETTING_SETTING_PERFORMANCE">外观与性能</Key>
-        <Key name="CORE_SETTING_SETTING_NETWORKING">网络</Key>
-        <Key name="CORE_SETTING_SETTING_DEVELOPER">开发者</Key>
-        <Key name="CORE_SETTING_SETTING_SECURITY">安全</Key>
-        <Key name="CORE_SETTING_SETTING_ACTION_SAVE_CFG">应用并保存</Key>
-        <Key name="CORE_SETTING_SAVE_SETTING_TITLE">是否保存配置</Key>
-        <Key name="CORE_SETTING_SAVE_SETTING_CONTENT">您更改了配置，请问是否要保存？只有保存这些配置，Lunalipse才能保证下次启动时能够重新按照此配置进行调整。</Key>
+      <Key name="CORE_DIALOG_OK">确认</Key>
+      <Key name="CORE_DIALOG_NO">取消</Key>
+      <Key name="CORE_DIALOG_YES">好的</Key>
+      <Key name="CORE_DIALOG_CANCEL">算了</Key>
 
-        <!-- Music Presentor Area -->
-        <Key name="CORE_PRESENTOR_UNKNOW_ARTIST">未知艺术家</Key>
-        <Key name="CORE_PRESENTOR_UNKNOW_ALBUM">未知专辑</Key>
-          
-        <Key name="CORE_LOADING">正在加载 ...</Key>
+      <Key name="CORE_PLAYLISTGUARD_MISSING_TITLE">丢失的条目</Key>
+      <Key name="CORE_PLAYLISTGUARD_MISSING_CONTENT">检测到先前保存的播放列表，但在恢复的时候出现了些问题：一些播放列表中保存的歌曲貌似在不在本地中。有可能该歌曲已更换名称或永久的移动到了新的路径。</Key>
 
-        <Key name="CORE_MUSICENTITY_EDITOR_TITLE">编辑元数据</Key>
-      </Page>
-      <Page key="CORE_GENERAL_SETTING">
-        <Key name="CORE_SETTING_MUSIC_SOURCES">我们将会在以下地方查找音乐</Key>
-        <Key name="CORE_SETTING_FILE_COUNT">音乐文件个数：</Key>
-        <Key name="CORE_SETTING_TOTAL_DUR">估计的总时长：</Key>
-        <Key name="CORE_SETTING_BTN_ADDNEW">增加位置</Key>
-        <Key name="CORE_SETTING_BTN_REMOVE">删除所选位置</Key>
-        <Key name="CORE_SETTING_FULL_PATH">完整路径</Key>
-        
-      </Page>
-      <Page key="CORE_MUSICENTITY_EDITOR">
-        <Key name="CORE_MEEDITOR_NOTALLOWED">禁止编辑播放中的歌曲</Key>
-        <Key name="CORE_MEEDITOR_NAME">名称</Key>
-        <Key name="CORE_MEEDITOR_ABLUM">专辑</Key>
-        <Key name="CORE_MEEDITOR_ARTIST">艺术家</Key>
-        
-      </Page>
-      <!-- Online Music Library -->
-      <Page key="CORE_CLOUD_LIB">
-          
-      </Page>
-    </Lang>
+      <Key name="CORE_CATALOGUE_ALL_LOCATION">所有位置</Key>
+      <Key name="CORE_CATALOGUE_ALL_MUSIC">所有歌曲</Key>
+      <Key name="CORE_CATALOGUE_ALBUM_COLLECTION">所有专辑</Key>
+      <Key name="CORE_CATALOGUE_USER_PLAYLIST">我的歌单</Key>
+      <Key name="CORE_CATALOGUE_ARTIST_COLLECTION">所有艺术家</Key>
+      <Key name="CORE_CATALOGUE_NO_ITEMS">没有任何的歌单或专辑</Key>
+      <Key name="CORE_CATALOGUE_GENERAL_CONFIG">设置</Key>
+
+      <Key name="CORE_MAINUI_MODE_LINEAR">全部循环</Key>
+      <Key name="CORE_MAINUI_MODE_SINGLELOOP">单曲循环</Key>
+      <Key name="CORE_MAINUI_MODE_SHUFFLE">随机播放</Key>
+
+      <Key name="CORE_ADDPLAYLIST_NOFAVCATA">没有心仪的播放列表？</Key>
+      <Key name="CORE_ADDPLAYLIST_NEWONE">新建 ……</Key>
+      <Key name="CORE_ADDPLAYLIST_TITLE">添加至歌单</Key>
+      <Key name="CORE_ADDPLAYLIST_CREATE_TITLE">新建一个歌单</Key>
+      <Key name="CORE_ADDPLAYLIST_CREATE_HINT">为新增的歌单指定一个名字</Key>
+      <Key name="CORE_ADDPLAYLIST_EXIST_TITLE">播放列表已存在</Key>
+      <Key name="CORE_ADDPLAYLIST_EXIST_CONTENT">很遗憾，亟待创建的播放列表 {0} 已经存在。</Key>
+
+      <Key name="CORE_MUSICLIST_NO_ITEMS">此歌单中暂无歌曲</Key>
+
+      <Key name="CORE_UI_DETAILEDLISTVIEW_NOITEMS">这里空空如也</Key>
+
+      <Key name="CORE_SETTING">配置 Lunalipse</Key>
+      <Key name="CORE_SETTING_SETTING_GENERAL">通用</Key>
+      <Key name="CORE_SETTING_SETTING_PERFORMANCE">外观与性能</Key>
+      <Key name="CORE_SETTING_SETTING_NETWORKING">网络</Key>
+      <Key name="CORE_SETTING_SETTING_DEVELOPER">开发者</Key>
+      <Key name="CORE_SETTING_SETTING_SECURITY">安全</Key>
+      <Key name="CORE_SETTING_SETTING_ACTION_SAVE_CFG">应用并保存</Key>
+      <Key name="CORE_SETTING_SETTING_ABOUT">关于此软件</Key>
+      <Key name="CORE_SETTING_SAVE_SETTING_TITLE">是否保存配置</Key>
+      <Key name="CORE_SETTING_SAVE_SETTING_CONTENT">您更改了配置，请问是否要保存？只有保存这些配置，Lunalipse才能保证下次启动时能够重新按照此配置进行调整。</Key>
+
+      <!-- Music Presentor Area -->
+      <Key name="CORE_PRESENTOR_UNKNOW_ARTIST">未知艺术家</Key>
+      <Key name="CORE_PRESENTOR_UNKNOW_ALBUM">未知专辑</Key>
+
+      <Key name="CORE_LOADING">正在加载 ...</Key>
+
+      <Key name="CORE_MUSICENTITY_EDITOR_TITLE">编辑元数据</Key>
+      
+      <Key name="CORE_CATALOGUE_INFO_TITLE">歌单信息</Key>
+      <Key name="CORE_CATALOGUE_INFO_SONGTOTAL">歌曲个数</Key>
+      <Key name="CORE_CATALOGUE_INFO_SONGDUR">估计的时长</Key>
+      
+      <Key name="CORE_CATALOGUE_CATADELETE_TITLE">删除一个播放列表（歌单）</Key>
+      <Key name="CORE_CATALOGUE_CATADELETE_MSG">确认删除播放列表（歌单）“{0}” 吗？该操作是不可逆的。</Key>
+    </Page>
+    <Page key="CORE_GENERAL_SETTING">
+      <Key name="CORE_SETTING_MUSIC_SOURCES">我们将会在以下地方查找音乐</Key>
+      <Key name="CORE_SETTING_FILE_COUNT">音乐文件个数：</Key>
+      <Key name="CORE_SETTING_TOTAL_DUR">估计的总时长：</Key>
+      <Key name="CORE_SETTING_BTN_ADDNEW">增加位置</Key>
+      <Key name="CORE_SETTING_BTN_REMOVE">删除所选位置</Key>
+      <Key name="CORE_SETTING_FULL_PATH">完整路径</Key>
+    </Page>
+    <Page key="CORE_APPEARANCE_SETTING">
+      <Key name="CORE_SETTING_APPR_THEME_CAP">请为Lunalipse选定一个主题（配色方案）</Key>
+      <Key name="CORE_SETTING_APPR_THEME_MSG">您可以为Lunalipse添加多个主题，以便适应您的喜好，请选择其中一个主题并设为默认，这样Lunalipse便会更改当前的配色方案</Key>
+      <Key name="CORE_SETTING_APPR_THEME_SETDEFAULT">设为默认</Key>
+      <Key name="CORE_SETTING_APPR_THEME_INPORT">导入主题</Key>
+      <Key name="CORE_SETTING_APPR_THEME_CREATE">创建新主题</Key>
+    </Page>
+    <Page key="CORE_ABOUT_SETTING">
+      <Key name="CORE_SETTING_ABOUT_VERSION">当前版本：{0}</Key>
+      <Key name="CORE_SETTING_ABOUT_VERSION_CODE">发行版本：{0}</Key>
+      <Key name="CORE_SETTING_ABOUT_COM_DATE">编译时间：{0}</Key>
+      <Key name="CORE_SETTING_ABOUT_LICENSE">开源许可证：GNU General Public License v3.0</Key>
+      <Key name="CORE_SETTING_ABOUT_FOR_STATEMENT">献给我最亲爱的Princess Luna</Key>
+      <Key name="CORE_SETTING_ABOUT_COPYRIGHT">版权所有 © 2019 Lunaixsky</Key>
+    </Page>
+    <Page key="CORE_MUSICENTITY_EDITOR">
+      <Key name="CORE_MEEDITOR_NOTALLOWED">禁止编辑播放中的歌曲</Key>
+      <Key name="CORE_MEEDITOR_NAME">名称</Key>
+      <Key name="CORE_MEEDITOR_ABLUM">专辑</Key>
+      <Key name="CORE_MEEDITOR_ARTIST">艺术家</Key>
+      <Key name="CORE_MEEDITOR_ERR_CAP">无法保存</Key>
+      <Key name="CORE_MEEDITOR_ERR_MSG">该音频文件正在播放或已被其他应用打开，Lunalipse无法写入更新的元数据。</Key>
+    </Page>
+    <!-- Online Music Library -->
+    <Page key="CORE_CLOUD_LIB">
+
+    </Page>
+  </Lang>
 </LpsI18N>

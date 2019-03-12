@@ -11,9 +11,13 @@ namespace Lunalipse.Common.Data
     public class MusicEntity :ICachable
     {
         [NonSerialized]
-        public string Album, ID3Name, Year;
+        public string Album, ID3Name="", Year;
 
-        public string Name, Path, Extension;
+        /// <summary>
+        /// This is the fucking FILE NAME!!!
+        /// </summary>
+        public string Name;
+        public string Path, Extension;
         [NonSerialized]
         public string[] Artist;
         [NonSerialized]
@@ -25,9 +29,14 @@ namespace Lunalipse.Common.Data
         [NonSerialized]
         public bool HasImage = false;
 
+        //Internet music support
+
+        public bool IsInternetLocation = false;
+        public string URI;
+
         public string ArtistFrist
         {
-            get
+            get 
             {
                 return Artist[0];
             }
@@ -38,7 +47,8 @@ namespace Lunalipse.Common.Data
         {
             get
             {
-                return Name;
+                if (ID3Name == "") return Name;
+                return ID3Name;
             }
         }
 

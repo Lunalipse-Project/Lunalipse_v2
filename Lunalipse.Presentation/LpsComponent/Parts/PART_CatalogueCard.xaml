@@ -15,14 +15,45 @@
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <Image Grid.Row="0" x:Name="cata_cover"></Image>
-                    <Label FontFamily="../../font/#Material-Design-Iconic-Font" Content="{StaticResource PlayList}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="{StaticResource IconLargeVI}" x:Name="default"
+                    <Label FontFamily="{StaticResource MaterialIcon}" Content="{StaticResource PlayList}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="{StaticResource IconLargeVI}" x:Name="default"
                            Foreground="{Binding Path=Foreground,ElementName=PART_CARD}" Background="{Binding ElementName=PART_CARD,Path=Background}"></Label>
-                    <Button HorizontalAlignment="Right" Margin="2,2,2,2" Style="{StaticResource IconButton}" VerticalAlignment="Top" 
-                            Content="{StaticResource Close}" FontSize="{StaticResource FontNormal}" Foreground="{Binding Path=Foreground,ElementName=PART_CARD}" Click="OnCatalogueDelete">
-                        <Button.Effect>
-                            <DropShadowEffect Color="#000" Direction="0" ShadowDepth="0" BlurRadius="4"/>
-                        </Button.Effect>
-                    </Button>
+                    <Grid x:Name="Overlay" Opacity="0">
+                        <Grid.Triggers>
+                            <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                                <EventTrigger.Actions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"  From="0" To="1" Duration="0:0:.1"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger.Actions>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="UIElement.MouseLeave">
+                                <EventTrigger.Actions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"  From="1" To="0" Duration="0:0:.1"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger.Actions>
+                            </EventTrigger>
+                        </Grid.Triggers>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height=".25*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height=".25*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width=".5*" x:Name="InfoPlaceHolder"/>
+                                <ColumnDefinition Width=".5*" x:Name="DeletePlaceHolder"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Style="{StaticResource IconButton}" Grid.Column="0" Content="{StaticResource Info_Outline}" FontSize="{StaticResource IconLargeII}"
+                                    Foreground="{Binding Path=Foreground,ElementName=PART_CARD}" Click="OnCatalogueEdit" Height="40" Width="40"/>
+                            <Button Style="{StaticResource IconButton}" Grid.Column="1" Content="{StaticResource Delete}" FontSize="{StaticResource IconLargeII}"
+                                    Foreground="{Binding Path=Foreground,ElementName=PART_CARD}" Click="OnCatalogueDelete" Height="40" Width="40" x:Name="DeleteButton"/>
+                        </Grid>
+                    </Grid>
                 </Grid>
                 <Label x:Name="cata_card_bottom_strip" Grid.Row="1" VerticalContentAlignment="Center" Padding="10,0,0,0" FontSize="{StaticResource FontNormal}"
                        Foreground="{Binding Path=Foreground,ElementName=PART_CARD}">

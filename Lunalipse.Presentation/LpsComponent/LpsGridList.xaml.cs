@@ -24,8 +24,11 @@ namespace Lunalipse.Presentation.LpsComponent
         //In-row offset for user selected card
         int CurrentOffset = 0;
 
+        Brush OverlayColor;
+
         //int row, int col, string uid
         public event Action<int, int, string> OnCatalogueSelectChanged;
+        public event Action<ICatalogue> OnCatalogueEditRequest;
 
         public LpsGridList()
         {
@@ -43,14 +46,12 @@ namespace Lunalipse.Presentation.LpsComponent
             totalCard++;
             int colum = totalCard % CardPerRow;
             colum = colum == 0 ? 2 : colum - 1;
-            PART_CatalogueCard cataCard = new PART_CatalogueCard();
+            PART_CatalogueCard cataCard = new PART_CatalogueCard(catalogue);
             cataCard.Margin = new Thickness(0, 20, 0, 20);
-            cataCard.CatalogueTitle = catalogue.Name();
-            cataCard.Uid = catalogue.Uid();
-            cataCard.CatalogueCover = catalogue.GetCatalogueCover();
             cataCard.Col = colum;
             cataCard.Row = totalRows;
             cataCard.OnCatalogueSelected += catalogueSelected;
+            cataCard.OnCatalogueEditRequest += CataCard_OnCatalogueEditRequest;
             if (totalCard > totalRows * CardPerRow)
             {
                 //New Row required
@@ -72,6 +73,11 @@ namespace Lunalipse.Presentation.LpsComponent
             {
                 EmptyTip.Visibility = Visibility.Hidden;
             }
+        }
+
+        private void CataCard_OnCatalogueEditRequest(ICatalogue obj)
+        {
+            OnCatalogueEditRequest?.Invoke(obj);
         }
 
         private void catalogueSelected(PART_CatalogueCard obj)

@@ -12,40 +12,42 @@
                    VerticalAlignment="Center" FontSize="{StaticResource FontNormal}" Background="Transparent"
                    Tag="CORE_UI_DETAILEDLISTVIEW_NOITEMS" x:Name="NoItemHint" Opacity="0.75"/>
         </Grid>
-        <ItemsControl x:Name="ITEMS" Background="{Binding Background,ElementName=LPS_DETAILED_LV}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <local:LpsDetailedItem Foreground="{Binding Foreground,ElementName=LPS_DETAILED_LV}" FontSize="{Binding FontSize,ElementName=LPS_DETAILED_LV}" Background="#00FFFFFF"
+        <ScrollViewer>
+            <ItemsControl x:Name="ITEMS" Background="{Binding Background,ElementName=LPS_DETAILED_LV}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <local:LpsDetailedItem Foreground="{Binding Foreground,ElementName=LPS_DETAILED_LV}" FontSize="{Binding FontSize,ElementName=LPS_DETAILED_LV}" Background="#00FFFFFF"
                                                    MouseDown="ItemContainer_MouseDown" IconSize="{Binding ListIconSize, ElementName=LPS_DETAILED_LV}" x:Name="ItemContainer">
-                        <local:LpsDetailedItem.Triggers>
-                            <EventTrigger RoutedEvent="UIElement.MouseEnter">
-                                <EventTrigger.Actions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" 
+                            <local:LpsDetailedItem.Triggers>
+                                <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                                    <EventTrigger.Actions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" 
                                                                 From="{Binding ItemUnhovered.Color,ElementName=LPS_DETAILED_LV}" 
                                                                 To="{Binding ItemHovered.Color,ElementName=LPS_DETAILED_LV}"
                                              Duration="0:0:.1"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger.Actions>
-                            </EventTrigger>
-                            <EventTrigger RoutedEvent="UIElement.MouseLeave">
-                                <EventTrigger.Actions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" 
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger.Actions>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="UIElement.MouseLeave">
+                                    <EventTrigger.Actions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" 
                                                                 From="{Binding ItemHovered.Color,ElementName=LPS_DETAILED_LV}" 
                                                                 To="{Binding ItemUnhovered.Color,ElementName=LPS_DETAILED_LV}"
                                              Duration="0:0:0.1"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger.Actions>
-                            </EventTrigger>
-                        </local:LpsDetailedItem.Triggers>
-                    </local:LpsDetailedItem>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger.Actions>
+                                </EventTrigger>
+                            </local:LpsDetailedItem.Triggers>
+                        </local:LpsDetailedItem>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </UserControl>

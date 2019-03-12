@@ -35,6 +35,18 @@ namespace Lunalipse.Common.Bus.Event
         /// <summary>
         /// 动作请求的禁用操作
         /// </summary>
-        ON_ACTION_REQ_DISABLE
+        ON_ACTION_REQ_DISABLE,
+        /// <summary>
+        /// 触发一个删除事件
+        /// </summary>
+        ON_ACTION_DELETE,
+        /// <summary>
+        /// 准备推送数据
+        /// </summary>
+        ON_DATA_POST,
+        /// <summary>
+        /// 准备拉取数据
+        /// </summary>
+        ON_DATA_GET
     }
 }

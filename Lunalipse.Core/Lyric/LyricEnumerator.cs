@@ -18,7 +18,7 @@ namespace Lunalipse.Core.Lyric
             {
                 return false;
             }
-            tokens = Tokenizer.CreateTokensFromFile(GetLyricFile(Music.Path, Music.Name));
+            tokens = Tokenizer.CreateTokensFromFile(TryGetLyric(Music));
             if(tokens == null) return false;
             return true;
         }
@@ -30,7 +30,7 @@ namespace Lunalipse.Core.Lyric
                 int middle = (int)Math.Floor(tokens.Count / 2.0);
                 int last = tokens.Count - 1;
                 int first = 0;
-                while (!isInRangeBetween(tokens[middle].TimeStamp, tokens[middle + 1].TimeStamp, current))
+                while (!isInRangeBetween(tokens[middle].TimeStamp, middle + 1 == tokens.Count ? TimeSpan.MaxValue : tokens[middle + 1].TimeStamp, current))
                 {
                     if (last - first == 0)
                     {
@@ -45,7 +45,8 @@ namespace Lunalipse.Core.Lyric
                         last = middle - 1;
                     }
                     middle = (int)Math.Floor((last - first) / 2.0) + first;
-                    if (middle + 1 == tokens.Count || middle < 0) return null;
+                    if (middle < 0) return null;
+                    if (middle + 1 == tokens.Count) return tokens[tokens.Count - 1];
                 }
                 return tokens[middle];
             }
@@ -55,6 +56,19 @@ namespace Lunalipse.Core.Lyric
         private string GetLyricFile(string path, string name)
         {
             return "{0}/{1}/{2}.lrc".FormateEx(Path.GetDirectoryName(path), LyricDefaultDir, name);
+        }
+
+        private string TryGetLyric(MusicEntity me)
+        {
+            string path = "";
+            if (File.Exists(path = GetLyricFile(me.Path, me.IDv3Name)))
+            {
+                return path;
+            }
+            else
+            {
+                return path = GetLyricFile(me.Path, me.Name);
+            }
         }
 
         private bool isInRangeBetween(TimeSpan first, TimeSpan last, TimeSpan current)

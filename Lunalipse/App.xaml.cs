@@ -1,4 +1,5 @@
-﻿using Lunalipse.Common.Data;
+﻿using Lunalipse.Common.Bus.Event;
+using Lunalipse.Common.Data;
 using Lunalipse.Common.Generic.Cache;
 using Lunalipse.Core;
 using Lunalipse.Core.BehaviorScript;
@@ -25,12 +26,15 @@ namespace Lunalipse
         ResourcesHandler resourcesHandler;
         string currentFolder = Environment.CurrentDirectory;
         LunalipseLogger Log;
+
+
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            Log = LunalipseLogger.GetLogger();
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
             I18T = new I18NTokenizer();
             cp = CataloguePool.INSATNCE;
             cacheSystem = CacheHub.INSTANCE(Environment.CurrentDirectory);
-            Log = LunalipseLogger.GetLogger();
             resourcesHandler = new ResourcesHandler(Assembly.GetEntryAssembly().GetName().Version);
 
             CheckResources();
@@ -39,6 +43,15 @@ namespace Lunalipse
 
             RestoringConfig();
             PerpearThemeColor();
+        }
+
+        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            Log.Exception(e.Exception);
+            Log.Release();
+            e.Handled = true;
+            MessageBox.Show(e.Exception.Message, "致命错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            Application.Current.Shutdown();
         }
 
         void RegisterOperators()
@@ -76,7 +89,7 @@ namespace Lunalipse
         void PerpearThemeColor()
         {
             Log.Info("Loaidng themes");
-            LThemeManager.Instance.SelectTheme(0);
+            LThemeManager.Instance.SelectTheme(GLS.INSTANCE.DefaultThemeUUID);
         }
     }
 }

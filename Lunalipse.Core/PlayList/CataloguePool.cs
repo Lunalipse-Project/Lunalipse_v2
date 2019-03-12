@@ -36,6 +36,8 @@ namespace Lunalipse.Core.PlayList
         Dictionary<string, string> LocationTable = new Dictionary<string, string>();
 
 
+
+
         public void AddCatalogue(Catalogue catalogue)
         {
             if (CatalogueBase.FindIndex(x => x.MainCatalogue == catalogue.MainCatalogue && x.MainCatalogue == true) != -1)
@@ -70,7 +72,11 @@ namespace Lunalipse.Core.PlayList
 
         public void RemoveChildrenCatalogue(string ParentUuid)
         {
-            CatalogueBase.RemoveAll(x => x.ParentUUID.Equals(ParentUuid));
+            CatalogueBase.RemoveAll(x =>
+            {
+                if (x.ParentUUID == null) return false;
+                else return x.ParentUUID.Equals(ParentUuid);
+            });
         }
 
         public List<Catalogue> SearchCatalogue(string Name)

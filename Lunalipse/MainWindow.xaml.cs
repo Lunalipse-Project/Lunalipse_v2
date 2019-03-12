@@ -23,6 +23,7 @@ using Lunalipse.Common.Generic.I18N;
 using Lunalipse.Common.Generic.Cache;
 using Lunalipse.Auxiliary;
 using Lunalipse.Core.LpsAudio;
+using Lunalipse.Common;
 
 namespace Lunalipse
 {
@@ -34,25 +35,27 @@ namespace Lunalipse
     {
         const int sliderSize = 200;
 
-        MusicListPool mlp;
-        CataloguePool CPOOL;
-        MediaMetaDataReader mmdr;
-        //Dialogue dia;
-        CacheHub cacheSystem;
-        EventBus Bus;
+        private MusicListPool mlp;
+        private CataloguePool CPOOL;
+        private MediaMetaDataReader mmdr;
+        private CacheHub cacheSystem;
+        private EventBus Bus;
         private PlaylistGuard playlistGuard;
-        LpsCore core;
-        GLS GlobalSetting = GLS.INSTANCE;
+        private LpsCore core;
+        private GLS GlobalSetting = GLS.INSTANCE;
+        private VersionHelper versionHelper;
 
-        CatalogueShowCase showcase;
-        MusicSelected musicList;
+        private CatalogueShowCase showcase;
+        private MusicSelected musicList;
 
-        Duration elapseTime = new Duration(TimeSpan.FromMilliseconds(250));
-        DoubleAnimation ExpandPanel;
-        DoubleAnimation MinimizePanel;
+        private Duration elapseTime = new Duration(TimeSpan.FromMilliseconds(250));
+        private DoubleAnimation ExpandPanel;
+        private DoubleAnimation MinimizePanel;
 
         List<Catalogue> ByLocation, ByArtist, ByAlbum, ByUserDefined;
         private DesktopDisplay desktopDisplay;
+
+        private string LinearMode, SingleLoop, ShuffleMode;
 
         public MainWindow() : base()
         {
@@ -61,7 +64,8 @@ namespace Lunalipse
             ExpandPanel = new DoubleAnimation(48, sliderSize, elapseTime);
             MinimizePanel = new DoubleAnimation(sliderSize, 48, elapseTime);
 
-            EventBus.OnBoardcastRecieved += EventBus_OnBoardcastRecieved; ;
+            EventBus.OnBoardcastRecieved += EventBus_OnBoardcastRecieved;
+            
 
             TranslationManagerBase.OnI18NEnvironmentChanged += Translate;
             Translate(TranslationManagerBase.AquireConverter());
@@ -137,6 +141,13 @@ namespace Lunalipse
             Task.Factory.StartNew(() =>
             {
                 ByUserDefined = CPOOL.GetUserDefined();
+                Dispatcher.Invoke(() =>
+                {
+                    if (CATALOGUES.TAG == CatalogueSections.USER_PLAYLISTS)
+                    {
+                        FPresentor.ShowContent(showcase, false, () => showcase.SetCatalogues(ByUserDefined));
+                    }
+                });
             });
         }
         #endregion
@@ -144,7 +155,10 @@ namespace Lunalipse
         public void Translate(II18NConvertor converter)
         {
             CATALOGUES.Translate(converter);
-            //playlistGuard.Translate(converter);
+            playlistGuard.Translate(converter);
+            LinearMode = converter.ConvertTo(SupportedPages.CORE_FUNC, "CORE_MAINUI_MODE_LINEAR");
+            SingleLoop = converter.ConvertTo(SupportedPages.CORE_FUNC, "CORE_MAINUI_MODE_SINGLELOOP");
+            ShuffleMode = converter.ConvertTo(SupportedPages.CORE_FUNC, "CORE_MAINUI_MODE_SHUFFLE");
         }
 
         /// <summary>
@@ -158,6 +172,7 @@ namespace Lunalipse
             mlp = MusicListPool.INSATNCE(mmdr = new MediaMetaDataReader());
             Bus = EventBus.Instance;
             playlistGuard = new PlaylistGuard();
+            versionHelper = VersionHelper.Instance;
 
             core.OnMusicComplete += PlayFinished;
             core.OnMusicPrepared += MusicPerpeared;
@@ -170,7 +185,7 @@ namespace Lunalipse
             ControlPanel.OnVolumeChanged += ControlPanel_OnVolumeChanged;
             ControlPanel.OnTrigging += ControlPanel_OnTrigging;
             ControlPanel.OnProfilePictureClicked += ControlPanel_OnProfilePictureClicked;
-            ControlPanel.OnModeChange += (mode, @object) => core.MusicPlayMode = mode;
+            ControlPanel.OnModeChange += ControlPanel_OnModeChange;
 
             CATALOGUES.OnSelectionChange += CATALOGUES_OnSelectionChange;
             CATALOGUES.OnMenuButtonClicked += CATALOGUES_OnMenuButtonClicked;
@@ -183,6 +198,23 @@ namespace Lunalipse
             musicList.OnSelectedMusicChange += MusicList_OnSelectedMusicChange;
 
             this.OnMinimizClicked += MainWindow_OnMinimizClicked;
+        }
+
+        private void ControlPanel_OnModeChange(PlayMode mode, object append)
+        {
+            core.MusicPlayMode = mode;
+            switch(mode)
+            {
+                case PlayMode.RepeatList:
+                    DesktopDisplay.ShowToast(LinearMode, 5);
+                    break;
+                case PlayMode.RepeatOne:
+                    DesktopDisplay.ShowToast(SingleLoop, 5);
+                    break;
+                case PlayMode.Shuffle:
+                    DesktopDisplay.ShowToast(ShuffleMode, 5);
+                    break;
+            }
         }
 
         private void CATALOGUES_OnConfigClicked()
@@ -253,6 +285,9 @@ namespace Lunalipse
                 case CatalogueSections.ARTIST_COLLECTIONS:
                     FPresentor.ShowContent(showcase, false, () => showcase.SetCatalogues(ByArtist));
                     break;
+                case CatalogueSections.ALL_MUSIC:
+                    FPresentor.ShowContent(musicList, false, () => musicList.SetCatalogue(CPOOL.MainCatalogue));
+                    break;
             }
         }
 
@@ -282,16 +317,30 @@ namespace Lunalipse
         /// <param name="args">附加参数</param>
         private void ControlPanel_OnTrigging(AudioPanelTrigger identifier, object args)
         {
-            if (!core.AudioOut.isLoaded) return;
+            if (!core.AudioOut.isLoaded)
+            {
+                if (core.currentCatalogue == null && musicList.SelectedCatalogue != null)
+                {
+                    core.SetCatalogue(musicList.SelectedCatalogue);
+                }
+                else return;
+            }
             switch (identifier)
             {
                 case AudioPanelTrigger.PausePlay:
                     bool isPaused = (bool)args;
-                    if (isPaused) core.Pause();
-                    else core.Resume();
+                    if(core.CurrentPlaying==null)
+                    {
+                        core.GetNext();
+                    }
+                    else
+                    {
+                        if (isPaused) core.Pause();
+                        else core.Resume();
+                    }
                     break;
                 case AudioPanelTrigger.SkipNext:
-                    core.PerpareMusic(core.currentCatalogue.getNext());
+                    core.GetNext();
                     break;
                 case AudioPanelTrigger.SkipPrev:
                     core.PerpareMusic(core.currentCatalogue.getPrevious());
@@ -308,7 +357,7 @@ namespace Lunalipse
         }
 
         /// <summary>
-        /// 当音乐播放进度更改时（由<see cref="LpsAudio"/>的CountTimerDelegate方法定时触发
+        /// 当音乐播放进度更改时（由<see cref="LpsAudio"/>.CountTimerDelegate定时触发）
         /// </summary>
         /// <param name="curPos"></param>
         private void NotifyChanged(TimeSpan curPos)
@@ -364,6 +413,15 @@ namespace Lunalipse
             desktopDisplay = new DesktopDisplay();
             desktopDisplay.Show();
             LunalipseLogger.GetLogger().Info("Loaded complete, rendering UI");
+#if BUILD
+            this.SetVersion(versionHelper.getGenerationTypedVersion(LunalipseGeneration.Build));
+#elif ALPHA
+            this.SetVersion(versionHelper.getGenerationTypedVersion(LunalipseGeneration.Alpha));
+#elif BETA
+            this.SetVersion(versionHelper.getGenerationTypedVersion(LunalipseGeneration.Beta));
+#elif RELEASE
+            this.SetVersion(versionHelper.getGenerationTypedVersion(LunalipseGeneration.Release));
+#endif
 
         }
 

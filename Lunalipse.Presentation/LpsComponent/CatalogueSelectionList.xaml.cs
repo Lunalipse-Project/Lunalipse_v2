@@ -17,7 +17,7 @@ namespace Lunalipse.Presentation.LpsComponent
     public partial class CatalogueSelectionList : UserControl, ITranslatable
     {
         private int __index = -5;
-        private CatalogueSections TAG;
+        public CatalogueSections TAG { get; protected set; }
 
         const string UI_COMPONENT_THEME_UID = "PR_COMP_CatalogueSelectionList";
 
@@ -87,6 +87,13 @@ namespace Lunalipse.Presentation.LpsComponent
                     csli = ArtistCollection;
                     TAG = CatalogueSections.ARTIST_COLLECTIONS;
                 }
+                else
+                {
+                    return;
+                }
+                __index = value;
+                csli.SetSelected();
+                OnSelectionChange?.Invoke(TAG);
             }
         }
 
@@ -135,6 +142,10 @@ namespace Lunalipse.Presentation.LpsComponent
                         __index = -4;
                         TAG = CatalogueSections.ARTIST_COLLECTIONS;
                         break;
+                    case "ALL_MUSIC":
+                        __index = -5;
+                        TAG = CatalogueSections.ALL_MUSIC;
+                        break;
                 }
                 csli.SetSelected();
                 OnSelectionChange?.Invoke(TAG);
@@ -147,6 +158,7 @@ namespace Lunalipse.Presentation.LpsComponent
             AlbumCollection.CatalogueText = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_" + AlbumCollection.Tag);
             UserPlaylist.CatalogueText = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_" + UserPlaylist.Tag);
             ArtistCollection.CatalogueText = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_" + ArtistCollection.Tag);
+            AllMusic.CatalogueText = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_" + AllMusic.Tag);
             ConfigEntry.CatalogueText = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_" + ConfigEntry.Tag);
             DetailedMenu.CatalogueText = "";
         }

@@ -50,5 +50,8 @@ namespace Lunalipse
 
         [ConfigField]
         public bool FFTEnabled = true;
+
+        [ConfigField]
+        public string DefaultThemeUUID = "d21d0d06-4583-463c-b949-c2b40978ee7a";
     }
 }

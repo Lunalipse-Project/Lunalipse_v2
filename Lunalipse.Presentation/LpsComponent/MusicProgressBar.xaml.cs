@@ -29,21 +29,30 @@ namespace Lunalipse.Presentation.LpsComponent
             this.AddHandler(PreviewMouseMoveEvent, new RoutedEventHandler(UserControl_MouseMove), true);
             this.AddHandler(PreviewMouseDownEvent, new RoutedEventHandler(CurrentProgress_MouseDown), true);
             Thumb.AddHandler(MouseDownEvent, new RoutedEventHandler(CurrentProgress_MouseDown), true);
+            Container.MouseLeave += Container_MouseLeave;
             MaxValue = -1;
+        }
+
+        private void Container_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (isDown)
+            {
+                UserControl_MouseUp(sender, e);
+            }
         }
 
         public event ProgressChange OnProgressChanged;
 
-        public static readonly DependencyProperty PRG_BG =
-            DependencyProperty.Register("PROGRESS_BACKGROUND",
-                                        typeof(Brush),
-                                        typeof(MusicProgressBar),
-                                        new PropertyMetadata(Brushes.Red));
-        public static readonly DependencyProperty TRACK_BG =
-            DependencyProperty.Register("PROGRESS_TRACK_BACKGROUND",
-                                        typeof(Brush),
-                                        typeof(MusicProgressBar),
-                                        new PropertyMetadata(null));
+        //public static readonly DependencyProperty PRG_BG =
+        //    DependencyProperty.Register("PROGRESS_BACKGROUND",
+        //                                typeof(Brush),
+        //                                typeof(MusicProgressBar),
+        //                                new PropertyMetadata(Brushes.Red));
+        //public static readonly DependencyProperty TRACK_BG =
+        //    DependencyProperty.Register("PROGRESS_TRACK_BACKGROUND",
+        //                                typeof(Brush),
+        //                                typeof(MusicProgressBar),
+        //                                new PropertyMetadata(null));
         public static readonly DependencyProperty _value =
             DependencyProperty.Register("PROGRESS_VALUE",
                                         typeof(double),
@@ -56,13 +65,18 @@ namespace Lunalipse.Presentation.LpsComponent
                                         new PropertyMetadata(100d));
         public Brush BarColor
         {
-            get => (Brush)GetValue(PRG_BG);
-            set => SetValue(PRG_BG, value);
+            get => CurrentProgress.Background;
+            set => ThumbColor = CurrentProgress.Background = value;
+        }
+        public Brush ThumbColor
+        {
+            get => Thumb.Background;
+            set => Thumb.Background = value;
         }
         public Brush TrackColor
         {
-            get => (Brush)GetValue(TRACK_BG);
-            set => SetValue(TRACK_BG, value);
+            get => BAR_TRACK.Background;
+            set => BAR_TRACK.Background = value;
         }
 
         public double MaxValue

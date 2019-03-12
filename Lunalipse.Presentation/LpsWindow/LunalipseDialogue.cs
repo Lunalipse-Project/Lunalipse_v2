@@ -26,18 +26,18 @@ namespace Lunalipse.Presentation.LpsWindow
 
             ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
             ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
-
+            
         }
 
         protected const int HeightBias = 55;
-        protected const int WidthBias = 20;
+        protected const int WidthBias = 25;
 
         private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
         {
             if (obj == null) return;
             Background = obj.Primary.SetOpacity(1);
             Foreground = obj.Foreground;
-            BorderBrush = (Background as SolidColorBrush).ToLuna();
+            BorderBrush = Background as SolidColorBrush;
         }
 
         protected virtual void DialogueLoaded(object sender, EventArgs args)
@@ -45,6 +45,8 @@ namespace Lunalipse.Presentation.LpsWindow
             ControlTemplate ct = (ControlTemplate)Application.Current.Resources["LunalipseDialogueBaseTemplate"];
             (TITLE_BAR = ct.FindName("TitleBar", this) as Border).MouseDown += TitleBarMove;
             (ct.FindName("DialogueClose", this) as Button).Click += ClosePressed;
+            this.HideWindowFromAltTab();
+            Topmost = true;
         }
 
         protected void TitleBarMove(object sender, EventArgs args)

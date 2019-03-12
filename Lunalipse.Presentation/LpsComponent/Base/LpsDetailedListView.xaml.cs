@@ -44,7 +44,7 @@ namespace Lunalipse.Presentation.LpsComponent.Base
                         typeof(LpsDetailedListView),
                         new PropertyMetadata(Application.Current.FindResource("IconLarge")));
 
-        public ObservableCollection<LpsDetailedListItem> Classes = new ObservableCollection<LpsDetailedListItem>();
+        public ObservableCollection<LpsDetailedListItem> Items = new ObservableCollection<LpsDetailedListItem>();
         public event OnItemSelected<LpsDetailedListItem> OnSelectionChanged;
 
         int _index = 0;
@@ -54,8 +54,8 @@ namespace Lunalipse.Presentation.LpsComponent.Base
         {
             InitializeComponent();
             DataContext = this;
-            ITEMS.ItemsSource = Classes;
-            if (Classes.Count == 0)
+            ITEMS.ItemsSource = Items;
+            if (Items.Count == 0)
             {
                 NoItem.Visibility = Visibility.Visible;
             }
@@ -79,7 +79,7 @@ namespace Lunalipse.Presentation.LpsComponent.Base
 
         public void Translate(II18NConvertor i8c)
         {
-            foreach (LpsDetailedListItem ldi in Classes)
+            foreach (LpsDetailedListItem ldi in Items)
             {
                 if (string.IsNullOrEmpty(ldi.I18NDescription)) continue;
                 ldi.DetailedDescription = i8c.ConvertTo(SupportedPages.CORE_FUNC, ldi.I18NDescription);
@@ -93,7 +93,7 @@ namespace Lunalipse.Presentation.LpsComponent.Base
             get => _index;
             set
             {
-                if (value >= Classes.Count) return;
+                if (value >= Items.Count) return;
                 if ((_index = value) == -1)
                 {
                     for (int i = 0; i < ITEMS.Items.Count; i++)
@@ -111,7 +111,7 @@ namespace Lunalipse.Presentation.LpsComponent.Base
                 }
                 GetContainer(_index).Select();
                 _prev_selected = _index;
-                OnSelectionChanged(Classes[_index]);
+                OnSelectionChanged(Items[_index]);
             }
         }
 
@@ -121,15 +121,15 @@ namespace Lunalipse.Presentation.LpsComponent.Base
             {
                 if (_index != -1)
                 {
-                    return Classes[_index];
+                    return Items[_index];
                 }
                 return null;
             }
             set
             {
-                for (int i = 0; i < Classes.Count; i++)
+                for (int i = 0; i < Items.Count; i++)
                 {
-                    if (Classes[i].Equals(value))
+                    if (Items[i].Equals(value))
                     {
                         SelectedIndex = i;
                         break;
@@ -140,21 +140,21 @@ namespace Lunalipse.Presentation.LpsComponent.Base
 
         public void Add(LpsDetailedListItem sc)
         {
-            Classes.Add(sc);
+            Items.Add(sc);
             if (NoItem.Visibility != Visibility.Hidden)
                 NoItem.Visibility = Visibility.Hidden;
         }
 
         public void Clear()
         {
-            Classes.Clear();
+            Items.Clear();
             NoItem.Visibility = Visibility.Visible;
         }
 
         public void Remove(LpsDetailedListItem sc)
         {
-            Classes.Remove(sc);
-            if (NoItem.Visibility == Visibility.Hidden && Classes.Count == 0)
+            Items.Remove(sc);
+            if (NoItem.Visibility == Visibility.Hidden && Items.Count == 0)
                 NoItem.Visibility = Visibility.Visible;
         }
 
@@ -178,10 +178,9 @@ namespace Lunalipse.Presentation.LpsComponent.Base
                 prev_spsi.Unselect();
             }
             spsi.Select();
-
-            OnSelectionChanged?.Invoke(sc);
-            _index = Classes.IndexOf(sc);
+            _index = Items.IndexOf(sc);
             _prev_selected = _index;
+            OnSelectionChanged?.Invoke(sc);
         }
     }
 }

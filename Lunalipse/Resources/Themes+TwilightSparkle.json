@@ -1,7 +1,8 @@
 ﻿{
   "Theme": {
     "Name": "Twilight Sparkle",
-    "Desc": "Lunalipse Build-In Theme, Adapt from TV series My Little Pony. Authorized by Twilight Sparkle"
+    "Desc": "Lunalipse Build-In Theme, Adapt from TV series My Little Pony. Authorized by Twilight Sparkle",
+    "Uid": "1a500509-6d46-4352-853b-9206a4f7dafb"
   },
   "Foreground": "#F0273873",
   "Primary": "#CCD19FE4",

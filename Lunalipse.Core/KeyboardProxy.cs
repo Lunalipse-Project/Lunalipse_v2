@@ -15,6 +15,13 @@ namespace Lunalipse.Core
     {
         static volatile KeyboardProxy K_PROXY_INSTANCE;
         static readonly object K_PROXY_LOCK = new object();
+        /// <summary>
+        /// 全局键盘监听器，当任意按键按下时总会触发。
+        /// 建议使用时将<see cref="IgnoreAllCustomAction"/>设为<c>true</c>，这将屏蔽所有的响应按键的事件。
+        /// </summary>
+        public Action<int, Keys> KeyboardGlobalListener;
+
+        public bool IgnoreAllCustomAction { get; set; }
         public static KeyboardProxy INSTANCE
         {
             get
@@ -44,18 +51,23 @@ namespace Lunalipse.Core
 
         private void KeyDown(object sender, KeyEventArgs e)
         {
-            foreach(KeyEventProc kep in EventList)
+            if(!IgnoreAllCustomAction)
             {
-                if(e.KeyValue==kep.SubKey&& (int)Control.ModifierKeys == kep.ModifierKey)
+                foreach (KeyEventProc kep in EventList)
                 {
-                    kep.ProcInvoke_Down?.Invoke();
-                    break;
+                    if (e.KeyValue == kep.SubKey && (int)Control.ModifierKeys == kep.ModifierKey)
+                    {
+                        kep.ProcInvoke_Down?.Invoke();
+                        break;
+                    }
                 }
             }
+            KeyboardGlobalListener?.Invoke(e.KeyValue, Control.ModifierKeys);
         }
 
         private void KeyUp(object sender, KeyEventArgs e)
         {
+            if (IgnoreAllCustomAction) return;
             foreach (KeyEventProc kep in EventList)
             {
                 if (e.KeyValue == kep.SubKey && (int)Control.ModifierKeys == kep.ModifierKey && kep.WaitRelease)

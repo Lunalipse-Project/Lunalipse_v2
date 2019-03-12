@@ -1,0 +1,90 @@
+﻿<Page x:Class="Lunalipse.Pages.ConfigPage.AppearanceConfig"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:LpsComponent="clr-namespace:Lunalipse.Presentation.LpsComponent.Base;assembly=Lunalipse.Presentation"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Lunalipse.Pages.ConfigPage"
+      mc:Ignorable="d" 
+      x:Name="APPR_CFG"
+      Height="450" Width="800" Loaded="APPR_CFG_Loaded"
+      Title="AppearanceConfig">
+    <Page.Resources>
+        <ResourceDictionary>
+            <Style x:Key="NormalLabelStyle" TargetType="Label">
+                <Setter Property="Foreground" Value="{Binding Foreground,ElementName=GeneralConfigPage}"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="FontSize" Value="{StaticResource FontNormal}"/>
+            </Style>
+            <Style x:Key="LargeLabelStyle" TargetType="Label">
+                <Setter Property="Foreground" Value="{Binding Foreground,ElementName=GeneralConfigPage}"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="FontSize" Value="{StaticResource FontLarge}"/>
+            </Style>
+        </ResourceDictionary>
+    </Page.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="55px"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="55px"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width=".7*"/>
+                <ColumnDefinition Width=".3*"/>
+            </Grid.ColumnDefinitions>
+            <Label HorizontalAlignment="Left" HorizontalContentAlignment="Left" Tag="CORE_SETTING_APPR_THEME_CAP" FontSize="{StaticResource FontMedium}"
+                   Style="{DynamicResource NormalLabelStyle}" Name="ST_TN_F1" Foreground="{Binding Foreground,ElementName=APPR_CFG}"></Label>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Margin="50 -5 50 0" FontSize="{StaticResource FontNormal}" 
+                   TextWrapping="WrapWithOverflow"
+                   Tag="CORE_SETTING_APPR_THEME_MSG" Name="ST_TN_F2" Foreground="{Binding Foreground,ElementName=APPR_CFG}" Opacity="0.80"/>
+            <Grid Grid.Row="1" Margin="50 10 50 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                </Grid.ColumnDefinitions>
+                <LpsComponent:LpsDetailedListView Grid.Column="0" Height="250" ListIconSize="{StaticResource IconLargeII}" 
+                                              FontSize="{StaticResource FontNormal}" x:Name="ThemeList" 
+                                              Background="Transparent" BorderThickness="0" 
+                                              BorderBrush="{Binding Foreground,ElementName=APPR_CFG}"/>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" FontSize="{StaticResource FontLarge}" x:Name="ThemeName" Padding="5 0 0 0" VerticalContentAlignment="Center" Foreground="{Binding Foreground,ElementName=APPR_CFG}"/>
+                    <TextBlock Grid.Row="1" FontSize="{StaticResource FontNormal}" x:Name="ThemeDesc" Padding="10 0 0 0"
+                               Foreground="{Binding Foreground,ElementName=APPR_CFG}" Opacity="0.80"
+                               Margin="0 10 0 0"
+                               TextWrapping="WrapWithOverflow"/>
+                    <Button Style="{StaticResource GenericButton}" Grid.Row="2" FontSize="{StaticResource FontNormal}" 
+                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+                            Width="200" Height="30" 
+                            Foreground="{Binding Foreground,ElementName=APPR_CFG}" Background="#00ffffff"
+                            Padding="0,5,0,5" x:Name="SetDefault" Click="SetDefault_Click"
+                            Visibility="Hidden"
+                            Tag="CORE_SETTING_APPR_THEME_SETDEFAULT"/>
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="2" Margin="50,5,50,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width=".5*"/>
+                    <ColumnDefinition Width=".5*"/>
+                    <ColumnDefinition Width=".5*"/>
+                    <ColumnDefinition Width=".5*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="2" Style="{StaticResource GenericButton}" Height="25" Margin="0 10 0 10" Width="100" Tag="CORE_SETTING_APPR_THEME_INPORT" Foreground="{Binding Foreground,ElementName=APPR_CFG}"/>
+                <Button Grid.Column="3" Style="{StaticResource GenericButton}" Height="25" Margin="0 10 0 10" Width="100" Tag="CORE_SETTING_APPR_THEME_CREATE" Foreground="{Binding Foreground,ElementName=APPR_CFG}"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

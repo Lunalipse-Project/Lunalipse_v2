@@ -47,10 +47,27 @@ namespace Lunalipse.Core.Theme
             LunalipseLogger.GetLogger().Info("Select Theme " + SelectedContainer.Name);
             Reflush();
         }
+        public void SelectTheme(string uid)
+        {
+            SelectedContainer = LoadedTheme.Find(x => x.Uid.Equals(uid));
+            if(SelectedContainer == null)
+            {
+                LunalipseLogger.GetLogger().Info("Theme with UID:{0} not found, using default..".FormateEx(uid));
+                SelectTheme(0);
+                return;
+            }
+            LunalipseLogger.GetLogger().Info("Select Theme " + SelectedContainer.Name);
+            Reflush();
+        }
 
         public override void Reflush()
         {
             InvokEvent(SelectedContainer.ColorBlend);
+        }
+
+        public List<ThemeContainer> GetLoadedThemes()
+        {
+            return LoadedTheme;
         }
 
         private void Initialize()
@@ -79,23 +96,29 @@ namespace Lunalipse.Core.Theme
             {
                 Name = "Princess Luna",
                 Description = "Lunalipse Built-In Theme (Default). Adapted from Princess Luna in My Little Pony",
-                ColorBlend = tt
+                ColorBlend = tt,
+                isBuildIn = true,
+                Uid = "d21d0d06-4583-463c-b949-c2b40978ee7a"
             };
         }
 
         private ThemeContainer CreateBuiltIn_Celestia()
         {
             ThemeTuple tt = new ThemeTuple();
-            tt.Foreground = "#FFE18FE4".ToColor().ToBrush();
-            tt.Secondary = "#FF64DCB7".ToColor().ToBrush();
+            tt.Foreground = "#FF474747".ToColor().ToBrush();
+            tt.Secondary = "#EEF84CFF".ToColor().ToBrush();
             tt.Primary = "#CCFDF5FB".ToColor().ToBrush();
             tt.Surface = "#FF93B9FF".ToColor().ToBrush();
             return new ThemeContainer()
             {
                 Name = "Princess Celestia",
-                Description = "Lunalipse Built-In Theme. Adapted from Princess Celestia in My Little Pony",
-                ColorBlend = tt
+                Description = "Lunalipse Built-In Theme. Adapted from Princess Celestia in My Little Pony。 (仍然处在测试中)",
+                ColorBlend = tt,
+                isBuildIn = true,
+                Uid= "c087d6b3-f4e2-4d44-a906-cb1085d58fb5"
             };
         }
+
+        
     }
 }

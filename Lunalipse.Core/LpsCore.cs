@@ -37,6 +37,12 @@ namespace Lunalipse.Core
 
         private void mComplete()
         {
+            GetNext();
+            OnMusicComplete?.Invoke();
+        }
+
+        public void GetNext()
+        {
             if (!executor.LBSLoaded)
             {
                 switch (MusicPlayMode)
@@ -57,7 +63,6 @@ namespace Lunalipse.Core
             {
                 PerpareMusic(executor.Stepping());
             }
-            OnMusicComplete?.Invoke();
         }
 
         private void mLoaded(MusicEntity Music, Track mTrack)

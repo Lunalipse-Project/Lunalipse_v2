@@ -1,17 +1,12 @@
-﻿using Lunalipse.Common.Data;
-using Lunalipse.Common.Generic.Cache;
+﻿using Lunalipse.Common.Bus.Event;
+using Lunalipse.Common.Data;
 using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Core.Cache;
-using Lunalipse.Core.Metadata;
 using Lunalipse.Core.PlayList;
 using Lunalipse.Presentation.BasicUI;
 using Lunalipse.Utilities;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Lunalipse.Auxiliary
@@ -21,9 +16,10 @@ namespace Lunalipse.Auxiliary
         CacheHub cacheHub;
         CataloguePool cataloguePool;
         MusicListPool musicListPool;
+        EventBus EVENT_BUS;
 
-        string missingTitle;
-        string missingContent;
+        string missingTitle, deleteConfirmTitle;
+        string missingContent, deleteConfirmContent;
 
         string savedFolder;
 
@@ -36,8 +32,26 @@ namespace Lunalipse.Auxiliary
             musicListPool = MusicListPool.INSATNCE();
             savedFolder = Environment.CurrentDirectory + @"\UserData\";
             if (!Directory.Exists(savedFolder)) Directory.CreateDirectory(savedFolder);
+            EVENT_BUS = EventBus.Instance;
+            EVENT_BUS.AddUnicastReciever("PlaylistGuard", PlayListGuard_UnicastReciever);
         }
 
+        protected void PlayListGuard_UnicastReciever(EventBusTypes MsgType,object[] data)
+        {
+            if(MsgType == EventBusTypes.ON_ACTION_DELETE)
+            {
+                string CatalogueUid = data[0] as string;
+                Catalogue tobeDelete = cataloguePool.GetCatalogue(CatalogueUid);
+                if (tobeDelete == null) return;
+                CommonDialog WarningToDelete = new CommonDialog(deleteConfirmTitle, deleteConfirmContent.FormateEx(tobeDelete.Name), MessageBoxButton.YesNo);
+                if(!WarningToDelete.ShowDialog().Value) return;
+
+                string SavedCatalogue = savedFolder + CatalogueUid + ".cata";
+                if (!File.Exists(SavedCatalogue)) return;
+                File.Delete(savedFolder + CatalogueUid + ".cata");
+                EVENT_BUS.Boardcast(EventBusTypes.ON_ACTION_COMPLETE, "C_UPD_USR");
+            }
+        }
         
         public void Restore()
         {
@@ -45,16 +59,11 @@ namespace Lunalipse.Auxiliary
             foreach(string path in Directory.GetFiles(savedFolder))
             {
                 Catalogue restoredCatalogue = Read(path);
-                Catalogue NewCatalogue = new Catalogue(restoredCatalogue.Name);
+                Catalogue NewCatalogue = new Catalogue(restoredCatalogue.Name, restoredCatalogue.UUID);
                 NewCatalogue.isUserDefined = restoredCatalogue.isUserDefined;
                 foreach (MusicEntity me in restoredCatalogue.MusicList)
                 {
-                    if (!File.Exists(me.Path))
-                    {
-                        IsEntityMissing = true;
-                        continue;
-                    }
-                    MusicEntity Entity = musicListPool.Musics.Find(x => x.Path == me.Path);
+                    MusicEntity Entity = musicListPool.Musics.Find(x => Path.GetFileName(x.Path) == Path.GetFileName(me.Path));
                     if (Entity != null)
                     {
                         NewCatalogue.MusicList.Add(Entity);
@@ -82,13 +91,15 @@ namespace Lunalipse.Auxiliary
         public void Translate(II18NConvertor i8c)
         {
             missingContent = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_PLAYLISTGUARD_MISSING_CONTENT");
+            deleteConfirmContent = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_CATADELETE_MSG");
             missingTitle = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_PLAYLISTGUARD_MISSING_TITLE");
+            deleteConfirmTitle = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_CATADELETE_TITLE");
         }
 
         private void Save(Catalogue catalogue)
         {
             byte[] savedData = UniversalObjectSerializor<Catalogue>.Serialize(catalogue);
-            Compression.Compress(savedData, "{0}/{1}.{2}".FormateEx(savedFolder, catalogue.Name, CATALOGUE_FILE_EXTENSION));
+            Compression.Compress(savedData, "{0}/{1}.{2}".FormateEx(savedFolder, catalogue.Uid(), CATALOGUE_FILE_EXTENSION));
         }
 
         private Catalogue Read(string CataloguePath)

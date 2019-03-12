@@ -40,12 +40,12 @@ namespace Lunalipse.Common.Bus.Event
         /// <summary>
         /// 单播接受端注册表
         /// </summary>
-        Dictionary<Type, Action<EventBusTypes, object[]>> UnicastRegisterTable;
+        Dictionary<object, Action<EventBusTypes, object[]>> UnicastRegisterTable;
 
 
         protected EventBus()
         {
-            UnicastRegisterTable = new Dictionary<Type, Action<EventBusTypes, object[]>>();
+            UnicastRegisterTable = new Dictionary<object, Action<EventBusTypes, object[]>>();
         }
         /// <summary>
         /// 向事件总线发送一个全局广播
@@ -72,9 +72,20 @@ namespace Lunalipse.Common.Bus.Event
         /// 向事件总线进行点对点单播
         /// </summary>
         /// <param name="ActionStatus">广播信息类别</param>
-        /// <param name="Receiver">单播接受者</param>
+        /// <param name="Receiver">单播接受者（接受类的类型）</param>
         /// <param name="Message">携带的信息</param>
         public void Unicast(EventBusTypes ActionStatus, Type Receiver, params object[] Message)
+        {
+            UnicastRegisterTable[Receiver]?.Invoke(ActionStatus, Message);
+        }
+
+        /// <summary>
+        /// 向事件总线进行点对点单播
+        /// </summary>
+        /// <param name="ActionStatus">广播信息类别</param>
+        /// <param name="Receiver">单播接受者（注册时使用的ID）</param>
+        /// <param name="Message">携带的信息</param>
+        public void Unicast(EventBusTypes ActionStatus, string Receiver, params object[] Message)
         {
             UnicastRegisterTable[Receiver]?.Invoke(ActionStatus, Message);
         }
@@ -82,6 +93,10 @@ namespace Lunalipse.Common.Bus.Event
         public void AddUnicastReciever(Type type, Action<EventBusTypes, object[]> action)
         {
             UnicastRegisterTable.Add(type, action);
+        }
+        public void AddUnicastReciever(string Identifier, Action<EventBusTypes, object[]> action)
+        {
+            UnicastRegisterTable.Add(Identifier, action);
         }
     }
 }

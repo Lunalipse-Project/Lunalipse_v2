@@ -14,7 +14,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="45px"/>
         </Grid.RowDefinitions>
-        <TextBlock x:Name="DetialContent" TextWrapping="Wrap" Text="TextBlock" Foreground="White"  Height="auto"
+        <TextBlock x:Name="DetialContent" TextWrapping="Wrap" Text="TextBlock" Foreground="{Binding Foreground,ElementName=CommonDialogueTemplate}"  Height="auto"
                    Padding="15,10,15,10" FontFamily="Microsoft YaHei UI Light" FontSize="{StaticResource FontNormal}" Grid.Row="0" VerticalAlignment="Top"/>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>

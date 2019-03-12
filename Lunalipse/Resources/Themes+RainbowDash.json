@@ -1,10 +1,11 @@
 ﻿{
   "Theme": {
     "Name": "Rainbow Dash",
-    "Desc": "Lunalipse Build-In Theme, Adapt from TV series My Little Pony. Authorized by Rainbow Dash"
+    "Desc": "Lunalipse Build-In Theme, Adapt from TV series My Little Pony. Authorized by Rainbow Dash",
+    "Uid": "23296c17-7a2d-4e47-b78a-857d47620d8c"
   },
-  "Foreground": "#FFA8026F",
-  "Primary": "#CCA3DEF8",
-  "Secondary": "#FFE76838",
+  "Foreground": "#FFFFFFFF",
+  "Primary": "#FF00A2E5",
+  "Secondary": "#FFA3DEF8",
   "Surface": "#FF269DCE"
 }

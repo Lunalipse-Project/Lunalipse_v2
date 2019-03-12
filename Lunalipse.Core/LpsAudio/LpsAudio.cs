@@ -17,6 +17,7 @@ using Lunalipse.Common.Interfaces.ILyric;
 using Lunalipse.Common.Interfaces.IConsole;
 using Lunalipse.Core.Console;
 using System.Windows;
+using System.IO;
 
 namespace Lunalipse.Core.LpsAudio
 {
@@ -184,25 +185,34 @@ namespace Lunalipse.Core.LpsAudio
         // Private Methods
         private IWaveSource GetCodec(string type, string file)
         {
+            if (string.IsNullOrEmpty(file)) return null;
             switch (type)
             {
                 case SupportFormat.MP3:
-                    if (file != null) return new DmoMp3Decoder(file);
-                    break;
+                    return new DmoMp3Decoder(file);
                 case SupportFormat.FLAC:
-                    if (file != null) return new FlacFile(file);
-                    break;
+                    return new FlacFile(file);
                 case SupportFormat.WAV:
-                    if (file != null) return new WaveFileReader(file);
-                    break;
+                    return new WaveFileReader(file);
                 case SupportFormat.ACC:
-                    if (file != null) return new AacDecoder(file);
-                    break;
+                    return new AacDecoder(file);
                 case SupportFormat.AIFF:
-                    if (file != null) return new AiffReader(file);
-                    break;
+                    return new AiffReader(file);
+                default:
+                    return null;
             }
-            return null;
+        }
+
+        private IWaveSource GetCodecWebMp3(string type, string Address)
+        {
+            switch (type)
+            {
+                case SupportFormat.MP3:
+                    return new Mp3WebStream(Address,true);
+                default:
+                    return null;
+            }
+            
         }
 
         private ISoundOut GetWasapiSoundOut(bool immersed = false, int latency = 100)
@@ -228,6 +238,7 @@ namespace Lunalipse.Core.LpsAudio
         
         private void CountTimerDelegate()
         {
+            
             double totalMS = iws.GetLength().TotalMilliseconds;
             TimeSpan position;
             while ((position = iws.GetPosition()).TotalMilliseconds < totalMS)
@@ -241,10 +252,10 @@ namespace Lunalipse.Core.LpsAudio
                         AudioDelegations.LyricUpdated?.Invoke(lt);
                     }
                 }
-                Thread.Sleep(1000);
+                Thread.Sleep(998);
             }
-            isPlaying = false;
             Application.Current.Dispatcher.Invoke(() => AudioDelegations.PlayingFinished?.Invoke());
+            isPlaying = false;
         }
 
         #region Command Handler

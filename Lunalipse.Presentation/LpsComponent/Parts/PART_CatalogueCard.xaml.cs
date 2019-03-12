@@ -1,4 +1,6 @@
-﻿using Lunalipse.Common.Generic.Themes;
+﻿using Lunalipse.Common.Bus.Event;
+using Lunalipse.Common.Generic.Themes;
+using Lunalipse.Common.Interfaces.IPlayList;
 using Lunalipse.Presentation.Generic;
 using Lunalipse.Utilities;
 using System;
@@ -26,13 +28,15 @@ namespace Lunalipse.Presentation.LpsComponent.Parts
     public partial class PART_CatalogueCard : UserControl
     {
 
-        public event Action OnCatalogueDeleted;
+        public event Action<ICatalogue> OnCatalogueEditRequest;
         public event Action<PART_CatalogueCard> OnCatalogueSelected;
 
         private Duration elapseTime = new Duration(TimeSpan.FromMilliseconds(400));
         private DoubleAnimation FloatingUp, FloatingDown;
 
-        public PART_CatalogueCard()
+        private ICatalogue catalogue;
+
+        public PART_CatalogueCard(ICatalogue catalogue)
         {
             InitializeComponent();
             this.MouseDown += PART_CatalogueCard_MouseDown;
@@ -45,6 +49,17 @@ namespace Lunalipse.Presentation.LpsComponent.Parts
 
             ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
             ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
+
+            this.catalogue = catalogue;
+            CatalogueCover = catalogue.GetCatalogueCover();
+            CatalogueTitle = catalogue.Name();
+            Uid = catalogue.Uid();
+            if(!catalogue.IsUserDefined())
+            {
+                InfoPlaceHolder.Width = new GridLength(1.0, GridUnitType.Star);
+                DeletePlaceHolder.Width = new GridLength(0, GridUnitType.Star);
+                DeleteButton.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
@@ -52,6 +67,7 @@ namespace Lunalipse.Presentation.LpsComponent.Parts
             if (obj == null) return;
             Background = BottomStripColor = obj.Primary.SetOpacity(1);
             Foreground = obj.Foreground;
+            Overlay.Background = obj.Primary.SetOpacity(0.8);
         }
 
         private void PART_CatalogueCard_MouseLeave(object sender, MouseEventArgs e)
@@ -121,7 +137,12 @@ namespace Lunalipse.Presentation.LpsComponent.Parts
 
         private void OnCatalogueDelete(object sender, RoutedEventArgs e)
         {
-            OnCatalogueDeleted?.Invoke();
+            EventBus.Instance.Unicast(EventBusTypes.ON_ACTION_DELETE, "PlaylistGuard", catalogue.Uid());
+        }
+
+        private void OnCatalogueEdit(object sender, RoutedEventArgs e)
+        {
+            OnCatalogueEditRequest?.Invoke(catalogue);
         }
 
         private void Grid_PreviewMouseMove(object sender, MouseEventArgs e)

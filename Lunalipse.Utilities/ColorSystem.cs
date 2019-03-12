@@ -70,6 +70,11 @@ namespace Lunalipse.Utilities
             return new SolidColorBrush(brush.Color.ToLuna());
         }
 
+        public static SolidColorBrush ToLuna(this SolidColorBrush brush,float Ratio)
+        {
+            return new SolidColorBrush(brush.Color.ToLuna(Ratio));
+        }
+
         /// <summary>
         /// 转换为淡色主题颜色
         /// </summary>
@@ -78,6 +83,10 @@ namespace Lunalipse.Utilities
         public static SolidColorBrush ToCelestia(this SolidColorBrush brush)
         {
             return new SolidColorBrush(brush.Color.ToCelestia());
+        }
+        public static SolidColorBrush ToCelestia(this SolidColorBrush brush, float Ratio)
+        {
+            return new SolidColorBrush(brush.Color.ToCelestia(Ratio));
         }
 
         /// <summary>
@@ -88,6 +97,11 @@ namespace Lunalipse.Utilities
         public static Color ToLuna(this Color color)
         {
             return color.Concentrate(LUNA_RATIO);
+        }
+
+        public static Color ToLuna(this Color color,float Ratio)
+        {
+            return color.Concentrate(Ratio);
         }
 
         /// <summary>
@@ -109,6 +123,10 @@ namespace Lunalipse.Utilities
         public static Color ToCelestia(this Color color)
         {
             return color.Dilute(CELESTIA_RATIO);
+        }
+        public static Color ToCelestia(this Color color, float Ratio)
+        {
+            return color.Dilute(Ratio);
         }
 
         public static SolidColorBrush ToBrush(this Color color)

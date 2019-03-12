@@ -7,21 +7,35 @@
         WindowStyle="None"
         WindowState="Normal"
         mc:Ignorable="d"
-        Loaded="Window_Loaded"
+        Loaded="Window_Loaded" x:Name="LyricDisplayRegion"
         AllowsTransparency="True" Background="#00000000"
-        Height="100px"
+        Height="150px"
         Title="DesktopDisplay">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="300"/>
-        </Grid.ColumnDefinitions>
-        <Label x:Name="LyricDisplayArea" Grid.Column="0" VerticalContentAlignment="Center"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50px"/>
+            <RowDefinition Height="100px"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="auto" Width="auto">
+                <Border CornerRadius="5" x:Name="BorderDisplay" Padding="20 0 20 0" Opacity="0">
+                    <Label x:Name="Toast" Foreground="{Binding ElementName=LyricDisplayArea,Path=Foreground}" FontSize="{StaticResource FontMedium}">
+                    </Label>
+                </Border>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="300"/>
+            </Grid.ColumnDefinitions>
+            <Label x:Name="LyricDisplayArea" Grid.Column="0" VerticalContentAlignment="Center"
                VerticalAlignment="Center"
                FontSize="{StaticResource IconLargeIII}" Foreground="#FFFFFFFF" Padding="20,0,0,0">
-            <Label.Effect>
-                <DropShadowEffect Color="#FF000000" ShadowDepth="0" BlurRadius="8" Direction="0"/>
-            </Label.Effect>
-        </Label>
+                <Label.Effect>
+                    <DropShadowEffect Color="#FF000000" ShadowDepth="0" BlurRadius="8" Direction="0"/>
+                </Label.Effect>
+            </Label>
+        </Grid>
     </Grid>
 </Window>

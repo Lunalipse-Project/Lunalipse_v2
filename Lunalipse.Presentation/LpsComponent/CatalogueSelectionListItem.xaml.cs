@@ -70,6 +70,9 @@ namespace Lunalipse.Presentation.LpsComponent
                     case "MENU_DETAIL":
                         TagIcon.Content = FindResource("Menu");
                         break;
+                    case "ALL_MUSIC":
+                        TagIcon.Content = FindResource("PlayList");
+                        break;
                     default:
                         TagIcon.Content = FindResource("Music_Collection");
                         break;

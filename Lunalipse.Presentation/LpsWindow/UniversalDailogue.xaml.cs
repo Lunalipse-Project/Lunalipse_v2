@@ -27,6 +27,12 @@ namespace Lunalipse.Presentation.LpsWindow
             Loaded += UniversalDailogue_Loaded;
             TranslationManagerBase.OnI18NEnvironmentChanged += TranslationManagerBase_OnI18NEnvironmentChanged;
             ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
+            Display.ContentRendered += Display_ContentRendered;
+        }
+
+        private void Display_ContentRendered(object sender, EventArgs e)
+        {
+            TranslationManagerBase_OnI18NEnvironmentChanged(TranslationManagerBase.AquireConverter());
         }
 
         private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
@@ -49,8 +55,6 @@ namespace Lunalipse.Presentation.LpsWindow
 
         private void UniversalDailogue_Loaded(object sender, RoutedEventArgs e)
         {
-            this.HideWindowFromAltTab();
-            TranslationManagerBase_OnI18NEnvironmentChanged(TranslationManagerBase.AquireConverter());
             ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
             Positive.Click += (a, b) =>
             {

@@ -65,6 +65,11 @@ namespace Lunalipse.Core.PlayList
         {
             if (CPool.Exists(x => x.isLocationClassified == true && x.Name.Equals(dirpath)))
                 return "";
+            if (!Directory.Exists(dirpath))
+            {
+                Log.Error("Path {0} not exist locally.", dirpath);
+                return "";
+            }
             Catalogue pathCatalogue = new Catalogue(dirpath)
             {
                 isLocationClassified = true

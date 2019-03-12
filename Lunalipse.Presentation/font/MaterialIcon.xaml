@@ -49,6 +49,8 @@
     <System:String x:Key="Menu">&#xf197;</System:String>
     
     <System:String x:Key="FolderStar">&#xf227;</System:String>
+    
+    <System:String x:Key="Info_Outline">&#xf1f7;</System:String>
 
     <!-- Play Mode -->
     <System:String x:Key="RepeatList">&#xf3ae;</System:String>
@@ -90,6 +92,8 @@
     <System:String x:Key="SETTING_SECURITY">&#xf1c8;</System:String>
 
     <System:String x:Key="SETTING_ACTION_SAVE_CFG">&#xf297;</System:String>
+
+    <System:String x:Key="SETTING_ABOUT">&#xf1f7;</System:String>
 
     <System:String x:Key="Music_Collection">&#xf14c;</System:String>
     

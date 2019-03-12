@@ -18,6 +18,7 @@ namespace Lunalipse.Common.Interfaces.IPlayList
         bool DeleteMusic(string name);
         bool DeleteMusic(int index);
         bool DeleteMusic(int start, int count);
+        bool IsUserDefined();
         int GetCount();
         MusicEntity getMusic(int index);
         MusicEntity getMusic(string name);
@@ -28,5 +29,7 @@ namespace Lunalipse.Common.Interfaces.IPlayList
         void SortByName();
         BitmapSource GetCatalogueCover();
         IEnumerable<MusicEntity> GetAll();
+
+        
     }
 }

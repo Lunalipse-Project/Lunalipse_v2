@@ -121,6 +121,9 @@ namespace Lunalipse.Core.Theme
                             case "Desc":
                                 tc.Description = inner.Value.Value<string>();
                                 break;
+                            case "Uid":
+                                tc.Uid = inner.Value.Value<string>();
+                                break;
                         }
                     }
                 }

@@ -113,7 +113,7 @@ namespace CSCore.DMO
 
                 if (_outputDataBuffer.Length <= 0)
                 {
-                    Debug.WriteLine("No data in output buffer.");
+                    //Debug.WriteLine("No data in output buffer.");
                     continue; //todo:
                 }
 
