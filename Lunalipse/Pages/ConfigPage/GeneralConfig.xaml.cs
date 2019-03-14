@@ -5,7 +5,9 @@ using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Core.PlayList;
 using Lunalipse.Pages.ConfigPage.Structures;
+using Lunalipse.Presentation.LpsComponent;
 using Lunalipse.Utilities;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using WinForms = System.Windows.Forms;
@@ -25,6 +27,8 @@ namespace Lunalipse.Pages.ConfigPage
         const int BUTTON_NUM = 2;
         const int Label_NUM = 4;
 
+        SupportLanguages supportLanguages = SupportLanguages.CHINESE_SIM;
+
         // 保存增加的Catalogue的UUID, 方便用户撤销操作
         //List<string> AddedCatalogues;
 
@@ -43,14 +47,13 @@ namespace Lunalipse.Pages.ConfigPage
 
             //主题监听器订阅
             ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
-            ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
 
             //界面语言监听器订阅
             TranslationManagerBase.OnI18NEnvironmentChanged += Translate;
-            Translate(TranslationManagerBase.AquireConverter());
 
             //其他监听器
             MusicPath.OnSelectionChanged += MusicPath_OnSelectionChanged;
+            
 
         }
 
@@ -67,11 +70,11 @@ namespace Lunalipse.Pages.ConfigPage
         {
             if (obj == null) return;
             Foreground = obj.Foreground;
-            for(int i = 5; i < 5 + BUTTON_NUM; i++)
+            foreach(Button b in Utils.FindVisualChildren<Button>(this))
             {
-                Button b = FindName("ST_TN_F" + i) as Button;
                 b.Background = obj.Surface.ToLuna();
             }
+            LanguageSelection.Background = obj.Primary;
         }
 
         /// <summary>
@@ -91,24 +94,42 @@ namespace Lunalipse.Pages.ConfigPage
                 });
                 //AddedCatalogues.Add(c.UUID);
             }
+            Enum.TryParse(GlobalSetting.CurrentSelectedLanguage, out supportLanguages);
+            LangFollowSystem.Toggle(GlobalSetting.UseSystemDefaultLanguage);
         }
 
         public void Translate(II18NConvertor i8c)
         {
-            for(int i = 1; i <= BUTTON_NUM + Label_NUM; i++)
+            foreach (ContentControl contentControl in Utils.FindVisualChildren<ContentControl>(this))
             {
-                ContentControl l = FindName("ST_TN_F" + i) as ContentControl;
-                if (l == null) continue;
-                l.Content = i8c.ConvertTo(SupportedPages.CORE_GENERAL_SETTING, l.Tag as string);
+                if (contentControl.Tag == null) continue;
+                if (!(contentControl.Tag is string)) continue;
+                contentControl.Content = i8c.ConvertTo(SupportedPages.CORE_GENERAL_SETTING, contentControl.Tag as string);
+            }
+            ST_TN_F7.Text = i8c.ConvertTo(SupportedPages.CORE_GENERAL_SETTING, ST_TN_F7.Tag as string);
+            ST_TN_F8.Text = i8c.ConvertTo(SupportedPages.CORE_GENERAL_SETTING, ST_TN_F8.Tag as string);
+            foreach (SupportLanguages supportLanguage in (SupportLanguages[])Enum.GetValues(typeof(SupportLanguages)))
+            {
+                LanguageSelection.Add(i8c.ConvertTo(SupportedPages.MULTI_LANG, supportLanguage.ToString()), supportLanguage);
             }
         }
 
         private void GeneralConfigPage_Loaded(object sender, RoutedEventArgs e)
         {
+            ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
+            Translate(TranslationManagerBase.AquireConverter());
             ReadManifest();
             //在调用SelectedIndex前（内部使用ControlTemplate.FindName实现）,显式更新ItemControl的布局，以免引发 InvalidOperationException
             MusicPath.UpdateLayout();
             MusicPath.SelectedIndex = 0;
+            LanguageSelection.SelectedIndex = 0;
+            LanguageSelection.OnSelectionChanged += LanguageSelection_OnSelectionChanged;
+            LangFollowSystem.OnSwitchStatusChanged += (y,x) => GlobalSetting.UseSystemDefaultLanguage = x;
+        }
+
+        private void LanguageSelection_OnSelectionChanged(object obj)
+        {
+            
         }
 
         // Add a new location

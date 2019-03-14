@@ -5,11 +5,13 @@ using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Common.Interfaces.ILpsUI;
 using Lunalipse.Core.Theme;
 using Lunalipse.Pages.ConfigPage.Structures;
+using Lunalipse.Presentation.LpsComponent;
 using Lunalipse.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,6 +35,7 @@ namespace Lunalipse.Pages.ConfigPage
         ThemeListStruc SelectedStruc;
         int SelectedIndex;
         GLS GlobalSetting;
+        static readonly Regex _regex = new Regex("[^0-9.-]+");
         public AppearanceConfig()
         {
             InitializeComponent();
@@ -63,6 +66,8 @@ namespace Lunalipse.Pages.ConfigPage
         private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
         {
             Foreground = obj.Foreground;
+            LyricFontFamily.Background = obj.Primary;
+            
             foreach (Button button in Utils.FindVisualChildren<Button>(this))
             {
                 button.Background = obj.Primary;
@@ -78,6 +83,8 @@ namespace Lunalipse.Pages.ConfigPage
                 contentControl.Content = i8c.ConvertTo(SupportedPages.CORE_APPEARANCE_SETTING, contentControl.Tag as string);
             }
             ST_TN_F2.Text = i8c.ConvertTo(SupportedPages.CORE_APPEARANCE_SETTING, ST_TN_F2.Tag as string);
+            ST_TN_F4.Text = i8c.ConvertTo(SupportedPages.CORE_APPEARANCE_SETTING, ST_TN_F4.Tag as string);
+
             ThemeList.Translate(i8c);
         }
 
@@ -85,6 +92,40 @@ namespace Lunalipse.Pages.ConfigPage
         {
             ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
             Translate(TranslationManagerBase.AquireConverter());
+            ReadManifest();
+            EnableSongHint.OnSwitchStatusChanged += OnSwitchStatusChanged;
+            NonPassiveLyricDisp.OnSwitchStatusChanged += OnSwitchStatusChanged;
+            EnableGuassianBlur.OnSwitchStatusChanged += OnSwitchStatusChanged;
+            LyricFontFamily.OnSelectionChanged += LyricFontFamily_OnSelectionChanged;
+        }
+
+        private void LyricFontFamily_OnSelectionChanged(object obj)
+        {
+            FontFamily fontFamily = obj as FontFamily;
+            GlobalSetting.LyricFontFamily = fontFamily.Source;
+            GlobalSetting.LyricFontFamilyInternal = fontFamily;
+            GlobalSetting.InvokeSettingChange("LyricFontFamily");
+        }
+
+        private void OnSwitchStatusChanged(object sender, bool status)
+        {
+            string name = (sender as ToggleSwitch).Name;
+            switch(name)
+            {
+                case "EnableSongHint":
+                    GlobalSetting.ShowNextSongHint = status;
+                    break;
+                case "NonPassiveLyricDisp":
+                    GlobalSetting.LyricEnabled = status;
+                    break;
+                case "EnableGuassianBlur":
+                    GlobalSetting.EnableGuassianBlur = status;
+                    break;
+            }
+        }
+
+        private void ReadManifest()
+        {
             ThemeContainer themeContainer = themeContainers.Find(x => x.Uid.Equals(GlobalSetting.DefaultThemeUUID));
             ThemeList.Add(new ThemeListStruc()
             {
@@ -104,6 +145,15 @@ namespace Lunalipse.Pages.ConfigPage
                     Uid = item.Uid
                 });
             });
+            EnableSongHint.Toggle(GlobalSetting.ShowNextSongHint);
+            NonPassiveLyricDisp.Toggle(GlobalSetting.LyricEnabled);
+            EnableGuassianBlur.Toggle(GlobalSetting.EnableGuassianBlur);
+            foreach(FontFamily fonts in Fonts.SystemFontFamilies)
+            {
+                LyricFontFamily.Add(fonts.Source, fonts);
+            }
+            LyricFontFamily.SetSelectionByVal(new FontFamily(GlobalSetting.LyricFontFamily));
+            LyricFontSize.Text = GlobalSetting.LyricFontSize.ToString();
         }
 
         private void SetDefault_Click(object sender, RoutedEventArgs e)
@@ -114,6 +164,30 @@ namespace Lunalipse.Pages.ConfigPage
             ThemeList.Items[SelectedIndex] = old;
             LThemeManager.Instance.SelectTheme(SelectedStruc.Uid);
             ThemeList.SelectedIndex = 0;
+        }
+
+        private static bool IsTextAllowed(string text)
+        {
+            return !_regex.IsMatch(text);
+        }
+
+        private void LyricFontSize_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !IsTextAllowed(e.Text);
+            uint TextSize = 0;
+            if (uint.TryParse(LyricFontSize.Text, out TextSize))
+            {
+                if (TextSize >= 5 && TextSize <= 100)
+                {
+                    GlobalSetting.LyricFontSize = (int)TextSize;
+                    GlobalSetting.InvokeSettingChange("LyricFontSize");
+                }
+            }
+        }
+
+        private void LyricFontSize_TextInput(object sender, TextCompositionEventArgs e)
+        {
+            
         }
     }
 }

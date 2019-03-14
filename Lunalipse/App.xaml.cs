@@ -9,6 +9,7 @@ using Lunalipse.Core.I18N;
 using Lunalipse.Core.PlayList;
 using Lunalipse.Core.Theme;
 using Lunalipse.I18N;
+using Lunalipse.Utilities;
 using System;
 using System.Reflection;
 using System.Windows;
@@ -36,12 +37,13 @@ namespace Lunalipse
             cp = CataloguePool.INSATNCE;
             cacheSystem = CacheHub.INSTANCE(Environment.CurrentDirectory);
             resourcesHandler = new ResourcesHandler(Assembly.GetEntryAssembly().GetName().Version);
+            RestoringConfig();
 
             CheckResources();
             InitializeI18NEnvironemnt();
             RegisterOperators();
 
-            RestoringConfig();
+            
             PerpearThemeColor();
         }
 
@@ -70,7 +72,20 @@ namespace Lunalipse
         void InitializeI18NEnvironemnt()
         {
             Log.Info("Perpearing i18n environemnt");
-            TranslationManager.Instance.SetLanguage(SupportLanguages.CHINESE_SIM);
+            SupportLanguages supportLanguages;
+            if(GLS.INSTANCE.UseSystemDefaultLanguage)
+            {
+                supportLanguages = TranslationManager.GetSystemLanguage();
+            }
+            else
+            {
+                if(!Enum.TryParse(GLS.INSTANCE.CurrentSelectedLanguage,out supportLanguages))
+                {
+                    supportLanguages = SupportLanguages.CHINESE_SIM;
+                    Log.Warning("Unknow Language '{0}'. Use default".FormateEx(GLS.INSTANCE.CurrentSelectedLanguage));
+                }
+            }
+            TranslationManager.Instance.SetLanguage(supportLanguages);
         }
 
         void RestoringConfig()

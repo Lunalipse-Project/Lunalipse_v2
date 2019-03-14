@@ -82,6 +82,11 @@ namespace Lunalipse.Core
             logWriter.WriteLine(FormateMessage("INFO", name, message));
         }
 
+        public void Warning(object formateEx)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Warning(string message, string ID = "")
         {
             string name = ID == "" ? new StackFrame(1).GetMethod().ReflectedType.Name : ID;

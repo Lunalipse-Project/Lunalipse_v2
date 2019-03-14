@@ -1,10 +1,10 @@
 <LpsI18N>
   <Lang lang="CHINESE_SIM">
     <Page key="MULTI_LANG">
-      <Key name="LANG_CHN_SIM">简体中文</Key>
-      <Key name="LANG_CHN_TRD">繁體中文</Key>
-      <Key name="LANG_ENG">English</Key>
-      <Key name="LANG_RUS">Русский</Key>
+      <Key name="CHINESE_SIM">简体中文</Key>
+      <Key name="CHINESE_TRA">繁體中文</Key>
+      <Key name="ENGLISH">English</Key>
+      <Key name="RUSSIAN">Русский</Key>
     </Page>
     <Page key="CORE_FUNC">
       <Key name="CORE_LBS_SynatxError">一个常规的语法错误</Key>
@@ -21,7 +21,7 @@
       <Key name="CORE_DIALOG_CANCEL">算了</Key>
 
       <Key name="CORE_PLAYLISTGUARD_MISSING_TITLE">丢失的条目</Key>
-      <Key name="CORE_PLAYLISTGUARD_MISSING_CONTENT">检测到先前保存的播放列表，但在恢复的时候出现了些问题：一些播放列表中保存的歌曲貌似在不在本地中。有可能该歌曲已更换名称或永久的移动到了新的路径。</Key>
+      <Key name="CORE_PLAYLISTGUARD_MISSING_CONTENT">检测到先前保存的播放列表，但在恢复的时候出现了些问题：一些播放列表中保存的歌曲貌似在不在本地中。有可能该歌曲已被重命名或永久的移动到了新的位置。</Key>
 
       <Key name="CORE_CATALOGUE_ALL_LOCATION">所有位置</Key>
       <Key name="CORE_CATALOGUE_ALL_MUSIC">所有歌曲</Key>
@@ -34,6 +34,7 @@
       <Key name="CORE_MAINUI_MODE_LINEAR">全部循环</Key>
       <Key name="CORE_MAINUI_MODE_SINGLELOOP">单曲循环</Key>
       <Key name="CORE_MAINUI_MODE_SHUFFLE">随机播放</Key>
+      <Key name="CORE_MAINUI_TOAST_SONGHINT">正在播放：{0}</Key>
 
       <Key name="CORE_ADDPLAYLIST_NOFAVCATA">没有心仪的播放列表？</Key>
       <Key name="CORE_ADDPLAYLIST_NEWONE">新建 ……</Key>
@@ -74,12 +75,21 @@
       <Key name="CORE_CATALOGUE_CATADELETE_MSG">确认删除播放列表（歌单）“{0}” 吗？该操作是不可逆的。</Key>
     </Page>
     <Page key="CORE_GENERAL_SETTING">
-      <Key name="CORE_SETTING_MUSIC_SOURCES">我们将会在以下地方查找音乐</Key>
+      <Key name="CORE_SETTING_MUSIC_SOURCES">编辑歌曲来源</Key>
+      <Key name="CORE_SETTING_MUSIC_SOURCES_HINT">我们将会在以下地方查找音乐</Key>
       <Key name="CORE_SETTING_FILE_COUNT">音乐文件个数：</Key>
       <Key name="CORE_SETTING_TOTAL_DUR">估计的总时长：</Key>
       <Key name="CORE_SETTING_BTN_ADDNEW">增加位置</Key>
       <Key name="CORE_SETTING_BTN_REMOVE">删除所选位置</Key>
       <Key name="CORE_SETTING_FULL_PATH">完整路径</Key>
+      
+      <Key name="CORE_SETTING_I18N">国际化设置</Key>
+      <Key name="CORE_SETTING_I18N_HINT">您可以在这里设置Lunalipse要显示的语言</Key>
+      <Key name="CORE_SETTING_I18N_LANG_OPTS">设置您的语言偏好</Key>
+      <Key name="CORE_SETTING_I18N_LANG_FOLLOWSYS">跟随系统语言</Key>
+
+      <Key name="CORE_SETTING_HOTKEY">快捷键设置</Key>
+      <Key name="CORE_SETTING_HOTKEY_HINT">通过编辑现有的快捷键，或着添加新的快捷键然后绑定到任意一个功能上，您可以更加快速与方便的操控Lunalipse</Key>
     </Page>
     <Page key="CORE_APPEARANCE_SETTING">
       <Key name="CORE_SETTING_APPR_THEME_CAP">请为Lunalipse选定一个主题（配色方案）</Key>
@@ -87,6 +97,14 @@
       <Key name="CORE_SETTING_APPR_THEME_SETDEFAULT">设为默认</Key>
       <Key name="CORE_SETTING_APPR_THEME_INPORT">导入主题</Key>
       <Key name="CORE_SETTING_APPR_THEME_CREATE">创建新主题</Key>
+
+      <Key name="CORE_SETTING_APPR_VISUAL">设置视觉效果</Key>
+      <Key name="CORE_SETTING_APPR_VISUAL_HINT">在这里您可以设置Lunalipse中几乎所有的视觉效果</Key>
+      <Key name="CORE_SETTING_APPR_VISUAL_SONGHINT">切换歌曲时显示歌曲名称</Key>
+      <Key name="CORE_SETTING_APPR_VISUAL_LYRIC">启用歌词主动显示</Key>
+      <Key name="CORE_SETTING_APPR_VISUAL_GUASSIANBLUR">启用窗体毛玻璃效果</Key>
+      <Key name="CORE_SETTING_APPR_VISUAL_LYRIC_FONT">显示歌词时采用字体</Key>
+      <Key name="CORE_SETTING_APPR_VISUAL_LYRIC_FONTSIZE">显示歌词时使用的字号</Key>
     </Page>
     <Page key="CORE_ABOUT_SETTING">
       <Key name="CORE_SETTING_ABOUT_VERSION">当前版本：{0}</Key>

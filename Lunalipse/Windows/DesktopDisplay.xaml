@@ -18,6 +18,9 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="auto" Width="auto">
+                <Grid.Effect>
+                    <DropShadowEffect BlurRadius="15" Opacity="0.55" ShadowDepth="0"/>
+                </Grid.Effect>
                 <Border CornerRadius="5" x:Name="BorderDisplay" Padding="20 0 20 0" Opacity="0">
                     <Label x:Name="Toast" Foreground="{Binding ElementName=LyricDisplayArea,Path=Foreground}" FontSize="{StaticResource FontMedium}">
                     </Label>

@@ -29,6 +29,7 @@ namespace Lunalipse.Presentation.LpsComponent
 
         public event Action OnSwitchTurnOn;
         public event Action OnSwitchTurnOff;
+        public event Action<object,bool> OnSwitchStatusChanged;
 
         private bool initialState = false;  //OFF
         public ToggleSwitch()
@@ -53,9 +54,9 @@ namespace Lunalipse.Presentation.LpsComponent
         {
             if (obj == null) return;
             ThumbActive = obj.Secondary.Color;
-            ThumbDeactive = obj.Secondary.ToLuna().Color;
-            TrackActive = obj.Secondary;
-            TrackDeactive = obj.Secondary.ToLuna();
+            ThumbDeactive = obj.Foreground.ToLuna().Color;
+            TrackActive = obj.Secondary.ToCelestia(0.3f);
+            TrackDeactive = obj.Foreground.ToLuna(0.3f);
             ResetColor();
         }
 
@@ -68,9 +69,14 @@ namespace Lunalipse.Presentation.LpsComponent
 
         }
 
-        public void OnThumbPressed(object sender, EventArgs args)
+        private void OnThumbPressed(object sender, EventArgs args)
         {
-            if(initialState)
+            Toggle(!initialState);
+        }
+
+        public void Toggle(bool state)
+        {
+            if (!state)
             {
                 Track_Active.BeginAnimation(WidthProperty, TrackDeact);
                 Thumb.Fill.BeginAnimation(SolidColorBrush.ColorProperty, ThumbToDeact);
@@ -84,6 +90,7 @@ namespace Lunalipse.Presentation.LpsComponent
                 initialState = true;
                 OnSwitchTurnOn?.Invoke();
             }
+            OnSwitchStatusChanged?.Invoke(this, initialState);
         }
     }
 }

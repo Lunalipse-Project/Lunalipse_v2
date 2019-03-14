@@ -32,6 +32,8 @@ namespace Lunalipse.Windows
         DoubleAnimation PreFadeOut = new DoubleAnimation(1, 1, new Duration(TimeSpan.FromSeconds(5)));
         DoubleAnimation FadeOut = new DoubleAnimation(1, 0, new Duration(TimeSpan.FromSeconds(2)));
 
+        GLS GlobalSetting;
+
         public DesktopDisplay()
         {
             InitializeComponent();
@@ -55,6 +57,22 @@ namespace Lunalipse.Windows
             ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
             ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
             this.Topmost = true;
+
+            GlobalSetting = GLS.INSTANCE;
+            GlobalSetting.OnSettingUpdated += GlobalSetting_OnSettingUpdated;
+        }
+
+        private void GlobalSetting_OnSettingUpdated(string obj)
+        {
+            switch(obj)
+            {
+                case "LyricFontFamily":
+                    LyricDisplayArea.FontFamily = GlobalSetting.LyricFontFamilyInternal;
+                    break;
+                case "LyricFontSize":
+                    LyricDisplayArea.FontSize = GlobalSetting.LyricFontSize;
+                    break;
+            }
         }
 
         private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
@@ -71,7 +89,7 @@ namespace Lunalipse.Windows
             BorderDisplay.BeginAnimation(OpacityProperty, PreFadeOut);
         }
 
-        public static void ShowToast(string Content, int ElapseTime) => OnToastSet?.Invoke(Content, ElapseTime);
+        public static void ShowToast(string Content, int ElapseTime = 2000) => OnToastSet?.Invoke(Content, ElapseTime);
 
         private void ReceiveAction(EventBusTypes eventBusTypes, object[] param)
         {

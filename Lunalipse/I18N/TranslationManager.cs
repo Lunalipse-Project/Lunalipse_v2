@@ -3,8 +3,10 @@ using Lunalipse.Common.Generic.I18N;
 using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Core;
 using Lunalipse.Core.I18N;
+using Lunalipse.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -64,6 +66,21 @@ namespace Lunalipse.I18N
             Pages = I18T.GetPages(language);
             convertor = new I18NConvertor(Pages);
             ChangeI18NEnvironment(convertor);
+        }
+
+        public static SupportLanguages GetSystemLanguage()
+        {
+            CultureInfo cultureInfo = CultureInfo.InstalledUICulture;
+            string identifier = cultureInfo.Name;
+            if (identifier == "en-US" && identifier == "en-GB")
+            {
+                return SupportLanguages.ENGLISH;
+            }
+            else if (identifier == "zh-Hans") return SupportLanguages.CHINESE_SIM;
+            else if (identifier == "zh-Hant") return SupportLanguages.CHINESE_TRA;
+            else if (identifier == "ru") return SupportLanguages.RUSSIAN;
+            LunalipseLogger.GetLogger().Warning("Language or location : {0} is not supported yet, use default.".FormateEx(identifier));
+            return SupportLanguages.CHINESE_SIM;
         }
     }
 }

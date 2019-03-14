@@ -24,6 +24,7 @@ using Lunalipse.Common.Generic.Cache;
 using Lunalipse.Auxiliary;
 using Lunalipse.Core.LpsAudio;
 using Lunalipse.Common;
+using Lunalipse.Utilities;
 
 namespace Lunalipse
 {
@@ -55,7 +56,7 @@ namespace Lunalipse
         List<Catalogue> ByLocation, ByArtist, ByAlbum, ByUserDefined;
         private DesktopDisplay desktopDisplay;
 
-        private string LinearMode, SingleLoop, ShuffleMode;
+        private string LinearMode, SingleLoop, ShuffleMode,NextSongHint;
 
         public MainWindow() : base()
         {
@@ -77,6 +78,8 @@ namespace Lunalipse
             playlistGuard.Restore();
 
             CataloguesRefleshAll();
+
+            this.EnableBlur = GlobalSetting.EnableGuassianBlur;
 
         }
 
@@ -159,6 +162,7 @@ namespace Lunalipse
             LinearMode = converter.ConvertTo(SupportedPages.CORE_FUNC, "CORE_MAINUI_MODE_LINEAR");
             SingleLoop = converter.ConvertTo(SupportedPages.CORE_FUNC, "CORE_MAINUI_MODE_SINGLELOOP");
             ShuffleMode = converter.ConvertTo(SupportedPages.CORE_FUNC, "CORE_MAINUI_MODE_SHUFFLE");
+            NextSongHint = converter.ConvertTo(SupportedPages.CORE_FUNC, "CORE_MAINUI_TOAST_SONGHINT");
         }
 
         /// <summary>
@@ -196,8 +200,16 @@ namespace Lunalipse
 
             musicList = new MusicSelected();
             musicList.OnSelectedMusicChange += MusicList_OnSelectedMusicChange;
+            //GlobalSetting.OnSettingUpdated += GlobalSetting_OnSettingUpdated;
 
             this.OnMinimizClicked += MainWindow_OnMinimizClicked;
+        }
+
+        private void GlobalSetting_OnSettingUpdated(string obj)
+        {
+            //switch (obj)
+            //{             
+            //}
         }
 
         private void ControlPanel_OnModeChange(PlayMode mode, object append)
@@ -378,13 +390,15 @@ namespace Lunalipse
         {
             Dispatcher.Invoke(() =>
             {
+                if (GlobalSetting.ShowNextSongHint)
+                    DesktopDisplay.ShowToast(NextSongHint.FormateEx(Music.MusicName), 4000);
                 BitmapSource source;
                 ControlPanel.AlbumProfile = (source = MediaMetaDataReader.GetPicture(Music.Path)) == null ? null : new ImageBrush(source);
                 ControlPanel.StartPlaying();
                 ControlPanel.MaxValue = mTrack.Duration.TotalSeconds;
                 ControlPanel.Value = 0;
                 musicList.PlayingIndex = musicList.SelectedCatalogue.CurrentIndex;
-                ControlPanel.CurrentMusic = Music.Artist[0] +" - "+ Music.Name;
+                ControlPanel.CurrentMusic = Music.Artist[0] +" - "+ Music.MusicName;
                 ControlPanel.TotalLength = mTrack.Duration;
                 AudioDelegations.LyricUpdated?.Invoke(null);
             });

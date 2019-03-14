@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace Lunalipse
 {
@@ -13,6 +14,9 @@ namespace Lunalipse
     {
         static volatile GLS GS_Instance;
         static readonly object GS_Lock = new object();
+
+        [field: NonSerialized]
+        public event Action<string> OnSettingUpdated;
         public static GLS INSTANCE
         {
             get
@@ -53,5 +57,43 @@ namespace Lunalipse
 
         [ConfigField]
         public string DefaultThemeUUID = "d21d0d06-4583-463c-b949-c2b40978ee7a";
+
+        /// <summary>
+        /// 是否在切换歌曲时提示歌曲名称
+        /// </summary>
+        [ConfigField]
+        public bool ShowNextSongHint = true;
+
+        [ConfigField]
+        public string LyricFontFamily = "Microsoft YaHei UI";
+
+        [NonSerialized]
+        public FontFamily LyricFontFamilyInternal;
+
+        [ConfigField]
+        public int LyricFontSize = 40;
+
+        [ConfigField]
+        public string CurrentSelectedLanguage = "CHINESE_SIM";
+
+        [ConfigField]
+        public bool UseSystemDefaultLanguage = true;
+
+        /// <summary>
+        /// 是否启用列表懒加载
+        /// </summary>
+        [ConfigField]
+        public bool UseLazyLoading = false;
+
+        /// <summary>
+        /// 启用毛玻璃效果
+        /// </summary>
+        [ConfigField]
+        public bool EnableGuassianBlur = true;
+
+        public void InvokeSettingChange(string settingkey)
+        {
+            OnSettingUpdated?.Invoke(settingkey);
+        }
     }
 }
