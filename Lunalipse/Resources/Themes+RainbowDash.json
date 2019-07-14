@@ -2,10 +2,48 @@
   "Theme": {
     "Name": "Rainbow Dash",
     "Desc": "Lunalipse Build-In Theme, Adapt from TV series My Little Pony. Authorized by Rainbow Dash",
-    "Uid": "23296c17-7a2d-4e47-b78a-857d47620d8c"
+    "Uid": "23296c17-7a2d-4e47-b78a-857d47620d8c",
+    "Author": "Lunaixsky"
   },
-  "Foreground": "#FFFFFFFF",
-  "Primary": "#FF00A2E5",
-  "Secondary": "#FFA3DEF8",
-  "Surface": "#FF269DCE"
+  "Foreground": {
+    "cValue":"#FFFFFF",
+    "cOpacity":1
+  },
+  "Primary": {
+    "cRefer": "RAINBOW_DASH_SKIN_GRADIENT"
+  },
+  "Secondary": {
+    "cValue":"#A3DEF8",
+    "cOpacity":1
+  },
+  "gDefinitions":{
+    "RAINBOW_DASH_SKIN_GRADIENT": {
+      "gStart": {
+        "x": 0,
+        "y": 0
+      },
+      "gEnd": {
+        "x": 1,
+        "y": 1
+      },
+      "gInterpolation": "SRgbLinearInterpolation",
+      "gStops": [
+        {
+          "cValue": "#ef3d32",
+          "cOpacity": 1,
+          "gOffset": 0
+        },
+        {
+          "cValue": "#f7ea80",
+          "cOpacity": 1,
+          "gOffset": 0.5
+        },
+        {
+          "cValue": "#0392ce",
+          "cOpacity": 1,
+          "gOffset": 1
+        }
+      ]
+    }
+  }
 }

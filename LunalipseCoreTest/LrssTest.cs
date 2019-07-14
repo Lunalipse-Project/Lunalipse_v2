@@ -15,7 +15,7 @@ namespace LunalipseCoreTest
         public void LrssExporter()
         {
             LrssWriter le = new LrssWriter();
-            le.Initialize(0x2F30, "Song", "exp.lrss", Encoding.ASCII.GetBytes("PrincessLuna"));
+            le.Initialize(0x2F30, "Song", Encoding.ASCII.GetBytes("PrincessLuna"));
             le.AppendResource(@"F:\M2\Daniel Ingram - Luna's Future.mp3");
             le.Export().Wait();
         }

@@ -15,11 +15,12 @@ namespace LunalipseEmbedder
         static string signature, dest, pwd;
         static bool IsSealMode = false;
         static string[] dirs;
+        static string directory;
         static bool silenceMode = false;
         static void Main(string[] args)
         {
             OnSingleEndpointReached += SingleReachingEndpoint;
-            OnEndpointReached += OnEndpointReached;
+            OnEndpointReached += ReachingEndpoint;
             OnChuckOperated += OnChuckUpdate;
             for(int i = 0; i < args.Length;i+=2)
             {
@@ -29,6 +30,9 @@ namespace LunalipseEmbedder
                 {
                     case "-i":
                         dirs = body.Split(',');
+                        break;
+                    case "-dir":
+                        directory = body;
                         break;
                     case "-mode":
                         if(body=="seal")
@@ -63,6 +67,10 @@ namespace LunalipseEmbedder
         {
             if (IsSealMode)
             {
+                if (dirs == null)
+                {
+                    dirs = Directory.GetFiles(directory);
+                }
                 Writer wr = new Writer(dirs);
                 if (string.IsNullOrEmpty(dest))
                 {
@@ -87,8 +95,8 @@ namespace LunalipseEmbedder
                     if (Console.ReadKey().KeyChar != 'y')
                     {
                         Console.WriteLine("Rolling back....");
+                        return;
                     }
-                    return;
                 }
                 Console.WriteLine("\nExporting....");
                 wr.DoSeal().Wait();
@@ -206,7 +214,7 @@ namespace LunalipseEmbedder
 
         static void SingleReachingEndpoint(string args)
         {
-            Console.WriteLine("Starting for {0}", args[0]);
+            Console.WriteLine("Starting for {0}", args);
         }
         static void ReachingEndpoint(params object[] args)
         {

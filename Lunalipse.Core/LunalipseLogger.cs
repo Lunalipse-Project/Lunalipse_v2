@@ -1,4 +1,5 @@
 ﻿using Lunalipse.Common;
+using Lunalipse.Common.Data;
 using Lunalipse.Common.Data.Errors;
 using Lunalipse.Utilities;
 using System;
@@ -32,6 +33,8 @@ namespace Lunalipse.Core
         private string ApplicationEnvPath;
         private StreamWriter logWriter;
 
+        public LogLevel LogLevel;
+
         public LunalipseLogger()
         {
             ErrorDelegation.GenericError += ErrorDelegation_GenericError;
@@ -39,6 +42,11 @@ namespace Lunalipse.Core
             if (!Directory.Exists(ApplicationEnvPath + @"\Logs\"))
                 Directory.CreateDirectory(ApplicationEnvPath + @"\Logs\");
             logWriter = new StreamWriter(ApplicationEnvPath + @"\Logs\" + GetLogName());
+#if DEBUG
+            LogLevel = LogLevel.DEBUG;
+#else
+            LogLevel = LogLevel.INFO;
+#endif
         }
 
         private void ErrorDelegation_GenericError(string ExceptionMsg, string ExceptionStackTrace, string componentID = "")
@@ -48,11 +56,21 @@ namespace Lunalipse.Core
 
         public void Error(string message, string trace = "", string ID = "")
         {
-            string name = ID == "" ? new StackFrame(1).GetMethod().ReflectedType.Name : ID;
-            logWriter.WriteLine(FormateMessage("ERROR", name, message));
-            if (trace != "")
+            try
             {
-                logWriter.WriteLine(trace);
+                if (LogLevel <= LogLevel.ERROR)
+                {
+                    string name = ID == "" ? new StackFrame(1).GetMethod().ReflectedType.Name : ID;
+                    logWriter.WriteLine(FormateMessage("ERROR", name, message));
+                    if (trace != "")
+                    {
+                        logWriter.WriteLine(trace);
+                    }
+                }
+            }
+            catch
+            {
+
             }
         }
         public void Exception(Exception e, string trace = "", string ID = "")
@@ -72,30 +90,33 @@ namespace Lunalipse.Core
 
         public void Debug(string message, string ID = "")
         {
-            string name = ID == "" ? new StackFrame(1).GetMethod().ReflectedType.Name : ID;
-            logWriter.WriteLine(FormateMessage("DEBUG", name, message));
+            if(LogLevel==LogLevel.DEBUG)
+            {
+                string name = ID == "" ? new StackFrame(1).GetMethod().ReflectedType.Name : ID;
+                logWriter.WriteLine(FormateMessage("DEBUG", name, message));
+            }
         }
 
         public void Info(string message, string ID = "")
         {
-            string name = ID == "" ? new StackFrame(1).GetMethod().ReflectedType.Name : ID;
-            logWriter.WriteLine(FormateMessage("INFO", name, message));
-        }
-
-        public void Warning(object formateEx)
-        {
-            throw new NotImplementedException();
+            if(LogLevel<=LogLevel.INFO)
+            {
+                string name = ID == "" ? new StackFrame(1).GetMethod().ReflectedType.Name : ID;
+                logWriter.WriteLine(FormateMessage("INFO", name, message));
+            }
         }
 
         public void Warning(string message, string ID = "")
         {
-            string name = ID == "" ? new StackFrame(1).GetMethod().ReflectedType.Name : ID;
-            logWriter.WriteLine(FormateMessage("Warning", name, message));
+            if(LogLevel<=LogLevel.WARNING)
+            {
+                string name = ID == "" ? new StackFrame(1).GetMethod().ReflectedType.Name : ID;
+                logWriter.WriteLine(FormateMessage("Warning", name, message));
+            }
         }
 
         public void Release()
         {
-            logWriter.Flush();
             logWriter.Close();
         }
 

@@ -8,6 +8,7 @@ using System.Windows.Media;
 using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Utilities;
 using Lunalipse.Common.Data;
+using System.Windows.Media.Animation;
 
 namespace Lunalipse.Presentation.LpsComponent
 {
@@ -30,10 +31,17 @@ namespace Lunalipse.Presentation.LpsComponent
 
         public event Action OnMenuButtonClicked;
 
+        private Duration duration = new Duration(TimeSpan.FromMilliseconds(100));
+        private ColorAnimation FadeIn, FadeOut;
+
         public CatalogueSelectionList()
         {
             InitializeComponent();
             ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
+            FadeIn = new ColorAnimation();
+            FadeOut = new ColorAnimation();
+            FadeIn.Duration = duration;
+            FadeOut.Duration = duration;
             ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
         }
 
@@ -50,16 +58,33 @@ namespace Lunalipse.Presentation.LpsComponent
                                         typeof(CatalogueSelectionList),
                                         new PropertyMetadata(Application.Current.FindResource("ItemUnhoverColorDefault")));
 
-        public SolidColorBrush ItemHovered
+        public Brush ItemHovered
         {
-            get => (SolidColorBrush)GetValue(ITEM_HOVER);
-            private set => SetValue(ITEM_HOVER, value);
+            get
+            {
+                return GetValue(ITEM_HOVER) as Brush;
+            }
+            private set
+            {
+                SetValue(ITEM_HOVER, value);
+            }
         }
-        public SolidColorBrush ItemUnhovered
+        public Brush ItemUnhovered
         {
-            get => (SolidColorBrush)GetValue(ITEM_UNHOVER);
-            private set => SetValue(ITEM_UNHOVER, value);
+            get
+            {
+                return GetValue(ITEM_UNHOVER) as Brush;
+            }
+            private set
+            {
+                SetValue(ITEM_UNHOVER, value);
+            }
         }
+        //public SolidColorBrush ItemUnhovered
+        //{
+        //    get => (SolidColorBrush)GetValue(ITEM_UNHOVER);
+        //    private set => SetValue(ITEM_UNHOVER, value);
+        //}
 
         public int SelectedIndex
         {
@@ -100,10 +125,10 @@ namespace Lunalipse.Presentation.LpsComponent
         private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
         {
             if (obj == null) return;
-            ItemHovered = obj.Primary.ToLuna();
-            ItemUnhovered = ItemHovered;
-            ItemUnhovered.Opacity = 0;
             Foreground = obj.Foreground;
+            ItemHovered = obj.Foreground.CloneCurrentValue().SetOpacity(0.15);
+            ItemUnhovered = obj.Foreground.CloneCurrentValue().SetOpacity(0);
+            
         }
 
         private void ItemConatiner_MouseDown(object sender, MouseButtonEventArgs args)

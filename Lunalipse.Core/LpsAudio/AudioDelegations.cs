@@ -28,11 +28,16 @@ namespace Lunalipse.Core.LpsAudio
         public static OnPositionChanged PostionChanged;
         public static OnMusicLoaded MusicLoaded;
         public static OnMusicPlayingFinished PlayingFinished;
-        public static OnLyricUpdate LyricUpdated;
+        public static event OnLyricUpdate LyricUpdated;
         public static OnLyricLoadStatus LyricLoadStatus;
         public static VolumeChangeInvoke ChangeVolume;
 
         public static FFTDataAcquired FftAcquired;
         public static FFTIndexAcquired FftInxAcquired;
+
+        public static void InvokeLyricUpdate(LyricToken token)
+        {
+            LyricUpdated?.Invoke(token);
+        }
     }
 }

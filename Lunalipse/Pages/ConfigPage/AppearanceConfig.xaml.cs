@@ -66,11 +66,11 @@ namespace Lunalipse.Pages.ConfigPage
         private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
         {
             Foreground = obj.Foreground;
-            LyricFontFamily.Background = obj.Primary;
+            LyricFontFamily.DropDownBackground = obj.Secondary;
             
             foreach (Button button in Utils.FindVisualChildren<Button>(this))
             {
-                button.Background = obj.Primary;
+                button.Background = obj.Secondary;
             }
         }
 
@@ -96,6 +96,7 @@ namespace Lunalipse.Pages.ConfigPage
             EnableSongHint.OnSwitchStatusChanged += OnSwitchStatusChanged;
             NonPassiveLyricDisp.OnSwitchStatusChanged += OnSwitchStatusChanged;
             EnableGuassianBlur.OnSwitchStatusChanged += OnSwitchStatusChanged;
+            ThemeColorFollowAlbum.OnSwitchStatusChanged += OnSwitchStatusChanged;
             LyricFontFamily.OnSelectionChanged += LyricFontFamily_OnSelectionChanged;
         }
 
@@ -120,6 +121,10 @@ namespace Lunalipse.Pages.ConfigPage
                     break;
                 case "EnableGuassianBlur":
                     GlobalSetting.EnableGuassianBlur = status;
+                    break;
+                case "ThemeColorFollowAlbum":
+                    GlobalSetting.ThemeColorFollowAlbum = status;
+                    if (!status) themeManager.Restore();
                     break;
             }
         }
@@ -148,6 +153,7 @@ namespace Lunalipse.Pages.ConfigPage
             EnableSongHint.Toggle(GlobalSetting.ShowNextSongHint);
             NonPassiveLyricDisp.Toggle(GlobalSetting.LyricEnabled);
             EnableGuassianBlur.Toggle(GlobalSetting.EnableGuassianBlur);
+            ThemeColorFollowAlbum.Toggle(GlobalSetting.ThemeColorFollowAlbum);
             foreach(FontFamily fonts in Fonts.SystemFontFamilies)
             {
                 LyricFontFamily.Add(fonts.Source, fonts);

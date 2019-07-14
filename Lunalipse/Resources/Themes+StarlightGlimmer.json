@@ -2,9 +2,43 @@
   "Theme": {
     "Name": "Starlight Glimmer",
     "Desc": "Lunalipse Build-In Theme, Adapt from TV series My Little Pony. Authorized by Starlight Glimmer",
-    "Uid": "3fd28791-844c-4348-9028-d9fd055397dc"
+    "Uid": "3fd28791-844c-4348-9028-d9fd055397dc",
+    "Author": "Lunaixsky"
   },
-  "Foreground": "#FF622489",
-  "Primary": "#CCEDBBF3",
-  "Secondary": "#FF802DAD"
+  "Foreground": {
+    "cValue": "#FFFFFF",
+    "cOpacity": 1
+  },
+  "Primary": {
+    "cRefer": "STARLIGHT_GLIMMER_SKIN_GRADIENT"
+  },
+  "Secondary": {
+    "cValue": "#efbef6",
+    "cOpacity": 1
+  },
+  "gDefinitions": {
+    "STARLIGHT_GLIMMER_SKIN_GRADIENT": {
+      "gStart": {
+        "x": 0,
+        "y": 0
+      },
+      "gEnd": {
+        "x": 1,
+        "y": 1
+      },
+      "gInterpolation": "SRgbLinearInterpolation",
+      "gStops": [
+        {
+          "cValue": "#9ff4d7",
+          "cOpacity": 1,
+          "gOffset": 1
+        },
+        {
+          "cValue": "#802fb1",
+          "cOpacity": 1,
+          "gOffset": 0
+        }
+      ]
+    }
+  }
 }

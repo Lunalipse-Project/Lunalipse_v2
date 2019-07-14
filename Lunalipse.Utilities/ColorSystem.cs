@@ -60,6 +60,21 @@ namespace Lunalipse.Utilities
             return Math.Sqrt(dr * dr + dg * dg + db * db);
         }
 
+        public static double DistanceBetweenSquare(Color color1,Color color2)
+        {
+            int dr = color1.R - color2.R;
+            int dg = color1.G - color2.G;
+            int db = color1.B - color2.B;
+            return dr * dr + dg * dg + db * db;
+        }
+        public static double DistanceBetweenSquare(System.Drawing.Color color1, System.Drawing.Color color2)
+        {
+            int dr = color1.R - color2.R;
+            int dg = color1.G - color2.G;
+            int db = color1.B - color2.B;
+            return dr * dr + dg * dg + db * db;
+        }
+
         /// <summary>
         /// 转换为深色主题颜色
         /// </summary>
@@ -99,9 +114,37 @@ namespace Lunalipse.Utilities
             return color.Concentrate(LUNA_RATIO);
         }
 
+        /// <summary>
+        /// 转换为深色主题颜色
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public static Brush ToLuna(this Brush color)
+        {
+            return color.ToLuna(LUNA_RATIO);
+        }
+
         public static Color ToLuna(this Color color,float Ratio)
         {
             return color.Concentrate(Ratio);
+        }
+
+        public static Brush ToLuna(this Brush color, float Ratio)
+        {
+            if (color.isLinearGradientBrush())
+            {
+                LinearGradientBrush gbrush = color.CloneCurrentValue() as LinearGradientBrush;
+                for (int i = 0; i < gbrush.GradientStops.Count; i++)
+                {
+                    gbrush.GradientStops[i].Color = gbrush.GradientStops[i].Color.Concentrate(Ratio);
+                }
+                return gbrush;
+            }
+            else
+            {
+                SolidColorBrush solidColorBrush = color.CloneCurrentValue() as SolidColorBrush;
+                return solidColorBrush.Color.Concentrate(Ratio).ToBrush();
+            }
         }
 
         /// <summary>
@@ -110,9 +153,24 @@ namespace Lunalipse.Utilities
         /// <param name="brush"></param>
         /// <param name="opacity">透明度，范围是[0,1]</param>
         /// <returns></returns>
-        public static SolidColorBrush SetOpacity(this SolidColorBrush brush, double opacity)
+        public static Brush SetOpacity(this Brush brush, double opacity)
         {
-            return new SolidColorBrush(brush.Color.SetOpacity(opacity));
+            if (opacity < 0 || opacity > 1) return brush;
+            if (brush.isLinearGradientBrush())
+            {              
+                LinearGradientBrush linearGradientBrush = brush.CloneCurrentValue() as LinearGradientBrush;
+                foreach (var stop in linearGradientBrush.GradientStops)
+                {
+                    stop.Color = stop.Color.SetOpacity(opacity);
+                }
+                return linearGradientBrush;
+            }
+            else
+            {
+                SolidColorBrush solidColorBrush = brush.CloneCurrentValue() as SolidColorBrush;
+                solidColorBrush.Color = solidColorBrush.Color.SetOpacity(opacity);
+                return solidColorBrush;
+            }
         }
 
         /// <summary>
@@ -124,14 +182,53 @@ namespace Lunalipse.Utilities
         {
             return color.Dilute(CELESTIA_RATIO);
         }
+        public static Brush ToCelestia(this Brush color)
+        {
+            return color.ToCelestia(CELESTIA_RATIO);
+        }
         public static Color ToCelestia(this Color color, float Ratio)
         {
             return color.Dilute(Ratio);
+        }
+        public static Brush ToCelestia(this Brush color, float Ratio)
+        {
+            if (color.isLinearGradientBrush())
+            {
+                LinearGradientBrush gbrush = color.CloneCurrentValue() as LinearGradientBrush;
+                for (int i = 0; i < gbrush.GradientStops.Count; i++)
+                {
+                    gbrush.GradientStops[i].Color = gbrush.GradientStops[i].Color.Dilute(Ratio);
+                }
+                return gbrush;
+            }
+            else
+            {
+                SolidColorBrush solidColorBrush = color.CloneCurrentValue() as SolidColorBrush;
+                return solidColorBrush.Color.Dilute(Ratio).ToBrush();
+            }
+        }
+
+
+        public static Color GetColor(this Brush brush)
+        {
+            if(brush.GetType()==typeof(LinearGradientBrush))
+            {
+                return (brush as LinearGradientBrush).GradientStops[0].Color;
+            }
+            else
+            {
+                return (brush as SolidColorBrush).Color;
+            }
         }
 
         public static SolidColorBrush ToBrush(this Color color)
         {
             return new SolidColorBrush(color);
+        }
+
+        public static SolidColorBrush ToBrush(this System.Drawing.Color color)
+        {
+            return new SolidColorBrush(Color.FromArgb(0xff, color.R, color.G, color.B));
         }
 
         public static Color ToColor(this string colorInHex)

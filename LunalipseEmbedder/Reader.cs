@@ -20,7 +20,7 @@ namespace LunalipseEmbedder
         public Reader(string path)
         {
             lr = new LrssReader();
-            lr.LoadLrss(path);
+            lr.LoadLrssCompressed(path);
             Signature = lr.SIGNATURE;
             if (!IsPasswordRequired())
             {
@@ -59,11 +59,11 @@ namespace LunalipseEmbedder
                 FileAttributes attributes = File.GetAttributes(OutputDir);
                 if (attributes.HasFlag(FileAttributes.Directory))
                 {
-                    outp += @"\{0}.{1}".FormateEx(lri.Name, lri.Type);
+                    outp += @"\{0}.{1}".LrssFormateEx(lri.Name, lri.Type);
                 }
             }
             else
-                outp += "{0}{1}".FormateEx(lri.Name, lri.Type);
+                outp += "{0}{1}".LrssFormateEx(lri.Name, lri.Type);
             try
             {
                 using (FileStream fs = new FileStream(outp, FileMode.Create))

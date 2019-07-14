@@ -22,7 +22,7 @@ namespace Lunalipse.Core.LpsAudio
             
         }
 
-        public int GetFftBandIndex(float frequency)
+        public int GetFftBandIndex(float frequency) 
         {
             int fftSize = (int)FftSize;
             double f = _sampleRate / 2.0;

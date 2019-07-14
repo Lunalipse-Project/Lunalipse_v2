@@ -52,9 +52,9 @@
                                         <BeginStoryboard>
                                             <Storyboard>
                                                 <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" 
-                                                                From="{Binding ItemUnhovered.Color,ElementName=MUSIC_LIST}" 
-                                                                To="{Binding ItemHovered.Color,ElementName=MUSIC_LIST}"
-                                             Duration="0:0:.1"/>
+                                                    From="{Binding Path=ItemUnhovered.Color,ElementName=MUSIC_LIST}"
+                                                    To="{Binding Path=ItemHovered.Color,ElementName=MUSIC_LIST}"
+                                                    Duration="0:0:.1"/>
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </EventTrigger.Actions>
@@ -64,9 +64,9 @@
                                         <BeginStoryboard>
                                             <Storyboard>
                                                 <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" 
-                                                                From="{Binding ItemHovered.Color,ElementName=MUSIC_LIST}" 
-                                                                To="{Binding ItemUnhovered.Color,ElementName=MUSIC_LIST}"
-                                             Duration="0:0:0.1"/>
+                                                    From="{Binding Path=ItemHovered.Color,ElementName=MUSIC_LIST}"
+                                                    To="{Binding Path=ItemUnhovered.Color,ElementName=MUSIC_LIST}"
+                                                     Duration="0:0:.1"/>
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </EventTrigger.Actions>

@@ -76,6 +76,7 @@ namespace Lunalipse.Common.Bus.Event
         /// <param name="Message">携带的信息</param>
         public void Unicast(EventBusTypes ActionStatus, Type Receiver, params object[] Message)
         {
+            if (!UnicastRegisterTable.ContainsKey(Receiver)) return;
             UnicastRegisterTable[Receiver]?.Invoke(ActionStatus, Message);
         }
 
@@ -93,6 +94,10 @@ namespace Lunalipse.Common.Bus.Event
         public void AddUnicastReciever(Type type, Action<EventBusTypes, object[]> action)
         {
             UnicastRegisterTable.Add(type, action);
+        }
+        public void RemoveUnicastReciever(Type type)
+        {
+            UnicastRegisterTable.Remove(type);
         }
         public void AddUnicastReciever(string Identifier, Action<EventBusTypes, object[]> action)
         {

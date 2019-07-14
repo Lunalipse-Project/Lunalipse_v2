@@ -14,9 +14,14 @@ namespace Lunalipse.Common.Generic.Themes
 
         protected string ENV_PATH = Environment.CurrentDirectory;
 
-        public virtual void Reflush()
+        protected virtual void Reflush()
         {
             
+        }
+
+        public virtual void Reflush(ThemeTuple themeTuple)
+        {
+
         }
 
         public virtual void Reload()

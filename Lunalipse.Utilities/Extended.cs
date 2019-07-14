@@ -133,6 +133,11 @@ namespace Lunalipse.Utilities
             return hashcode;
         }
 
+        public static bool isLinearGradientBrush(this Brush brush)
+        {
+            return brush.GetType() == typeof(LinearGradientBrush);
+        }
+
         public enum FType
         {
             FILE,

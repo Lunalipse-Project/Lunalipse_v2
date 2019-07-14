@@ -27,7 +27,7 @@ namespace Lunalipse.Presentation.LpsComponent.Base
                         typeof(LpsDetailedItem),
                         new PropertyMetadata(Application.Current.FindResource("IconLarge")));
 
-        public SolidColorBrush SelectedColor { get; set; }
+        public Brush SelectedColor { get; set; }
 
         public double IconSize
         {

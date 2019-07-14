@@ -46,9 +46,6 @@
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.1.1.11\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -58,10 +55,7 @@
   <ItemGroup>
     <Compile Include="ParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SerializationTest.cs" />
     <Compile Include="LrssTest.cs" />
-    <Compile Include="Support\I18NConvertor.cs" />
-    <Compile Include="Support\JSONExportTestSet.cs" />
     <Compile Include="UtilsTest.cs" />
     <Compile Include="Win32Test.cs" />
   </ItemGroup>
@@ -84,6 +78,10 @@
     <ProjectReference Include="..\Lunalipse.Utilities\Lunalipse.Utilities.csproj">
       <Project>{D273FBB2-C02A-45FF-B672-9E6930ECFAD7}</Project>
       <Name>Lunalipse.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LunaNetCore\LunaNetCore.csproj">
+      <Project>{0370c0cb-20b3-4e1a-9f5f-1a846bc1c1b8}</Project>
+      <Name>LunaNetCore</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

@@ -54,14 +54,14 @@ namespace Lunalipse.Presentation.LpsComponent
                                         typeof(double),
                                         typeof(MusicProgressBar),
                                         new PropertyMetadata(100d));
-        public SolidColorBrush BarColor
+        public Brush BarColor
         {
-            get => (SolidColorBrush)GetValue(PRG_BG);
+            get => (Brush)GetValue(PRG_BG);
             set => SetValue(PRG_BG, value);
         }
-        public SolidColorBrush TrackColor
+        public Brush TrackColor
         {
-            get => (SolidColorBrush)GetValue(TRACK_BG);
+            get => (Brush)GetValue(TRACK_BG);
             set => SetValue(TRACK_BG, value);
         }
 
@@ -140,10 +140,12 @@ namespace Lunalipse.Presentation.LpsComponent
                 //ValueInner = newVal;
                 isDown = false;
             }
+            e.Handled = true;
         }
         private void StartDragThumb(object sender, RoutedEventArgs e)
         {
             isDown = true;
+            e.Handled = true;
         }
     }
 }

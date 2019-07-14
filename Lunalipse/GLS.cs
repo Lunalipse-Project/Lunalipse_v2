@@ -91,6 +91,38 @@ namespace Lunalipse
         [ConfigField]
         public bool EnableGuassianBlur = true;
 
+        /// <summary>
+        /// 网络代理，是否启用
+        /// </summary>
+        [ConfigField]
+        public bool EnableProxy = false;
+
+        /// <summary>
+        /// 网络代理，IP地址
+        /// </summary>
+        [ConfigField]
+        public string ProxyIPAddr = "";
+
+        /// <summary>
+        /// 网络代理，端口
+        /// </summary>
+        [ConfigField]
+        public int ProxyPort = 0;
+
+        /// <summary>
+        /// 主题颜色跟随专辑封面
+        /// </summary>
+        [ConfigField]
+        public bool ThemeColorFollowAlbum = true;
+
+        [ConfigField]
+        public string LogRecordLevel =
+#if DEBUG
+            "DEBUG";
+#else
+            "INFO";
+#endif
+
         public void InvokeSettingChange(string settingkey)
         {
             OnSettingUpdated?.Invoke(settingkey);

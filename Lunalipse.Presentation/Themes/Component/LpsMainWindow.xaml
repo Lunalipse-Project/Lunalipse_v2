@@ -2,43 +2,44 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Lunalipse.Presentation.Themes.Component">
     <ControlTemplate x:Key="LunalipseMainWindowTemplate" TargetType="{x:Type Window}">
-        <Grid Width="auto" Height="auto">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="64"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Border Grid.Row="0" CornerRadius="4,4,0,0" x:Name="TitleBar" Background="{TemplateBinding Background}">
+        <Grid Width="auto" Height="auto" x:Name="TitleBar">
+            <Border CornerRadius="4" Background="{TemplateBinding Background}">
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="1">
-                        <Grid Height="auto" VerticalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="45"/>
-                                <ColumnDefinition Width="15"/>
-                                <ColumnDefinition Width="45"/>
-                                <ColumnDefinition Width="45"/>
-                            </Grid.ColumnDefinitions>
-                            <Button Grid.Column="0" x:Name="BtnSetting" Style="{DynamicResource IconButton}" FontSize="{DynamicResource IconMedium}" Content="{DynamicResource Setting}" Foreground="{TemplateBinding Foreground}" Width="45" Height="45"/>
-                            <Button Grid.Column="2" x:Name="BtnMinimiz"  Style="{DynamicResource IconButton}" FontSize="{DynamicResource IconMedium}" Content="{DynamicResource Minimize}" Foreground="{TemplateBinding Foreground}" Width="45" Height="45"/>
-                            <Button Grid.Column="3" x:Name="BtnCloseWn"  Style="{DynamicResource IconButton}" FontSize="{DynamicResource IconMedium}" Content="{DynamicResource Close}" Foreground="{TemplateBinding Foreground}" Width="45" Height="45"/>
-                        </Grid>
-                    </Grid>
-                    <!-- Display for logo & text. My Luna's Cutie Mark !! :) -->
-                    <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="64"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Width="auto">
                         <Grid.ColumnDefinitions>
-                            <!-- Here is Luna's Cutie Mark, In this case, set to fixed size -->
-                            <ColumnDefinition Width="auto"/>
-                            <!-- Text region set for rest -->
-                            <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0" Width="64" Height="64">
-                            <Viewbox Width="64" Height="64">
-                                <!-- Princess Luna's cutie mark! In SVG path form, keep it clear -->
-                                <Path Data="M397.6,132c30.8-0.6,60,2.8,82.4,12c9.1,3.7,18.5,9.3,28,12c0,0.5,0,1.1,0,1.6c-21.6,0.8-40.8,13.3-55.2,22.4
+                        <Grid Grid.Column="1">
+                            <Grid Height="auto" VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="45"/>
+                                    <ColumnDefinition Width="15"/>
+                                    <ColumnDefinition Width="45"/>
+                                    <ColumnDefinition Width="45"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0" x:Name="BtnSetting" Style="{DynamicResource IconButton}" FontSize="{DynamicResource IconMedium}" Content="{DynamicResource Setting}" Foreground="{TemplateBinding Foreground}" Width="45" Height="45"/>
+                                <Button Grid.Column="2" x:Name="BtnMinimiz"  Style="{DynamicResource IconButton}" FontSize="{DynamicResource IconMedium}" Content="{DynamicResource Minimize}" Foreground="{TemplateBinding Foreground}" Width="45" Height="45"/>
+                                <Button Grid.Column="3" x:Name="BtnCloseWn"  Style="{DynamicResource IconButton}" FontSize="{DynamicResource IconMedium}" Content="{DynamicResource Close}" Foreground="{TemplateBinding Foreground}" Width="45" Height="45"/>
+                            </Grid>
+                        </Grid>
+                        <!-- Display for logo & text. My Luna's Cutie Mark !! :) -->
+                        <Grid Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <!-- Here is Luna's Cutie Mark, In this case, set to fixed size -->
+                                <ColumnDefinition Width="auto"/>
+                                <!-- Text region set for rest -->
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0" Width="64" Height="64">
+                                <Viewbox Width="64" Height="64">
+                                    <!-- Princess Luna's cutie mark! In SVG path form, keep it clear -->
+                                    <Path Data="M397.6,132c30.8-0.6,60,2.8,82.4,12c9.1,3.7,18.5,9.3,28,12c0,0.5,0,1.1,0,1.6c-21.6,0.8-40.8,13.3-55.2,22.4
 	                                        c-36.6,23.2-59,54.4-73.6,100c-6.4,20-8.2,53.4-1.6,75.2c3.4,11.2,7.8,23.3,13.6,32.8c23.8,39,60.1,65.7,106.4,82.4
 	                                        c19.1,6.9,52.7,9.4,74.4,2.4c39.6-12.7,68.1-37,90.4-67.2c6.8-9.2,14.8-17.9,20-28.8c0.3,0,0.5,0,0.8,0c0,1.6,0,3.2,0,4.8
 	                                        c2.1,3.1,0.6,7.5,1.6,12c2.5,11.3,2.9,25.4,2.4,39.2c-1.5,44.9-14.2,82.8-32,112c-36.9,60.3-79.2,95.7-148,124
@@ -46,19 +47,18 @@
 	                                        c-2.4-12.3-4.8-24.5-7.2-36.8c-3.4-14.6-2.3-47.3,0.8-60.8c3.5-14.8,2.8-27.6,7.2-40.8c12.7-38.5,28.5-66.7,49.6-96
 	                                        c8.6-11.9,17.8-21.8,28-32c2.7-2.9,5.3-5.9,8-8.8c8-6.1,15.1-13.5,23.2-19.2c21.8-15.4,45.6-28.4,72-39.2
 	                                        c15.2-6.3,32.5-8.6,49.6-12.8C378.2,132.9,393,134.9,397.6,132z" Fill="{TemplateBinding Foreground}"/>
-                            </Viewbox>
-                        </Grid>
-                        <Label Grid.Column="1" FontFamily="{DynamicResource Equestria}" Content="Lunalipse" FontSize="60" Margin="10,0,0,0" Foreground="{TemplateBinding Foreground}"/>
-                        <!-- Generation Number -->
-                        <Label Grid.Column="2" Content="Build-201902" FontSize="13" Margin="5,0,0,0" Foreground="{TemplateBinding Foreground}"
+                                </Viewbox>
+                            </Grid>
+                            <Label Grid.Column="1" FontFamily="{DynamicResource Equestria}" Content="Lunalipse" FontSize="60" Margin="10,0,0,0" Foreground="{TemplateBinding Foreground}"/>
+                            <!-- Generation Number -->
+                            <Label Grid.Column="2" Content="Build-201902" FontSize="13" Margin="5,0,0,0" Foreground="{TemplateBinding Foreground}"
                                HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="VersionNumber"/>
+                        </Grid>
                     </Grid>
+                    <AdornerDecorator Grid.Row="1">
+                        <ContentPresenter/>
+                    </AdornerDecorator>
                 </Grid>
-            </Border>
-            <Border Grid.Row="1" CornerRadius="0,0,4,4" Background="{TemplateBinding Background}" Width="auto" Height="auto">
-                <AdornerDecorator>
-                    <ContentPresenter/>
-                </AdornerDecorator>
             </Border>
         </Grid>
     </ControlTemplate>

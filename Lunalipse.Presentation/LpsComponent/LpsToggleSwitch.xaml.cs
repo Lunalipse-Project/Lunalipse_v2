@@ -53,10 +53,10 @@ namespace Lunalipse.Presentation.LpsComponent
         private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
         {
             if (obj == null) return;
-            ThumbActive = obj.Secondary.Color;
-            ThumbDeactive = obj.Foreground.ToLuna().Color;
-            TrackActive = obj.Secondary.ToCelestia(0.3f);
-            TrackDeactive = obj.Foreground.ToLuna(0.3f);
+            ThumbActive = obj.Secondary.GetColor();
+            ThumbDeactive = obj.Foreground.GetColor().ToLuna();
+            TrackActive = obj.Secondary.GetColor().ToCelestia(0.3f).ToBrush();
+            TrackDeactive = obj.Foreground.GetColor().ToLuna(0.3f).ToBrush();
             ResetColor();
         }
 

@@ -5,44 +5,64 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetEaseHijacker
+namespace LunaNetCore
 {
+    /// <summary>
+    /// 下载器
+    /// </summary>
     public class Downloader
     {
+        /// <summary>
+        /// 委托：下载完成
+        /// </summary>
+        /// <param name="gotError">是否产生错误</param>
+        /// <param name="e">如果有错误产生，错误的详情</param>
         public delegate void ODF(bool gotError, Exception e);
-        public delegate void DataSetup(long d);
-        public delegate void Update(long d);
+
+        /// <summary>
+        /// 委托：下载器已就位
+        /// </summary>
+        /// <param name="totalLength"></param>
+        public delegate void Prepared(long totalLength);
+
+        /// <summary>
+        /// 委托：下载状态更新
+        /// </summary>
+        /// <param name="currentLength"></param>
+        public delegate void Update(long currentLength);
+
+        /// <summary>
+        /// 事件：下载完成
+        /// </summary>
         public event ODF OnDownloadFinish;
-        public event DataSetup OnDataSetup;
+
+        /// <summary>
+        /// 事件：下载器准备就绪
+        /// </summary>
+        public event Prepared OnPrepared;
+
+        /// <summary>
+        /// 事件：下载状态更新
+        /// </summary>
         public event Update OnTaskUpdate;
-        bool isFirstTime = true;
-        WebClient wc = new WebClient();
 
-        public Downloader()
-        {
-
-        }
         /// <summary>
         /// 下载文件
         /// </summary>
         /// <param name="URL">文件URL</param>
         /// <param name="filename">文件保存路径</param>
-        /// <param name="prog"></param>
-        /// <param name="label1"></param>
-        public void DownloadFile(string URL, string filename, long tb)
+        public void DownloadFile(string URL, string filename)
         {
-            //wc.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:53.0) Gecko/20100101 Firefox/53.0");
-            //wc.DownloadFile(new Uri(URL), filename);
             try
             {
-                System.Net.HttpWebRequest Myrq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(URL);
+                HttpWebRequest Myrq = (HttpWebRequest)WebRequest.Create(URL);
                 Myrq.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:53.0) Gecko/20100101 Firefox/53.0";
                 Myrq.Method = "GET";
                 Myrq.Credentials = CredentialCache.DefaultNetworkCredentials;
 
-                System.Net.HttpWebResponse myrp = (System.Net.HttpWebResponse)Myrq.GetResponse();
+                HttpWebResponse myrp = (HttpWebResponse)Myrq.GetResponse();
                 long totalBytes = myrp.ContentLength;
-                OnDataSetup(totalBytes);
+                OnPrepared?.Invoke(totalBytes);
                 System.IO.Stream st = myrp.GetResponseStream();
                 System.IO.Stream so = new System.IO.FileStream(filename, System.IO.FileMode.Create);
                 long totalDownloadedByte = 0;
@@ -55,18 +75,17 @@ namespace NetEaseHijacker
                     {
                         totalDownloadedByte = osize + totalDownloadedByte;
                         so.Write(by, 0, osize);
-                        OnTaskUpdate(totalDownloadedByte);
-                        osize = st.Read(by, 0, (int)by.Length);
-                        Console.WriteLine(osize + "|" + totalDownloadedByte + "|" + totalBytes);
+                        OnTaskUpdate?.Invoke(totalDownloadedByte);
+                        osize = st.Read(by, 0, 1024);
                     }
                 }
                 so.Close();
                 st.Close();
-                OnDownloadFinish(false, null);
+                OnDownloadFinish?.Invoke(false, null);
             }
             catch (Exception e)
             {
-                OnDownloadFinish(true, e);
+                OnDownloadFinish?.Invoke(true, e);
             }
         }
     }

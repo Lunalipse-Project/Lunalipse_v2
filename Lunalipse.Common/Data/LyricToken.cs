@@ -1,19 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Lunalipse.Common.Data
 {
-    public class LyricToken
+    public class LyricToken: INotifyPropertyChanged
     {
+
         public TimeSpan TimeStamp { get; private set; }
         public string Statement { get; private set; }
         public string SubStatement { get; private set; }
         public int Offset { get; private set; }
         public int Position { get; private set; }
         public bool HasModified { get; private set; }
+
+        private double lyricOpacityUI = 0.7d;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public double LyricOpacityUI
+        {
+            get
+            {
+                return lyricOpacityUI;
+            }
+            set
+            {
+                lyricOpacityUI = value;
+                OnPropertyChanged("LyricOpacityUI");
+            }
+        }
 
         public LyricToken(string Statement,TimeSpan TimeStamp)
         {
@@ -56,6 +75,11 @@ namespace Lunalipse.Common.Data
         {
             SubStatement = sstat;
             HasModified = true;
+        }
+
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Lunalipse.Utilities.Win32;
+﻿
+using Lunalipse.Utilities.Win32;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -6,6 +7,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Media.Imaging;
 
 namespace Lunalipse.Utilities
@@ -148,8 +150,8 @@ namespace Lunalipse.Utilities
 
                     if (imageWidth > 0 && imageHeight > 0)
                     {
-                        var size = new Size(imageWidth, imageHeight);
-                        if (maxLength > 0) size = GetScaledSize(new Size(imageWidth, imageHeight), maxLength);
+                        var size = new System.Drawing.Size(imageWidth, imageHeight);
+                        if (maxLength > 0) size = GetScaledSize(new System.Drawing.Size(imageWidth, imageHeight), maxLength);
 
                         bi.DecodePixelWidth = size.Width;
                         bi.DecodePixelHeight = size.Height;
@@ -167,9 +169,9 @@ namespace Lunalipse.Utilities
             return null;
         }
 
-        public static Size GetScaledSize(Size originalSize, int maxLength)
+        public static System.Drawing.Size GetScaledSize(System.Drawing.Size originalSize, int maxLength)
         {
-            var scaledSize = new Size();
+            var scaledSize = new System.Drawing.Size();
 
             if (originalSize.Height > originalSize.Width)
             {
@@ -267,5 +269,39 @@ namespace Lunalipse.Utilities
                 stream.Close();
             }
         }
+
+        public static Bitmap ResizeImage(Image image, int width, int height)
+        {
+            var destRect = new Rectangle(0, 0, width, height);
+            var destImage = new Bitmap(width, height);
+
+            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+            using (var graphics = Graphics.FromImage(destImage))
+            {
+                graphics.CompositingMode = CompositingMode.SourceCopy;
+                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                using (var wrapMode = new ImageAttributes())
+                {
+                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+                }
+            }
+
+            return destImage;
+        }
+
+        public static Bitmap BitmapSource2Bitmap(BitmapSource source)
+        {
+            Bitmap bmp = new Bitmap(source.PixelWidth,source.PixelHeight,PixelFormat.Format32bppPArgb);
+            BitmapData data = bmp.LockBits(new Rectangle(System.Drawing.Point.Empty, bmp.Size),ImageLockMode.WriteOnly,PixelFormat.Format32bppPArgb);
+            source.CopyPixels(Int32Rect.Empty,data.Scan0,data.Height * data.Stride,data.Stride);bmp.UnlockBits(data);
+            return bmp;
+        }
+
     }
 }

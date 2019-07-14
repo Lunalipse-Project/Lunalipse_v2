@@ -41,9 +41,6 @@
     <AssemblyOriginatorKeyFile>Lunaxisky.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Jint, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2e92ba9c8d81157f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Jint.2.11.58\lib\net451\Jint.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -54,6 +51,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Presentation" />
     <Reference Include="System.Xml.Linq" />
@@ -94,9 +92,13 @@
     <Compile Include="LpsAudio\LpsFftWarp.cs" />
     <Compile Include="LpsCore.cs" />
     <Compile Include="LunalipseLogger.cs" />
+    <Compile Include="Markdown\Markdown.cs" />
+    <Compile Include="Markdown\ParseLines.cs" />
+    <Compile Include="Markdown\ParseParagraph.cs" />
     <Compile Include="ResourcesHandler.cs" />
     <Compile Include="Theme\LThemeManager.cs" />
     <Compile Include="Theme\LThemeParser.cs" />
+    <Compile Include="UpdateHelper.cs" />
     <Compile Include="Visualization\Droplet.cs" />
     <Compile Include="Visualization\VisualizationBase.cs" />
     <Compile Include="Lyric\LyricEnumerator.cs" />
@@ -119,9 +121,17 @@
       <Project>{61478c16-44f2-4333-8209-fab113bebd4b}</Project>
       <Name>Lunalipse.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Lunalipse.Resource\Lunalipse.Resource.csproj">
+      <Project>{79cf16ce-ef56-4d3a-b736-e21edd673327}</Project>
+      <Name>Lunalipse.Resource</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lunalipse.Utilities\Lunalipse.Utilities.csproj">
       <Project>{d273fbb2-c02a-45ff-b672-9e6930ecfad7}</Project>
       <Name>Lunalipse.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LunaNetCore\LunaNetCore.csproj">
+      <Project>{0370c0cb-20b3-4e1a-9f5f-1a846bc1c1b8}</Project>
+      <Name>LunaNetCore</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

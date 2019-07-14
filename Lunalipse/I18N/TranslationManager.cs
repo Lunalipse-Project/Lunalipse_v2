@@ -72,14 +72,11 @@ namespace Lunalipse.I18N
         {
             CultureInfo cultureInfo = CultureInfo.InstalledUICulture;
             string identifier = cultureInfo.Name;
-            if (identifier == "en-US" && identifier == "en-GB")
-            {
-                return SupportLanguages.ENGLISH;
-            }
-            else if (identifier == "zh-Hans") return SupportLanguages.CHINESE_SIM;
-            else if (identifier == "zh-Hant") return SupportLanguages.CHINESE_TRA;
-            else if (identifier == "ru") return SupportLanguages.RUSSIAN;
-            LunalipseLogger.GetLogger().Warning("Language or location : {0} is not supported yet, use default.".FormateEx(identifier));
+            if (identifier.StartsWith("en")) return SupportLanguages.ENGLISH;
+            else if (identifier == "zh-CN") return SupportLanguages.CHINESE_SIM;
+            else if (identifier == "zh-TW" || identifier == "zh-HK") return SupportLanguages.CHINESE_TRA;
+            else if (identifier == "ru-RU") return SupportLanguages.RUSSIAN;
+            else LunalipseLogger.GetLogger().Warning("Language or location : {0} is not supported yet, use default.".FormateEx(identifier));
             return SupportLanguages.CHINESE_SIM;
         }
     }

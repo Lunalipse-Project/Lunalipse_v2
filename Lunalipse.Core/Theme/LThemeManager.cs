@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace Lunalipse.Core.Theme
 {
@@ -16,6 +17,10 @@ namespace Lunalipse.Core.Theme
 
         static volatile LThemeManager JTM_INSTANCE = null;
         static readonly object LOCK = new object();
+
+        bool UseOtherTheme = false;
+        private ThemeTuple ControledTuple = null;
+
 
         public static LThemeManager Instance
         {
@@ -60,9 +65,24 @@ namespace Lunalipse.Core.Theme
             Reflush();
         }
 
-        public override void Reflush()
+
+
+        protected override void Reflush()
         {
             InvokEvent(SelectedContainer.ColorBlend);
+            UseOtherTheme = false;
+        }
+
+        public override void Reflush(ThemeTuple themeTuple)
+        {
+            UseOtherTheme = true;
+            InvokEvent(ControledTuple = themeTuple);
+        }
+
+        public void Restore()
+        {
+            if (UseOtherTheme)
+                Reflush();
         }
 
         public List<ThemeContainer> GetLoadedThemes()
@@ -75,23 +95,30 @@ namespace Lunalipse.Core.Theme
             LoadedTheme.Clear();
             LoadedTheme.Add(CreateBuiltIn_Luna());
             LoadedTheme.Add(CreateBuiltIn_Celestia());
+            LoadedTheme.Add(CreateBuiltIn_NightmareMoon());
             TParser.LoadAllTheme();
             LoadedTheme.AddRange(TParser.Tuples);
         }
 
         private ThemeTuple JThemeManager_OnTupleAcquire()
         {
-            if (SelectedContainer != null) return SelectedContainer.ColorBlend;
-            return null;
+            if (!UseOtherTheme)
+            {
+                if (SelectedContainer != null) return SelectedContainer.ColorBlend;
+                return null;
+            }
+            else
+                return ControledTuple;
         }
 
         private ThemeContainer CreateBuiltIn_Luna()
         {
-            ThemeTuple tt = new ThemeTuple();
-            tt.Primary = "#CC2449BE".ToColor().ToBrush();
-            tt.Secondary = "#FF4AA8A8".ToColor().ToBrush();
-            tt.Foreground = tt.Primary.GetForegroundBrush();
-            tt.Surface = "#FF8E8AC4".ToColor().ToBrush();
+            LinearGradientBrush LunaStyledGradient = new LinearGradientBrush(new GradientStopCollection()
+            {
+                new GradientStop((Color)ColorConverter.ConvertFromString("#373A77"),0),
+                new GradientStop((Color)ColorConverter.ConvertFromString("#656CB9"),1)
+            }, 45);
+            ThemeTuple tt = new ThemeTuple(Brushes.White, LunaStyledGradient, "#FF81B9FF".ToColor().ToBrush());
             return new ThemeContainer()
             {
                 Name = "Princess Luna",
@@ -102,20 +129,36 @@ namespace Lunalipse.Core.Theme
             };
         }
 
+        private ThemeContainer CreateBuiltIn_NightmareMoon()
+        {
+            ThemeTuple tt = new ThemeTuple(Brushes.White,"#FF000000".ToColor().ToBrush().ToCelestia(0.08f), "#FF3B49AB".ToColor().ToBrush());
+            return new ThemeContainer()
+            {
+                Name = "Nightmare Moon",
+                Description = "Lunalipse Built-In Theme (Default). Adapted from Nightmare Moon in My Little Pony",
+                ColorBlend = tt,
+                isBuildIn = true,
+                Uid = "521bbea0-4e4e-45c2-8aad-bf0b80befed4 "
+            };
+        }
+
         private ThemeContainer CreateBuiltIn_Celestia()
         {
-            ThemeTuple tt = new ThemeTuple();
-            tt.Foreground = "#FF474747".ToColor().ToBrush();
-            tt.Secondary = "#EEF84CFF".ToColor().ToBrush();
-            tt.Primary = "#CCFDF5FB".ToColor().ToBrush();
-            tt.Surface = "#FF93B9FF".ToColor().ToBrush();
+            LinearGradientBrush CelestiaStyledGradient = new LinearGradientBrush(new GradientStopCollection()
+            {
+                new GradientStop((Color)ColorConverter.ConvertFromString("#F5ADFF"),0),
+                new GradientStop((Color)ColorConverter.ConvertFromString("#93B9FF"),0.5),
+                new GradientStop((Color)ColorConverter.ConvertFromString("#64DCB7"),1),
+            }, 45);
+            ThemeTuple tt = new ThemeTuple("#FFFDF5FB".ToColor().ToBrush(), CelestiaStyledGradient, "#FFE18FE4".ToColor().ToBrush());
             return new ThemeContainer()
             {
                 Name = "Princess Celestia",
-                Description = "Lunalipse Built-In Theme. Adapted from Princess Celestia in My Little Pony。 (仍然处在测试中)",
+                Description = "Lunalipse Built-In Theme. Adapted from Princess Celestia in My Little Pony。",
                 ColorBlend = tt,
                 isBuildIn = true,
-                Uid= "c087d6b3-f4e2-4d44-a906-cb1085d58fb5"
+                Uid = "c087d6b3-f4e2-4d44-a906-cb1085d58fb5",
+                author = "Lunaixsky"
             };
         }
 

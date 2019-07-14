@@ -11,9 +11,10 @@ namespace Lunalipse.Common.Generic.GeneralSetting
         SETTING_GENERAL,
         SETTING_PERFORMANCE,
         SETTING_NETWORKING,
-        SETTING_DEVELOPER,
-        SETTING_SECURITY,
-        SETTING_ABOUT
+        SETTING_ABOUT,
+        SETTING_UPDATECHECK,
+        SETTING_LICENSES
+        //SETTING_SECURITY,
 
         // ... 其他枚举类型
 

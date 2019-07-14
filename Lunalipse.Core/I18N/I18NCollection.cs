@@ -21,6 +21,7 @@ namespace Lunalipse.Core.I18N
 
         public string getContext(string indexer)
         {
+
             if (Maps.ContainsKey(indexer)) return Maps[indexer];
             return indexer;
         }

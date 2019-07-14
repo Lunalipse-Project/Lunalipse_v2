@@ -7,6 +7,7 @@ using Lunalipse.Core.BehaviorScript;
 using Lunalipse.Common.Data.BehaviorScript;
 using Lunalipse.Core;
 using Lunalipse.Core.Theme;
+using Lunalipse.Common;
 
 namespace LunalipseCoreTest
 {
@@ -18,13 +19,13 @@ namespace LunalipseCoreTest
         [TestInitialize]
         public void Initialize()
         {
-            lt = LyricTokenizer.INSTANCE;
-            intp = Interpreter.INSTANCE(@"F:\Lunalipse\TestUnit\bin\Debug");
-            ErrorDelegation.OnErrorRaisedBSI += (x, y, z) =>
-            {
-                Console.WriteLine("ERROR:{0}   |   {2} => {1}", x, y, z);
-            };
-            Assert.IsTrue(intp.Load("prg2"));
+            //lt = LyricTokenizer.INSTANCE;
+            //intp = Interpreter.INSTANCE(@"F:\Lunalipse\TestUnit\bin\Debug");
+            //ErrorDelegation.OnErrorRaisedBSI += (x, y, z) =>
+            //{
+            //    Console.WriteLine("ERROR:{0}   |   {2} => {1}", x, y, z);
+            //};
+            //Assert.IsTrue(intp.Load("prg2"));
         }
         [TestMethod]
         public void LyricTokenizerTest()
@@ -55,8 +56,14 @@ namespace LunalipseCoreTest
         public void ThemeJsonParserTest()
         {
             LThemeParser jtp = new LThemeParser();
-            //jtp.LoadTheme("test");
-            Assert.IsNotNull(jtp.Tuples);
+            jtp.ErrorRaised += Jtp_ErrorRaised;
+            jtp.LoadAllTheme();
+            Assert.AreEqual(1,jtp.Tuples.Count);
+        }
+
+        private void Jtp_ErrorRaised(string arg1, string[] arg2)
+        {
+            Console.WriteLine(arg1);
         }
 
         [TestMethod]

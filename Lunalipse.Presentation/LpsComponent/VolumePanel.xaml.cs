@@ -37,17 +37,17 @@ namespace Lunalipse.Presentation.LpsComponent
             set => VolumBar.MaxValue = value;
         }
 
-        public SolidColorBrush BarColor
+        public Brush BarColor
         {
             get => VolumBar.BarColor;
             set => VolumBar.BarColor = value;
         }
-        public SolidColorBrush BarTrackColor
+        public Brush BarTrackColor
         {
             get => VolumBar.TrackColor;
             set => VolumBar.TrackColor = value;
         }
-        public SolidColorBrush FontColor
+        public Brush FontColor
         {
             get => (SolidColorBrush)ValueDisp.Foreground;
             set => ValueDisp.Foreground = value;

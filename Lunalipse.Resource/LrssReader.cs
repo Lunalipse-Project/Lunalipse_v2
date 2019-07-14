@@ -15,7 +15,7 @@ namespace Lunalipse.Resource
     {
         LPS_HEADER HEADER;
 
-        FileStream fs;
+        MemoryStream fs;
 
         int len_header, len_fheader, len_dblock, len_verified;
         public int MAGIC { get; private set; }
@@ -43,13 +43,20 @@ namespace Lunalipse.Resource
 
         public LrssReader(string path, byte[] DecKey = null) : this()
         {
-            LoadLrss(path);
+            LoadLrssCompressed(path);
         }
 
-        public void LoadLrss(string path)
+        public void LoadLrssCompressed(string path)
         {
             if (fs != null) fs.Close();
-            fs = new FileStream(path, FileMode.Open);
+            fs = Compression.DecompressTo(path);
+            ReadHeader();
+        }
+
+        public void LoadLrssRaw(byte[] lrss)
+        {
+            if (fs != null) fs.Close();
+            fs = new MemoryStream(lrss);
             ReadHeader();
         }
 
@@ -118,6 +125,7 @@ namespace Lunalipse.Resource
             byte[] b = new byte[len_header];
             fs.Read(b, 0, len_header);
             HEADER = (LPS_HEADER)b.ToStruct(typeof(LPS_HEADER));
+            MAGIC = HEADER.H_MAGIC;
             fs.Seek(0, SeekOrigin.Begin);
         }
 

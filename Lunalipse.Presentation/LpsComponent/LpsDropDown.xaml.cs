@@ -28,6 +28,25 @@ namespace Lunalipse.Presentation.LpsComponent
             InitializeComponent();
             DropDownItems.ItemsSource = DropdownsSource;
             MouseDown += LpsDropDown_MouseDown;
+            LostKeyboardFocus += LpsDropDown_LostFocus;
+        }
+
+        private void LpsDropDown_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (SelectionArea.IsOpen)
+                SelectionArea.IsOpen = false;
+        }
+
+        public Brush DropDownBackground
+        {
+            get
+            {
+                return DropdownBorder.Background;
+            }
+            set
+            {
+                DropdownBorder.Background = value;
+            }
         }
 
         private void LpsDropDown_MouseDown(object sender, MouseButtonEventArgs e)

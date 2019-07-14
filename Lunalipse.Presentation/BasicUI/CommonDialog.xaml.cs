@@ -35,6 +35,14 @@ namespace Lunalipse.Presentation.BasicUI
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
             ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
+            Unloaded += CommonDialog_Unloaded;
+        }
+
+        private void CommonDialog_Unloaded(object sender, RoutedEventArgs e)
+        {
+            ThemeManagerBase.OnThemeApplying -= ThemeManagerBase_OnThemeApplying;
+            TranslationManagerBase.OnI18NEnvironmentChanged -= TranslationManagerBase_OnI18NEnvironmentChanged;
+
         }
 
         private void CommonDialog_Loaded(object sender, RoutedEventArgs e)
@@ -92,11 +100,11 @@ namespace Lunalipse.Presentation.BasicUI
         private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
         {
             if (obj == null) return;
-            SolidColorBrush primary = obj.Primary.ToLuna();
+            Brush secondary = obj.Secondary.ToLuna();
             Foreground = obj.Foreground;
-            Background = primary.SetOpacity(1).ToCelestia();
-            Negative.Background = primary.SetOpacity(1);
-            Positive.Background = primary.SetOpacity(1);
+            Background = obj.Primary;
+            Negative.Background = secondary;
+            Positive.Background = secondary;
         }
     }
 }

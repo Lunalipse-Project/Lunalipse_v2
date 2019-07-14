@@ -22,21 +22,21 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;BUILD</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;ALPHA</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;BUILD</DefineConstants>
+    <DefineConstants>TRACE;ALPHA</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>true</Prefer32Bit>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
@@ -93,9 +93,15 @@
     <Compile Include="Pages\ConfigPage\GeneralConfig.xaml.cs">
       <DependentUpon>GeneralConfig.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ConfigPage\Licenses.xaml.cs">
+      <DependentUpon>Licenses.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\ConfigPage\Structures\ThemeListStruc.cs" />
     <Compile Include="Pages\ConfigPage\Structures\PlaylistStruc.cs" />
     <Compile Include="Pages\ConfigPage\Structures\MusicPathSturc.cs" />
+    <Compile Include="Pages\ConfigPage\UpdateCheck.xaml.cs">
+      <DependentUpon>UpdateCheck.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\EntityEditDialoguePage.xaml.cs">
       <DependentUpon>EntityEditDialoguePage.xaml</DependentUpon>
     </Compile>
@@ -104,6 +110,9 @@
     </Compile>
     <Compile Include="Pages\MusicDetail.xaml.cs">
       <DependentUpon>MusicDetail.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ViewLicensePage.xaml.cs">
+      <DependentUpon>ViewLicensePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="TestPage.xaml.cs">
       <DependentUpon>TestPage.xaml</DependentUpon>
@@ -162,6 +171,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\ConfigPage\Licenses.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ConfigPage\UpdateCheck.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\EntityEditDialoguePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -175,6 +192,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\MusicSelected.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ViewLicensePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -221,6 +242,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Themes+RainbowDash.json" />
     <EmbeddedResource Include="Resources\Themes+StarlightGlimmer.json" />
+    <EmbeddedResource Include="Resources\Data+licenses.lrss" />
     <Resource Include="favicon.ico" />
     <EmbeddedResource Include="Resources\Data+i18n%40V.xml">
       <SubType>Designer</SubType>
@@ -251,6 +273,10 @@
       <Project>{EC61FD35-E655-4EBF-823C-24DF1599154C}</Project>
       <Name>Lunalipse.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Lunalipse.Resource\Lunalipse.Resource.csproj">
+      <Project>{79CF16CE-EF56-4D3A-B736-E21EDD673327}</Project>
+      <Name>Lunalipse.Resource</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lunalipse.Utilities\Lunalipse.Utilities.csproj">
       <Project>{D273FBB2-C02A-45FF-B672-9E6930ECFAD7}</Project>
       <Name>Lunalipse.Utilities</Name>
@@ -258,6 +284,10 @@
     <ProjectReference Include="..\Lunalipse.Presentation\Lunalipse.Presentation.csproj">
       <Project>{cd82bd9b-bd7a-425c-a341-c51e03d74afb}</Project>
       <Name>Lunalipse.Presentation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LunaNetCore\LunaNetCore.csproj">
+      <Project>{0370C0CB-20B3-4E1A-9F5F-1A846BC1C1B8}</Project>
+      <Name>LunaNetCore</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

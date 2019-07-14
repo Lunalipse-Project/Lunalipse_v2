@@ -44,6 +44,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -81,6 +82,12 @@
     </Compile>
     <Compile Include="LpsComponent\LpsGridList.xaml.cs">
       <DependentUpon>LpsGridList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LpsComponent\LpsProgressBar.xaml.cs">
+      <DependentUpon>LpsProgressBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LpsComponent\LpsSpinner.xaml.cs">
+      <DependentUpon>LpsSpinner.xaml</DependentUpon>
     </Compile>
     <Compile Include="LpsComponent\Parts\PART_CatalogueCard.xaml.cs">
       <DependentUpon>PART_CatalogueCard.xaml</DependentUpon>
@@ -138,6 +145,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="LpsComponent\LpsGridList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LpsComponent\LpsProgressBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LpsComponent\LpsSpinner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

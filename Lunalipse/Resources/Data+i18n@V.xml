@@ -21,7 +21,7 @@
       <Key name="CORE_DIALOG_CANCEL">算了</Key>
 
       <Key name="CORE_PLAYLISTGUARD_MISSING_TITLE">丢失的条目</Key>
-      <Key name="CORE_PLAYLISTGUARD_MISSING_CONTENT">检测到先前保存的播放列表，但在恢复的时候出现了些问题：一些播放列表中保存的歌曲貌似在不在本地中。有可能该歌曲已被重命名或永久的移动到了新的位置。</Key>
+      <Key name="CORE_PLAYLISTGUARD_MISSING_CONTENT">检测到先前保存的播放列表，但在恢复的时候出现了些问题：一些播放列表中保存的歌曲貌似不在本地磁盘中。有可能这些歌曲已被重命名或永久的移动到了新的位置。</Key>
 
       <Key name="CORE_CATALOGUE_ALL_LOCATION">所有位置</Key>
       <Key name="CORE_CATALOGUE_ALL_MUSIC">所有歌曲</Key>
@@ -37,7 +37,7 @@
       <Key name="CORE_MAINUI_TOAST_SONGHINT">正在播放：{0}</Key>
 
       <Key name="CORE_ADDPLAYLIST_NOFAVCATA">没有心仪的播放列表？</Key>
-      <Key name="CORE_ADDPLAYLIST_NEWONE">新建 ……</Key>
+      <Key name="CORE_ADDPLAYLIST_NEWONE">新建 …… </Key>
       <Key name="CORE_ADDPLAYLIST_TITLE">添加至歌单</Key>
       <Key name="CORE_ADDPLAYLIST_CREATE_TITLE">新建一个歌单</Key>
       <Key name="CORE_ADDPLAYLIST_CREATE_HINT">为新增的歌单指定一个名字</Key>
@@ -52,7 +52,8 @@
       <Key name="CORE_SETTING_SETTING_GENERAL">通用</Key>
       <Key name="CORE_SETTING_SETTING_PERFORMANCE">外观与性能</Key>
       <Key name="CORE_SETTING_SETTING_NETWORKING">网络</Key>
-      <Key name="CORE_SETTING_SETTING_DEVELOPER">开发者</Key>
+      <Key name="CORE_SETTING_SETTING_UPDATECHECK">检查更新</Key>
+      <Key name="CORE_SETTING_SETTING_LICENSES">开源许可</Key>
       <Key name="CORE_SETTING_SETTING_SECURITY">安全</Key>
       <Key name="CORE_SETTING_SETTING_ACTION_SAVE_CFG">应用并保存</Key>
       <Key name="CORE_SETTING_SETTING_ABOUT">关于此软件</Key>
@@ -73,6 +74,14 @@
       
       <Key name="CORE_CATALOGUE_CATADELETE_TITLE">删除一个播放列表（歌单）</Key>
       <Key name="CORE_CATALOGUE_CATADELETE_MSG">确认删除播放列表（歌单）“{0}” 吗？该操作是不可逆的。</Key>
+      
+      <!-- Theme parser -->
+      <Key name="CORE_THEMEPARSER_ERR_INVALIDRANGE">无效的范围，"{0}"的取值范围必须要在"{1}"与"{2}"之间。</Key>
+      <Key name="CORE_THEMEPARSER_ERR_INVALIDTYPE">无效的类型定义，类型"{0}"形式必须为"{1}"</Key>
+      <Key name="CORE_THEMEPARSER_ERR_COLORNOTFOUND">未找到名称为"{0}"的颜色定义，请确保使用了已定义的值。</Key>
+    </Page>
+    <Page key="CORE_MUSIC_DETAIL">
+      <Key name="CORE_MUSIC_DETAIL_NOLYRIC">未找到与之匹配的歌词</Key>
     </Page>
     <Page key="CORE_GENERAL_SETTING">
       <Key name="CORE_SETTING_MUSIC_SOURCES">编辑歌曲来源</Key>
@@ -105,13 +114,14 @@
       <Key name="CORE_SETTING_APPR_VISUAL_GUASSIANBLUR">启用窗体毛玻璃效果</Key>
       <Key name="CORE_SETTING_APPR_VISUAL_LYRIC_FONT">显示歌词时采用字体</Key>
       <Key name="CORE_SETTING_APPR_VISUAL_LYRIC_FONTSIZE">显示歌词时使用的字号</Key>
+      <Key name="CORE_SETTING_APPR_VISUAL_FOLLOWEDTHEME">主题颜色跟随专辑封面色调</Key>
     </Page>
     <Page key="CORE_ABOUT_SETTING">
       <Key name="CORE_SETTING_ABOUT_VERSION">当前版本：{0}</Key>
       <Key name="CORE_SETTING_ABOUT_VERSION_CODE">发行版本：{0}</Key>
       <Key name="CORE_SETTING_ABOUT_COM_DATE">编译时间：{0}</Key>
       <Key name="CORE_SETTING_ABOUT_LICENSE">开源许可证：GNU General Public License v3.0</Key>
-      <Key name="CORE_SETTING_ABOUT_FOR_STATEMENT">献给我最亲爱的Princess Luna</Key>
+      <Key name="CORE_SETTING_ABOUT_FOR_STATEMENT">献给我挚爱的Princess Luna</Key>
       <Key name="CORE_SETTING_ABOUT_COPYRIGHT">版权所有 © 2019 Lunaixsky</Key>
     </Page>
     <Page key="CORE_MUSICENTITY_EDITOR">
@@ -121,6 +131,25 @@
       <Key name="CORE_MEEDITOR_ARTIST">艺术家</Key>
       <Key name="CORE_MEEDITOR_ERR_CAP">无法保存</Key>
       <Key name="CORE_MEEDITOR_ERR_MSG">该音频文件正在播放或已被其他应用打开，Lunalipse无法写入更新的元数据。</Key>
+    </Page>
+    <Page key="CORE_UPDATE_CHECKER">
+      <Key name="CORE_UPDATECHECKER_CHECKING">正在检查更新</Key>
+      <Key name="CORE_UPDATECHECKER_FOUND">更新到版本：{0}</Key>
+      <Key name="CORE_UPDATECHECKER_DONWLOAD">下载更新</Key>
+      <Key name="CORE_UPDATECHECKER_LATEST">您的Lunalipse已是最新</Key>
+      <Key name="CORE_UPDATECHECKER_REMINDTITLE">更新已下载</Key>
+      <Key name="CORE_UPDATECHECKER_REMINDCONTENT">Lunalipse已完成更新的下载，并随时可以开始安装。当您确认安装后Lunalipse会自动退出并开始安装。您确认要现在安装吗？</Key>
+    </Page>
+    <Page key="CORE_OPENSOURCE_LICENSE">
+      <Key name="CORE_OPENSOURCE_LICENSE_DESC">Lunalipse的诞生离不开这些优秀的第三方库。凭借着开源精神以及开源社区优势，Lunalipse才得以使用库中那些设计优良以及高效率的算法，大幅度缩短了开发周期以及避免许多重复性的工作和一些自己垃圾的算法设计。</Key>
+      <Key name="CORE_OPENSOURCE_LICENSE_LPS_DESC">为弘扬开源精神，Lunalipse音乐播放器（本软件）遵循GNU General Public License v3.0开源许可。</Key>
+      <Key name="CORE_OPENSOURCE_LICENSE_VIEW">查看许可证</Key>
+      <Key name="CORE_OPENSOURCE_LICENSE_TAGLIB">Taglib#</Key>
+      <Key name="CORE_OPENSOURCE_LICENSE_JSON">Newtonsoft.Json</Key>
+      <Key name="CORE_OPENSOURCE_LICENSE_CSCORE">CSCore</Key>
+      <Key name="CORE_OPENSOURCE_LICENSE_LPS">Lunalipse</Key>
+      <Key name="CORE_OPENSOURCE_LICENSE_DIALOGUE_TITLE">开源许可证以及版权声明</Key>
+      
     </Page>
     <!-- Online Music Library -->
     <Page key="CORE_CLOUD_LIB">

@@ -20,7 +20,7 @@
                 </Grid.ColumnDefinitions>
                 <Border Grid.Column="0" x:Name="CurrentProgress" HorizontalAlignment="Left" CornerRadius="4,0,0,4" Height="8" Width="400" Background="{Binding Path=BarColor, ElementName=PROGRESSBAR}">
                     <Border.Effect>
-                        <DropShadowEffect BlurRadius="10" Direction="0" Color="{Binding Path=BarColor.Color, ElementName=PROGRESSBAR}" Opacity="0.8"/>
+                        <DropShadowEffect BlurRadius="10" Direction="0" Color="{Binding Path=BarColor.Color, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MusicProgressBar}}}" Opacity="0.8"/>
                     </Border.Effect>
                 </Border>
                 <Border Grid.Column="1" x:Name="Thumb" VerticalAlignment="Center" HorizontalAlignment="Left" Width="8" Height="8" Background="{Binding Path=ThumbColor, ElementName=PROGRESSBAR}" Margin="-4,0,0,0" RenderTransformOrigin="0.5,0.5" CornerRadius="4">

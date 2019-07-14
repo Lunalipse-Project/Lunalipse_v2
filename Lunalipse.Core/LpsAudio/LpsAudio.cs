@@ -241,15 +241,20 @@ namespace Lunalipse.Core.LpsAudio
             
             double totalMS = iws.GetLength().TotalMilliseconds;
             TimeSpan position;
+            LyricToken p_lt = null;
             while ((position = iws.GetPosition()).TotalMilliseconds < totalMS)
             {
                 if (isPlaying)
                 {
                     AudioDelegations.PostionChanged?.Invoke(position);
-                    LyricToken lt;
-                    if((lt = lEnum.Enumerating(position))!= null)
+                    LyricToken lt = null;
+                    if((lt = lEnum.Enumerating(position,lt))!= null)
                     {
-                        AudioDelegations.LyricUpdated?.Invoke(lt);
+                        if (p_lt != lt)
+                        {
+                            AudioDelegations.InvokeLyricUpdate(lt);
+                            p_lt = lt;
+                        }
                     }
                 }
                 Thread.Sleep(998);

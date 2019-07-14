@@ -10,6 +10,6 @@ namespace Lunalipse.Common.Interfaces.ILyric
     public interface ILyricEnumerator
     {
         bool AcquireLyric(MusicEntity Music);
-        LyricToken Enumerating(TimeSpan current);
+        LyricToken Enumerating(TimeSpan current, LyricToken currentToken);
     }
 }

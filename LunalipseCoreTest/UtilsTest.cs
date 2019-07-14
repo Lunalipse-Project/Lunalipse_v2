@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Media;
 using Lunalipse.Common;
+using Lunalipse.Core;
 using Lunalipse.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -51,6 +52,14 @@ namespace LunalipseCoreTest
         {
             Color c = Color.FromRgb(255,255,255);
             Console.WriteLine(c.GetForeground());
+        }
+
+        [TestMethod]
+        public void UpdateGetterTest()
+        {
+            UpdateHelper updateHelper = new UpdateHelper();
+
+            updateHelper.QueryUpdateAll();
         }
     }
 }

@@ -8,7 +8,7 @@
       xmlns:LpsComponentUI="clr-namespace:Lunalipse.Presentation.LpsComponent;assembly=Lunalipse.Presentation"
       mc:Ignorable="d" 
       x:Name="APPR_CFG"
-      Height="750" Width="800" Loaded="APPR_CFG_Loaded"
+      Height="780" Width="800" Loaded="APPR_CFG_Loaded"
       Title="AppearanceConfig">
     <Page.Resources>
         <ResourceDictionary>
@@ -133,6 +133,15 @@
                         <Label HorizontalAlignment="Left" VerticalContentAlignment="Center" Tag="CORE_SETTING_APPR_VISUAL_GUASSIANBLUR" Grid.Column="0" 
                                Foreground="{Binding ElementName=APPR_CFG,Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
                         <LpsComponentUI:ToggleSwitch HorizontalAlignment="Center" Grid.Column="1" x:Name="EnableGuassianBlur"></LpsComponentUI:ToggleSwitch>
+                    </Grid>
+                    <Grid Height="50px">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width=".7*"/>
+                            <ColumnDefinition Width=".4*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label HorizontalAlignment="Left" VerticalContentAlignment="Center" Tag="CORE_SETTING_APPR_VISUAL_FOLLOWEDTHEME" Grid.Column="0" 
+                               Foreground="{Binding ElementName=APPR_CFG,Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
+                        <LpsComponentUI:ToggleSwitch HorizontalAlignment="Center" Grid.Column="1" x:Name="ThemeColorFollowAlbum"></LpsComponentUI:ToggleSwitch>
                     </Grid>
                     <Grid Height="50px">
                         <Grid.ColumnDefinitions>

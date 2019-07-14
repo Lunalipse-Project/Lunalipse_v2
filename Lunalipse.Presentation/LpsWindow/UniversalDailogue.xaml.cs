@@ -28,6 +28,13 @@ namespace Lunalipse.Presentation.LpsWindow
             TranslationManagerBase.OnI18NEnvironmentChanged += TranslationManagerBase_OnI18NEnvironmentChanged;
             ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
             Display.ContentRendered += Display_ContentRendered;
+            Unloaded += UniversalDailogue_Unloaded;
+        }
+
+        private void UniversalDailogue_Unloaded(object sender, RoutedEventArgs e)
+        {
+            TranslationManagerBase.OnI18NEnvironmentChanged -= TranslationManagerBase_OnI18NEnvironmentChanged;
+            ThemeManagerBase.OnThemeApplying -= ThemeManagerBase_OnThemeApplying;
         }
 
         private void Display_ContentRendered(object sender, EventArgs e)
@@ -38,11 +45,11 @@ namespace Lunalipse.Presentation.LpsWindow
         private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
         {
             if (obj == null) return;
-            SolidColorBrush primary = obj.Primary.SetOpacity(1).ToLuna();
+            Brush secondary = obj.Secondary.ToLuna();
             Foreground = obj.Foreground;
-            Background = primary.ToCelestia();
-            Negative.Background = primary;
-            Positive.Background = primary;
+            Background = obj.Primary;
+            Negative.Background = secondary;
+            Positive.Background = secondary;
             (pageCotent as IDialogPage).UnifiedTheme(obj);
         }
 
@@ -50,7 +57,7 @@ namespace Lunalipse.Presentation.LpsWindow
         {
             Positive.Content = obj.ConvertTo(SupportedPages.CORE_FUNC, PositiveBtnI18N);
             Negative.Content = obj.ConvertTo(SupportedPages.CORE_FUNC, NegativeBtnI18N);
-            (pageCotent as ITranslatable).Translate(obj);
+            (pageCotent as ITranslatable)?.Translate(obj);
         }
 
         private void UniversalDailogue_Loaded(object sender, RoutedEventArgs e)

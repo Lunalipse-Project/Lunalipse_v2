@@ -41,7 +41,7 @@ namespace Lunalipse.Windows
             eventBus = EventBus.Instance;
             eventBus.AddUnicastReciever(GetType(), ReceiveAction);
             LocateWindow();
-            AudioDelegations.LyricUpdated = token =>
+            AudioDelegations.LyricUpdated += token =>
             {
                 Dispatcher.Invoke(() =>
                 {
@@ -60,6 +60,13 @@ namespace Lunalipse.Windows
 
             GlobalSetting = GLS.INSTANCE;
             GlobalSetting.OnSettingUpdated += GlobalSetting_OnSettingUpdated;
+
+            this.Closing += DesktopDisplay_Closing;
+        }
+
+        private void DesktopDisplay_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            MainWindow.DesktopDisplayIndicator -= MainWindow_DesktopDisplayIndicator;
         }
 
         private void GlobalSetting_OnSettingUpdated(string obj)
@@ -116,6 +123,12 @@ namespace Lunalipse.Windows
             ShowInTaskbar = false;
             this.SetThroughableWindow();
             this.HideWindowFromAltTab();
+            MainWindow.DesktopDisplayIndicator += MainWindow_DesktopDisplayIndicator;
+        }
+
+        private void MainWindow_DesktopDisplayIndicator()
+        {
+            throw new NotImplementedException();
         }
 
         void LocateWindow()

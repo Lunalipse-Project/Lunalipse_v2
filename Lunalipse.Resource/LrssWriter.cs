@@ -10,14 +10,22 @@ using static Lunalipse.Resource.Generic.Delegates;
 
 namespace Lunalipse.Resource
 {
-    public class LrssWriter : ILrssWriter
+    public class LrssWriter : ILrssWriter, IDisposable
     {
         LPS_HEADER header;
         LPS_VERIFIED lve;
         int len_header, len_fheader, len_dblock, len_verified;
         public List<LrssIndex> Resources { get; set; }
-        FileStream fs;
+        MemoryStream fs;
         int magic;
+
+        public MemoryStream OuputStream
+        {
+            get
+            {
+                return fs;
+            }
+        }
 
         public LrssWriter()
         {
@@ -27,7 +35,7 @@ namespace Lunalipse.Resource
             len_dblock = Marshal.SizeOf(typeof(LPS_FBLOCK));
             len_verified = Marshal.SizeOf(typeof(LPS_VERIFIED));
         }
-        public void Initialize(int Magic, string signature, string dest, byte[] EncKey = null)
+        public void Initialize(int Magic, string signature, byte[] EncKey = null)
         {
             magic = Magic;
             header = new LPS_HEADER();
@@ -42,14 +50,14 @@ namespace Lunalipse.Resource
             header.H_FH_LOC = new long[32];
             header.H_SIG = signature;
             header.H_ENCRYPTED = EncKey != null;
-            if (File.Exists(dest)) File.Delete(dest);
-            fs = new FileStream(dest, FileMode.OpenOrCreate);
+            fs = new MemoryStream();
         }
 
         public async Task<bool> Export()
         {
             await Task.Run(() =>
             {
+
                 fs.Write(new byte[len_header], 0, len_header);
                 if (header.H_ENCRYPTED)
                     fs.Write(lve.ToBytes(len_verified).XorCrypt(magic), 0, len_verified);
@@ -64,8 +72,6 @@ namespace Lunalipse.Resource
                 fs.Write(header.ToBytes(len_header), 0, len_header);
                 OnEndpointReached?.Invoke(Resources.Count);
             });
-            fs.Flush();
-            fs.Close();
             return true;
         }
 
@@ -131,6 +137,13 @@ namespace Lunalipse.Resource
                 index++;
                 OnChuckOperated?.Invoke(index, bcount);
             }
+        }
+
+        public void Dispose()
+        {
+            fs.Close();
+            Resources.Clear();
+            fs.Dispose();
         }
     }
 }

@@ -2,9 +2,48 @@
   "Theme": {
     "Name": "Twilight Sparkle",
     "Desc": "Lunalipse Build-In Theme, Adapt from TV series My Little Pony. Authorized by Twilight Sparkle",
-    "Uid": "1a500509-6d46-4352-853b-9206a4f7dafb"
+    "Uid": "1a500509-6d46-4352-853b-9206a4f7dafb",
+    "Author": "Lunaixsky"
   },
-  "Foreground": "#F0273873",
-  "Primary": "#CCD19FE4",
-  "Secondary": "#FFED438D"
+  "Foreground": {
+    "cValue": "#FFFFFF",
+    "cOpacity": 1
+  },
+  "Primary": {
+    "cRefer": "TWILIGHT_SPARKLE_SKIN_GRADIENT"
+  },
+  "Secondary": {
+    "cValue": "#cc93e0",
+    "cOpacity": 1
+  },
+  "gDefinitions": {
+    "TWILIGHT_SPARKLE_SKIN_GRADIENT": {
+      "gStart": {
+        "x": 0,
+        "y": 0
+      },
+      "gEnd": {
+        "x": 1,
+        "y": 1
+      },
+      "gInterpolation": "SRgbLinearInterpolation",
+      "gStops": [
+        {
+          "cValue": "#de2b89",
+          "cOpacity": 1,
+          "gOffset": 0
+        },
+        {
+          "cValue": "#612086",
+          "cOpacity": 1,
+          "gOffset": 0.5
+        },
+        {
+          "cValue": "#283470",
+          "cOpacity": 1,
+          "gOffset": 1
+        }
+      ]
+    }
+  }
 }

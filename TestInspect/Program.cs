@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace TestInspect
@@ -14,43 +15,34 @@ namespace TestInspect
     {
         static void Main(string[] args)
         {
-            Read();
-            Console.Read();
-        }
-
-        static void Write()
-        {
-            Console.WriteLine(" ======= LRSS WRITE TEST =========");
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            LrssWriter lw = new LrssWriter();
-            lw.Initialize(0x2333, "MLP_SONGS", "export.lrss", Encoding.ASCII.GetBytes("2WS_=3+?"));
-            lw.AppendResourcesDir(@"F:\MLPMUSIC");
-            lw.Export().Wait();
-            sw.Stop();
-            Console.WriteLine(sw.Elapsed.ToString());      
-        }
-
-        static async void Read()
-        {
-            Console.WriteLine(" ======= LRSS READ TEST =========");
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            LrssReader lr = new LrssReader("export.lrss", Encoding.ASCII.GetBytes("2WS_=3+?"));
-            Directory.CreateDirectory("EXPORT");
-            foreach(LrssIndex li in lr.GetIndex())
-            {
-                LrssResource lrr = await lr.ReadResource(li);
-                if(lrr==null)
-                {
-                    Console.WriteLine("Error: Can not export.\n\t Wrong key or damaged file.");
-                    break;
-                }
-                lrr.ToFile("EXPORT");
-            }
-            lr.Dispose();
-            sw.Stop();
-            Console.WriteLine(sw.Elapsed.ToString());
+            Regex regex = new Regex(@"(<?)[https?://]?.*(>?)");
+            GroupCollection gc = regex.Match("cds<http://www.baid.com>abc").Groups;
+            //Console.WriteLine(regex.IsMatch());
+            Console.ReadKey();
+            //List<string> Bold = new List<string>();
+            //List<string> Italic = new List<string>();
+            //string testString = "**Test** This is a ***Test*** String, with *Italic* and **Bold**";
+            //string[] spt = testString.Split(new[] { "**" }, StringSplitOptions.None);
+            //for (int i = 0; i < spt.Length; i += 1)
+            //{
+            //    if (i != 0 && i % 2 != 0)
+            //    {
+            //        Bold.Add(spt[i]);
+            //    }
+            //    if (spt[i].Contains('*'))
+            //    {
+            //        string[] spt2 = spt[i].Split(new[] { "*" }, StringSplitOptions.None);
+            //        for (int j = 0; j < spt2.Length; j++)
+            //        {
+            //            if (j != 0 && j % 2 != 0)
+            //            {
+            //                Italic.Add(spt2[j]);
+            //            }
+            //        }
+            //    }
+            //}
+            //MarkdownParserTest markdownParserTest = new MarkdownParserTest();
+            //markdownParserTest.FindBoldOrItalic();
         }
     }
 }

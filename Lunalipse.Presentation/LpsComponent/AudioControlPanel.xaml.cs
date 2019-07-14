@@ -278,7 +278,7 @@ namespace Lunalipse.Presentation.LpsComponent
             MusicProgress.BarColor = obj.Secondary;
             MusicProgress.TrackColor = obj.Primary.SetOpacity(0.8).ToLuna();
 
-            VolumeBar.BarTrackColor = obj.Primary.SetOpacity(0.8).ToLuna();
+            VolumeBar.BarTrackColor = MusicProgress.TrackColor;
             VolumeBar.BarColor = obj.Secondary;
             VolumeBar.FontColor = obj.Foreground;
             VolumeBar.Background = obj.Primary.ToLuna();

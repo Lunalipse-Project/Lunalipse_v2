@@ -38,6 +38,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lunalipse.Presentation", "L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunalipseEmbedder", "LunalipseEmbedder\LunalipseEmbedder.csproj", "{9192DBCD-0DD0-4039-922E-D7735B9C7594}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunalipseUpdate", "LunalipseUpdate\LunalipseUpdate.csproj", "{43E94E80-C11B-4497-99C6-BCA88BD1BB81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIPlayground", "UIPlayground\UIPlayground.csproj", "{2250DBE6-1704-48F1-89D5-A31D0337D30B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -216,6 +220,30 @@ Global
 		{9192DBCD-0DD0-4039-922E-D7735B9C7594}.Release|x64.Build.0 = Release|Any CPU
 		{9192DBCD-0DD0-4039-922E-D7735B9C7594}.Release|x86.ActiveCfg = Release|Any CPU
 		{9192DBCD-0DD0-4039-922E-D7735B9C7594}.Release|x86.Build.0 = Release|Any CPU
+		{43E94E80-C11B-4497-99C6-BCA88BD1BB81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43E94E80-C11B-4497-99C6-BCA88BD1BB81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43E94E80-C11B-4497-99C6-BCA88BD1BB81}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{43E94E80-C11B-4497-99C6-BCA88BD1BB81}.Debug|x64.Build.0 = Debug|Any CPU
+		{43E94E80-C11B-4497-99C6-BCA88BD1BB81}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{43E94E80-C11B-4497-99C6-BCA88BD1BB81}.Debug|x86.Build.0 = Debug|Any CPU
+		{43E94E80-C11B-4497-99C6-BCA88BD1BB81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43E94E80-C11B-4497-99C6-BCA88BD1BB81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43E94E80-C11B-4497-99C6-BCA88BD1BB81}.Release|x64.ActiveCfg = Release|Any CPU
+		{43E94E80-C11B-4497-99C6-BCA88BD1BB81}.Release|x64.Build.0 = Release|Any CPU
+		{43E94E80-C11B-4497-99C6-BCA88BD1BB81}.Release|x86.ActiveCfg = Release|Any CPU
+		{43E94E80-C11B-4497-99C6-BCA88BD1BB81}.Release|x86.Build.0 = Release|Any CPU
+		{2250DBE6-1704-48F1-89D5-A31D0337D30B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2250DBE6-1704-48F1-89D5-A31D0337D30B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2250DBE6-1704-48F1-89D5-A31D0337D30B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2250DBE6-1704-48F1-89D5-A31D0337D30B}.Debug|x64.Build.0 = Debug|Any CPU
+		{2250DBE6-1704-48F1-89D5-A31D0337D30B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2250DBE6-1704-48F1-89D5-A31D0337D30B}.Debug|x86.Build.0 = Debug|Any CPU
+		{2250DBE6-1704-48F1-89D5-A31D0337D30B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2250DBE6-1704-48F1-89D5-A31D0337D30B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2250DBE6-1704-48F1-89D5-A31D0337D30B}.Release|x64.ActiveCfg = Release|Any CPU
+		{2250DBE6-1704-48F1-89D5-A31D0337D30B}.Release|x64.Build.0 = Release|Any CPU
+		{2250DBE6-1704-48F1-89D5-A31D0337D30B}.Release|x86.ActiveCfg = Release|Any CPU
+		{2250DBE6-1704-48F1-89D5-A31D0337D30B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

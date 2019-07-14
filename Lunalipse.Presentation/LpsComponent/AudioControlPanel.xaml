@@ -15,6 +15,32 @@
         <Grid Grid.Column="0" MouseLeftButtonDown="Grid_MouseLeftButtonDown">
             <Border CornerRadius="5" Width="100" Height="100" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="AlbProfile">
                 <Label x:Name="FallBackPic" BorderBrush="{x:Null}" Visibility="Visible" Opacity="0.7" Content="{StaticResource AlbumDefault}" FontFamily="../font/#Material-Design-Iconic-Font" FontSize="{StaticResource IconLargeVI}" HorizontalContentAlignment="Center" VerticalAlignment="Center" Foreground="{Binding Path=Foreground, ElementName=AudioPanelControl}"/>
+                <Border.Triggers>
+                    <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                        <EventTrigger.Actions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                     From="1"
+                                                     To="0.55"
+                                                     Duration="0:0:0.2"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger.Actions>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="UIElement.MouseLeave">
+                        <EventTrigger.Actions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                     From="0.55"
+                                                     To="1"
+                                                     Duration="0:0:0.2"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger.Actions>
+                    </EventTrigger>
+                </Border.Triggers>
             </Border>
         </Grid>
         <Grid Grid.Column="1">

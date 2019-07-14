@@ -72,9 +72,9 @@ namespace Lunalipse.Pages.ConfigPage
             Foreground = obj.Foreground;
             foreach(Button b in Utils.FindVisualChildren<Button>(this))
             {
-                b.Background = obj.Surface.ToLuna();
+                b.Background = obj.Secondary.ToLuna();
             }
-            LanguageSelection.Background = obj.Primary;
+            LanguageSelection.DropDownBackground = obj.Secondary;
         }
 
         /// <summary>

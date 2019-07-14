@@ -64,7 +64,7 @@ namespace Lunalipse.Pages
         public void UnifiedTheme(ThemeTuple obj)
         {
             if (obj == null) return;
-            CreateNew.Background = obj.Primary.SetOpacity(1);
+            CreateNew.Background = obj.Primary;
             Foreground = obj.Foreground;
         }
 

@@ -44,14 +44,14 @@ namespace Lunalipse.Presentation.LpsComponent
                                         typeof(MusicSelectionList),
                                         new PropertyMetadata(Application.Current.FindResource("ItemUnhoverColorDefault")));
 
-        public SolidColorBrush ItemHovered
+        public Brush ItemHovered
         {
-            get => (SolidColorBrush)GetValue(ITEM_HOVER);
+            get => GetValue(ITEM_HOVER) as Brush;
             set => SetValue(ITEM_HOVER, value);
         }
-        public SolidColorBrush ItemUnhovered
+        public Brush ItemUnhovered
         {
-            get => (SolidColorBrush)GetValue(ITEM_UNHOVER);
+            get => GetValue(ITEM_UNHOVER) as Brush;
             set => SetValue(ITEM_UNHOVER, value);
         }
 
@@ -91,8 +91,8 @@ namespace Lunalipse.Presentation.LpsComponent
         private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
         {
             if (obj == null) return;
-            ItemUnhovered = obj.Foreground.SetOpacity(0);
             ItemHovered = obj.Foreground.SetOpacity(0.15);
+            ItemUnhovered = obj.Foreground.SetOpacity(0);
         }
 
         [Obsolete]
@@ -161,7 +161,10 @@ namespace Lunalipse.Presentation.LpsComponent
         private void ItemConatiner_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (DisplayedCatalogue.Uid() != CatalogueInUse.Uid())
+            {
                 CatalogueInUse = DisplayedCatalogue;
+                __index = -1;
+            }
 
             MusicSelectionListItem Item = (MusicSelectionListItem)sender;
             MusicSelectionListItem Temp;

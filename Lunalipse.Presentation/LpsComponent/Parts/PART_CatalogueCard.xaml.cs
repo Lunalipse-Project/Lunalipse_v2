@@ -65,7 +65,7 @@ namespace Lunalipse.Presentation.LpsComponent.Parts
         private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
         {
             if (obj == null) return;
-            Background = BottomStripColor = obj.Primary.SetOpacity(1);
+            Background = BottomStripColor = obj.Primary;
             Foreground = obj.Foreground;
             Overlay.Background = obj.Primary.SetOpacity(0.8);
         }
@@ -95,11 +95,11 @@ namespace Lunalipse.Presentation.LpsComponent.Parts
         public int Row { get; set; }
         public int Col { get; set; }
 
-        public SolidColorBrush BottomStripColor
+        public Brush BottomStripColor
         {
             get
             {
-                return (SolidColorBrush)cata_card_bottom_strip.Background;
+                return cata_card_bottom_strip.Background;
             }
             set
             {

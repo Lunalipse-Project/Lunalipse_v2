@@ -22,9 +22,9 @@ namespace Lunalipse.Presentation.LpsComponent
         /// <summary>
         /// 选中标识颜色
         /// </summary>
-        public SolidColorBrush MarkColor
+        public Brush MarkColor
         {
-            get => (SolidColorBrush)GetValue(ITEM_SELECTED_MARK);
+            get => (Brush)GetValue(ITEM_SELECTED_MARK);
             set => SetValue(ITEM_SELECTED_MARK, value);
         }
 

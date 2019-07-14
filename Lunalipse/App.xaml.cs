@@ -1,4 +1,5 @@
-﻿using Lunalipse.Common.Bus.Event;
+﻿using Lunalipse.Common;
+using Lunalipse.Common.Bus.Event;
 using Lunalipse.Common.Data;
 using Lunalipse.Common.Generic.Cache;
 using Lunalipse.Core;
@@ -9,9 +10,11 @@ using Lunalipse.Core.I18N;
 using Lunalipse.Core.PlayList;
 using Lunalipse.Core.Theme;
 using Lunalipse.I18N;
+using Lunalipse.Resource.Generic.Types;
 using Lunalipse.Utilities;
 using System;
 using System.Reflection;
+using System.Text;
 using System.Windows;
 
 namespace Lunalipse
@@ -43,8 +46,9 @@ namespace Lunalipse
             InitializeI18NEnvironemnt();
             RegisterOperators();
 
-            
             PerpearThemeColor();
+
+            ReadLicenses();
         }
 
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
@@ -105,6 +109,29 @@ namespace Lunalipse
         {
             Log.Info("Loaidng themes");
             LThemeManager.Instance.SelectTheme(GLS.INSTANCE.DefaultThemeUUID);
+        }
+
+        async void ReadLicenses()
+        {
+            foreach (LrssResource lrr in await resourcesHandler.getResourcesAsync(AppConst.LUNALIPSE_LICENSES))
+            {
+                string text = Encoding.UTF8.GetString(lrr.Data);
+                switch (lrr.Name)
+                {
+                    case "GNU_GPL":
+                        AppConst.LICENSE_GUNGPL_LUNALIPSE = text;
+                        break;
+                    case "GNU_LGPL":
+                        AppConst.LICENSE_GUNLGPL_TAGLIB = text;
+                        break;
+                    case "MIT":
+                        AppConst.LICENSE_MIT_JSON = text;
+                        break;
+                    case "MSPL":
+                        AppConst.LICENSE_MS_PL_CSCORE = text;
+                        break;
+                }
+            }
         }
     }
 }

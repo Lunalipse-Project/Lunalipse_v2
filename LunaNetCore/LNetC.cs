@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,11 +29,8 @@ namespace LunaNetCore
         /// 声明AllQueueRequestCompletely委托
         /// </summary>
         public delegate void AllQueueRequestCompletely();
-        /// <summary>
-        /// 声明ErrorOccursSecondDelegate委托
-        /// </summary>
-        /// <param name="e">异常</param>
-        public delegate void ErrorOccursSecondDelegate(Exception e);
+        public delegate void ErrorOccurs(WebExceptionStatus webExceptionStatus,HttpStatusCode httpStatusCode, string Description, string message);
+
 
         /// <summary>
         /// 声明请求超时委托
@@ -52,10 +50,9 @@ namespace LunaNetCore
         /// 队列全部请求完毕触发事件
         /// </summary>
         public event AllQueueRequestCompletely OnAllQueueRequestCompletely;
-        /// <summary>
-        /// 深层异常事件触发
-        /// </summary>
-        public event ErrorOccursSecondDelegate OnErrorOccursInDeepLayer;
+
+        public event ErrorOccurs OnErrorOccurs;
+
         /// <summary>
         /// 请求超时异常触发
         /// </summary>
@@ -72,9 +69,11 @@ namespace LunaNetCore
         /// </summary>
         public LNetC()
         {
-            HttpHelper.OnErrorOccurs += (e) => OnErrorOccursInDeepLayer(e);
-            HttpHelper.OnRequestTimeOut += () => OnHttpTimeOut();
             HttpRequestBuffer = new Dictionary<string, RBody>();
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
+                    | SecurityProtocolType.Tls11
+                    | SecurityProtocolType.Tls12
+                    | SecurityProtocolType.Ssl3;
         }
 
         /// <summary>
@@ -109,6 +108,8 @@ namespace LunaNetCore
             return HttpRequestBuffer[id];
         }
 
+        public IWebProxy LunaNetProxy { get; set; } = null;
+
         /// <summary>
         /// 开始异步请求
         /// <para>
@@ -123,7 +124,6 @@ namespace LunaNetCore
         /// 这里是一些用于拓展的可选事件
         /// </para>
         /// <see cref="OnAllQueueRequestCompletely"/>
-        /// <see cref="OnErrorOccursInDeepLayer"/>
         /// </summary>
         public async Task RequestAsyn()
         {
@@ -153,7 +153,6 @@ namespace LunaNetCore
         /// 这里是一些用于拓展的可选事件
         /// </para>
         /// <see cref="OnAllQueueRequestCompletely"/>
-        /// <see cref="OnErrorOccursInDeepLayer"/>
         /// </summary>
         /// <param name="rb">请求体</param>
         /// <param name="key">请求体标识</param>
@@ -166,23 +165,61 @@ namespace LunaNetCore
             });
         }
 
-        private void _request(RBody rb, string key)
+        /// <summary>
+        /// 使用非异步请求，此方法会阻塞线程但会及时返回请求结果。
+        /// </summary>
+        /// <param name="rb">请求体</param>
+        /// <returns>请求结果</returns>
+        public RResult Request(RBody rb)
+        {
+            return _request(rb, "", false);
+        }
+
+        private RResult _request(RBody rb, string key, bool isAsync = true)
         {
             string rs = "";
+            RResult rResult = null;
             HttpWebResponse wr = null;
             OnHttpRequesting?.Invoke(key);
-            if (rb.RequestMethod == HttpMethod.GET)
+            try
             {
-                wr = HttpHelper.CreateGetHttpResponse(rb.URL + rb.PatchParameter(), 5000, rb.RequestCookie);
-                if (wr != null) rs = HttpHelper.GetResponseString(wr);
+                if (rb.RequestMethod == HttpMethod.GET)
+                {
+                    wr = HttpHelper.CreateGetHttpResponse(rb, 10000, LunaNetProxy);
+                }
+                else
+                {
+                    wr = HttpHelper.CreatePostHttpResponse(rb, 10000, LunaNetProxy);
+                }
             }
-            else
+            catch (WebException TE)
             {
-                wr = HttpHelper.CreatePostHttpResponse(rb.URL, rb.RequestParameter, 5000, rb.RequestCookie);
-                if (wr != null) rs = HttpHelper.GetResponseString(wr);
+#if DEBUG
+                System.Console.WriteLine(TE.StackTrace);
+#endif
+                HttpWebResponse httpWebResponse = (HttpWebResponse)TE.Response;
+                if(TE.Status == WebExceptionStatus.Timeout)
+                {
+                    OnHttpTimeOut?.Invoke();
+                }
+                OnErrorOccurs(TE.Status,httpWebResponse.StatusCode, httpWebResponse.StatusDescription, TE.Message);
+                return rResult;
             }
+            using (Stream stream = wr.GetResponseStream())
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    rs = reader.ReadToEnd();
+                }
+            }
+            
             if (rs != "")
-                OnHttpResponded?.Invoke(key, new RResult(rb.URL, rb.RequestMethod, rs, rb.BodyBundle));
+            {
+                rResult = new RResult(rb.URL, rb.RequestMethod, rs, rb.BodyBundle);
+                if (isAsync)
+                    OnHttpResponded?.Invoke(key, rResult);
+            }
+            return rResult;
         }
 
         /// <summary>

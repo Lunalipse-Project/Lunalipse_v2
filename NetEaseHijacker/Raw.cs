@@ -73,7 +73,9 @@ namespace NetEaseHijacker
             RBody r = new RBody()
             {
                 URL = url,
-                RequestMethod = HttpMethod.POST
+                RequestMethod = HttpMethod.POST,
+                ContentType = "application/x-www-form-urlencoded",
+                Referer = "http://music.163.com/search/"
             };
             r.AddParameter("params", param);
             r.AddParameter("encSecKey", NeParams.encSecKey);

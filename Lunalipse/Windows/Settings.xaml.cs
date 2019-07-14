@@ -59,6 +59,12 @@ namespace Lunalipse.Windows
                 case SettingCatalogues.SETTING_ABOUT:
                     SPanleViewer.ShowContent(new LunalipseAbout(), true);
                     break;
+                case SettingCatalogues.SETTING_UPDATECHECK:
+                    SPanleViewer.ShowContent(new UpdateCheck(), true);
+                    break;
+                case SettingCatalogues.SETTING_LICENSES:
+                    SPanleViewer.ShowContent(new Licenses(), true);
+                    break;
                     //case SettingCatalogues.SETTING_ACTION_SAVE_CFG:
                     //    SPanleViewer.ShowContent(new SaveAndApply(), true);
                     //    break;
@@ -68,8 +74,7 @@ namespace Lunalipse.Windows
         private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
         {
             if (obj == null) return;
-            Background = obj.Primary.SetOpacity(0.9).ToLuna();
-            SPlanelSlider.Background = obj.Primary;
+            Background = obj.Primary.SetOpacity(1).ToLuna();
         }
 
         public void Translate(II18NConvertor i8c)

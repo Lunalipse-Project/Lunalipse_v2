@@ -1,4 +1,6 @@
-﻿using Lunalipse.Utilities;
+﻿using Lunalipse.Resource;
+using Lunalipse.Resource.Generic.Types;
+using Lunalipse.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,11 +13,13 @@ namespace Lunalipse.Core
 {
     public class ResourcesHandler
     {
+        LrssReader lrssReader;
         public string version;
         public const string LUNALIPSE_DATA_FILE_EXTENSION = ".lp";
         public ResourcesHandler(Version version)
         {
             this.version = version.ToString().Replace(".", "");
+            lrssReader = new LrssReader();
         }
         public void ReleaseResources(string[] ManifestName, string basePath, Assembly asm)
         {
@@ -25,7 +29,10 @@ namespace Lunalipse.Core
                 {
                     string FileName = names.TrimStart("Lunalipse.Resources.".ToCharArray());
                     if (FileName.StartsWith("Data+"))
-                        FileName = FileName.Split('.')[0] + LUNALIPSE_DATA_FILE_EXTENSION;
+                    {
+                        string[] Filenames = FileName.Split('.');
+                        FileName = Filenames[0] + (Filenames[1] != "lrss" ? LUNALIPSE_DATA_FILE_EXTENSION : "." + Filenames[1]);
+                    }
                     FileName = FileName.Replace("+", @"\");
                     FileName = FileName.Replace("@V", version);
                     LunalipseLogger.GetLogger().Debug("Checking " + FileName);
@@ -60,6 +67,34 @@ namespace Lunalipse.Core
                 }
             }
             LunalipseLogger.GetLogger().Debug("{0} -> {1}".FormateEx(ManifestName, path));
+        }
+
+        public async Task<List<LrssResource>> getResourcesAsync(string lrssPath, string password = null)
+        {
+            lrssReader.LoadLrssCompressed(lrssPath);
+            return await UnpackLrss(password);
+        }
+
+        public async Task<List<LrssResource>> getResourcesAsync(byte[] lrss, string password = null)
+        {
+            lrssReader.LoadLrssRaw(lrss);
+            return await UnpackLrss(password);
+        }
+
+        private async Task<List<LrssResource>> UnpackLrss(string password = null)
+        {
+            List<LrssResource> lrssResources = new List<LrssResource>();
+            if (lrssReader.Encrypted)
+            {
+                if (password != null) return lrssResources;
+                if (!lrssReader.RestoringMagic(Encoding.ASCII.GetBytes(password)))
+                    return lrssResources;
+            }
+            foreach (LrssIndex lri in lrssReader.GetIndex())
+            {
+                lrssResources.Add(await lrssReader.ReadResource(lri));
+            }
+            return lrssResources;
         }
     }
 }

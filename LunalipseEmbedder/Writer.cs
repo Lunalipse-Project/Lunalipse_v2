@@ -26,6 +26,7 @@ namespace LunalipseEmbedder
         {
             str = resources;
             lwriter = new LrssWriter();
+            
         }
         
 
@@ -42,7 +43,7 @@ namespace LunalipseEmbedder
                     lwriter.AppendResource(p);
                 }
             }
-            lwriter.Initialize(MagicNumber, Signature, outPutPath, Passwd);
+            lwriter.Initialize(MagicNumber, Signature, Passwd);
         }
 
         public List<LrssIndex> GetResources()
@@ -53,6 +54,8 @@ namespace LunalipseEmbedder
         public async Task DoSeal()
         {
             await lwriter.Export();
+            Compression.CompressTo(lwriter.OuputStream, outPutPath);
+            lwriter.Dispose();
         }
 
     }

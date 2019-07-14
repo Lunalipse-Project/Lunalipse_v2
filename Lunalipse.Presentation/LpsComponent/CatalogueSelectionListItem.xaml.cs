@@ -10,8 +10,8 @@ namespace Lunalipse.Presentation.LpsComponent
     /// </summary>
     public partial class CatalogueSelectionListItem : UserControl
     {
-        public SolidColorBrush SelectedColor { get; set; }
-        public SolidColorBrush DefaultColor { get; set; }
+        public Brush SelectedColor { get; set; }
+        public Brush DefaultColor { get; set; }
         private bool isSelected=false;
         public bool Selected => isSelected;
         public CatalogueSelectionListItem()

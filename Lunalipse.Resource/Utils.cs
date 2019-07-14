@@ -76,9 +76,9 @@ namespace Lunalipse.Resource
                 inx++;
             }
             if (inx > Prefixes.Length - 1) throw new OverflowException("values is too big to convert");
-            return "{0}{1}".FormateEx(size, Prefixes[inx]);
+            return "{0}{1}".LrssFormateEx(size, Prefixes[inx]);
         }
-        public static string FormateEx(this string target, params object[] s)
+        public static string LrssFormateEx(this string target, params object[] s)
         {
             return string.Format(target, s);
         }

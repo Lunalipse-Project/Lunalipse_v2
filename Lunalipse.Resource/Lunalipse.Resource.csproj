@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Lunalipse.Resource</RootNamespace>
     <AssemblyName>Lunalipse.Resource</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compression.cs" />
     <Compile Include="Generic\Delegates.cs" />
     <Compile Include="Generic\Types\LrssIndex.cs" />
     <Compile Include="Generic\Types\LrssResource.cs" />

@@ -131,6 +131,7 @@ namespace Lunalipse.Presentation.LpsComponent
                 Point p = Mouse.GetPosition(this);
                 CurrentProgress.Width = (p.X - 4) < 0 ? 0 : p.X - 4;
             }
+            e.Handled = true;
         }
 
         private void UserControl_MouseUp(object sender, RoutedEventArgs e)
@@ -142,11 +143,13 @@ namespace Lunalipse.Presentation.LpsComponent
                 ValueInner = newVal;
                 isDown = false;
             }
+            e.Handled = true;
         }
 
         private void CurrentProgress_MouseDown(object sender, RoutedEventArgs e)
         {
             isDown = true;
+            e.Handled = true;
         }
     }
 }

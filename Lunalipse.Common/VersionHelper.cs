@@ -65,6 +65,14 @@ namespace Lunalipse.Common
             return asmv.Minor;
         }
 
+        public Version Version
+        {
+            get
+            {
+                return asmv;
+            }
+        }
+
         public DateTime LinkerTime { get; private set; }
 
         public string getGenerationTypedVersion(LunalipseGeneration lunalipseGeneration)

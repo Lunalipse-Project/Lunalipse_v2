@@ -87,8 +87,10 @@
 
     <System:String x:Key="SETTING_NETWORKING">&#xf21c;</System:String>
     
-    <System:String x:Key="SETTING_DEVELOPER">&#xf13a;</System:String>
-    
+    <System:String x:Key="SETTING_UPDATECHECK">&#xf1b5;</System:String>
+
+    <System:String x:Key="SETTING_LICENSES">&#xf150;</System:String>
+
     <System:String x:Key="SETTING_SECURITY">&#xf1c8;</System:String>
 
     <System:String x:Key="SETTING_ACTION_SAVE_CFG">&#xf297;</System:String>
@@ -100,6 +102,10 @@
     <System:String x:Key="ThemeTemplate">&#xf40b;</System:String>
 
     <System:String x:Key="ThemeTemplate_BuildIn">&#xf40c;</System:String>
+    
+    <System:String x:Key="Tick">&#xf26b;</System:String>
+    
+    
     
     <!-- Navigation -->
     <System:String x:Key="ArrowLeft">&#xf2ea;</System:String>

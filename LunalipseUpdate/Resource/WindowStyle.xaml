@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:LunalipseUpdate.Resource">
+    <ControlTemplate TargetType="{x:Type Window}" x:Key="WindowFace">
+        <Grid Background="Transparent" Margin="10" Width="auto" Height="auto">
+            <Border CornerRadius="3" Background="{TemplateBinding Background}" >
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="15" Color="Black" ShadowDepth="0"/>
+                </Border.Effect>
+                <AdornerDecorator>
+                    <ContentPresenter/>
+                </AdornerDecorator>
+            </Border>
+        </Grid>
+    </ControlTemplate>
+    <Style x:Key="LpsWindowFace" TargetType="{x:Type Window}">
+        <Setter Property="Template" Value="{StaticResource WindowFace}"/>
+        <Setter Property="AllowsTransparency" Value="True"/>
+        <Setter Property="WindowStyle" Value="None"/>
+    </Style>
+</ResourceDictionary>

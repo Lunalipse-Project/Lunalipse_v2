@@ -10,6 +10,7 @@ namespace Lunalipse.Utilities.Misc
     {
         List<int> Numbers = new List<int>();
         Random rand;
+        int currentIndex = 0;
 
         int from = 0, to = 0;
         public UnrepeatedRandom()
@@ -28,17 +29,29 @@ namespace Lunalipse.Utilities.Misc
         {
             this.from = from;
             this.to = to;
+            refill(from, to);
         }
 
         public int Next()
         {
-            if (Numbers.Count == 0)
+            currentIndex++;
+            if (currentIndex == Numbers.Count)
             {
-                refill(from, to);
+                Shuffle(Numbers, rand);
+                currentIndex = 0;
             }
-            int randIndex = rand.Next(0, Numbers.Count);
-            int randResult = Numbers[randIndex];
-            Numbers.RemoveAt(randIndex);
+            int randResult = Numbers[currentIndex];
+            return randResult;
+        }
+
+        public int Previous()
+        {
+            currentIndex--;
+            if (currentIndex == 0)
+            {
+                currentIndex = Numbers.Count - 1;
+            }
+            int randResult = Numbers[currentIndex];
             return randResult;
         }
 
@@ -50,7 +63,20 @@ namespace Lunalipse.Utilities.Misc
             {
                 Numbers.Add(i);
             }
+            Shuffle(Numbers, rand);
         }
 
+        public void Shuffle<T>(IList<T> list, Random random)
+        {
+            int n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = random.Next(n + 1);
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
+        }
     }
 }

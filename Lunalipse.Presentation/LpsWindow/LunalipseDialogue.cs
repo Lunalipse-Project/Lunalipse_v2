@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -35,9 +36,9 @@ namespace Lunalipse.Presentation.LpsWindow
         private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
         {
             if (obj == null) return;
-            Background = obj.Primary.SetOpacity(1);
+            Background = obj.Primary;
             Foreground = obj.Foreground;
-            BorderBrush = Background as SolidColorBrush;
+            BorderBrush = obj.Primary;
         }
 
         protected virtual void DialogueLoaded(object sender, EventArgs args)
@@ -51,7 +52,10 @@ namespace Lunalipse.Presentation.LpsWindow
 
         protected void TitleBarMove(object sender, EventArgs args)
         {
-            this.DragMove();
+            if(Mouse.LeftButton== MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
         }
 
         protected void ClosePressed(object sender, EventArgs args)

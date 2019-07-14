@@ -6,28 +6,34 @@
              xmlns:local="clr-namespace:Lunalipse.Presentation.LpsComponent"
              mc:Ignorable="d" x:Name="LpsDropDownBox"
              d:DesignHeight="50" d:DesignWidth="120">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="20px"/>
-        </Grid.ColumnDefinitions>
-        <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="{Binding ElementName=LpsDropDownBox, Path=Foreground}" 
+    <Grid Background="Transparent">
+        <Border CornerRadius="4" x:Name="DropdownBorder">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20px"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="{Binding ElementName=LpsDropDownBox, Path=Foreground}" 
                    FontSize="{StaticResource FontNormal}" x:Name="SelectedContent" Margin="5 0 5 0"
                    TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
-        <TextBlock FontFamily="{StaticResource MaterialIcon}" Text="&#xf2f2;" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="{StaticResource IconLarge}"
+                <TextBlock FontFamily="{StaticResource MaterialIcon}" Text="&#xf2f2;" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="{StaticResource IconLarge}"
                    Foreground="{Binding ElementName=LpsDropDownBox, Path=Foreground}"/>
-        <Popup Placement="Bottom" PlacementTarget="{Binding ElementName=LpsDropDownBox}" Width="auto" 
-               Height="auto" PopupAnimation="Fade" x:Name="SelectionArea" AllowsTransparency="True" MaxHeight="200px">
-            <Grid Background="{Binding ElementName=LpsDropDownBox, Path= Background}" Height="auto">
-                <ListView x:Name="DropDownItems" SelectionChanged="DropDownItems_SelectionChanged" Background="Transparent" BorderThickness="0">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Label Foreground="{Binding ElementName=LpsDropDownBox, Path=Foreground}" FontSize="{StaticResource FontNormal}" Content="{Binding Key}" Padding="5 0 0 0"
+                <Popup Placement="Bottom" PlacementTarget="{Binding ElementName=LpsDropDownBox}" MinWidth="{Binding ElementName=LpsDropDownBox, Path=ActualWidth}"
+               Height="auto" PopupAnimation="Slide" x:Name="SelectionArea" AllowsTransparency="True" MaxHeight="200px" Margin="0 -4 0 0">
+                    <Grid Height="auto">
+                        <Border CornerRadius="0 0 4 4" Background="{Binding ElementName=DropdownBorder, Path= Background}">
+                            <ListView x:Name="DropDownItems" SelectionChanged="DropDownItems_SelectionChanged" Background="Transparent" BorderThickness="0">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Label Foreground="{Binding ElementName=LpsDropDownBox, Path=Foreground}" FontSize="{StaticResource FontNormal}" Content="{Binding Key}" Padding="5 0 0 0"
                                    HorizontalContentAlignment="Left" Height="20" Background="Transparent" FontFamily="{Binding LabelFontFamily}"></Label>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Border>
+                    </Grid>
+                </Popup>
             </Grid>
-        </Popup>
+        </Border>
     </Grid>
 </UserControl>

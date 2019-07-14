@@ -2,50 +2,73 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Lunalipse.Pages"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       mc:Ignorable="d" x:Name="MUSIC_DEATIL"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MusicDetail">
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="0.5*"/>
-            <RowDefinition Height="0.5*"/>
-        </Grid.RowDefinitions>
-        <!-- Return Button -->
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Button Style="{StaticResource IconButton}" Content="{StaticResource ArrowLeft}" Foreground="{Binding Foreground,ElementName=MUSIC_DEATIL}" x:Name="ReturnButton" Click="ReturnButton_Click"/>
-        </Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="190"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
         <!-- Picture. Name, Artist, Album Info -->
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="224"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
-                <Grid  x:Name="AlbumPicture" Width="200" Height="200" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="190"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid Width="175" Height="175" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Border CornerRadius="3" x:Name="AlbumPicture" />
+                </Grid>
                 <Label x:Name="NoPictureFound" HorizontalAlignment="Center" VerticalAlignment="Center"
                        FontSize="120" Content="{StaticResource AlbumDefault}" FontFamily="{StaticResource MaterialIcon}"
                        Foreground="{Binding Foreground,ElementName=MUSIC_DEATIL}"/>
             </Grid>
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="0.4*"/>
-                    <RowDefinition Height="0.3*"/>
-                    <RowDefinition Height="0.3*"/>
-                </Grid.RowDefinitions>
-                <TextBlock x:Name="MusicName" FontSize="{StaticResource IconLargeII}" Foreground="{Binding Foreground,ElementName=MUSIC_DEATIL}"
-                       VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Grid.Row="0" Padding="20 0 0 0"/>
-                <TextBlock x:Name="MusicAlbum" FontSize="{StaticResource IconLargeI}" Foreground="{Binding Foreground,ElementName=MUSIC_DEATIL}"
-                       VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Grid.Row="1" Padding="20 0 0 0"/>
-                <TextBlock x:Name="MusicArtist" FontSize="{StaticResource IconLargeI}" Foreground="{Binding Foreground,ElementName=MUSIC_DEATIL}"
-                       VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Grid.Row="2" Padding="20 0 0 0"/>
+            <!-- Operation Area -->
+            <Grid Grid.Row="1">
+                <StackPanel Orientation="Vertical">
+                    
+                </StackPanel>
+            </Grid>
+            
+        </Grid>
+        <!-- Lyric and Operation Panel -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" VerticalAlignment="Center">
+                <TextBlock x:Name="MusicName" FontSize="{StaticResource FontLarge}" Foreground="{Binding Foreground,ElementName=MUSIC_DEATIL}"
+                       VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Grid.Row="0" Padding="5 0 0 0"
+                          Text="Here gose Title Should be Long" />
+                <TextBlock x:Name="MusicAlbum" FontSize="{StaticResource FontNormal}" Foreground="{Binding Foreground,ElementName=MUSIC_DEATIL}" Opacity="0.75"
+                       VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Grid.Row="1" Padding="5 0 0 0" Text="Here gose Album"/>
+                <TextBlock x:Name="MusicArtist" FontSize="{StaticResource FontNormal}" Foreground="{Binding Foreground,ElementName=MUSIC_DEATIL}" Opacity="0.75"
+                       VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Grid.Row="2" Padding="5 0 0 0" Text="Here gose Artist"/>
+            </StackPanel>
+            <!-- Lyric Area -->
+            <Grid Grid.Row="1">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" MouseWheel="LyrciScrolling_PreviewMouseWheel" CanContentScroll="False">
+                    <ItemsControl x:Name="LyricScrollWall" Margin="0 150 0 0" Height="auto" HorizontalAlignment="Center">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0 0 0 50" Opacity="{Binding LyricOpacityUI}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Text="{Binding Statement}" HorizontalAlignment="Center" FontSize="{StaticResource FontMedium}" Foreground="{Binding Foreground,ElementName=MUSIC_DEATIL}" MaxWidth="350"
+                                           TextWrapping="WrapWithOverflow"></TextBlock>
+                                    <TextBlock Grid.Row="1" Text="{Binding SubStatement}" HorizontalAlignment="Center" FontSize="{StaticResource FontSmall}" Foreground="{Binding Foreground,ElementName=MUSIC_DEATIL}" MaxWidth="350"
+                                           TextWrapping="WrapWithOverflow"></TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
             </Grid>
         </Grid>
     </Grid>

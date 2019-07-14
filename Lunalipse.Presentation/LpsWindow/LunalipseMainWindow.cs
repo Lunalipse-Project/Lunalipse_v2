@@ -4,6 +4,7 @@ using Lunalipse.Utilities;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Lunalipse.Presentation.LpsWindow
 {
@@ -49,7 +50,7 @@ namespace Lunalipse.Presentation.LpsWindow
         protected virtual void MainWindowLoaded(object sender, EventArgs args)
         {
             ControlTemplate ct = (ControlTemplate)Application.Current.Resources["LunalipseMainWindowTemplate"];
-            (ct.FindName("TitleBar", this) as Border).MouseDown += TitleBarMove;
+            (ct.FindName("TitleBar", this) as Grid).MouseLeftButtonDown += LunalipseMainWindow_MouseLeftButtonDown; ;
             (ct.FindName("BtnCloseWn", this) as Button).Click += CloseWnd ;
             (ct.FindName("BtnSetting", this) as Button).Click += (a, b) => OnSettingClicked?.Invoke(a, b);
             (ct.FindName("BtnMinimiz", this) as Button).Click += (a, b) => OnMinimizClicked?.Invoke(a, b);
@@ -58,14 +59,16 @@ namespace Lunalipse.Presentation.LpsWindow
                 this.EnableBlur();
         }
 
+        private void LunalipseMainWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (Mouse.LeftButton == MouseButtonState.Pressed)
+                this.DragMove();
+            e.Handled = true;
+        }
+
         private void CloseWnd(object sender, RoutedEventArgs e)
         {
             this.Close();
-        }
-
-        protected void TitleBarMove(object sender, EventArgs args)
-        {
-            this.DragMove();
         }
 
         public void SetVersion(string version)

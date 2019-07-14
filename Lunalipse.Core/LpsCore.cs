@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Lunalipse.Common.Data;
 using Lunalipse.Common.Generic.AudioControlPanel;
 using Lunalipse.Core.BehaviorScript;
@@ -11,6 +12,9 @@ namespace Lunalipse.Core
 {
     public class LpsCore: IDisposable
     {
+
+        public volatile static Dictionary<string, LpsCore> lpsCoresSessions = new Dictionary<string, LpsCore>();
+
         private Interpreter executor;
         private UnrepeatedRandom random;
 
@@ -18,9 +22,17 @@ namespace Lunalipse.Core
         public event Action<MusicEntity, Track> OnMusicPrepared;
         public event Action<TimeSpan> OnMusicProgressChanged;
 
-        public static LpsCore Session()
+        public static LpsCore Session(string name)
         {
-            return new LpsCore();
+            LpsCore tempCore = new LpsCore();
+            lpsCoresSessions.Add(name, tempCore);
+            return tempCore;
+        }
+
+        public static LpsCore GetSession(string name)
+        {
+            if (!lpsCoresSessions.ContainsKey(name)) return null;
+            return lpsCoresSessions[name];
         }
 
         protected LpsCore()
@@ -47,14 +59,34 @@ namespace Lunalipse.Core
             {
                 switch (MusicPlayMode)
                 {
+                    case PlayMode.RepeatOne:
                     case PlayMode.RepeatList:
                         PerpareMusic(currentCatalogue.getNext());
                         break;
-                    case PlayMode.RepeatOne:
-                        PerpareMusic(CurrentPlaying);
-                        break;
                     case PlayMode.Shuffle:
                         int i = random.Next();
+                        PerpareMusic(currentCatalogue.getMusic(i));
+                        break;
+                }
+            }
+            else
+            {
+                PerpareMusic(executor.Stepping());
+            }
+        }
+
+        public void GetPrevious()
+        {
+            if (!executor.LBSLoaded)
+            {
+                switch (MusicPlayMode)
+                {
+                    case PlayMode.RepeatOne:
+                    case PlayMode.RepeatList:
+                        PerpareMusic(currentCatalogue.getPrevious());
+                        break;
+                    case PlayMode.Shuffle:
+                        int i = random.Previous();
                         PerpareMusic(currentCatalogue.getMusic(i));
                         break;
                 }

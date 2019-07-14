@@ -51,7 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Downloader.cs" />
     <Compile Include="Hijack.cs" />
     <Compile Include="NeParams.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

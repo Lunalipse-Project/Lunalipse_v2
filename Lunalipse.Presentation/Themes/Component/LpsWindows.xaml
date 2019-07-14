@@ -4,12 +4,12 @@
                     xmlns:local="clr-namespace:Lunalipse.Presentation.Themes.Component">
     <ControlTemplate x:Key="LunalipseDialogueBaseTemplate" TargetType="{x:Type Window}">
         <Grid Margin="8,8,8,8" Width="Auto" Height="Auto">
-            <Border CornerRadius="4" Margin="2,2,2,2">
+            <Border CornerRadius="4" Margin="2,2,2,2" Background="{TemplateBinding Background}">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="15" Opacity="0.55" ShadowDepth="0"/>
                 </Border.Effect>
                 <DockPanel LastChildFill="True">
-                    <Border Width="Auto" Height="Auto" DockPanel.Dock="Top" Background="{TemplateBinding BorderBrush}" x:Name="TitleBar"  CornerRadius="4,4,0,0">
+                    <Border Width="Auto" Height="Auto" DockPanel.Dock="Top" Background="Transparent" x:Name="TitleBar"  CornerRadius="4,4,0,0">
                         <Grid Width="auto">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="0.5*"/>
@@ -25,7 +25,7 @@
                             </Grid>
                         </Grid>
                     </Border>
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" 
+                    <Border BorderBrush="{TemplateBinding BorderBrush}" Background="Transparent" 
                         BorderThickness="{TemplateBinding BorderThickness}" Width="Auto" Height="Auto" 
                         CornerRadius="0,0,4,4" DockPanel.Dock="Top">
                         <AdornerDecorator>
