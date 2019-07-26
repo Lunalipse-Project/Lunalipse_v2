@@ -19,6 +19,8 @@
       <Key name="CORE_DIALOG_NO">取消</Key>
       <Key name="CORE_DIALOG_YES">好的</Key>
       <Key name="CORE_DIALOG_CANCEL">算了</Key>
+      
+      
 
       <Key name="CORE_PLAYLISTGUARD_MISSING_TITLE">丢失的条目</Key>
       <Key name="CORE_PLAYLISTGUARD_MISSING_CONTENT">检测到先前保存的播放列表，但在恢复的时候出现了些问题：一些播放列表中保存的歌曲貌似不在本地磁盘中。有可能这些歌曲已被重命名或永久的移动到了新的位置。</Key>
@@ -30,7 +32,10 @@
       <Key name="CORE_CATALOGUE_ARTIST_COLLECTION">所有艺术家</Key>
       <Key name="CORE_CATALOGUE_NO_ITEMS">没有任何的歌单或专辑</Key>
       <Key name="CORE_CATALOGUE_GENERAL_CONFIG">设置</Key>
-
+      
+      <Key name="CORE_CATALOGUE_DELETE_PREM_TITLE">确认永久删除？</Key>
+      <Key name="CORE_CATALOGUE_DELETE_PREM_CONTENT">您正要删除位于主分类里的歌曲：{0}，这会导致Lunalipse执行永久删除操作（真正的删除文件！），您确定要继续？</Key>
+      
       <Key name="CORE_MAINUI_MODE_LINEAR">全部循环</Key>
       <Key name="CORE_MAINUI_MODE_SINGLELOOP">单曲循环</Key>
       <Key name="CORE_MAINUI_MODE_SHUFFLE">随机播放</Key>
@@ -135,10 +140,13 @@
     <Page key="CORE_UPDATE_CHECKER">
       <Key name="CORE_UPDATECHECKER_CHECKING">正在检查更新</Key>
       <Key name="CORE_UPDATECHECKER_FOUND">更新到版本：{0}</Key>
-      <Key name="CORE_UPDATECHECKER_DONWLOAD">下载更新</Key>
+      <Key name="CORE_UPDATECHECKER_DONWLOAD">开始更新</Key>
+      <Key name="CORE_UPDATECHECKER_SCHEDULED">更新将在本次会话结束后安装</Key>
       <Key name="CORE_UPDATECHECKER_LATEST">您的Lunalipse已是最新</Key>
-      <Key name="CORE_UPDATECHECKER_REMINDTITLE">更新已下载</Key>
-      <Key name="CORE_UPDATECHECKER_REMINDCONTENT">Lunalipse已完成更新的下载，并随时可以开始安装。当您确认安装后Lunalipse会自动退出并开始安装。您确认要现在安装吗？</Key>
+      <Key name="CORE_UPDATECHECKER_REMINDTITLE">安装已确认</Key>
+      <Key name="CORE_UPDATECHECKER_REMINDCONTENT">Lunalipse已完成更新的下载，并随时可以开始安装。当您确认安装后Lunalipse会自动退出并开始更新。如果您选择稍后，则Lunalipse会在本次会话结束后开始更新。</Key>
+      <Key name="CORE_UPDATECHECKER_NOW">即刻安装</Key>
+      <Key name="CORE_UPDATECHECKER_LATER">稍后继续</Key>
     </Page>
     <Page key="CORE_OPENSOURCE_LICENSE">
       <Key name="CORE_OPENSOURCE_LICENSE_DESC">Lunalipse的诞生离不开这些优秀的第三方库。凭借着开源精神以及开源社区优势，Lunalipse才得以使用库中那些设计优良以及高效率的算法，大幅度缩短了开发周期以及避免许多重复性的工作和一些自己垃圾的算法设计。</Key>

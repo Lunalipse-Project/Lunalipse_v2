@@ -63,6 +63,8 @@ namespace Lunalipse.Utilities.Misc
             int mean_xpoint = xpoints / 2;
             int mean_ypoint = ypoints / 2;
             Tuple<Color, double>[] colorWeight = new Tuple<Color, double>[16];
+            Color[] highestContrast = new Color[16];
+            List<KeyValuePair<Color, int>> color_list;
             //Sampling the bitmap
             for (int i = 0; i < regions.Length; i++)
             {
@@ -78,7 +80,9 @@ namespace Lunalipse.Utilities.Misc
                             counter.Add(c, 1);
                     }
                 }
-                Color avgc = counter.OrderByDescending(x => x.Value).First().Key;
+                color_list = counter.OrderByDescending(x => x.Value).ToList();
+                Color avgc = color_list[0].Key;
+                highestContrast[i] = GreatestDistanceSquare(color_list);
                 double r = ColorSystem.DistanceBetweenSquare(avgc, Color.White);
                 colorWeight[i] = new Tuple<Color, double>(avgc, r);
                 counter.Clear();
@@ -86,7 +90,39 @@ namespace Lunalipse.Utilities.Misc
             Sort(ref colorWeight);
             background = colorWeight[0].Item1;
             inter = colorWeight[7].Item1;
-            foreground = colorWeight[15].Item1;
+            foreground = GreatestDistanceSquare(highestContrast, background);
+        }
+
+        private Color GreatestDistanceSquare(List<KeyValuePair<Color, int>> color_list)
+        {
+            Color dominate = color_list[0].Key;
+            Color gColor = Color.White;
+            double max = double.MinValue;
+            for(int i = 1; i < color_list.Count; i++)
+            {
+                double dist = ColorSystem.DistanceBetweenSquare(color_list[i].Key, dominate);
+                if (dist > max)
+                {
+                    max = dist;
+                    gColor = color_list[i].Key;
+                }
+            }
+            return gColor;
+        }
+        private Color GreatestDistanceSquare(Color[] color_list,Color compare)
+        {
+            Color gColor = Color.White;
+            double max = double.MinValue;
+            for (int i = 0; i < color_list.Length; i++)
+            {
+                double dist = ColorSystem.DistanceBetweenSquare(color_list[i], compare);
+                if (dist > max)
+                {
+                    max = dist;
+                    gColor = color_list[i];
+                }
+            }
+            return gColor;
         }
 
         private void Sort(ref Tuple<Color, double>[] src)

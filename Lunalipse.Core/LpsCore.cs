@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using Lunalipse.Common.Data;
 using Lunalipse.Common.Generic.AudioControlPanel;
 using Lunalipse.Core.BehaviorScript;
@@ -38,7 +40,7 @@ namespace Lunalipse.Core
         protected LpsCore()
         {
             AudioOut = LpsAudio.LpsAudio.INSTANCE();
-            executor = Interpreter.INSTANCE(Environment.CurrentDirectory);
+            executor = Interpreter.INSTANCE(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
             AudioDelegations.MusicLoaded += mLoaded;
             AudioDelegations.PlayingFinished += mComplete;
             AudioDelegations.PostionChanged += time => OnMusicProgressChanged?.Invoke(time);

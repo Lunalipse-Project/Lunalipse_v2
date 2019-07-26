@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using static Lunalipse.Resource.Generic.Structure;
 using static Lunalipse.Resource.Generic.Delegates;
 
@@ -53,25 +52,21 @@ namespace Lunalipse.Resource
             fs = new MemoryStream();
         }
 
-        public async Task<bool> Export()
+        public bool Export()
         {
-            await Task.Run(() =>
+            fs.Write(new byte[len_header], 0, len_header);
+            if (header.H_ENCRYPTED)
+                fs.Write(lve.ToBytes(len_verified).XorCrypt(magic), 0, len_verified);
+            for (int i = 0; i < Resources.Count;)
             {
-
-                fs.Write(new byte[len_header], 0, len_header);
-                if (header.H_ENCRYPTED)
-                    fs.Write(lve.ToBytes(len_verified).XorCrypt(magic), 0, len_verified);
-                for (int i = 0; i < Resources.Count;)
-                {
-                    OnSingleEndpointReached?.Invoke(Resources[i].ResourcePath);
-                    _writeHeader(Resources[i], ref i);
-                    Resources[i - 1] = null;
-                }
-                Resources.Clear();
-                fs.Seek(0, SeekOrigin.Begin);
-                fs.Write(header.ToBytes(len_header), 0, len_header);
-                OnEndpointReached?.Invoke(Resources.Count);
-            });
+                OnSingleEndpointReached?.Invoke(Resources[i].ResourcePath);
+                _writeHeader(Resources[i], ref i);
+                Resources[i - 1] = null;
+            }
+            Resources.Clear();
+            fs.Seek(0, SeekOrigin.Begin);
+            fs.Write(header.ToBytes(len_header), 0, len_header);
+            OnEndpointReached?.Invoke(Resources.Count);
             return true;
         }
 

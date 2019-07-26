@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -38,7 +39,7 @@ namespace Lunalipse.Core
         public LunalipseLogger()
         {
             ErrorDelegation.GenericError += ErrorDelegation_GenericError;
-            ApplicationEnvPath = Environment.CurrentDirectory;
+            ApplicationEnvPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             if (!Directory.Exists(ApplicationEnvPath + @"\Logs\"))
                 Directory.CreateDirectory(ApplicationEnvPath + @"\Logs\");
             logWriter = new StreamWriter(ApplicationEnvPath + @"\Logs\" + GetLogName());

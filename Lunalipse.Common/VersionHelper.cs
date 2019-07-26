@@ -13,7 +13,7 @@ namespace Lunalipse.Common
         private static volatile VersionHelper VHELPER_INSTANCE;
         private static readonly object VHELPER_LOCK = new object();
 
-        public const string SOFTWARE_CODE = "Azure";
+        public const string SOFTWARE_CODE = "Luna";
         
 
         public static VersionHelper Instance
@@ -84,9 +84,9 @@ namespace Lunalipse.Common
                 case LunalipseGeneration.Build:
                     return string.Format("Build{0}", asmv.Revision);
                 case LunalipseGeneration.Alpha:
-                    return string.Format("Alpha {0}.{1}.{2}", asmv.Major, asmv.Minor, asmv.Build);
+                    return string.Format("Alpha {0}.{1}", asmv.Major, asmv.Revision);
                 case LunalipseGeneration.Beta:
-                    return string.Format("Beta {0}.{1}.{2}", asmv.Major, asmv.Minor, asmv.Build);
+                    return string.Format("Beta {0}.{1}", asmv.Major, asmv.Revision);
                 default:
                     return "";
             }

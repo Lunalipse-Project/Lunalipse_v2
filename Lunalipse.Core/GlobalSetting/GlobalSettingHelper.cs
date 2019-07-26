@@ -41,7 +41,7 @@ namespace Lunalipse.Core.GlobalSetting
             VERSION = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             ConsoleAdapter.INSTANCE.RegisterComponent("lpsseting", this);
             //Set default value
-            OutputFile = Environment.CurrentDirectory+"/config.lps";
+            OutputFile = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "/config.lps";
             UseLZ78Compress = true;
             USerializor = new UniversalSerializor<ConfigField, IGlobalSetting>();
         }

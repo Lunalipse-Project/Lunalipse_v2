@@ -33,7 +33,19 @@ namespace Lunalipse.Presentation.LpsComponent
         public LpsGridList()
         {
             InitializeComponent();
+            Loaded += LpsGridList_Loaded;
+        }
+
+        private void LpsGridList_Loaded(object sender, RoutedEventArgs e)
+        {
             Scroller.ScrollChanged += Scroller_ScrollChanged;
+            Unloaded += LpsGridList_Unloaded;
+        }
+
+        private void LpsGridList_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Scroller.ScrollChanged -= Scroller_ScrollChanged;
+            Unloaded -= LpsGridList_Unloaded;
         }
 
         private void Scroller_ScrollChanged(object sender, ScrollChangedEventArgs e)
@@ -118,7 +130,19 @@ namespace Lunalipse.Presentation.LpsComponent
         {
             totalCard = 0;
             totalRows = 0;
+            foreach (Grid grid in StackedItems.Children)
+            {
+                int count = grid.Children.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    PART_CatalogueCard catalogueCard = grid.Children[0] as PART_CatalogueCard;
+                    catalogueCard.OnCatalogueSelected -= catalogueSelected;
+                    catalogueCard.OnCatalogueEditRequest -= CataCard_OnCatalogueEditRequest;
+                    grid.Children.Remove(catalogueCard);
+                }
+            }
             StackedItems.Children.Clear();
+            GC.Collect();
         }
 
         private Grid CreateContainer()

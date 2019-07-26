@@ -4,11 +4,13 @@ using Lunalipse.Common.Generic;
 using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Common.Interfaces.IPlayList;
+using Lunalipse.Presentation.BasicUI;
 using Lunalipse.Presentation.Generic;
 using Lunalipse.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,6 +31,8 @@ namespace Lunalipse.Presentation.LpsComponent
         private ObservableCollection<MusicEntity> Items = new ObservableCollection<MusicEntity>();
         private int __index = -1;
         private Point startPoint;
+
+        private string deleteTitle, deleteContent;
 
         public event OnItemSelected<MusicEntity> ItemSelectionChanged;
         public event Action<GeneratorStatus> OnListStatusChanged;
@@ -69,17 +73,19 @@ namespace Lunalipse.Presentation.LpsComponent
             //DragDrop.DoDragDrop
             Delegation.RemovingItem += dctx =>
             {
-                MusicEntity removed = dctx as MusicEntity;
                 if (dctx is MusicEntity)
                 {
-                    if (!IsMotherCatalogue)
-                    {
-                        EventBus.Instance.Multicast(EventBusTypes.ON_ACTION_REQ_DELETE, dctx, DisplayedCatalogue.Uid());
-                        Items.Remove(removed);
-                    }
-                    else
+                    MusicEntity removed = dctx as MusicEntity;
+                    EventBus.Instance.Multicast(EventBusTypes.ON_ACTION_REQ_DELETE, dctx, DisplayedCatalogue.Uid());
+                    Items.Remove(removed);
+                    if (IsMotherCatalogue)
                     {
                         // TODO 永久从母分类中删除歌曲（本地文件永久删除），包括：提醒
+                        CommonDialog commonDialog = new CommonDialog(deleteTitle, deleteContent.FormateEx(removed.MusicName), MessageBoxButton.YesNo);
+                        if(commonDialog.ShowDialog().Value)
+                        {
+                            //File.Delete(removed.Path);
+                        }
                     }
                 }
             };
@@ -210,6 +216,8 @@ namespace Lunalipse.Presentation.LpsComponent
                     me.Artist[0] = i8c.ConvertTo(SupportedPages.CORE_FUNC, me.DefaultArtist);
                 }
             }
+            deleteTitle = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_DELETE_PREM_TITLE");
+            deleteContent = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_DELETE_PREM_CONTENT");
         }
 
         public void StartWait()

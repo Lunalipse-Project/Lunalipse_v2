@@ -1,4 +1,5 @@
-﻿using Lunalipse.Common.Data;
+﻿using Lunalipse.Common.Bus.Event;
+using Lunalipse.Common.Data;
 using Lunalipse.Common.Generic.I18N;
 using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Common.Interfaces.II18N;
@@ -8,6 +9,7 @@ using Lunalipse.Presentation.BasicUI;
 using Lunalipse.Utilities;
 using LunaNetCore;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -24,9 +26,10 @@ namespace Lunalipse.Pages.ConfigPage
         ReleaseInfo updateInfo;
         Markdown markdownParser = new Markdown();
         DoubleAnimation ExpandDocView = new DoubleAnimation(0, 340, new Duration(TimeSpan.FromMilliseconds(450)));
-        Downloader downloader = new Downloader();
+        EventBus eventBus;
 
         string Reminding_Title, Reminding_Content;
+        string InstallNow, InstallLater;
 
         double percentage = 0.0;
         public UpdateCheck()
@@ -42,30 +45,18 @@ namespace Lunalipse.Pages.ConfigPage
             updateHelper = new UpdateHelper();
             updateHelper.OnQueryCompleted += UpdateHelper_OnQueryCompleted;
 
-            downloader.OnDownloadFinish += Downloader_OnDownloadFinish;
-            downloader.OnPrepared += Downloader_OnPrepared;
-            downloader.OnTaskUpdate += Downloader_OnTaskUpdate;
+            eventBus = EventBus.Instance;
+
+            Unloaded += UpdateCheck_Unloaded;
         }
 
-        private void Downloader_OnTaskUpdate(long d)
+        private void UpdateCheck_Unloaded(object sender, RoutedEventArgs e)
         {
-            percentage = d / Progress.MaximumValue * 100d;
-            ProgressDisplay.Content = "{0:0.00}%".FormateEx(percentage);
-        }
-
-        private void Downloader_OnPrepared(long d)
-        {
-            Progress.MaximumValue = d;
-            ProgressDisplay.Content = "{0:0.00}%".FormateEx(percentage);
-        }
-
-        private void Downloader_OnDownloadFinish(bool gotError, Exception e)
-        {
-            CommonDialog commonDialog = new CommonDialog(Reminding_Title, Reminding_Content, MessageBoxButton.YesNo);
-            if(commonDialog.ShowDialog().Value)
-            {
-                //Start Install
-            }
+            ThemeManagerBase.OnThemeApplying -= ThemeManagerBase_OnThemeApplying;
+            TranslationManagerBase.OnI18NEnvironmentChanged -= Translate;
+            Loaded -= UpdateCheck_Loaded;
+            updateHelper.OnQueryCompleted -= UpdateHelper_OnQueryCompleted;
+            Unloaded -= UpdateCheck_Unloaded;
         }
 
         private void UpdateHelper_OnQueryCompleted()
@@ -80,10 +71,7 @@ namespace Lunalipse.Pages.ConfigPage
         private void UpdateCheck_Loaded(object sender, RoutedEventArgs e)
         {
 
-            DownloadingConatiner.Visibility = Visibility.Hidden;
             AvailabilityIndicator.Visibility = Visibility.Hidden;
-            Progress.CurrentValue = 0;
-            ProgressDisplay.Content = "0%";
             StatusDisplay.Content = Checking;
             updateHelper.QueryLatestUpdate();
         }
@@ -92,8 +80,6 @@ namespace Lunalipse.Pages.ConfigPage
         {
             
             Foreground = obj.Foreground;
-            Progress.TrackBackgroundBrush = obj.Primary;
-            Progress.ProgressBackgroundBrush = obj.Secondary;
             Spinning.SpinnerDotRadius = 5;
             markdownParser.DocumentForeground = obj.Foreground;
             DonwloadUpdate.Background = obj.Secondary.ToLuna();
@@ -101,10 +87,17 @@ namespace Lunalipse.Pages.ConfigPage
 
         private void DonwloadUpdate_Click(object sender, RoutedEventArgs e)
         {
-            string updatePackURL = updateHelper.FindPackDownloadURI(updateInfo);
-            if(!string.IsNullOrEmpty(updatePackURL))
+            Asset pack = updateHelper.FindPackDownloadAssets(updateInfo);
+            if(!string.IsNullOrEmpty(pack.DownloadURL))
             {
-                downloader.DownloadFile(updatePackURL, "mcdata/update.lrss");
+                string argument = "-s:u \"{0}\" -s:v {1} -s:s {2}";
+                GLS.INSTANCE.UpdateArguments = argument.FormateEx(pack.DownloadURL, updateInfo.Tag, pack.FileSize);
+                CommonDialog commonDialog = new CommonDialog(Reminding_Title, Reminding_Content, MessageBoxButton.YesNo, InstallNow, InstallLater);
+                if (commonDialog.ShowDialog().Value)
+                {
+                    //立刻开始安装
+                    eventBus.Boardcast(EventBusTypes.ON_ACTION_START, "END_SESSION");
+                }
             }
         }
 
@@ -115,7 +108,10 @@ namespace Lunalipse.Pages.ConfigPage
             Checking = i8c.ConvertTo(SupportedPages.CORE_UPDATE_CHECKER, "CORE_UPDATECHECKER_CHECKING");
             Reminding_Title = i8c.ConvertTo(SupportedPages.CORE_UPDATE_CHECKER, "CORE_UPDATECHECKER_REMINDTITLE");
             Reminding_Content = i8c.ConvertTo(SupportedPages.CORE_UPDATE_CHECKER, "CORE_UPDATECHECKER_REMINDCONTENT");
+            InstallNow = i8c.ConvertTo(SupportedPages.CORE_UPDATE_CHECKER, "CORE_UPDATECHECKER_NOW");
+            InstallLater = i8c.ConvertTo(SupportedPages.CORE_UPDATE_CHECKER, "CORE_UPDATECHECKER_LATER");
             DonwloadUpdate.Content = i8c.ConvertTo(SupportedPages.CORE_UPDATE_CHECKER, "CORE_UPDATECHECKER_DONWLOAD");
+
         }
 
         void UpdateIndicator(bool hasUpdate,string current)

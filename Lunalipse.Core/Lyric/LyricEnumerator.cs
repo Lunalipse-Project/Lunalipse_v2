@@ -81,7 +81,7 @@ namespace Lunalipse.Core.Lyric
         private string TryGetLyric(MusicEntity me)
         {
             string path = "";
-            if (File.Exists(path = GetLyricFile(me.Path, me.IDv3Name)))
+            if (File.Exists(path = GetLyricFile(me.Path, me.MusicName)))
             {
                 return path;
             }

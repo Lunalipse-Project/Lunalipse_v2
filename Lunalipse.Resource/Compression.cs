@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lunalipse.Resource
 {
@@ -24,7 +20,9 @@ namespace Lunalipse.Resource
                     {
                         using (FileStream fs2 = new FileStream(path, FileMode.Open))
                         {
-                            fs2.CopyTo(gzs);
+                            byte[] b = new byte[fs2.Length];
+                            fs2.Read(b, 0, b.Length);
+                            gzs.Write(b, 0, b.Length);
                         }
                     }
                 }
@@ -44,7 +42,9 @@ namespace Lunalipse.Resource
                 {
                     using (GZipStream gzs = new GZipStream(fs, CompressionMode.Compress, false))
                     {
-                        memoryStream.CopyTo(gzs);
+                        byte[] b = new byte[memoryStream.Length];
+                        memoryStream.Read(b, 0, b.Length);
+                        gzs.Write(b, 0, b.Length);
                     }
                 }
                 return true;
@@ -63,7 +63,39 @@ namespace Lunalipse.Resource
                 {
                     using (GZipStream gzs = new GZipStream(fs, CompressionMode.Decompress, false))
                     {
-                        gzs.CopyTo(ms);
+                        byte[] b = new byte[1024];
+                        int len = 0;
+                        while((len = gzs.Read(b, 0, 1024)) > 0)
+                        {
+                            ms.Write(b, 0, len);
+                        }
+                    }
+                }
+                ms.Seek(0, SeekOrigin.Begin);
+                return ms;
+            }
+            catch (Exception)
+            {
+                return ms;
+            }
+        }
+
+        public static MemoryStream DecompressTo(byte[] raw)
+        {
+            MemoryStream ms = new MemoryStream();
+            try
+            {
+                using (MemoryStream ms_src = new MemoryStream(raw))
+                {
+                    ms_src.Seek(0, SeekOrigin.Begin);
+                    using (GZipStream gzs = new GZipStream(ms_src, CompressionMode.Decompress, false))
+                    {
+                        byte[] b = new byte[1024];
+                        int len = 0;
+                        while ((len = gzs.Read(b, 0, 1024)) > 0)
+                        {
+                            ms.Write(b, 0, len);
+                        }
                     }
                 }
                 ms.Seek(0, SeekOrigin.Begin);

@@ -113,6 +113,13 @@ namespace Lunalipse.Presentation.LpsWindow
             Height += 45;
         }
 
+        public UniversalDailogue(IDialogPage content, string title, MessageBoxButton Buttons, string PositiveContent, string NegativeContent) 
+            : this(content,title,Buttons)
+        {
+            PositiveBtnI18N = PositiveContent;
+            NegativeBtnI18N = NegativeContent;
+        }
+
         public Page RenderContent
         {
             get => Display.Content as Page;

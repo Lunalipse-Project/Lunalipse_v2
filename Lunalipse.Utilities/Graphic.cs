@@ -250,11 +250,12 @@ namespace Lunalipse.Utilities
 
         public static BitmapSource Byte2BitmapSource(byte[] b)
         {
-            MemoryStream stream = null;
             try
             {
-                stream = new MemoryStream(b);
-                return Bitmap2BitmapSource((Bitmap)Image.FromStream(stream));
+                using (MemoryStream stream = new MemoryStream(b))
+                {
+                    return Bitmap2BitmapSource((Bitmap)Image.FromStream(stream));
+                }
             }
             catch (ArgumentNullException ex)
             {
@@ -263,10 +264,6 @@ namespace Lunalipse.Utilities
             catch (ArgumentException ex)
             {
                 throw ex;
-            }
-            finally
-            {
-                stream.Close();
             }
         }
 

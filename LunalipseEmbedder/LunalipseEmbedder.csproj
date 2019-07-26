@@ -55,7 +55,11 @@
     <ProjectReference Include="..\Lunalipse.Resource\Lunalipse.Resource.csproj">
       <Project>{79cf16ce-ef56-4d3a-b736-e21edd673327}</Project>
       <Name>Lunalipse.Resource</Name>
+      <Private>False</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="lib\Lunalipse.Resource.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

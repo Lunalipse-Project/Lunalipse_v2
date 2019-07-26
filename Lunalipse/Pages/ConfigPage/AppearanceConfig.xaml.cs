@@ -51,6 +51,16 @@ namespace Lunalipse.Pages.ConfigPage
             ThemeList.OnSelectionChanged += ThemeList_OnSelectionChanged;
 
             GlobalSetting = GLS.INSTANCE;
+
+            Unloaded += AppearanceConfig_Unloaded;
+        }
+
+        private void AppearanceConfig_Unloaded(object sender, RoutedEventArgs e)
+        {
+            TranslationManagerBase.OnI18NEnvironmentChanged -= Translate;
+            ThemeManagerBase.OnThemeApplying -= ThemeManagerBase_OnThemeApplying;
+            ThemeList.OnSelectionChanged -= ThemeList_OnSelectionChanged;
+            Unloaded -= AppearanceConfig_Unloaded;
         }
 
         private void ThemeList_OnSelectionChanged(LpsDetailedListItem selected, object tag = null)

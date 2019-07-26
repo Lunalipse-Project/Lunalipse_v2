@@ -24,15 +24,13 @@ namespace LunalipseUpdate
     /// </summary>
     public partial class MainWindow : LpsWindow
     {
-        DoubleAnimation r_animation;
         ProcedureHelper procedureHelper;
         Thread UpdationThread;
 
-        public MainWindow(string url,string version)
+        public MainWindow(string url, string version, int size)
         {
             InitializeComponent();
             procedureHelper = new ProcedureHelper(UpdateOnUIElements);
-            r_animation = new DoubleAnimation(0, 720, new Duration(TimeSpan.FromHours(5)));
             Celestia_CM.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Resource/celestia_cm.png")));
             this.Background = new LinearGradientBrush(new GradientStopCollection()
             {
@@ -45,12 +43,11 @@ namespace LunalipseUpdate
             UpdateProgress.MaximumValue = 1;
 
             procedureHelper.AddProcedure(new Checking());
-            procedureHelper.AddProcedure(new Downloading(url));
+            procedureHelper.AddProcedure(new Downloading(url, size));
             procedureHelper.AddProcedure(new Unpacking());
             procedureHelper.AddProcedure(new Applying());
             procedureHelper.AddProcedure(new CleanUp());
 
-            r_animation.RepeatBehavior = RepeatBehavior.Forever;
             UpdateProgress.Wait();
 
             UpgradeHint.Content = string.Format("正在升级Lunalipse到版本{0}", version);
@@ -58,7 +55,6 @@ namespace LunalipseUpdate
 
         private void LpsWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            Celestia_CM.BeginAnimation(RotateTransform.AngleProperty, r_animation);
             UpdationThread = new Thread(new ThreadStart(DoUpdateProcedures));
             UpdationThread.Start();
         }
@@ -79,6 +75,7 @@ namespace LunalipseUpdate
             catch(Exception exception)
             {
                 Console.WriteLine(exception.Message);
+                Console.WriteLine(exception.StackTrace);
             }
             Environment.Exit(0);
         }

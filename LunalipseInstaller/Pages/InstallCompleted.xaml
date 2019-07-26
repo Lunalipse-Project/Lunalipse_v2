@@ -1,0 +1,33 @@
+﻿<Page x:Class="LunalipseInstaller.Pages.InstallCompleted"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LunalipseInstaller.Pages"
+      mc:Ignorable="d" 
+      Height="150" Width="800"
+      Title="InstallCompleted">
+
+    <Grid>
+        <Grid VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Content="Lunalipse已完成安装" x:Name="InstallationStatus" HorizontalAlignment="Center" Foreground="White" FontSize="17"/>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Style="{StaticResource GenericButton}" Grid.Column="1" Content="Button 1" x:Name="OperationButton" HorizontalAlignment="Center"
+                    Foreground="White" BorderBrush="#A0383b78" Padding="25 10 25 10" Background="#FF383b78" FontSize="15" Margin="0 20 0 0" Click="OperationButton_Click"/>
+                <Button Style="{StaticResource GenericButton}" Grid.Column="3" Content="完成"  HorizontalAlignment="Center" x:Name="Completed" Click="Completed_Click"
+                    Foreground="White" BorderBrush="#A0383b78" Padding="25 10 25 10" Background="#FF383b78" FontSize="15" Margin="0 20 0 0"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

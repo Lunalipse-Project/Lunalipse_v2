@@ -13,6 +13,7 @@ using Lunalipse.I18N;
 using Lunalipse.Resource.Generic.Types;
 using Lunalipse.Utilities;
 using System;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Windows;
@@ -28,7 +29,7 @@ namespace Lunalipse
         CacheHub cacheSystem;
         CataloguePool cp;
         ResourcesHandler resourcesHandler;
-        string currentFolder = Environment.CurrentDirectory;
+        string currentFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
         LunalipseLogger Log;
 
 
@@ -38,7 +39,7 @@ namespace Lunalipse
             DispatcherUnhandledException += App_DispatcherUnhandledException;
             I18T = new I18NTokenizer();
             cp = CataloguePool.INSATNCE;
-            cacheSystem = CacheHub.INSTANCE(Environment.CurrentDirectory);
+            cacheSystem = CacheHub.INSTANCE(currentFolder);
             resourcesHandler = new ResourcesHandler(Assembly.GetEntryAssembly().GetName().Version);
             RestoringConfig();
 
@@ -113,7 +114,7 @@ namespace Lunalipse
 
         async void ReadLicenses()
         {
-            foreach (LrssResource lrr in await resourcesHandler.getResourcesAsync(AppConst.LUNALIPSE_LICENSES))
+            foreach (LrssResource lrr in await resourcesHandler.getResourcesAsync(currentFolder + "\\" + AppConst.LUNALIPSE_LICENSES)) 
             {
                 string text = Encoding.UTF8.GetString(lrr.Data);
                 switch (lrr.Name)

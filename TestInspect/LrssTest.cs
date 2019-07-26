@@ -21,7 +21,7 @@ namespace TestInspect
             LrssWriter lw = new LrssWriter();
             lw.Initialize(0x2333, "MLP_SONGS", "export.lrss", Encoding.ASCII.GetBytes("2WS_=3+?"));
             lw.AppendResourcesDir(@"F:\MLPMUSIC");
-            lw.Export().Wait();
+            lw.Export();
             sw.Stop();
             Console.WriteLine(sw.Elapsed.ToString());
         }

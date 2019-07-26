@@ -83,18 +83,21 @@ namespace Lunalipse.Core
 
         private async Task<List<LrssResource>> UnpackLrss(string password = null)
         {
-            List<LrssResource> lrssResources = new List<LrssResource>();
-            if (lrssReader.Encrypted)
+            return await Task.Run(() =>
             {
-                if (password != null) return lrssResources;
-                if (!lrssReader.RestoringMagic(Encoding.ASCII.GetBytes(password)))
-                    return lrssResources;
-            }
-            foreach (LrssIndex lri in lrssReader.GetIndex())
-            {
-                lrssResources.Add(await lrssReader.ReadResource(lri));
-            }
-            return lrssResources;
+                List<LrssResource> lrssResources = new List<LrssResource>();
+                if (lrssReader.Encrypted)
+                {
+                    if (password != null) return lrssResources;
+                    if (!lrssReader.RestoringMagic(Encoding.ASCII.GetBytes(password)))
+                        return lrssResources;
+                }
+                foreach (LrssIndex lri in lrssReader.GetIndex())
+                {
+                    lrssResources.Add(lrssReader.ReadResource(lri));
+                }
+                return lrssResources;
+            });
         }
     }
 }

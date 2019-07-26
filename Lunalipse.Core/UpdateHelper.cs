@@ -25,8 +25,8 @@ namespace Lunalipse.Core
         List<ReleaseInfo> releaseInfos = null;
 
         readonly Regex TagPatternMatch = new Regex("v([0-9.]+)-([a-z]+)", RegexOptions.IgnoreCase);
-        readonly Regex UpdatePackDownload = new Regex("https://.*/updatepack.lrss", RegexOptions.IgnoreCase);
-        readonly Regex UpdateProgram = new Regex("https://.*/update.exe", RegexOptions.IgnoreCase);
+        readonly Regex UpdatePackDownload = new Regex("https://.*/license.clrss", RegexOptions.IgnoreCase);
+        //readonly Regex UpdateProgram = new Regex("https://.*/update.exe", RegexOptions.IgnoreCase);
 
         public event Action OnQueryCompleted;
         public event Action<WebExceptionStatus, HttpStatusCode, string, string> OnErrorOccurs;
@@ -99,34 +99,34 @@ namespace Lunalipse.Core
             return v > versionHelper.Version ? releaseInfo : null;
         }
 
-        public string FindPackDownloadURI(ReleaseInfo releaseInfo)
+        public Asset FindPackDownloadAssets(ReleaseInfo releaseInfo)
         {
             foreach(Asset asset in releaseInfo.Assets)
             {
                 if (UpdatePackDownload.IsMatch(asset.DownloadURL))
                 {
-                    return asset.DownloadURL;
+                    return asset;
                 }
             }
-            return string.Empty;
+            return null;
         }
 
-        /// <summary>
-        /// This method will return a uri when there is newer version of update program available
-        /// </summary>
-        /// <param name="releaseInfo"></param>
-        /// <returns></returns>
-        public string FindUpdateExeDownloadURI(ReleaseInfo releaseInfo)
-        {
-            foreach (Asset asset in releaseInfo.Assets)
-            {
-                if (UpdateProgram.IsMatch(asset.DownloadURL))
-                {
-                    return asset.DownloadURL;
-                }
-            }
-            return string.Empty;
-        }
+        ///// <summary>
+        ///// This method will return a uri when there is newer version of update program available
+        ///// </summary>
+        ///// <param name="releaseInfo"></param>
+        ///// <returns></returns>
+        //public string FindUpdateExeDownloadURI(ReleaseInfo releaseInfo)
+        //{
+        //    foreach (Asset asset in releaseInfo.Assets)
+        //    {
+        //        if (UpdateProgram.IsMatch(asset.DownloadURL))
+        //        {
+        //            return asset.DownloadURL;
+        //        }
+        //    }
+        //    return string.Empty;
+        //}
 
         public string CurrentVersion
         {

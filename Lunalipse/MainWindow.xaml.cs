@@ -7,6 +7,7 @@ using System.Windows.Threading;
 using System.Collections.Generic;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+
 using Lunalipse.Core;
 using Lunalipse.Core.PlayList;
 using Lunalipse.Core.Metadata;
@@ -27,13 +28,33 @@ using Lunalipse.Windows;
 using Lunalipse.Auxiliary;
 using Lunalipse.Utilities;
 using Lunalipse.Utilities.Misc;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 
 namespace Lunalipse
 {
-    /// <summary>
-    /// MainWindow.xaml 的交互逻辑
-    /// （测试界面）
-    /// </summary>
+    /*
+     *                                                                                                                                         
+                                                                                                                                                                                
+                        -:=>;="`                                                                                                                                
+                   =TMB@@@@@@@0k=`                                                                                                                              
+                !K#@@@@@@@@B]'                                                                                                                                  
+              ,Z@@@@@@@@@@D`                     .}yyyVVclv                                                                                                     
+             ^@@@@@@@@@@@#-                        m@@@@Y_         ~gQ8$*     .w6ObHr  `"<)}y=  ^OBBBQo*   *wzv``r*^=:-`       :*!:r:         ``                
+            *@@@@@@@@@@@@#-                         8@@m      "O##@)]@@O :5QQQ8*M@@O`  "a@@@@M   `Q@@)    `#@@@) !g@@@@@BV` `V#@$OQ@T`8@###QQQ@Z                
+            R@@@@@@@@@@@@@8-              _r        b@@k        #@# _@@K   0@@@#v@@?    v@@@@#    s@@,    `Z##8x  _@@Q`h@@d !@@@BMT^` 'Q@@MuZrUd                
+            8@@@@@@@@@@@@@@@d|`         rO@H        b@@Z    `   O@@`.#@w   }@@#@@@@r    Q@#g@@!   I@@*  :_ :@@R   _@@@@#0z:.^]d8R0@@H  I@@@@@^                  
+            }@@@@@@@@@@@@@@@@@@gUTx\xVO#@@@x        d@@Q  .3@;  Y@@Ue@@x   6@@|d@@@V  `U@@D6@@H   M@@GvI@e Y@@#r  "@@#-    `c#@@lD@#\ .Q@@XiI}0y                
+             V@@@@@@@@@@@@@@@@@@@@@@@@@@@@R        *#@@@#@@@@}   *OBQZ*  -wdMGk,Q@@#}`PQQBWr@@@I`U@##BBQQj"???r* -KBBBY      .z8B$V' `g###BBBQQy                
+              v#@@@@@@@@@@@@@@@@@@@@@@@@Bv        -WWPmIzyVuT!                  `:-`       ePUV}_                                                               
+               `uB@@@@@@@@@@@@@@@@@@@@gL                                                                                                                        
+                  ,udB@@@@@@@@@@@@QU|-                                                                                                                          
+                      `_^r?\(r>:`                                                                                                                               
+                                                                                                                                                                              
+        Copyright Lunaixsky 2019
+     */
+
     public partial class MainWindow : LunalipseMainWindow, ITranslatable
     {
         const int sliderSize = 200;
@@ -116,6 +137,10 @@ namespace Lunalipse
                         break;
                 }
             }
+            if(busTypes == EventBusTypes.ON_ACTION_START && Tag.Equals("END_SESSION"))
+            {
+                this.Close();
+            }
         }
 
         #region Reflesh the list
@@ -183,7 +208,7 @@ namespace Lunalipse
         {          
             CPOOL = CataloguePool.INSATNCE;
             core = LpsCore.Session("MAIN_AUDIO_SESSION");
-            cacheSystem = CacheHub.INSTANCE(Environment.CurrentDirectory);
+            cacheSystem = CacheHub.INSTANCE(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
             mlp = MusicListPool.INSATNCE(mmdr = new MediaMetaDataReader());
             Bus = EventBus.Instance;
             playlistGuard = new PlaylistGuard();
@@ -493,6 +518,12 @@ namespace Lunalipse
         }
         private void Window_Closed(object sender, EventArgs e)
         {
+            if (GlobalSetting.UpdateArguments != string.Empty)
+            {
+                LunalipseLogger.GetLogger().Info("Initiating Upgrade installation");
+                ProcessStartInfo info = new ProcessStartInfo("CeleUpdater.exe", GlobalSetting.UpdateArguments);
+                Process.Start(info);
+            }
             desktopDisplay?.Close();
             LunalipseLogger.GetLogger().Debug("Saving Playlist");
             playlistGuard.SavePlaylist();
@@ -500,6 +531,7 @@ namespace Lunalipse
             core.Pause();
             core.Dispose();
             LunalipseLogger.GetLogger().Release();
+            Environment.Exit(0);
         }
 
         /// <summary>

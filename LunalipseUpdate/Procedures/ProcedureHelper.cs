@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,9 +15,10 @@ namespace LunalipseUpdate.Procedures
          * lrss : 未压缩的LRSS资源文件
          * lrs  : 压缩的LRSS资源文件
          */
-        public const string updateFolder = "Update/";
-        public const string updateCompressedPackage = "Update/pack.lrs";
-        public const string updateManifest = "Update/manifest.xml";
+        public static string baseDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+        public static string updateFolder = baseDir + "/mcdata/";
+        public static string updateCompressedPackage = baseDir + "/mcdata/pack.lrs";
+        public static string updateManifest = baseDir + "/mcdata/manifest.xml";
 
 
         public static event ProgressReporter OnProgressUpdated;
@@ -25,6 +27,7 @@ namespace LunalipseUpdate.Procedures
         List<IProcedure> procedures;
         public ProcedureHelper(ProgressReporter reporter)
         {
+            
             procedures = new List<IProcedure>();
             this.reporter = reporter;
             OnProgressUpdated += ProcedureHelper_OnProgressUpdated;

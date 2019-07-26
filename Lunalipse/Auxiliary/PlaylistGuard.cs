@@ -7,6 +7,7 @@ using Lunalipse.Presentation.BasicUI;
 using Lunalipse.Utilities;
 using System;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 
 namespace Lunalipse.Auxiliary
@@ -30,7 +31,7 @@ namespace Lunalipse.Auxiliary
             cacheHub = CacheHub.INSTANCE();
             cataloguePool = CataloguePool.INSATNCE;
             musicListPool = MusicListPool.INSATNCE();
-            savedFolder = Environment.CurrentDirectory + @"\UserData\";
+            savedFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\UserData\";
             if (!Directory.Exists(savedFolder)) Directory.CreateDirectory(savedFolder);
             EVENT_BUS = EventBus.Instance;
             EVENT_BUS.AddUnicastReciever("PlaylistGuard", PlayListGuard_UnicastReciever);

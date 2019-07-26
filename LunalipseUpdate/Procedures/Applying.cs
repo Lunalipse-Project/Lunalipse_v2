@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace LunalipseUpdate.Procedures
@@ -29,16 +24,19 @@ namespace LunalipseUpdate.Procedures
                 switch(item.operation)
                 {
                     case Operations.Delete:
+                        ProcedureHelper.UpdateProgress("移除" + item.targetPath, -1);
                         File.Delete(item.targetPath);
                         break;
                     case Operations.ReplaceOrAdd:
-                        if(File.Exists(item.targetPath))
+                        ProcedureHelper.UpdateProgress("替换" + item.targetPath, -1);
+                        if (File.Exists(item.targetPath))
                         {
                             File.Delete(item.targetPath);
                         }
                         File.Move(ProcedureHelper.updateFolder + item.fileName, item.targetPath);
                         break;
                     case Operations.Run:
+                        ProcedureHelper.UpdateProgress("运行" + item.fileName, -1);
                         Process.Start(ProcedureHelper.updateFolder + item.fileName);
                         break;
                 }

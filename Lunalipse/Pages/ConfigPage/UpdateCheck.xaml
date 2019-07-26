@@ -29,14 +29,6 @@
                         <RowDefinition Height=".3*"/>
                     </Grid.RowDefinitions>
                     <Label x:Name="StatusDisplay" Foreground="{Binding ElementName=UpdateCheckPage, Path=Foreground}" FontSize="{StaticResource FontMedium}" Padding="10 0 0 0" Grid.Row="0" VerticalContentAlignment="Bottom" Content="Checking"/>
-                    <Grid Grid.Row="1" x:Name="DownloadingConatiner" Visibility="Hidden">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="40"/>
-                        </Grid.ColumnDefinitions>
-                        <Component:LpsProgressBar x:Name="Progress" Grid.Column="0" VerticalAlignment="Center" Height="8" Foreground="{Binding ElementName=UpdateCheckPage, Path=Foreground}"></Component:LpsProgressBar>
-                        <Label x:Name="ProgressDisplay" Foreground="{Binding ElementName=UpdateCheckPage, Path=Foreground}" FontSize="{StaticResource FontSmall}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1" Content="0%"/>
-                    </Grid>
                 </Grid>
             </Grid>
             <Grid Grid.Row="1" Height="0" x:Name="DocContainer">

@@ -25,12 +25,15 @@ namespace Lunalipse.Pages
         public CatalogueShowCase()
         {
             InitializeComponent();
-            showcase.OnCatalogueSelectChanged += Showcase_OnCatalogueSelectChanged;
-            converter = TranslationManagerBase.AquireConverter();
             TranslationManagerBase.OnI18NEnvironmentChanged += TranslationManagerBase_OnI18NEnvironmentChanged;
-            TranslationManagerBase_OnI18NEnvironmentChanged(converter);
+            showcase.OnCatalogueSelectChanged += Showcase_OnCatalogueSelectChanged;
             showcase.OnCatalogueEditRequest += Showcase_OnCatalogueEditRequest;
+            converter = TranslationManagerBase.AquireConverter();
+            TranslationManagerBase_OnI18NEnvironmentChanged(converter);
+
+
         }
+
 
         private void TranslationManagerBase_OnI18NEnvironmentChanged(II18NConvertor obj)
         {

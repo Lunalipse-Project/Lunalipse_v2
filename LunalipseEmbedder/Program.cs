@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using static Lunalipse.Resource.Generic.Delegates;
 
 namespace LunalipseEmbedder
@@ -14,15 +14,33 @@ namespace LunalipseEmbedder
         static int magic = 0;
         static string signature, dest, pwd;
         static bool IsSealMode = false;
-        static string[] dirs;
+        static string[] dirs,filters, excludes;
         static string directory;
         static bool silenceMode = false;
+        static bool enableCompression = false;
         static void Main(string[] args)
+        {
+            try
+            {
+                LoadAsm();
+                Core(args);
+                Console.WriteLine("\npress any key to countinue...");
+                Console.ReadKey();
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Export Fail");
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+            }
+        }
+
+        static void Core(string[] args)
         {
             OnSingleEndpointReached += SingleReachingEndpoint;
             OnEndpointReached += ReachingEndpoint;
             OnChuckOperated += OnChuckUpdate;
-            for(int i = 0; i < args.Length;i+=2)
+            for (int i = 0; i < args.Length; i += 2)
             {
                 string command = args[i];
                 string body = args[i + 1];
@@ -34,12 +52,31 @@ namespace LunalipseEmbedder
                     case "-dir":
                         directory = body;
                         break;
+                    case "--excludes":
+                        excludes = body.Split(',');
+                        break;
                     case "-mode":
-                        if(body=="seal")
+                        foreach (string mode in body.Split('|'))
                         {
-                            IsSealMode = true;
+                            switch (mode)
+                            {
+                                case "seal":
+                                    IsSealMode = true;
+                                    break;
+                                case "unpack":
+                                    IsSealMode = false;
+                                    break;
+                                case "slience":
+                                    silenceMode = true;
+                                    break;
+                                case "compression":
+                                    enableCompression = true;
+                                    break;
+                            }
                         }
-                        else IsSealMode = false;
+                        break;
+                    case "--filters":
+                        filters = body.Split('|');
                         break;
                     case "-pwd":
                         pwd = body;
@@ -48,19 +85,31 @@ namespace LunalipseEmbedder
                         dest = body;
                         break;
                     case "-mg":
-                        magic = int.Parse(body,System.Globalization.NumberStyles.HexNumber);
+                        magic = int.Parse(body, System.Globalization.NumberStyles.HexNumber);
                         break;
                     case "-sign":
                         signature = body;
                         break;
-                    case "--slience":
-                        silenceMode = true;
-                        break;
                 }
             }
             Export();
-            Console.WriteLine("\npress any key to countinue...");
-            Console.ReadKey();
+        }
+
+        static void LoadAsm()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+            {
+                //LunalipseInstaller.lib.Lunalipse.Resource.dll   ---> lib/Lunalipse.Resource.dll
+                string resourceName = new AssemblyName(args.Name).Name + ".dll";
+                string resource = Array.Find(Assembly.GetExecutingAssembly().GetManifestResourceNames(), element => element.EndsWith(resourceName));
+                if (resource == null) return null;
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
+                {
+                    byte[] assemblyData = new byte[stream.Length];
+                    stream.Read(assemblyData, 0, assemblyData.Length);
+                    return Assembly.Load(assemblyData);
+                }
+            };
         }
 
         static void Export()
@@ -70,6 +119,18 @@ namespace LunalipseEmbedder
                 if (dirs == null)
                 {
                     dirs = Directory.GetFiles(directory);
+                    if (filters!=null && filters.Length > 0)
+                    {
+                        List<string> files = new List<string>();
+                        foreach(string file in dirs)
+                        {
+                            if (filters.Contains(Path.GetExtension(file)) && !excludes.Contains(Path.GetFileName(file)))
+                            {
+                                files.Add(file);
+                            }
+                        }
+                        dirs = files.ToArray();
+                    }
                 }
                 Writer wr = new Writer(dirs);
                 if (string.IsNullOrEmpty(dest))
@@ -99,7 +160,7 @@ namespace LunalipseEmbedder
                     }
                 }
                 Console.WriteLine("\nExporting....");
-                wr.DoSeal().Wait();
+                wr.DoSeal(enableCompression).Wait();
             }
             else
             {
@@ -109,12 +170,12 @@ namespace LunalipseEmbedder
 
         static void ReadFile()
         {
-            if (dirs.Length == 0)
+            if (dirs == null || dirs.Length == 0)
             {
                 Console.WriteLine("Error: missing input");
                 return;
             }
-            Reader r = new Reader(dirs[0]);
+            Reader r = new Reader(dirs[0],enableCompression);
             Console.WriteLine(" === LRss file loaded ===");
             Console.WriteLine("Signature: {0}", r.Signature);
             Console.WriteLine("Magic: {0}", r.IsPasswordRequired() ? "[* Encrypted *]" : "0x" + r.MagicNumber.ToString("X4"));

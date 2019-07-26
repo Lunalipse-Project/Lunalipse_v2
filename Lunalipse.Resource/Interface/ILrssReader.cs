@@ -1,6 +1,5 @@
 ﻿using Lunalipse.Resource.Generic.Types;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Lunalipse.Resource.Interface
 {
@@ -9,6 +8,6 @@ namespace Lunalipse.Resource.Interface
         void LoadLrssCompressed(string path);
         bool RestoringMagic(byte[] DecKey = null);
         List<LrssIndex> GetIndex();
-        Task<LrssResource> ReadResource(LrssIndex li);
+        LrssResource ReadResource(LrssIndex li);
     }
 }

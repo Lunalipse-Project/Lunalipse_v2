@@ -6,30 +6,40 @@ using Lunalipse.Common;
 using System.Windows.Media.Imaging;
 using Lunalipse.Common.Interfaces.IMetadata;
 using Lunalipse.Common.Interfaces.II18N;
+using System;
 
 namespace Lunalipse.Core.Metadata
 {
     public class MediaMetaDataReader : IMediaMetadataReader
     {
-        public MediaMetaDataReader()
-        {
-        }
         public MusicEntity CreateEntity(string path)
         {
-            TL.File media = TL.File.Create(path);
             MusicEntity me = new MusicEntity()
             {
-                Album = media.Tag.Album,
-                Artist = media.Tag.Performers,
                 Extension = Path.GetExtension(path),
                 Name = Path.GetFileNameWithoutExtension(path),
-                ID3Name = string.IsNullOrEmpty(media.Tag.Title) ? "" : media.Tag.Title,
-                Year = media.Tag.Year.ToString(),
                 Path = path,
-                EstDuration = media.Properties.Duration,
-                HasImage = media.Tag.Pictures.Length != 0
             };
-            if(me.Artist==null || me.Artist.Length == 0)
+            try
+            {
+                TL.File media = TL.File.Create(path);
+                me.Album = media.Tag.Album;
+                me.Artist = media.Tag.Performers;
+                me.ID3Name = string.IsNullOrEmpty(media.Tag.Title) ? "" : media.Tag.Title;
+                me.Year = media.Tag.Year.ToString();
+                me.EstDuration = media.Properties.Duration;
+                if (media.Tag.Pictures != null)
+                    me.HasImage = media.Tag.Pictures.Length != 0;
+                media.Dispose();
+            }
+            catch (Exception)
+            {
+                LunalipseLogger.GetLogger().Warning("Unable to load IDv3 tag, skipping...");
+                me.Year = "1900";
+                me.EstDuration = TimeSpan.Zero;
+                me.HasImage = false;
+            }
+            if (me.Artist==null || me.Artist.Length == 0)
             {
                 me.Artist = new string[1] { "" };
                 me.DefaultArtist = "CORE_PRESENTOR_UNKNOW_ARTIST";
@@ -39,7 +49,6 @@ namespace Lunalipse.Core.Metadata
                 me.DefaultAlbum = "CORE_PRESENTOR_UNKNOW_ALBUM";
                 me.Album = "";
             }
-            media.Dispose();
             return me;
         }
 

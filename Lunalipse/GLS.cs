@@ -43,6 +43,8 @@ namespace Lunalipse
             MusicBaseDirs = new List<string>();
         }
 
+        public string UpdateArguments = string.Empty;
+
         [ConfigField]
         public List<string> MusicBaseDirs;
 

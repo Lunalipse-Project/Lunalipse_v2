@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,7 +13,7 @@ namespace Lunalipse.Common.Generic.Themes
         public static event Action<ThemeTuple> OnThemeApplying;
         protected static event Func<ThemeTuple> OnTupleAcquire;
 
-        protected string ENV_PATH = Environment.CurrentDirectory;
+        protected string ENV_PATH = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
         protected virtual void Reflush()
         {

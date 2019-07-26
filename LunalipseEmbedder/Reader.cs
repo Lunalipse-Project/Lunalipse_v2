@@ -17,10 +17,14 @@ namespace LunalipseEmbedder
         public string OutputDir { get; set; } = "";
         public byte[] Passwd { get; set; } = null;
 
-        public Reader(string path)
+        public Reader(string path,bool enableCompressed)
         {
             lr = new LrssReader();
-            lr.LoadLrssCompressed(path);
+            if (enableCompressed)
+            {
+                lr.LoadLrssCompressed(path);
+            }
+            else lr.LoadLrss(path);
             Signature = lr.SIGNATURE;
             if (!IsPasswordRequired())
             {
@@ -51,7 +55,7 @@ namespace LunalipseEmbedder
 
         public async Task<bool> OutputResource(LrssIndex lri)
         {
-            LrssResource lrs = await lr.ReadResource(lri);
+            LrssResource lrs = lr.ReadResource(lri);
             if (lrs.Data == null || lrs == null) return false;
             string outp = OutputDir;
             if (outp != "")

@@ -17,7 +17,7 @@ namespace LunalipseCoreTest
             LrssWriter le = new LrssWriter();
             le.Initialize(0x2F30, "Song", Encoding.ASCII.GetBytes("PrincessLuna"));
             le.AppendResource(@"F:\M2\Daniel Ingram - Luna's Future.mp3");
-            le.Export().Wait();
+            le.Export();
         }
 
         [TestMethod]

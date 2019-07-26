@@ -35,6 +35,16 @@ namespace Lunalipse.Pages.ConfigPage
             ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
 
             Loaded += Licenses_Loaded;
+
+            Unloaded += Licenses_Unloaded;
+        }
+
+        private void Licenses_Unloaded(object sender, RoutedEventArgs e)
+        {
+            TranslationManagerBase.OnI18NEnvironmentChanged -= Translate;
+            ThemeManagerBase.OnThemeApplying -= ThemeManagerBase_OnThemeApplying;
+            Loaded -= Licenses_Loaded;
+            Unloaded -= Licenses_Unloaded;
         }
 
         private void Licenses_Loaded(object sender, RoutedEventArgs e)

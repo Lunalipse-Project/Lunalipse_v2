@@ -42,6 +42,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunalipseUpdate", "Lunalips
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIPlayground", "UIPlayground\UIPlayground.csproj", "{2250DBE6-1704-48F1-89D5-A31D0337D30B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdatePacker", "UpdatePacker\UpdatePacker.csproj", "{0C46BCBE-32ED-4420-B7E4-6BF9698EA992}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunalipseInstaller", "LunalipseInstaller\LunalipseInstaller.csproj", "{8E11002E-5136-4833-8E22-DEAC4924D89F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -244,6 +248,30 @@ Global
 		{2250DBE6-1704-48F1-89D5-A31D0337D30B}.Release|x64.Build.0 = Release|Any CPU
 		{2250DBE6-1704-48F1-89D5-A31D0337D30B}.Release|x86.ActiveCfg = Release|Any CPU
 		{2250DBE6-1704-48F1-89D5-A31D0337D30B}.Release|x86.Build.0 = Release|Any CPU
+		{0C46BCBE-32ED-4420-B7E4-6BF9698EA992}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C46BCBE-32ED-4420-B7E4-6BF9698EA992}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C46BCBE-32ED-4420-B7E4-6BF9698EA992}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0C46BCBE-32ED-4420-B7E4-6BF9698EA992}.Debug|x64.Build.0 = Debug|Any CPU
+		{0C46BCBE-32ED-4420-B7E4-6BF9698EA992}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0C46BCBE-32ED-4420-B7E4-6BF9698EA992}.Debug|x86.Build.0 = Debug|Any CPU
+		{0C46BCBE-32ED-4420-B7E4-6BF9698EA992}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C46BCBE-32ED-4420-B7E4-6BF9698EA992}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C46BCBE-32ED-4420-B7E4-6BF9698EA992}.Release|x64.ActiveCfg = Release|Any CPU
+		{0C46BCBE-32ED-4420-B7E4-6BF9698EA992}.Release|x64.Build.0 = Release|Any CPU
+		{0C46BCBE-32ED-4420-B7E4-6BF9698EA992}.Release|x86.ActiveCfg = Release|Any CPU
+		{0C46BCBE-32ED-4420-B7E4-6BF9698EA992}.Release|x86.Build.0 = Release|Any CPU
+		{8E11002E-5136-4833-8E22-DEAC4924D89F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E11002E-5136-4833-8E22-DEAC4924D89F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E11002E-5136-4833-8E22-DEAC4924D89F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8E11002E-5136-4833-8E22-DEAC4924D89F}.Debug|x64.Build.0 = Debug|Any CPU
+		{8E11002E-5136-4833-8E22-DEAC4924D89F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8E11002E-5136-4833-8E22-DEAC4924D89F}.Debug|x86.Build.0 = Debug|Any CPU
+		{8E11002E-5136-4833-8E22-DEAC4924D89F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E11002E-5136-4833-8E22-DEAC4924D89F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E11002E-5136-4833-8E22-DEAC4924D89F}.Release|x64.ActiveCfg = Release|Any CPU
+		{8E11002E-5136-4833-8E22-DEAC4924D89F}.Release|x64.Build.0 = Release|Any CPU
+		{8E11002E-5136-4833-8E22-DEAC4924D89F}.Release|x86.ActiveCfg = Release|Any CPU
+		{8E11002E-5136-4833-8E22-DEAC4924D89F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

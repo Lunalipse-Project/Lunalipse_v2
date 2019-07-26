@@ -17,7 +17,9 @@
                 <EventTrigger RoutedEvent="Loaded">
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)" From="0" To="360" Duration="0:0:1" RepeatBehavior="Forever" />
+                            <DoubleAnimation Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)" 
+                                             AccelerationRatio="0.5" DecelerationRatio="0.4"
+                                             From="0" To="360" Duration="0:0:2" RepeatBehavior="Forever" />
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>
@@ -31,7 +33,7 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" x:Name="UpgradeHint" Content="" FontSize="23" Foreground="White" Margin="10"/>
+            <Label Grid.Row="0" x:Name="UpgradeHint" Content="" FontSize="22" Foreground="White" Margin="10" />
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>

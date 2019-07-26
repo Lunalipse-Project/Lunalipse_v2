@@ -37,6 +37,16 @@ namespace Lunalipse.Windows
             globalSettingHelper = GlobalSettingHelper<GLS>.INSTANCE;
             globalSettingHelper.UseLZ78Compress = true;
             this.Loaded += Settings_Loaded;
+            Unloaded += Settings_Unloaded;
+        }
+
+        private void Settings_Unloaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            SPlanelSlider.OnSelectionChanged -= SPlanelSlider_OnSelectionChanged;
+            ThemeManagerBase.OnThemeApplying -= ThemeManagerBase_OnThemeApplying;
+            TranslationManagerBase.OnI18NEnvironmentChanged -= Translate;
+            this.Loaded -= Settings_Loaded;
+            Unloaded -= Settings_Unloaded;
         }
 
         private void Settings_Loaded(object sender, System.Windows.RoutedEventArgs e)

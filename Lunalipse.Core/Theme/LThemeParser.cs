@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Windows.Media;
 
@@ -24,7 +25,7 @@ namespace Lunalipse.Core.Theme
 
         public LThemeParser()
         {
-            ENV_PATH = Environment.CurrentDirectory;
+            ENV_PATH = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             Tuples = new List<ThemeContainer>();
             Log = LunalipseLogger.GetLogger();
             if (!Directory.Exists(ENV_PATH + "/Themes"))

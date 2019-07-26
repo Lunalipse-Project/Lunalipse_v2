@@ -52,6 +52,8 @@ namespace Lunalipse.Presentation.BasicUI
             ShowInTaskbar = false;
             Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
             Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
+            TranslationManagerBase.OnI18NEnvironmentChanged += TranslationManagerBase_OnI18NEnvironmentChanged;
+            TranslationManagerBase_OnI18NEnvironmentChanged(TranslationManagerBase.AquireConverter());
         }
 
         private void Positive_Click(object sender, RoutedEventArgs e)
@@ -86,9 +88,13 @@ namespace Lunalipse.Presentation.BasicUI
                     break;
 
             }
-            
-            TranslationManagerBase.OnI18NEnvironmentChanged += TranslationManagerBase_OnI18NEnvironmentChanged;
-            TranslationManagerBase_OnI18NEnvironmentChanged(TranslationManagerBase.AquireConverter());
+        }
+
+        public CommonDialog(string Caption, string Message, MessageBoxButton Buttons, string PositiveContent, string NegativeContent)
+            : this(Caption, Message, Buttons)
+        {
+            PositiveBtnI18N = PositiveContent;
+            NegativeBtnI18N = NegativeContent;
         }
 
         private void TranslationManagerBase_OnI18NEnvironmentChanged(II18NConvertor obj)

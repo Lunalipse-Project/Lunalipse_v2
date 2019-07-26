@@ -51,10 +51,18 @@ namespace LunalipseEmbedder
             return lwriter.Resources;
         }
 
-        public async Task DoSeal()
+        public async Task DoSeal(bool useCompression)
         {
-            await lwriter.Export();
-            Compression.CompressTo(lwriter.OuputStream, outPutPath);
+            lwriter.Export();
+            if (useCompression) Compression.CompressTo(lwriter.OuputStream, outPutPath);
+            else
+            {
+                lwriter.OuputStream.Seek(0, SeekOrigin.Begin);
+                using(FileStream fs = new FileStream(outPutPath, FileMode.Create))
+                {
+                    lwriter.OuputStream.CopyTo(fs);
+                }
+            }
             lwriter.Dispose();
         }
 

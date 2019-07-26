@@ -19,6 +19,7 @@ namespace LunalipseUpdate
             if (args != null || args.Length > 0)
             {
                 string url = "", version = "";
+                int size = 0;
                 for(int i = 0; i < args.Length - 1;)
                 {
                     switch(args[i])
@@ -29,12 +30,15 @@ namespace LunalipseUpdate
                         case "-s:v":
                             version = args[i + 1];
                             break;
+                        case "-s:s":
+                            size = int.Parse(args[i + 1]);
+                            break;
                     }
                     i += 2;
                 }
                 if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
                 {
-                    MainWindow mainwindow = new MainWindow(url,version);
+                    MainWindow mainwindow = new MainWindow(url, version, size);
                     mainwindow.Show();
                 }
             }

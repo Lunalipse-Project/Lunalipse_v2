@@ -59,16 +59,19 @@ namespace Lunalipse.Presentation.LpsComponent
         private void MusicRemove(object sender, RoutedEventArgs e)
         {
             Delegation.RemovingItem?.Invoke((sender as Button).DataContext);
+            e.Handled = true;
         }
 
         private void AddCatalogueBelonging(object sender, System.Windows.RoutedEventArgs e)
         {
             Delegation.AddToNewCatalogue?.Invoke((sender as Button).DataContext);
+            e.Handled = true;
         }
 
         private void OpenMetadataEditor(object sender, RoutedEventArgs e)
         {
             Delegation.EditMetadata?.Invoke((sender as Button).DataContext as MusicEntity);
+            e.Handled = true;
         }
     }
 }

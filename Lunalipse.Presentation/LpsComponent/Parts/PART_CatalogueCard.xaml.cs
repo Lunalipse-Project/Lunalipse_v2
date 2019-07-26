@@ -39,19 +39,18 @@ namespace Lunalipse.Presentation.LpsComponent.Parts
         public PART_CatalogueCard(ICatalogue catalogue)
         {
             InitializeComponent();
-            this.MouseDown += PART_CatalogueCard_MouseDown;
-            this.MouseEnter += PART_CatalogueCard_MouseEnter;
-            this.MouseLeave += PART_CatalogueCard_MouseLeave;
+           
             cata_cover.Stretch = Stretch.UniformToFill;
 
             FloatingUp      =    new DoubleAnimation(7, 14, elapseTime);
             FloatingDown    =    new DoubleAnimation(14, 7, elapseTime);
 
-            ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
             ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
 
             this.catalogue = catalogue;
-            CatalogueCover = catalogue.GetCatalogueCover();
+            BitmapSource bitmapSource = catalogue.GetCatalogueCover();
+            if (bitmapSource != null) bitmapSource.Freeze();
+            CatalogueCover = bitmapSource;
             CatalogueTitle = catalogue.Name();
             Uid = catalogue.Uid();
             if(!catalogue.IsUserDefined())
@@ -60,6 +59,25 @@ namespace Lunalipse.Presentation.LpsComponent.Parts
                 DeletePlaceHolder.Width = new GridLength(0, GridUnitType.Star);
                 DeleteButton.Visibility = Visibility.Collapsed;
             }
+            Loaded += PART_CatalogueCard_Loaded;
+        }
+
+        private void PART_CatalogueCard_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.MouseDown += PART_CatalogueCard_MouseDown;
+            this.MouseEnter += PART_CatalogueCard_MouseEnter;
+            this.MouseLeave += PART_CatalogueCard_MouseLeave;
+            ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
+            Unloaded += PART_CatalogueCard_Unloaded;
+        }
+
+        private void PART_CatalogueCard_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Unloaded -= PART_CatalogueCard_Unloaded;
+            this.MouseDown -= PART_CatalogueCard_MouseDown;
+            this.MouseEnter -= PART_CatalogueCard_MouseEnter;
+            this.MouseLeave -= PART_CatalogueCard_MouseLeave;
+            ThemeManagerBase.OnThemeApplying -= ThemeManagerBase_OnThemeApplying;
         }
 
         private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)

@@ -53,7 +53,17 @@ namespace Lunalipse.Pages.ConfigPage
 
             //其他监听器
             MusicPath.OnSelectionChanged += MusicPath_OnSelectionChanged;
-            
+
+            Unloaded += GeneralConfig_Unloaded;
+        }
+
+        private void GeneralConfig_Unloaded(object sender, RoutedEventArgs e)
+        {
+            ThemeManagerBase.OnThemeApplying -= ThemeManagerBase_OnThemeApplying;
+            TranslationManagerBase.OnI18NEnvironmentChanged -= Translate;
+            MusicPath.OnSelectionChanged -= MusicPath_OnSelectionChanged;
+            Unloaded -= GeneralConfig_Unloaded;
+            LanguageSelection.OnSelectionChanged -= LanguageSelection_OnSelectionChanged;
 
         }
 
@@ -112,6 +122,7 @@ namespace Lunalipse.Pages.ConfigPage
             {
                 LanguageSelection.Add(i8c.ConvertTo(SupportedPages.MULTI_LANG, supportLanguage.ToString()), supportLanguage);
             }
+            MusicPath.Translate(i8c);
         }
 
         private void GeneralConfigPage_Loaded(object sender, RoutedEventArgs e)

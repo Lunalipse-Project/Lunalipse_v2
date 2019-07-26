@@ -7,6 +7,7 @@ using Lunalipse.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -18,6 +19,8 @@ namespace Lunalipse.I18N
     {
         static volatile TranslationManager T_MANAGER;
         static readonly object T_MANAGER_LOCK = new object();
+
+        string baseDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
         public static TranslationManager Instance
         {
@@ -45,9 +48,9 @@ namespace Lunalipse.I18N
             Pages = new I18NPages();
             I18T = new I18NTokenizer();
             Version v = Assembly.GetEntryAssembly().GetName().Version;
-            if (!I18T.LoadFromFile(string.Format(@"Data\i18n{0}{1}",
+            if (!I18T.LoadFromFile(string.Format(@"{2}\Data\i18n{0}{1}",
                 v.ToString().Replace(".", ""),
-                ResourcesHandler.LUNALIPSE_DATA_FILE_EXTENSION)))
+                ResourcesHandler.LUNALIPSE_DATA_FILE_EXTENSION, baseDir)))
             {
                 LunalipseLogger.GetLogger().Warning("Unable to load i18n environment, shutting down Lunalipse");
                 System.Windows.Application.Current.Shutdown();

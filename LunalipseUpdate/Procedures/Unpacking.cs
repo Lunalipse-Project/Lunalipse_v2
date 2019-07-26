@@ -28,7 +28,7 @@ namespace LunalipseUpdate.Procedures
             int total = indexes.Count, current = 1;
             foreach (LrssIndex index in indexes)
             {
-                LrssResource lrssResource = lrssReader.ReadResource(index).Result;
+                LrssResource lrssResource = lrssReader.ReadResource(index);
                 ProcedureHelper.UpdateProgress(string.Format(ProgressDetail, lrssResource.Name, lrssResource.Type), current / total);
                 Thread.Sleep(200);
                 string path = string.Format("{0}{1}{2}", ProcedureHelper.updateFolder, lrssResource.Name, lrssResource.Type);

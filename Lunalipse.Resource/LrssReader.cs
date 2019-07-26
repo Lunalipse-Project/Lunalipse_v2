@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using static Lunalipse.Resource.Generic.Structure;
 using static Lunalipse.Resource.Generic.Delegates;
 using System.Text;
@@ -53,10 +52,31 @@ namespace Lunalipse.Resource
             ReadHeader();
         }
 
+        public void LoadLrss(string path)
+        {
+            if (fs != null) fs.Close();
+            fs = new MemoryStream();
+            using(FileStream fs_ = new FileStream(path, FileMode.Open))
+            {
+                byte[] content = new byte[fs_.Length];
+                fs_.Read(content, 0, content.Length);
+                fs.Write(content, 0, content.Length);
+            }
+            fs.Seek(0, SeekOrigin.Begin);
+            ReadHeader();
+        }
+
         public void LoadLrssRaw(byte[] lrss)
         {
             if (fs != null) fs.Close();
             fs = new MemoryStream(lrss);
+            ReadHeader();
+        }
+
+        public void LoadLrssRawCompressed(byte[] lrss)
+        {
+            if (fs != null) fs.Close();
+            fs = Compression.DecompressTo(lrss);
             ReadHeader();
         }
 
@@ -87,26 +107,23 @@ namespace Lunalipse.Resource
             return lis;
         }
 
-        public async Task<LrssResource> ReadResource(LrssIndex li)
+        public LrssResource ReadResource(LrssIndex li)
         {
-            return await Task.Run(() =>
+            try
             {
-                try
+                return new LrssResource(li.Size, li.Name, li.Type)
                 {
-                    return new LrssResource(li.Size, li.Name, li.Type)
-                    {
-                        Data = GetContent(li.Size, li.Address, li.Occupied)
-                    };
-                }
-                catch (Exception)
-                {
-                    return null;
-                }
-                finally
-                {
-                    OnEndpointReached?.Invoke(li.Occupied);
-                }
-            });
+                    Data = GetContent(li.Size, li.Address, li.Occupied)
+                };
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            finally
+            {
+                OnEndpointReached?.Invoke(li.Occupied);
+            }
         }
 
         private bool Verification(string key)
