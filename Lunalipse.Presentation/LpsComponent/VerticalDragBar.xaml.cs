@@ -20,8 +20,10 @@ namespace Lunalipse.Presentation.LpsComponent
     /// </summary>
     public partial class VerticalDragBar : UserControl
     {
-        public event ProgressChange OnValueChanged;
+        public event Action<object,double> OnValueChanged;
+        double maxval, val;
         bool isDown = false;
+        Brush track, bar;
         public VerticalDragBar()
         {
             InitializeComponent();
@@ -32,42 +34,39 @@ namespace Lunalipse.Presentation.LpsComponent
             Thumb.AddHandler(MouseDownEvent, new RoutedEventHandler(StartDragThumb), true);
             // Refreshing the UI, GETTING THE HEIGHT
             Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            this.DataContext = this;
         }
 
-        public static readonly DependencyProperty PRG_BG =
-            DependencyProperty.Register("VDRAGBAR_BACKGROUND",
-                                        typeof(Brush),
-                                        typeof(MusicProgressBar),
-                                        new PropertyMetadata(Brushes.Red));
-        public static readonly DependencyProperty TRACK_BG =
-            DependencyProperty.Register("VDRAGBAR_TRACK_BACKGROUND",
-                                        typeof(Brush),
-                                        typeof(MusicProgressBar),
-                                        new PropertyMetadata(Brushes.Transparent));
-        public static readonly DependencyProperty _value =
-            DependencyProperty.Register("VDRAGBAR_VALUE",
-                                        typeof(double),
-                                        typeof(MusicProgressBar),
-                                        new PropertyMetadata(0.0d));
-        public static readonly DependencyProperty _maxValue =
-            DependencyProperty.Register("VDRAGBAR_MAXVALUE",
-                                        typeof(double),
-                                        typeof(MusicProgressBar),
-                                        new PropertyMetadata(100d));
         public Brush BarColor
         {
-            get => (Brush)GetValue(PRG_BG);
-            set => SetValue(PRG_BG, value);
+            get
+            {
+                return bar;
+            }
+            set
+            {
+                bar = value;
+                CurrentVal.Background = bar;
+                BarShadowEffect.Color = (bar as SolidColorBrush).Color;
+                Thumb.Background = bar;
+            }
         }
         public Brush TrackColor
         {
-            get => (Brush)GetValue(TRACK_BG);
-            set => SetValue(TRACK_BG, value);
+            get
+            {
+                return track;
+            }
+            set
+            {
+                track = value;
+                Track.Background = track ;
+            }
         }
 
         public double MaxValue
         {
-            get => (double)GetValue(_maxValue);
+            get => maxval;
             set
             {
                 if (value == -1)
@@ -76,34 +75,34 @@ namespace Lunalipse.Presentation.LpsComponent
                     return;
                 }
                 IsEnabled = true;
-                SetValue(_maxValue, value);
+                maxval = value;
             }
         }
         public bool IsHold { get => isDown; }
         public double Value
         {
-            get => (double)GetValue(_value);
+            get => val;
             set
             {
                 if (value > MaxValue || isDown) return;
-                SetValue(_value, value);
+                val = value;
                 UpdateLength(false);
             }
         }
         private double ValueInner
         {
-            get => (double)GetValue(_value);
+            get => val;
             set
             {
                 if (value > MaxValue) return;
-                SetValue(_value, value);
+                val = value;
                 UpdateLength(true);
             }
         }
 
         private void UpdateLength(bool isNotify)
         {
-            if (ActualHeight != 0)
+            if (ActualHeight > 0)
             {
                 CurrentVal.Height = (Value / MaxValue) * (ActualHeight - 4);
             }
@@ -111,7 +110,7 @@ namespace Lunalipse.Presentation.LpsComponent
                 CurrentVal.Height = (Value / MaxValue) * (DesiredSize.Height - 4);
             if (isNotify)
             {
-                OnValueChanged?.Invoke(Value);
+                OnValueChanged?.Invoke(this,Value);
             }
         }
         private void ThumbDrag(object sender, RoutedEventArgs e)

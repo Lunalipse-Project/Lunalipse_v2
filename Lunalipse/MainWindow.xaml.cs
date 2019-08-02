@@ -408,6 +408,10 @@ namespace Lunalipse
                         typeof(DesktopDisplay), "lyric");
                     GlobalSetting.LyricEnabled = !GlobalSetting.LyricEnabled;
                     break;
+                case AudioPanelTrigger.Equalizer:
+                    MyEqualizer myEqualizer = new MyEqualizer();
+                    myEqualizer.Show();
+                    break;
             }
         }
 

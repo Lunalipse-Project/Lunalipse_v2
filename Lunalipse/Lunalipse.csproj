@@ -120,6 +120,9 @@
     <Compile Include="Windows\DesktopDisplay.xaml.cs">
       <DependentUpon>DesktopDisplay.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\MyEqualizer.xaml.cs">
+      <DependentUpon>MyEqualizer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\SaveAndApply.xaml.cs">
       <DependentUpon>SaveAndApply.xaml</DependentUpon>
     </Compile>
@@ -207,6 +210,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Windows\MyEqualizer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\SaveAndApply.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -273,6 +280,10 @@
       <Project>{EC61FD35-E655-4EBF-823C-24DF1599154C}</Project>
       <Name>Lunalipse.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Lunalipse.Presentation\Lunalipse.Presentation.csproj">
+      <Project>{cd82bd9b-bd7a-425c-a341-c51e03d74afb}</Project>
+      <Name>Lunalipse.Presentation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lunalipse.Resource\Lunalipse.Resource.csproj">
       <Project>{79CF16CE-EF56-4D3A-B736-E21EDD673327}</Project>
       <Name>Lunalipse.Resource</Name>
@@ -280,10 +291,6 @@
     <ProjectReference Include="..\Lunalipse.Utilities\Lunalipse.Utilities.csproj">
       <Project>{D273FBB2-C02A-45FF-B672-9E6930ECFAD7}</Project>
       <Name>Lunalipse.Utilities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Lunalipse.Presentation\Lunalipse.Presentation.csproj">
-      <Project>{cd82bd9b-bd7a-425c-a341-c51e03d74afb}</Project>
-      <Name>Lunalipse.Presentation</Name>
     </ProjectReference>
     <ProjectReference Include="..\LunaNetCore\LunaNetCore.csproj">
       <Project>{0370C0CB-20B3-4E1A-9F5F-1A846BC1C1B8}</Project>

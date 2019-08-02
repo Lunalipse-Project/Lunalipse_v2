@@ -21,11 +21,13 @@ namespace Lunalipse.I18N
 
         public string ConvertTo(SupportedPages page, string key)
         {
+            if (key == null) return string.Empty;
             if (Pages == null) return key;
             return Pages.GetPage(page).getContext(key);
         }
         public string ConvertTo(SupportedPages page, string key, params object[] replace)
         {
+            if (key == null) return string.Empty;
             if (Pages == null) return key;
             return Pages.GetPage(page).getContext(key).FormateEx(replace);
         }

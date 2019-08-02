@@ -95,6 +95,7 @@
     <Compile Include="Generic\IWaitable.cs" />
     <Compile Include="Generic\Themes\ThemeContainer.cs" />
     <Compile Include="Generic\Themes\ThemeManagerBase.cs" />
+    <Compile Include="Interfaces\ICommunicator\IProgressIndicator.cs" />
     <Compile Include="Interfaces\ILpsUI\IDialogPage.cs" />
     <Compile Include="Interfaces\ILpsUI\LpsDetailedListItem.cs" />
     <Compile Include="Interfaces\IThemes\IJThemeParser.cs" />

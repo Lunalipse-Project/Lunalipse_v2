@@ -88,35 +88,34 @@ namespace LunalipseUpdate
         {
             HorizontalAlignment currentAlignment = HorizontalAlignment.Left;
             Dispatcher.Invoke(() => ProgressBar.HorizontalAlignment = currentAlignment);
-            Dispatcher.Invoke(() => ProgressBar.Width = 0);
+            Dispatcher.Invoke(() => ProgressBarBackground.Width = 0);
             while (progress_waiting)
             {
                 Dispatcher.Invoke(() =>
                 {
-                    if (ProgressBar.Width < this.ActualWidth && currentAlignment == HorizontalAlignment.Left)
+                    if (ProgressBarBackground.Width < this.ActualWidth && currentAlignment == HorizontalAlignment.Left)
                     {
-                        ProgressBar.Width+=4;
+                        ProgressBarBackground.Width += 4;
                     }
-                    else if (ProgressBar.Width >= this.ActualWidth && currentAlignment == HorizontalAlignment.Left)
+                    else if (ProgressBarBackground.Width >= this.ActualWidth && currentAlignment == HorizontalAlignment.Left)
                     {
                         currentAlignment = HorizontalAlignment.Right;
                         ProgressBar.HorizontalAlignment = currentAlignment;
                     }
-                    else if (ProgressBar.Width <= 0 && currentAlignment == HorizontalAlignment.Right)
+                    else if (ProgressBarBackground.Width <= 0 && currentAlignment == HorizontalAlignment.Right)
                     {
                         currentAlignment = HorizontalAlignment.Left;
                         ProgressBar.HorizontalAlignment = currentAlignment;
                     }
                     else
                     {
-                        ProgressBar.Width-=4;
+                        ProgressBarBackground.Width -= 4;
                     }
                 });
                 Thread.Sleep(1000 / 64);
             }
-            currentAlignment = HorizontalAlignment.Left;
             Dispatcher.Invoke(() => ProgressBar.HorizontalAlignment = currentAlignment);
-            Dispatcher.Invoke(() => ProgressBar.Width = 0);
+            Dispatcher.Invoke(() => ProgressBarBackground.Width = 0);
         }
     }
 }

@@ -79,6 +79,8 @@
       
       <Key name="CORE_CATALOGUE_CATADELETE_TITLE">删除一个播放列表（歌单）</Key>
       <Key name="CORE_CATALOGUE_CATADELETE_MSG">确认删除播放列表（歌单）“{0}” 吗？该操作是不可逆的。</Key>
+
+      <Key name="CORE_EQUALIZER_TITLE">十段均衡器</Key>
       
       <!-- Theme parser -->
       <Key name="CORE_THEMEPARSER_ERR_INVALIDRANGE">无效的范围，"{0}"的取值范围必须要在"{1}"与"{2}"之间。</Key>

@@ -1,0 +1,19 @@
+﻿<LpsWindow:LunalipseDialogue x:Class="Lunalipse.Presentation.BasicUI.ProgressDialogue"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:LpsWindow="clr-namespace:Lunalipse.Presentation.LpsWindow"
+        xmlns:Lps="clr-namespace:Lunalipse.Presentation.LpsComponent"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Lunalipse.Presentation.BasicUI" WindowStyle="None"
+        mc:Ignorable="d" x:Name="PROGRESS_DIALOG" Foreground="White"
+        Title="ProgressDialogue" Height="150" Width="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" HorizontalContentAlignment="Center" x:Name="Message" Content="MESSAGE" Margin="0 10 0 0" Foreground="{Binding ElementName=PROGRESS_DIALOG, Path=Foreground}"/>
+        <Lps:LpsProgressBar x:Name="Progress" Grid.Row="1" Height="10" Margin="20 10 20 0 "/>
+    </Grid>
+</LpsWindow:LunalipseDialogue>

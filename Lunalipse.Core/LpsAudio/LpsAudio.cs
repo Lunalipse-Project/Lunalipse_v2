@@ -40,7 +40,7 @@ namespace Lunalipse.Core.LpsAudio
 
         ISoundOut wasapiOut;
         IWaveSource iws;
-        Equalizer mEqualizer;
+        public static Equalizer mEqualizer;
         LpsFftWarp lfw;
         Thread Counter;
         LyricEnumerator lEnum;
@@ -229,11 +229,11 @@ namespace Lunalipse.Core.LpsAudio
         {
             iws?.Dispose();
             iws = GetCodec(music.Extension, music.Path);
-            iws = lfw.Initialize(iws.ToSampleSource()
-                .ChangeSampleRate(32000)
-                .AppendSource(Equalizer.Create10BandEqualizer, out mEqualizer));
+            iws = lfw.Initialize(
+                iws.ToSampleSource()
+                    .ChangeSampleRate(32000)
+                    .AppendSource(Equalizer.Create10BandEqualizer, out mEqualizer));
             wasapiOut.Initialize(iws);
-            
         }
         
         private void CountTimerDelegate()

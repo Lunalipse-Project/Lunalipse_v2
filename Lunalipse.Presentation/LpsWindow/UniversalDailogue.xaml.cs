@@ -87,12 +87,13 @@ namespace Lunalipse.Presentation.LpsWindow
             Width = pageCotent.Width + WidthBias;
             Height = pageCotent.Height + HeightBias;
             Display.Content = content;
-            
+            Buttons.Visibility = Visibility.Collapsed;
         }
 
-        public UniversalDailogue(IDialogPage content, string title, MessageBoxButton Buttons) : this(content, title)
+        public UniversalDailogue(IDialogPage content, string title, MessageBoxButton MsgBtns) : this(content, title)
         {
-            switch (Buttons)
+            Buttons.Visibility = Visibility.Visible;
+            switch (MsgBtns)
             {
                 case MessageBoxButton.OK:
                     PositiveBtnI18N = "CORE_DIALOG_OK";
@@ -113,8 +114,8 @@ namespace Lunalipse.Presentation.LpsWindow
             Height += 45;
         }
 
-        public UniversalDailogue(IDialogPage content, string title, MessageBoxButton Buttons, string PositiveContent, string NegativeContent) 
-            : this(content,title,Buttons)
+        public UniversalDailogue(IDialogPage content, string title, MessageBoxButton MsgBtns, string PositiveContent, string NegativeContent) 
+            : this(content,title,MsgBtns)
         {
             PositiveBtnI18N = PositiveContent;
             NegativeBtnI18N = NegativeContent;

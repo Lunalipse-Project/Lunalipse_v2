@@ -98,9 +98,13 @@
                         <Grid Grid.Column="3">
                             <Button x:Name="VolumeAdj" Style="{StaticResource IconButton}" Height="45" Width="45" Content="{StaticResource Volume_0}" FontSize="{StaticResource IconMedium}" Foreground="{Binding Path=Foreground, ElementName=AudioPanelControl}">
                             </Button>
-                            <Popup PlacementTarget="{Binding ElementName=VolumeAdj}" Placement="Top" IsOpen="False" x:Name="VolumePlanePopup" AllowsTransparency="True" Width="45" Height="150">
-                                <local:VolumePanel Width="45" Height="150" Background="#BF000000" x:Name="VolumeBar" Opacity="0">
-                                    <!--<local:VolumePanel.Triggers>
+                            <Popup PlacementTarget="{Binding ElementName=VolumeAdj}" Placement="Top" IsOpen="False" x:Name="VolumePlanePopup" AllowsTransparency="True" Width="51" Height="156">
+                                <Border Margin="3 3 3 3" CornerRadius="4" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="1" Color="#FF333333"></DropShadowEffect>
+                                    </Border.Effect>
+                                    <local:VolumePanel Width="45" Height="150" Background="#BF000000" x:Name="VolumeBar" Opacity="0">
+                                        <!--<local:VolumePanel.Triggers>
                                         <EventTrigger RoutedEvent="MouseLeave">
                                             <BeginStoryboard>
                                                 <Storyboard>
@@ -113,7 +117,8 @@
                                             </BeginStoryboard>
                                         </EventTrigger>
                                     </local:VolumePanel.Triggers>-->
-                                </local:VolumePanel>
+                                    </local:VolumePanel>
+                                </Border>
                             </Popup>
                             <!--<Grid.Triggers>
                                 <EventTrigger RoutedEvent="MouseEnter">

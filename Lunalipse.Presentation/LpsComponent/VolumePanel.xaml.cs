@@ -24,10 +24,10 @@ namespace Lunalipse.Presentation.LpsComponent
         public VolumePanel()
         {
             InitializeComponent();
-            VolumBar.OnValueChanged += x =>
+            VolumBar.OnValueChanged += (sender, value) =>
             {
-                ValueDisp.Content = Math.Round(x);
-                OnValueChanged?.Invoke(x);
+                ValueDisp.Content = Math.Round(value);
+                OnValueChanged?.Invoke(value);
             };
         }
 

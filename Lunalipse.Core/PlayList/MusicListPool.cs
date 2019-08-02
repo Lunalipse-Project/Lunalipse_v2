@@ -12,6 +12,8 @@ using Lunalipse.Core.Metadata;
 using Lunalipse.Core.I18N;
 using Lunalipse.Common.Generic.Cache;
 using Lunalipse.Utilities;
+using Lunalipse.Common.Interfaces.ICommunicator;
+using System.Windows.Threading;
 
 namespace Lunalipse.Core.PlayList
 {
@@ -61,7 +63,7 @@ namespace Lunalipse.Core.PlayList
             Log = LunalipseLogger.GetLogger();
         }
 
-        public string AddToPool(string dirpath)
+        public string AddToPool(string dirpath, IProgressIndicator indicator = null)
         {
             if (CPool.Exists(x => x.isLocationClassified == true && x.Name.Equals(dirpath)))
                 return "";
@@ -75,15 +77,21 @@ namespace Lunalipse.Core.PlayList
                 isLocationClassified = true
             };
             Log.Info("Loading path \"{0}\"".FormateEx(dirpath));
-            foreach(string fi in Directory.GetFiles(dirpath))
+            string[] files = Directory.GetFiles(dirpath);
+            indicator?.SetRange(0, files.Length);
+            int counter = 0;
+            foreach (string fi in files)
             {
+                counter++;
                 if(SupportFormat.AllQualified(Path.GetExtension(fi)))
                 {
                     MusicEntity me = immdr.CreateEntity(fi);
                     AllMusic.AddMusic(me);
                     pathCatalogue.AddMusic(me);
+                    indicator?.ChangeCurrentVal(counter, me.Name);
                 }
             }
+            indicator?.Complete();
             Log.Debug("{0} musics loaded".FormateEx(pathCatalogue.GetCount()));
             CPool.AddCatalogue(pathCatalogue);
             return pathCatalogue.UUID;

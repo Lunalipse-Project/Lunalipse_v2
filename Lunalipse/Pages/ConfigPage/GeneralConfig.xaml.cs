@@ -5,6 +5,7 @@ using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Core.PlayList;
 using Lunalipse.Pages.ConfigPage.Structures;
+using Lunalipse.Presentation.BasicUI;
 using Lunalipse.Presentation.LpsComponent;
 using Lunalipse.Utilities;
 using System;
@@ -154,7 +155,8 @@ namespace Lunalipse.Pages.ConfigPage
                 {
                     GlobalSetting.MusicBaseDirs.Add(folderChoice);
                     // 保存新增的Catalogue的uuid。
-                    MLP.AddToPool(folderChoice);
+                    ProgressDialogue dialogue = new ProgressDialogue((indicator) => MLP.AddToPool(folderChoice, indicator));
+                    dialogue.ShowDialog();
                     ReadManifest();
                     // 发送全局广播，标志着添加动作已完成
                     // C_UPD : Catalogues以添加，其他界面可以进行刷新。

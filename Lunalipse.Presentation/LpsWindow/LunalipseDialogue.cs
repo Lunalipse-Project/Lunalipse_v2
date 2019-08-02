@@ -26,14 +26,13 @@ namespace Lunalipse.Presentation.LpsWindow
             Loaded += DialogueLoaded;
 
             ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
-            ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
             
         }
 
         protected const int HeightBias = 55;
         protected const int WidthBias = 25;
 
-        private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
+        protected virtual void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
         {
             if (obj == null) return;
             Background = obj.Primary;
@@ -48,6 +47,7 @@ namespace Lunalipse.Presentation.LpsWindow
             (ct.FindName("DialogueClose", this) as Button).Click += ClosePressed;
             this.HideWindowFromAltTab();
             Topmost = true;
+            ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
         }
 
         protected void TitleBarMove(object sender, EventArgs args)

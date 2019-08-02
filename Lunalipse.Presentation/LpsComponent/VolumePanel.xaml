@@ -19,7 +19,7 @@
                 <ColumnDefinition Width="0.4*"/>
                 <ColumnDefinition Width="0.3*"/>
             </Grid.ColumnDefinitions>
-            <local:VerticalDragBar Grid.Column="1" x:Name="VolumBar" TrackColor="#FFBB3737"/>
+            <local:VerticalDragBar Grid.Column="1" x:Name="VolumBar"/>
         </Grid>
     </Grid>
 </UserControl>

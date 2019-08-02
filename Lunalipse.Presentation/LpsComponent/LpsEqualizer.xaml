@@ -1,0 +1,142 @@
+﻿<UserControl x:Class="Lunalipse.Presentation.LpsComponent.LpsEqualizer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:local="clr-namespace:Lunalipse.Presentation.LpsComponent"
+             mc:Ignorable="d" x:Name="Equliazer" Foreground="White"
+             Height="300" Width="560">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <GridLength x:Key="BarWidth">50</GridLength>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource BarWidth}"/>
+                    <ColumnDefinition Width="{StaticResource BarWidth}"/>
+                    <ColumnDefinition Width="{StaticResource BarWidth}"/>
+                    <ColumnDefinition Width="{StaticResource BarWidth}"/>
+                    <ColumnDefinition Width="{StaticResource BarWidth}"/>
+                    <ColumnDefinition Width="{StaticResource BarWidth}"/>
+                    <ColumnDefinition Width="{StaticResource BarWidth}"/>
+                    <ColumnDefinition Width="{StaticResource BarWidth}"/>
+                    <ColumnDefinition Width="{StaticResource BarWidth}"/>
+                    <ColumnDefinition Width="{StaticResource BarWidth}"/>
+                    <ColumnDefinition Width="{StaticResource BarWidth}"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" Margin="0 0 0 5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Content="21.25" Foreground="{Binding ElementName=Equliazer,Path=Foreground}" Margin="0 0 0 5" HorizontalContentAlignment="Center"/>
+                    <local:VerticalDragBar Grid.Row="1" x:Name="p1" Height="256" OnValueChanged="VerticalDragBar_OnValueChanged" HorizontalAlignment="Center" Tag="1"/>
+                </Grid>
+                <Grid Grid.Column="1" Margin="0 0 0 5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Content="62.5" Foreground="{Binding ElementName=Equliazer,Path=Foreground}" Margin="0 0 0 5" HorizontalContentAlignment="Center"/>
+                    <local:VerticalDragBar Grid.Row="1" x:Name="p2" Height="256" OnValueChanged="VerticalDragBar_OnValueChanged" HorizontalAlignment="Center" Tag="2"/>
+                </Grid>
+                <Grid Grid.Column="2" Margin="0 0 0 5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Content="125" Foreground="{Binding ElementName=Equliazer,Path=Foreground}" Margin="0 0 0 5" HorizontalContentAlignment="Center"/>
+                    <local:VerticalDragBar Grid.Row="1" x:Name="p3" Height="256" OnValueChanged="VerticalDragBar_OnValueChanged" HorizontalAlignment="Center" Tag="3"/>
+                </Grid>
+                <Grid Grid.Column="3" Margin="0 0 0 5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Content="250" Foreground="{Binding ElementName=Equliazer,Path=Foreground}" Margin="0 0 0 5" HorizontalContentAlignment="Center"/>
+                    <local:VerticalDragBar Grid.Row="1" x:Name="p4" Height="256" OnValueChanged="VerticalDragBar_OnValueChanged" HorizontalAlignment="Center" Tag="4"/>
+                </Grid>
+                <Grid Grid.Column="4" Margin="0 0 0 5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Content="500" Foreground="{Binding ElementName=Equliazer,Path=Foreground}" Margin="0 0 0 5" HorizontalContentAlignment="Center"/>
+                    <local:VerticalDragBar Grid.Row="1" x:Name="p5" Height="256" OnValueChanged="VerticalDragBar_OnValueChanged" HorizontalAlignment="Center" Tag="5"/>
+                </Grid>
+                <Grid Grid.Column="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="270"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="+12" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="{Binding ElementName=Equliazer,Path=Foreground}"/>
+                        <Label Content="+6" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Center" Foreground="{Binding ElementName=Equliazer,Path=Foreground}"/>
+                        <Label Content="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{Binding ElementName=Equliazer,Path=Foreground}"/>
+                        <Label Content="-6" Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="{Binding ElementName=Equliazer,Path=Foreground}"/>
+                        <Label Content="-12" Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Center" Foreground="{Binding ElementName=Equliazer,Path=Foreground}"/>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Column="6" Margin="0 0 0 5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Content="1K" Foreground="{Binding ElementName=Equliazer,Path=Foreground}" Margin="0 0 0 5" HorizontalContentAlignment="Center"/>
+                    <local:VerticalDragBar Grid.Row="1" x:Name="p6" Height="256" OnValueChanged="VerticalDragBar_OnValueChanged" HorizontalAlignment="Center" Tag="6"/>
+                </Grid>
+                <Grid Grid.Column="7" Margin="0 0 0 5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Content="2K" Foreground="{Binding ElementName=Equliazer,Path=Foreground}" Margin="0 0 0 5" HorizontalContentAlignment="Center"/>
+                    <local:VerticalDragBar Grid.Row="1"  x:Name="p7" Height="256" OnValueChanged="VerticalDragBar_OnValueChanged" HorizontalAlignment="Center" Tag="7"/>
+                </Grid>
+                <Grid Grid.Column="8" Margin="0 0 0 5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Content="4K" Foreground="{Binding ElementName=Equliazer,Path=Foreground}" Margin="0 0 0 5" HorizontalContentAlignment="Center"/>
+                    <local:VerticalDragBar Grid.Row="1" x:Name="p8" Height="256" OnValueChanged="VerticalDragBar_OnValueChanged" HorizontalAlignment="Center" Tag="8"/>
+                </Grid>
+                <Grid Grid.Column="9" Margin="0 0 0 5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Content="8K" Foreground="{Binding ElementName=Equliazer,Path=Foreground}" Margin="0 0 0 5" HorizontalContentAlignment="Center"/>
+                    <local:VerticalDragBar Grid.Row="1" x:Name="p9" Height="256" OnValueChanged="VerticalDragBar_OnValueChanged" HorizontalAlignment="Center" Tag="9"/>
+                </Grid>
+                <Grid Grid.Column="10" Margin="0 0 0 5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Content="16K" Foreground="{Binding ElementName=Equliazer,Path=Foreground}" Margin="0 0 0 5" HorizontalContentAlignment="Center"/>
+                    <local:VerticalDragBar Grid.Row="1" x:Name="p10" Height="256" OnValueChanged="VerticalDragBar_OnValueChanged" HorizontalAlignment="Center" Tag="10"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

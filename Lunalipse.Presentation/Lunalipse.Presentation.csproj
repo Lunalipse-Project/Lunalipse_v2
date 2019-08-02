@@ -62,6 +62,9 @@
     <Compile Include="BasicUI\CommonDialog.xaml.cs">
       <DependentUpon>CommonDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BasicUI\ProgressDialogue.xaml.cs">
+      <DependentUpon>ProgressDialogue.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Generic\Brush2Opacity.cs" />
     <Compile Include="Generic\ContentManager.cs" />
     <Compile Include="Generic\VisualParser\IndexingFile.cs" />
@@ -80,6 +83,9 @@
     <Compile Include="LpsComponent\LpsDropDown.xaml.cs">
       <DependentUpon>LpsDropDown.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LpsComponent\LpsEqualizer.xaml.cs">
+      <DependentUpon>LpsEqualizer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LpsComponent\LpsGridList.xaml.cs">
       <DependentUpon>LpsGridList.xaml</DependentUpon>
     </Compile>
@@ -97,6 +103,10 @@
     </Compile>
     <Compile Include="Utils\WaitingUI.cs" />
     <Page Include="BasicUI\CommonDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BasicUI\ProgressDialogue.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -141,6 +151,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="LpsComponent\LpsDropDown.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LpsComponent\LpsEqualizer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

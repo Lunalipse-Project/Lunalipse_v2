@@ -45,7 +45,7 @@
                     <DataTemplate>
                         <local:MusicSelectionListItem x:Name="ItemConatiner" 
                                                       Background="#00FFFFFF"
-                                                      MouseDown="ItemConatiner_MouseDown">
+                                                      MouseDoubleClick="ItemConatiner_MouseDown">
                             <local:MusicSelectionListItem.Triggers>
                                 <EventTrigger RoutedEvent="UIElement.MouseEnter">
                                     <EventTrigger.Actions>
