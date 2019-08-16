@@ -10,6 +10,8 @@
       Title="CatalogueShowCase">
 
     <Grid>
-        <LpsComponent:LpsGridList x:Name="showcase"/>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
+            <LpsComponent:LpsGridList x:Name="showcase"/>
+        </ScrollViewer>
     </Grid>
 </Page>

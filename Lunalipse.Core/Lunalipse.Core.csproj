@@ -66,6 +66,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BehaviorScript\BScriptManager.cs" />
     <Compile Include="BehaviorScript\InstructionProc.cs" />
     <Compile Include="BehaviorScript\Interpretation.cs" />
     <Compile Include="BehaviorScript\Parser.cs" />
@@ -100,7 +101,8 @@
     <Compile Include="Theme\LThemeParser.cs" />
     <Compile Include="UpdateHelper.cs" />
     <Compile Include="Visualization\Droplet.cs" />
-    <Compile Include="Visualization\VisualizationBase.cs" />
+    <Compile Include="Visualization\LineSpectrum.cs" />
+    <Compile Include="Visualization\VisualizationHelper.cs" />
     <Compile Include="Lyric\LyricEnumerator.cs" />
     <Compile Include="Lyric\LyricTokenizer.cs" />
     <Compile Include="Metadata\MediaMetaDataReader.cs" />
@@ -110,6 +112,7 @@
     <Compile Include="PlayList\CataloguePool.cs" />
     <Compile Include="PlayList\MusicListPool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Visualization\VisualizationManager.cs" />
     <Compile Include="Visualization\Wave.cs" />
   </ItemGroup>
   <ItemGroup>

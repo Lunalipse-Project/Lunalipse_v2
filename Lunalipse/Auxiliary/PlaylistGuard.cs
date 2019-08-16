@@ -28,9 +28,9 @@ namespace Lunalipse.Auxiliary
 
         public PlaylistGuard()
         {
-            cacheHub = CacheHub.INSTANCE();
-            cataloguePool = CataloguePool.INSATNCE;
-            musicListPool = MusicListPool.INSATNCE();
+            cacheHub = CacheHub.Instance();
+            cataloguePool = CataloguePool.Instance;
+            musicListPool = MusicListPool.Instance();
             savedFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\UserData\";
             if (!Directory.Exists(savedFolder)) Directory.CreateDirectory(savedFolder);
             EVENT_BUS = EventBus.Instance;

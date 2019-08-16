@@ -32,6 +32,7 @@ namespace LunalipseEmbedder
                 Console.WriteLine("Export Fail");
                 Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);
+                Console.ReadLine();
             }
         }
 

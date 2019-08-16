@@ -37,6 +37,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -55,8 +56,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ContentViewer.xaml.cs">
+      <DependentUpon>ContentViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Packer.cs" />
     <Compile Include="UpgradeManifest.cs" />
     <Compile Include="WatchedFile.cs" />
+    <Page Include="ContentViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -98,6 +107,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resource\LunaCM_60x60.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lunalipse.Resource\Lunalipse.Resource.csproj">
+      <Project>{79cf16ce-ef56-4d3a-b736-e21edd673327}</Project>
+      <Name>Lunalipse.Resource</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

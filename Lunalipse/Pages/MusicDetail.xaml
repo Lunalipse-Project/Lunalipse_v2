@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:lps="clr-namespace:Lunalipse.Presentation.LpsComponent;assembly=Lunalipse.Presentation"
       mc:Ignorable="d" x:Name="MUSIC_DEATIL"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MusicDetail">
@@ -29,7 +30,7 @@
             <!-- Operation Area -->
             <Grid Grid.Row="1">
                 <StackPanel Orientation="Vertical">
-                    
+                    <lps:LpsSpectrum Height="55" Margin="7.5 0 7.5 0" Background="Transparent" Name="FFTSpectrum" Tag="DISP_MusicDetail"/>
                 </StackPanel>
             </Grid>
             

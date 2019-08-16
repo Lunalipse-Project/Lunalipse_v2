@@ -38,7 +38,7 @@ namespace Lunalipse.Pages
         public ChooseCatalogues(MusicEntity Target)
         {
             InitializeComponent();
-            cataloguePool = CataloguePool.INSATNCE;
+            cataloguePool = CataloguePool.Instance;
             UserDefinedCatalogue.OnSelectionChanged += UserDefinedCatalogue_OnSelectionChanged;
             UpdateList();
             WaitingForAdd = Target;

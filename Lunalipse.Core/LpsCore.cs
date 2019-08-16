@@ -24,9 +24,9 @@ namespace Lunalipse.Core
         public event Action<MusicEntity, Track> OnMusicPrepared;
         public event Action<TimeSpan> OnMusicProgressChanged;
 
-        public static LpsCore Session(string name)
+        public static LpsCore Session(string name,bool immersed = false, int latency = 100)
         {
-            LpsCore tempCore = new LpsCore();
+            LpsCore tempCore = new LpsCore(immersed, latency);
             lpsCoresSessions.Add(name, tempCore);
             return tempCore;
         }
@@ -37,9 +37,9 @@ namespace Lunalipse.Core
             return lpsCoresSessions[name];
         }
 
-        protected LpsCore()
+        protected LpsCore(bool immersed, int latency)
         {
-            AudioOut = LpsAudio.LpsAudio.INSTANCE();
+            AudioOut = LpsAudio.LpsAudio.Instance(immersed,latency);
             executor = Interpreter.INSTANCE(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
             AudioDelegations.MusicLoaded += mLoaded;
             AudioDelegations.PlayingFinished += mComplete;

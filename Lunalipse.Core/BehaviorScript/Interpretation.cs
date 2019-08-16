@@ -67,29 +67,28 @@ namespace Lunalipse.Core.BehaviorScript
         private object[] ConvertArgs(int cmdType, string[] argsType, string[] srcArg,string curCmd)
         {
             List<object> args = new List<object>();
+            if (srcArg.Length > argsType.Length)
+            {
+                ErrorDelegation.OnErrorRaisedBSI?.Invoke("CORE_LBS_NoSuchPara", "{0}({1})".FormateEx(curCmd, string.Join(",", argsType)), position);
+                return null;
+            }
             for (int i = 0; i < srcArg.Length; i++)
             {
-                //if()
-                if (i > argsType.Length - 1)
-                {
-                    ErrorDelegation.OnErrorRaisedBSI?.Invoke("CORE_LBS_NoSuchPara", "{0}({1})".FormateEx(curCmd,string.Join(",", argsType)), position);
-                    return null;
-                }
+                
                 Type t = Type.GetType("System." + argsType[i]);
                 try
                 {
                     args.Add(Convert.ChangeType(srcArg[i], t));
                 }
-                catch (FormatException)
+                catch (Exception e)
                 {
-                    ErrorDelegation.OnErrorRaisedBSI?.Invoke("CORE_LBS_NoSuchPara", "{0}({1})".FormateEx(curCmd, string.Join(",", argsType)), position);
+                    if(e is FormatException || e is OverflowException)
+                    {
+                        ErrorDelegation.OnErrorRaisedBSI?.Invoke("CORE_LBS_NoSuchPara", "{0}({1})".FormateEx(curCmd, string.Join(",", argsType)), position);
+                    }
                     return null;
                 }
-                catch (OverflowException)
-                {
-                    ErrorDelegation.OnErrorRaisedBSI?.Invoke("CORE_LBS_DataTypeOverflow", argsType[i], position);
-                    return null;
-                }
+                
             }
             return args.ToArray();
         }

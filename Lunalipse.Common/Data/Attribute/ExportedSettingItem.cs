@@ -9,7 +9,7 @@ namespace Lunalipse.Common.Data.Attribute
     /// <summary>
     /// Lunalipse配置项
     /// </summary>
-    public class ConfigField : System.Attribute
+    public class NonConfigField : System.Attribute
     {
         
     }

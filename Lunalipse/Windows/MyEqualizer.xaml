@@ -7,7 +7,7 @@
         xmlns:LpsComponent="clr-namespace:Lunalipse.Presentation.LpsComponent;assembly=Lunalipse.Presentation"
         xmlns:local="clr-namespace:Lunalipse.Windows"
         mc:Ignorable="d"
-        Title="MyEqualizer" Height="360" Width="570">
+        Title="MyEqualizer" Height="360" Width="570" Loaded="LunalipseDialogue_Loaded">
     <Grid>
         <LpsComponent:LpsEqualizer x:Name="equalizer" OnEqualizerValueChanged="Equalizer_OnEqualizerValueChanged"/>
     </Grid>

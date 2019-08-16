@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace LunalipseUpdate
+namespace UpdatePacker
 {
-    public class UpgradeManifestItem
+   public class UpgradeManifestItem
     {
         public string fileName;
         public string targetPath;

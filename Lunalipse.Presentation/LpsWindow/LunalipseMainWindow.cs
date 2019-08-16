@@ -28,10 +28,9 @@ namespace Lunalipse.Presentation.LpsWindow
             this.Style = (Style)Application.Current.Resources["LunalipseMainWindow"];
             Loaded += MainWindowLoaded;
             ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
-            ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
         }
 
-        private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
+        protected virtual void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
         {
             if (obj == null) return;
             Foreground = obj.Foreground;
@@ -49,6 +48,7 @@ namespace Lunalipse.Presentation.LpsWindow
 
         protected virtual void MainWindowLoaded(object sender, EventArgs args)
         {
+            ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
             ControlTemplate ct = (ControlTemplate)Application.Current.Resources["LunalipseMainWindowTemplate"];
             (ct.FindName("TitleBar", this) as Grid).MouseLeftButtonDown += LunalipseMainWindow_MouseLeftButtonDown; ;
             (ct.FindName("BtnCloseWn", this) as Button).Click += CloseWnd ;

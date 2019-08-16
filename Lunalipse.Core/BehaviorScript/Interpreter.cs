@@ -68,7 +68,7 @@ namespace Lunalipse.Core.BehaviorScript
         {
             ScriptParser = new Parser();
             KbProxy = KeyboardProxy.INSTANCE;
-            CataPool = CataloguePool.INSATNCE;
+            CataPool = CataloguePool.Instance;
             Helper = new Interpretation();
             ScriptParser.ErrorOccured += (x, y, z) =>
             {
@@ -136,13 +136,16 @@ namespace Lunalipse.Core.BehaviorScript
                 if (singleStepCount == 1)
                 {
                     foreach (Delegate delg in onCExecutionRequest.GetInvocationList())
-                        if ((cache = ((CommandExecutor)delg).Invoke(atoken.CommandType, atoken.ct_args, CataPool, ref chosenCatalogue, ref Pointer)) 
+                        if ((cache = ((CommandExecutor)delg).Invoke(atoken.CommandType, atoken.ct_args, CataPool, ref chosenCatalogue, ref Pointer))
                                 != null)
+                            break;
+
+                    if (cache != null)
+                    {
+                        foreach (Delegate delg in onSExecutionRequest.GetInvocationList())
                             if (((SuffixExecutor)delg).Invoke(atoken.SuffixType, atoken.st_args, ref singleStepCount))
                                 break;
-                    //foreach (Delegate delg in onSExecutionRequest.GetInvocationList())
-                    //    if (((SuffixExecutor)delg).Invoke(atoken.SuffixType, atoken.st_args, ref singleStepCount))
-                    //        break;
+                    }
                     singleStepCount++;
                     if (RandomPlay)
                         Pointer = randomControl.Next(0, Actions.Count);

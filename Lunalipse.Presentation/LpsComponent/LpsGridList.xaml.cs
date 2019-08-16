@@ -38,20 +38,20 @@ namespace Lunalipse.Presentation.LpsComponent
 
         private void LpsGridList_Loaded(object sender, RoutedEventArgs e)
         {
-            Scroller.ScrollChanged += Scroller_ScrollChanged;
+            //Scroller.ScrollChanged += Scroller_ScrollChanged;
             Unloaded += LpsGridList_Unloaded;
         }
 
         private void LpsGridList_Unloaded(object sender, RoutedEventArgs e)
         {
-            Scroller.ScrollChanged -= Scroller_ScrollChanged;
+            //Scroller.ScrollChanged -= Scroller_ScrollChanged;
             Unloaded -= LpsGridList_Unloaded;
         }
 
-        private void Scroller_ScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            Console.WriteLine(e.VerticalOffset);
-        }
+        //private void Scroller_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        //{
+        //    Console.WriteLine(e.VerticalOffset);
+        //}
 
         public void Add(ICatalogue catalogue)
         {

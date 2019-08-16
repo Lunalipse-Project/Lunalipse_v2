@@ -52,7 +52,7 @@ namespace Lunalipse.Core.LpsAudio
             }
             else notify.BaseSource = iss;
             notify.SingleBlockRead += (s, e) => provider.Add(e.Left, e.Right);
-            return notify.ToWaveSource();
+            return notify.ToWaveSource(16);
         }
 
         public LpsFftWarp()
@@ -64,8 +64,10 @@ namespace Lunalipse.Core.LpsAudio
         public float[] GetFFTDat()
         {
             float[] buffer = new float[(int)size];
-            provider.GetFftData(buffer, this);
-            return buffer;
+            if (provider.GetFftData(buffer, this))
+                return buffer;
+            else
+                return null;
         }
 
         public int GetFftBandIndex(float freq)

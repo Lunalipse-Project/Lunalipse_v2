@@ -116,5 +116,10 @@ namespace Lunalipse.Utilities
                 }
             }
         }
+
+        public static double RecalucteSpectrumBarWidth(int barCount, double BarSpacing, double WidthOfRegion)
+        {
+            return (WidthOfRegion - BarSpacing) / barCount - BarSpacing;
+        }
     }
 }

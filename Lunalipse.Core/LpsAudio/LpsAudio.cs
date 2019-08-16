@@ -18,6 +18,9 @@ using Lunalipse.Common.Interfaces.IConsole;
 using Lunalipse.Core.Console;
 using System.Windows;
 using System.IO;
+using Lunalipse.Core.Visualization;
+using System.Windows.Shapes;
+using Lunalipse.Common.Interfaces.IVisualization;
 
 namespace Lunalipse.Core.LpsAudio
 {
@@ -26,13 +29,13 @@ namespace Lunalipse.Core.LpsAudio
         volatile static LpsAudio LA_instance;
         readonly static object LA_lock = new object();
 
-        public static LpsAudio INSTANCE(bool immersed = false)
+        public static LpsAudio Instance(bool immersed = false,int latency = 100)
         {
             if (LA_instance == null)
             {
                 lock (LA_lock)
                 {
-                    LA_instance = LA_instance ?? new LpsAudio(immersed);
+                    LA_instance = LA_instance ?? new LpsAudio(immersed, latency);
                 }
             }
             return LA_instance;
@@ -42,10 +45,13 @@ namespace Lunalipse.Core.LpsAudio
         IWaveSource iws;
         public static Equalizer mEqualizer;
         LpsFftWarp lfw;
-        Thread Counter;
+        Thread Counter, SpectrumUpdater;
         LyricEnumerator lEnum;
         bool isPlaying = false;
+        bool isSoundThreadFinished = false;
         float _vol = 0.7f;
+
+        VisualizationManager vManager;
 
         public float Volume
         {
@@ -62,6 +68,8 @@ namespace Lunalipse.Core.LpsAudio
         {
             get { return isPlaying; }
         }
+
+
         public bool wasapiSupport
         {
             get
@@ -69,6 +77,10 @@ namespace Lunalipse.Core.LpsAudio
                 return WasapiOut.IsSupportedOnCurrentPlatform;
             }
         }
+
+        
+        
+
         public Equalizer LpsEqualizer
         {
             get
@@ -94,14 +106,14 @@ namespace Lunalipse.Core.LpsAudio
         public bool isLoaded { get; private set; }
 
         // Constructor
-        public LpsAudio(bool immersed=false)
+        private LpsAudio(bool immersed, int latency)
         {
-            wasapiOut = WasapiOut.IsSupportedOnCurrentPlatform ? GetWasapiSoundOut(immersed) : GetDirectSoundOut();
+            wasapiOut = WasapiOut.IsSupportedOnCurrentPlatform ? GetWasapiSoundOut(immersed, latency) : GetDirectSoundOut(latency);
             lfw = LpsFftWarp.INSTANCE;
             lEnum = new LyricEnumerator();
             lEnum.LyricDefaultDir = "Lyrics";
             ConsoleAdapter.INSTANCE.RegisterComponent("lpsa", this);
-            
+            vManager = VisualizationManager.Instance;
             wasapiOut.Stopped += (s, e) =>
             {
                 //Counter?.Abort();
@@ -146,6 +158,9 @@ namespace Lunalipse.Core.LpsAudio
         {
             isPlaying = true;
             Counter = new Thread(new ThreadStart(CountTimerDelegate));
+            SpectrumUpdater = new Thread(new ThreadStart(FFTSpectrumUpdateDelegate));
+            isSoundThreadFinished = false;
+            SpectrumUpdater.Start();
             Counter?.Start();
             wasapiOut.Play();
             AudioDelegations.StatuesChanged?.Invoke(isPlaying);
@@ -177,7 +192,7 @@ namespace Lunalipse.Core.LpsAudio
         public bool SetEqualizerIndex(int inx, double data)
         {
             if (inx >= mEqualizer.SampleFilters.Count) return false;
-            mEqualizer.SampleFilters[inx].AverageGainDB = data * 20;
+            mEqualizer.SampleFilters[inx].AverageGainDB = data;
             return true;
         }
 
@@ -237,8 +252,7 @@ namespace Lunalipse.Core.LpsAudio
         }
         
         private void CountTimerDelegate()
-        {
-            
+        {          
             double totalMS = iws.GetLength().TotalMilliseconds;
             TimeSpan position;
             LyricToken p_lt = null;
@@ -257,10 +271,23 @@ namespace Lunalipse.Core.LpsAudio
                         }
                     }
                 }
-                Thread.Sleep(998);
+                Thread.Sleep(1000);
             }
             Application.Current.Dispatcher.Invoke(() => AudioDelegations.PlayingFinished?.Invoke());
             isPlaying = false;
+            isSoundThreadFinished = true;
+        }
+
+        private void FFTSpectrumUpdateDelegate()
+        {
+            while(!isSoundThreadFinished)
+            {
+                if (isPlaying && vManager.EnableSpectrum && AudioDelegations.HasSubscribersSpectrum())
+                {
+                    AudioDelegations.UpdateFftData(AudioDelegations.FftAcquired?.Invoke());
+                }
+                Thread.Sleep(1000 / vManager.SpectrumUpdatePreSecond);
+            }
         }
 
         #region Command Handler

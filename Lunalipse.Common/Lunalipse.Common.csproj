@@ -130,6 +130,10 @@
     <Compile Include="Interfaces\IPlayList\IMusicListPool.cs" />
     <Compile Include="Interfaces\ISetting\IGlobalSetting.cs" />
     <Compile Include="Interfaces\ISetting\ISettingHelper.cs" />
+    <Compile Include="Interfaces\IVisualization\ISpectrumStyle.cs" />
+    <Compile Include="Interfaces\IVisualization\IV11nHelper.cs" />
+    <Compile Include="Interfaces\IVisualization\IV11nManager.cs" />
+    <Compile Include="Interfaces\IVisualization\VisualizationManagerBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VersionHelper.cs" />
   </ItemGroup>
@@ -142,5 +146,6 @@
   <ItemGroup>
     <None Include="Lunaxisky.pfx" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -4,8 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UpdatePacker"
-        mc:Ignorable="d" ResizeMode="NoResize" Background="LightGray"
-        Title="MainWindow" Height="500" Width="450">
+        mc:Ignorable="d" ResizeMode="NoResize" Closing="Window_Closing"
+        Title="MainWindow" Height="537" Width="450" Background="Gray">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="64"/>
@@ -15,7 +15,7 @@
             <Grid.Background>
                 <LinearGradientBrush>
                     <GradientStop Color="Blue" Offset="0"/>
-                    <GradientStop Color="LightGray" Offset="1"/>
+                    <GradientStop Color="Gray" Offset="1"/>
                 </LinearGradientBrush>
             </Grid.Background>
             <Grid.ColumnDefinitions>
@@ -30,24 +30,37 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height=".5*"/>
             </Grid.RowDefinitions>
-            <ListBox Grid.Row="0" Height="300" Background="Transparent">
-                <ListBox.ItemTemplate>
+            <ListView Grid.Row="0" Height="300" Background="Transparent" x:Name="FilesInfo" ItemsSource="{Binding WatchedFiles}" MouseRightButtonDown="FilesInfo_MouseRightButtonDown">
+                <ListView.ItemTemplate>
                     <DataTemplate>
                         <Border BorderThickness="0 0 0 1" BorderBrush="Gray" Background="{Binding ModifyTypeColor}">
                             <DockPanel>
-                                <Label Grid.Column="0" Content="{Binding ModifyTypeIdentifier}" FontWeight="ExtraBold" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                <Label Grid.Column="1" Content="{Binding ModifiedFileName}" FontSize="20" Margin="10 0 0 0" VerticalAlignment="Center" Foreground="Black"/>
+                                <Label Grid.Column="0" Content="{Binding ModifyTypeIdentifier}" Width="40" FontWeight="ExtraBold" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
+                                <Label Grid.Column="1" Content="{Binding ModifiedFileName}" FontSize="20" Margin="5 0 0 0" VerticalAlignment="Center" Foreground="Black"/>
                             </DockPanel>
                         </Border>
                     </DataTemplate>
-                </ListBox.ItemTemplate>
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
+                </ListView.ItemTemplate>
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="标记为……">
+                            <MenuItem Header="已添加" Tag="ADD" Click="MenuItem_Click"/>
+                            <MenuItem Header="已修改" Tag="CHANGED" Click="MenuItem_Click"/>
+                            <MenuItem Header="已删除" Tag="DELETED" Click="MenuItem_Click"/>
+                            <MenuItem Header="可运行" Tag="RUN" Click="MenuItem_Click"/>
+                            <MenuItem Header="未变更" Tag="NOCHANGE" Click="MenuItem_Click"/>
+                        </MenuItem>
+                        <MenuItem Header="删除" Click="MenuItem_Delete_Click"/>
+                    </ContextMenu>
+                </ListView.ContextMenu>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                     </Style>
-                </ListBox.ItemContainerStyle>
-            </ListBox>
+                </ListView.ItemContainerStyle>
+            </ListView>
             <StackPanel Orientation="Horizontal" Grid.Row="1">
                 <Label Content="程序生成输出路径：" Margin="10 0 0 0"/>
                 <Label x:Name="SolutionPath" Content="F:/xxx/xxx/"/>
@@ -62,13 +75,21 @@
                         <RowDefinition Height=".5*"/>
                         <RowDefinition Height=".5*"/>
                     </Grid.RowDefinitions>
-                    <Button Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Content="选择Lunalipse所在文件夹" Padding="5"/>
+                    <Button Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Content="选择Lunalipse所在文件夹" Padding="5" Click="Button_Click" x:Name="ChooseDirectory"/>
                     <DockPanel Grid.Row="1" >
-                        <Button Content="查看清单内容" Padding="5" Margin="5"/>
-                        <Button Content="重建树缓存" Padding="5" Margin="5"/>
+                        <Button Content="查看清单内容" Padding="5" Margin="5" Click="Button_Click_4"/>
+                        <Button Content="重建树缓存" Padding="5" Margin="5" Click="Button_Click_1"/>
                     </DockPanel>
                 </Grid>
-                <Button Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Content="生成Lunalipse更新包" Padding="20"/>
+                <Button Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Content="生成Lunalipse更新包" Padding="20" Click="Button_Click_3"/>
+            </Grid>
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="放弃更改" Tag="Discard" Click="Button_Click_2" Background="#ffdc3545" Foreground="White"/>
+                <Button Grid.Column="1" Content="保存更改" Tag="Apply" Click="Button_Click_2" Background="#ff28a745" Foreground="White"/>
             </Grid>
         </Grid>
     </Grid>

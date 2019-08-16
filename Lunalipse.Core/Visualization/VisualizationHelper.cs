@@ -2,14 +2,18 @@
 using CSCore.DSP;
 using Lunalipse.Common.Generic.Audio;
 using Lunalipse.Common.Interfaces.IAudio;
+using Lunalipse.Common.Interfaces.IVisualization;
 using Lunalipse.Core.LpsAudio;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace Lunalipse.Core.Visualization
 {
-    public class VisualizationBase
+    public class VisualizationHelper : IV11nHelper
     {
         private const int ScaleFactorLinear = 9;
         protected const int ScaleFactorSqr = 2;
@@ -27,10 +31,14 @@ namespace Lunalipse.Core.Visualization
         private ScalingStrategy _scalingStrategy;
         private int[] _spectrumIndexMax;
         private int[] _spectrumLogScaleIndexMax;
-        private ILpsFFTProvider _spectrumProvider;
 
         protected int SpectrumResolution;
         private bool _useAverage;
+
+        public VisualizationHelper()
+        {
+            FftSize = FftSize.Fft4096;
+        }
 
         public int MaximumFrequency
         {
@@ -60,17 +68,6 @@ namespace Lunalipse.Core.Visualization
                 UpdateFrequencyMapping();
 
                 RaisePropertyChanged("MinimumFrequency");
-            }
-        }
-
-        [BrowsableAttribute(false)]
-        public ILpsFFTProvider SpectrumProvider
-        {
-            get { return _spectrumProvider; }
-            set
-            {
-                _spectrumProvider = value ?? throw new ArgumentNullException("value");
-                RaisePropertyChanged("SpectrumProvider");
             }
         }
 
@@ -123,7 +120,7 @@ namespace Lunalipse.Core.Visualization
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void UpdateFrequencyMapping()
+        public void UpdateFrequencyMapping()
         {
             _maximumFrequencyIndex = Math.Min(AudioDelegations.FftInxAcquired(MaximumFrequency) + 1, _maxFftIndex);
             _minimumFrequencyIndex = Math.Min(AudioDelegations.FftInxAcquired(MinimumFrequency), _maxFftIndex);
@@ -154,7 +151,7 @@ namespace Lunalipse.Core.Visualization
             }
         }
 
-        protected virtual SpectrumPointData[] CalculateSpectrumPoints(double maxValue, float[] fftBuffer)
+        public SpectrumPointData[] CalculateSpectrumPoints(float[] fftBuffer, double maxValue = 1)
         {
             var dataPoints = new List<SpectrumPointData>();
 
@@ -217,10 +214,14 @@ namespace Lunalipse.Core.Visualization
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        protected struct SpectrumPointData
+        public void UpdateSpectrumResolution(int resolution)
         {
-            public int SpectrumPointIndex;
-            public double Value;
+            SpectrumResolution = resolution;
+        }
+
+        public void SetScalingStrategy(ScalingStrategy scalingStrategy)
+        {
+            ScalingStrategy = scalingStrategy;
         }
     }
 }

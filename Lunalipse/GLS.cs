@@ -1,4 +1,5 @@
 ﻿using Lunalipse.Common.Data.Attribute;
+using Lunalipse.Common.Generic.Audio;
 using Lunalipse.Common.Interfaces.ISetting;
 using System;
 using System.Collections.Generic;
@@ -6,16 +7,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Xml.Serialization;
 
 namespace Lunalipse
 {
     [Serializable]
     public class GLS : IGlobalSetting
     {
+        [NonConfigField]
         static volatile GLS GS_Instance;
+        [NonConfigField]
         static readonly object GS_Lock = new object();
 
         [field: NonSerialized]
+        [NonConfigField]
         public event Action<string> OnSettingUpdated;
         public static GLS INSTANCE
         {
@@ -41,83 +46,76 @@ namespace Lunalipse
         {
             GS_Instance = this;
             MusicBaseDirs = new List<string>();
+            SpectrumDisplayers = new Dictionary<string, SpectrumDisplayCfg>();
         }
 
+        [field: NonSerialized]
         public string UpdateArguments = string.Empty;
 
-        [ConfigField]
         public List<string> MusicBaseDirs;
 
-        [ConfigField]
         public float Volume = 0.4f;
 
-        [ConfigField]
         public bool LyricEnabled = true;
 
-        [ConfigField]
         public bool FFTEnabled = true;
 
-        [ConfigField]
         public string DefaultThemeUUID = "d21d0d06-4583-463c-b949-c2b40978ee7a";
 
         /// <summary>
         /// 是否在切换歌曲时提示歌曲名称
         /// </summary>
-        [ConfigField]
         public bool ShowNextSongHint = true;
 
-        [ConfigField]
         public string LyricFontFamily = "Microsoft YaHei UI";
 
-        [NonSerialized]
+        [field: NonSerialized]
         public FontFamily LyricFontFamilyInternal;
 
-        [ConfigField]
         public int LyricFontSize = 40;
 
-        [ConfigField]
         public string CurrentSelectedLanguage = "CHINESE_SIM";
 
-        [ConfigField]
         public bool UseSystemDefaultLanguage = true;
 
         /// <summary>
         /// 是否启用列表懒加载
         /// </summary>
-        [ConfigField]
         public bool UseLazyLoading = false;
 
         /// <summary>
         /// 启用毛玻璃效果
         /// </summary>
-        [ConfigField]
         public bool EnableGuassianBlur = true;
 
         /// <summary>
         /// 网络代理，是否启用
         /// </summary>
-        [ConfigField]
         public bool EnableProxy = false;
 
         /// <summary>
         /// 网络代理，IP地址
         /// </summary>
-        [ConfigField]
         public string ProxyIPAddr = "";
 
         /// <summary>
         /// 网络代理，端口
         /// </summary>
-        [ConfigField]
         public int ProxyPort = 0;
 
         /// <summary>
         /// 主题颜色跟随专辑封面
         /// </summary>
-        [ConfigField]
         public bool ThemeColorFollowAlbum = true;
 
-        [ConfigField]
+        public bool ImmerseMode = false;
+
+        public ScalingStrategy scalingStrategy = ScalingStrategy.Decibel;
+
+        public int SpectrumFPS = 64;
+
+        public int AudioLatency = 100;
+
         public string LogRecordLevel =
 #if DEBUG
             "DEBUG";
@@ -125,9 +123,20 @@ namespace Lunalipse
             "INFO";
 #endif
 
+        public double[] EqualizerSets = new double[10];
+
+        public Dictionary<string, SpectrumDisplayCfg> SpectrumDisplayers;
+
         public void InvokeSettingChange(string settingkey)
         {
             OnSettingUpdated?.Invoke(settingkey);
         }
+    }
+
+    [Serializable]
+    public class SpectrumDisplayCfg
+    {
+        public string Style = "";
+        public int Resolution = 0;
     }
 }

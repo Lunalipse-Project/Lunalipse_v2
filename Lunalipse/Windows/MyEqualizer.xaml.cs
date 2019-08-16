@@ -27,11 +27,25 @@ namespace Lunalipse.Windows
     /// </summary>
     public partial class MyEqualizer : LunalipseDialogue
     {
+        LpsAudio lpsAudio;
+        bool isValueRestored = false;
         public MyEqualizer()
         {
             InitializeComponent();
+            lpsAudio = LpsAudio.Instance();
+            Closing += MyEqualizer_Closing;
             TranslationManagerBase.OnI18NEnvironmentChanged += TranslationManagerBase_OnI18NEnvironmentChanged;
             TranslationManagerBase_OnI18NEnvironmentChanged(TranslationManagerBase.AquireConverter());
+
+        }
+
+        private void MyEqualizer_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            GLS gLS = GLS.INSTANCE;
+            for(int i=0;i<10;i++)
+            {
+                gLS.EqualizerSets[i] = lpsAudio.LpsEqualizer.SampleFilters[i].AverageGainDB;
+            }
         }
 
         private void TranslationManagerBase_OnI18NEnvironmentChanged(II18NConvertor obj)
@@ -48,8 +62,16 @@ namespace Lunalipse.Windows
 
         private void Equalizer_OnEqualizerValueChanged(int index, double value)
         {
-            float perc = (((float)value - 12f) / 12f);
-            LpsAudio.INSTANCE().SetEqualizerIndex(index - 1, perc);
+            if(isValueRestored)
+            {
+                lpsAudio.SetEqualizerIndex(index - 1, value - 12d);
+            }
+        }
+
+        private void LunalipseDialogue_Loaded(object sender, RoutedEventArgs e)
+        {
+            equalizer.ApplyEqualizerValue(GLS.INSTANCE.EqualizerSets);
+            isValueRestored = true;
         }
     }
 }

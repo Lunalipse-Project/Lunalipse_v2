@@ -23,6 +23,9 @@ namespace Lunalipse.Presentation.LpsComponent
     {
         public event Action<object> OnSelectionChanged;
         ObservableCollection<DropDownItem> DropdownsSource = new ObservableCollection<DropDownItem>();
+
+        public object SelectedItemValue { get; private set; }
+
         public LpsDropDown()
         {
             InitializeComponent();
@@ -69,6 +72,7 @@ namespace Lunalipse.Presentation.LpsComponent
             if (dropDownItem == null) return;
             SelectedContent.Text = dropDownItem.Key;
             SelectionArea.IsOpen = false;
+            SelectedItemValue = dropDownItem.Value;
             OnSelectionChanged?.Invoke(dropDownItem.Value);
         }
 

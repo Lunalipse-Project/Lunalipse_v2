@@ -26,6 +26,28 @@ namespace Lunalipse.Presentation.BasicUI
     public partial class CommonDialog : LunalipseDialogue
     {
         string PositiveBtnI18N, NegativeBtnI18N;
+        string title, content;
+
+        public string DialogTitle
+        {
+            get => title;
+            set
+            {
+                title = value;
+                Title = title;
+            }
+        }
+
+        public string DialogContent
+        {
+            get => content;
+            set
+            {
+                content = value;
+                DetialContent.Text = content;
+            }
+        }
+
         public CommonDialog()
         {
             InitializeComponent();
@@ -68,8 +90,8 @@ namespace Lunalipse.Presentation.BasicUI
 
         public CommonDialog(string Caption, string Message, MessageBoxButton Buttons) : this()
         {
-            Title = Caption;
-            DetialContent.Text = Message;
+            DialogTitle = Caption;
+            DialogContent = Message;
             switch(Buttons)
             {
                 case MessageBoxButton.OK:

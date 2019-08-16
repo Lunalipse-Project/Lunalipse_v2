@@ -7,7 +7,7 @@
       xmlns:local="clr-namespace:Lunalipse.Pages.ConfigPage"
       mc:Ignorable="d"  Name="GeneralConfigPage"
       xmlns:LpsComponentUI="clr-namespace:Lunalipse.Presentation.LpsComponent;assembly=Lunalipse.Presentation"
-      Height="700" Width="800" Loaded="GeneralConfigPage_Loaded"
+      Height="1200" Width="800" Loaded="GeneralConfigPage_Loaded"
       Title="GeneralConfig">
 
     <Page.Resources>
@@ -27,6 +27,7 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
@@ -144,9 +145,132 @@
                         </Grid.ColumnDefinitions>
                         <Label HorizontalAlignment="Left" VerticalContentAlignment="Center" Tag="CORE_SETTING_I18N_LANG_FOLLOWSYS" Grid.Column="0" 
                                Foreground="{Binding ElementName=GeneralConfigPage,Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
-                        <LpsComponentUI:ToggleSwitch HorizontalAlignment="Center" Grid.Column="1" x:Name="LangFollowSystem"></LpsComponentUI:ToggleSwitch>
+                        <LpsComponentUI:ToggleSwitch HorizontalAlignment="Center" Grid.Column="1" x:Name="LangFollowSystem" OnSwitchStatusChanged="OnSwitchStatusChanged"></LpsComponentUI:ToggleSwitch>
                     </Grid>
                     
+                </StackPanel>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="2" Margin="0 10 0 0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Label HorizontalAlignment="Left" HorizontalContentAlignment="Left" Tag="CORE_SETTING_SPECTRUM"
+                   Style="{DynamicResource NormalLabelStyle}" FontSize="{StaticResource FontMedium}" Grid.Row="0"></Label>
+            <TextBlock Grid.Row="1" Margin="50 5 50 10" FontSize="{StaticResource FontNormal}" 
+                   TextWrapping="WrapWithOverflow"
+                   Tag="CORE_SETTING_SPECTRUM_HINT" Name="ST_TN_F9" Foreground="{Binding ElementName=GeneralConfigPage,Path=Foreground}" Opacity="0.80"/>
+            <Grid Grid.Row="2" Margin="50 0 50 0">
+                <StackPanel Orientation="Vertical">
+                    <Grid Height="50px">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width=".7*"/>
+                            <ColumnDefinition Width=".3*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label HorizontalAlignment="Left" VerticalContentAlignment="Center" Tag="CORE_SETTING_AUDIO_IMMSERED" Grid.Column="0" 
+                               Foreground="{Binding ElementName=GeneralConfigPage,Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
+                        <LpsComponentUI:ToggleSwitch HorizontalAlignment="Center" Grid.Column="1" x:Name="EnableImmersed" OnSwitchStatusChanged="OnSwitchStatusChanged"></LpsComponentUI:ToggleSwitch>
+                    </Grid>
+                    <Grid Height="50px">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width=".7*"/>
+                            <ColumnDefinition Width=".3*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label HorizontalAlignment="Left" VerticalContentAlignment="Center" Tag="CORE_SETTING_SPECTRUM_ENABLE" Grid.Column="0" 
+                               Foreground="{Binding ElementName=GeneralConfigPage,Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
+                        <LpsComponentUI:ToggleSwitch HorizontalAlignment="Center" Grid.Column="1" x:Name="EnableSpectrum" OnSwitchStatusChanged="OnSwitchStatusChanged"></LpsComponentUI:ToggleSwitch>
+                    </Grid>
+                    <Grid Height="50px">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width=".7*"/>
+                            <ColumnDefinition Width=".2*"/>
+                            <ColumnDefinition Width="30"/>
+                        </Grid.ColumnDefinitions>
+                        <Label HorizontalAlignment="Left" VerticalContentAlignment="Center" Tag="CORE_SETTING_AUDIO_LATENCY" Grid.Column="0" 
+                               Foreground="{Binding ElementName=GeneralConfigPage,Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
+                        <TextBox Style="{StaticResource LpsTextBox}" Grid.Column="1" Margin="25 0 25 0" x:Name="AudioLatency" HorizontalContentAlignment="Center"
+                                 Foreground="{Binding ElementName=GeneralConfigPage, Path=Foreground}" VerticalAlignment="Center" FontSize="{StaticResource FontNormal}" TextInput="SpectrumFPS_TextInput"></TextBox>
+                    </Grid>
+                    <Grid Height="50px">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width=".7*"/>
+                            <ColumnDefinition Width=".2*"/>
+                            <ColumnDefinition Width="30"/>
+                        </Grid.ColumnDefinitions>
+                        <Label HorizontalAlignment="Left" VerticalContentAlignment="Center" Tag="CORE_SETTING_SPECTRUM_FRAMERATE" Grid.Column="0" 
+                               Foreground="{Binding ElementName=GeneralConfigPage,Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
+                        <TextBox Style="{StaticResource LpsTextBox}" Grid.Column="1" x:Name="SpectrumFPS" HorizontalContentAlignment="Center" Margin="25 0 25 0"
+                                 Foreground="{Binding ElementName=GeneralConfigPage, Path=Foreground}" VerticalAlignment="Center" FontSize="{StaticResource FontNormal}" TextInput="SpectrumFPS_TextInput"></TextBox>
+                        <Button Style="{StaticResource GenericButton}" Grid.Column="2" x:Name="Apply_SpectrumFPS"
+                                        Foreground="{Binding Foreground,ElementName=GeneralConfigPage}" Click="Apply_Click"
+                                        Background="#00FFFFFF" Padding="5" FontFamily="{StaticResource MaterialIcon}"
+                                        Content="{StaticResource Preview_Change}" FontSize="{StaticResource FontNormal}" 
+                                        VerticalAlignment="Center" Margin="0 0 5 0"/>
+                    </Grid>
+                    <Grid Height="50px">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width=".7*"/>
+                            <ColumnDefinition Width=".2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label HorizontalAlignment="Left" VerticalContentAlignment="Center" Tag="CORE_SETTING_SPECTRUM_SCALING" Grid.Column="0" 
+                               Foreground="{Binding ElementName=GeneralConfigPage,Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
+                        <LpsComponentUI:LpsDropDown Margin="5 0 5 0" VerticalAlignment="Center" Grid.Column="1" OnSelectionChanged="SpectrumScalingStrategy_OnSelectionChanged"
+                                                    x:Name="SpectrumScalingStrategy" Foreground="{Binding ElementName=GeneralConfigPage, Path=Foreground}"></LpsComponentUI:LpsDropDown>
+                    </Grid>
+                    <Grid Height="auto">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Label Margin="0 10 0 0" Tag="CORE_SETTING_SPECTRUM_DISP_HINT" Grid.Row="0"
+                               Foreground="{Binding ElementName=GeneralConfigPage,Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.7*"/>
+                                <ColumnDefinition Width="0.5*"/>
+                            </Grid.ColumnDefinitions>
+                            <LpsComponent:LpsDetailedListView Grid.Column="0" Height="250" ListIconSize="{StaticResource FontLarge}" 
+                                              FontSize="{StaticResource FontNormal}" x:Name="Displayers" 
+                                              Background="Transparent" BorderThickness="0,0,1,0" 
+                                              BorderBrush="{Binding Foreground,ElementName=GeneralConfigPage}"/>
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="1">
+                                    <Grid Height="30" Margin="0 0 0 10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="0.6*"/>
+                                            <ColumnDefinition Width="0.5*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Column="0" Foreground="{Binding ElementName=GeneralConfigPage,Path=Foreground}" 
+                                           FontSize="{StaticResource FontNormal}" Tag="CORE_SETTING_SPECTRUM_DISP_RESOLUTION"/>
+                                        <TextBox Style="{StaticResource LpsTextBox}" Grid.Column="1" Width="60" x:Name="SpectrumResolution" HorizontalContentAlignment="Center"
+                                             Foreground="{Binding ElementName=GeneralConfigPage, Path=Foreground}" VerticalAlignment="Center" FontSize="{StaticResource FontNormal}"/>
+                                    </Grid>
+                                    <Grid Height="30" Margin="0 0 0 10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="0.6*"/>
+                                            <ColumnDefinition Width="0.5*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Column="0" Foreground="{Binding ElementName=GeneralConfigPage,Path=Foreground}" 
+                                           FontSize="{StaticResource FontNormal}" Tag="CORE_SETTING_SPECTRUM_DISP_STYLE"/>
+                                        <LpsComponentUI:LpsDropDown Margin="5 0 5 0" VerticalAlignment="Center" Grid.Column="1" 
+                                                    x:Name="SpectrumStyleSelector" Foreground="{Binding ElementName=GeneralConfigPage, Path=Foreground}"></LpsComponentUI:LpsDropDown>
+                                    </Grid>
+                                    <Button Style="{StaticResource GenericButton}" Name="ST_TN_F10" VerticalAlignment="Center"
+                                        Foreground="{Binding Foreground,ElementName=GeneralConfigPage}"
+                                        Background="#00FFFFFF" Width="150" Padding="0,5,0,5"
+                                        Tag="CORE_SETTING_SPECTRUM_DISP_APPLY" Content="c" FontSize="{StaticResource FontNormal}" 
+                                        HorizontalAlignment="Center" Click="ST_TN_F10_Click" Margin="0 10 0 0"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Grid>
                 </StackPanel>
             </Grid>
         </Grid>

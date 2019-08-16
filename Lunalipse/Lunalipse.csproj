@@ -27,9 +27,10 @@
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -96,6 +97,7 @@
     <Compile Include="Pages\ConfigPage\Licenses.xaml.cs">
       <DependentUpon>Licenses.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ConfigPage\Structures\SpectrumDispStruc.cs" />
     <Compile Include="Pages\ConfigPage\Structures\ThemeListStruc.cs" />
     <Compile Include="Pages\ConfigPage\Structures\PlaylistStruc.cs" />
     <Compile Include="Pages\ConfigPage\Structures\MusicPathSturc.cs" />

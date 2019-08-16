@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:lps="clr-namespace:Lunalipse.Presentation.LpsComponent;assembly=Lunalipse.Presentation"
         xmlns:local="clr-namespace:Lunalipse.Windows"
         WindowStyle="None"
         WindowState="Normal"
@@ -39,6 +40,7 @@
                     <DropShadowEffect Color="#FF000000" ShadowDepth="0" BlurRadius="8" Direction="0"/>
                 </Label.Effect>
             </Label>
+            <lps:LpsSpectrum Grid.Column="1" x:Name="FFTDrawing" Margin="3 3 3 0" Tag="DISP_DesktopDisplay"/>
         </Grid>
     </Grid>
 </Window>

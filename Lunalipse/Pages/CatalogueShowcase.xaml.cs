@@ -30,8 +30,6 @@ namespace Lunalipse.Pages
             showcase.OnCatalogueEditRequest += Showcase_OnCatalogueEditRequest;
             converter = TranslationManagerBase.AquireConverter();
             TranslationManagerBase_OnI18NEnvironmentChanged(converter);
-
-
         }
 
 

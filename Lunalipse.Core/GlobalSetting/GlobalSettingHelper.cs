@@ -5,6 +5,8 @@ using Lunalipse.Common.Interfaces.IConsole;
 using Lunalipse.Common.Interfaces.ISetting;
 using Lunalipse.Core.Cache;
 using Lunalipse.Core.Console;
+using Lunalipse.Utilities;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -21,7 +23,7 @@ namespace Lunalipse.Core.GlobalSetting
     {
         static volatile GlobalSettingHelper<T> GSH_INSTANCE;
         static readonly object GSH_LOCK = new object();
-        public static GlobalSettingHelper<T> INSTANCE
+        public static GlobalSettingHelper<T> Instance
         {
             get
             {
@@ -32,18 +34,18 @@ namespace Lunalipse.Core.GlobalSetting
             }
         }
 
-        UniversalSerializor<ConfigField, IGlobalSetting> USerializor;
+        UniversalSerializor<NonConfigField, IGlobalSetting> USerializor;
         string VERSION;
         public string OutputFile { get; set; }
         public bool UseLZ78Compress { get; set; }
         private GlobalSettingHelper()
         {
-            VERSION = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            VERSION = Assembly.GetEntryAssembly().GetName().Version.ToString();
             ConsoleAdapter.INSTANCE.RegisterComponent("lpsseting", this);
             //Set default value
             OutputFile = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "/config.lps";
-            UseLZ78Compress = true;
-            USerializor = new UniversalSerializor<ConfigField, IGlobalSetting>();
+            UseLZ78Compress = false;
+            //USerializor = new UniversalSerializor<NonConfigField, IGlobalSetting>();
         }
 
         public T ReadSetting(string path="")
@@ -51,17 +53,29 @@ namespace Lunalipse.Core.GlobalSetting
             if (path == "")
                 path = OutputFile;
             if (!File.Exists(path)) return default(T);
-            JObject jo = JObject.Parse(Encoding.UTF8.GetString(Compression.Decompress(path, UseLZ78Compress)));
-
-            return (T)USerializor.ReadNested(typeof(T), jo["ctx"] as JObject);
+            SettingSaveFile<T> restored = JsonConvert.DeserializeObject<SettingSaveFile<T>>(
+                Encoding.UTF8.GetString(
+                    Compression.Decompress(path, UseLZ78Compress)
+                    )
+                );
+            if(VERSION != restored.version)
+            {
+                // TODO Add warning dialog
+            }
+            //return (T)USerializor.ReadNested(typeof(T), jo["ctx"] as JObject);
+            return restored.setting;
         }
 
         public bool SaveSetting(T instance)
         {
-            JObject jo = new JObject();
-            jo["version"] = VERSION;
-            jo["ctx"] = USerializor.WriteNested(instance);
-            return Compression.Compress(Encoding.UTF8.GetBytes(jo.ToString()), OutputFile, UseLZ78Compress);
+            SettingSaveFile<T> saveFile = new SettingSaveFile<T>();
+            saveFile.version = VERSION;
+            saveFile.hash = instance.ComputeHash();
+            saveFile.setting = instance;
+            return Compression.Compress(
+                        Encoding.UTF8.GetBytes(
+                            JsonConvert.SerializeObject(saveFile)
+                            ), OutputFile, UseLZ78Compress);
         }
 
         #region Command Handler
@@ -70,5 +84,13 @@ namespace Lunalipse.Core.GlobalSetting
             return true;
         }
         #endregion
+    }
+
+    [Serializable]
+    public class SettingSaveFile<T>
+    {
+        public string version;
+        public string hash;
+        public T setting;
     }
 }

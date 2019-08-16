@@ -104,9 +104,14 @@
     <System:String x:Key="ThemeTemplate_BuildIn">&#xf40c;</System:String>
     
     <System:String x:Key="Tick">&#xf26b;</System:String>
-    
-    
-    
+
+    <System:String x:Key="SpectrumDisplayer">&#xf131;</System:String>
+
+    <System:String x:Key="Preview_Change">&#xf1b9;</System:String>
+
+
+
+
     <!-- Navigation -->
     <System:String x:Key="ArrowLeft">&#xf2ea;</System:String>
 

@@ -19,8 +19,11 @@ namespace Lunalipse.Presentation.LpsComponent
         bool isFullscreen = false;
         bool LyricEnabled = true;
         bool SpectrumEnabled = true;
+        bool IsMusicDetailPanelOpen = false;
+
         PlayMode Mode = PlayMode.RepeatList;
         Duration elapseTime = new Duration(TimeSpan.FromMilliseconds(100));
+        Duration elapseTimeFade = new Duration(TimeSpan.FromMilliseconds(200));
 
         /// <summary>
         /// 开关类事件触发，对于<see cref="AudioPanelTrigger.PausePlay"/>事件，<see cref="object"/>为<see cref="bool"/>，表示是否已暂停。
@@ -29,8 +32,9 @@ namespace Lunalipse.Presentation.LpsComponent
         public event Action<PlayMode, object> OnModeChange;
         public event ProgressChange OnProgressChanged;
         public event ProgressChange OnVolumeChanged;
-        public event Action OnProfilePictureClicked;
+        public event Action<bool> OnProfilePictureClicked;
         private DoubleAnimation FadeIn,FadeOut;
+        private DoubleAnimation FadeInDetail, FadeOutDetail;
 
         private const string UI_COMPONENT_THEME_UID = "PR_COMP_AudioControlPanel";
 
@@ -51,6 +55,8 @@ namespace Lunalipse.Presentation.LpsComponent
 
             FadeIn = new DoubleAnimation(0, 1, elapseTime);
             FadeOut = new DoubleAnimation(1, 0, elapseTime);
+            FadeInDetail = new DoubleAnimation(0.6, 1, elapseTimeFade);
+            FadeOutDetail = new DoubleAnimation(1, 0.6, elapseTimeFade);
             FadeOut.Completed += (a, b) => VolumePlanePopup.IsOpen = false;
 
             MusicProgress.OnProgressChanged += x => OnProgressChanged?.Invoke(x);
@@ -266,9 +272,37 @@ namespace Lunalipse.Presentation.LpsComponent
             VolumeBar.Value = 70;
         }
 
-        private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void AlbProfile_MouseEnter(object sender, MouseEventArgs e)
         {
-            OnProfilePictureClicked?.Invoke();
+            if(!IsMusicDetailPanelOpen)
+            {
+                AlbProfile.BeginAnimation(OpacityProperty,FadeOutDetail);
+            }
+            else
+            {
+                AlbProfile.BeginAnimation(OpacityProperty, FadeInDetail);
+            }
+        }
+
+        private void AlbProfile_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (IsMusicDetailPanelOpen)
+            {
+                if(AlbProfile.Opacity!=0.6)
+                {
+                    AlbProfile.BeginAnimation(OpacityProperty, FadeOutDetail);
+                }
+            }
+            else
+            {
+                AlbProfile.BeginAnimation(OpacityProperty, FadeInDetail);
+            }
+        }
+
+        private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {         
+            OnProfilePictureClicked?.Invoke(IsMusicDetailPanelOpen);
+            IsMusicDetailPanelOpen = !IsMusicDetailPanelOpen;
         }
 
         private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)

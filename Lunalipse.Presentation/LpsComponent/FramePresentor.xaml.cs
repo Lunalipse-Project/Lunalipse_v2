@@ -22,6 +22,8 @@ namespace Lunalipse.Presentation.LpsComponent
 
         public event Action<object> OnFrameLoadedComplete;
 
+        bool isGoBackStart = false;
+
         public FramePresentor()
         {
             InitializeComponent();
@@ -29,13 +31,27 @@ namespace Lunalipse.Presentation.LpsComponent
             AnimFadeOut = new DoubleAnimation(1, 0, elapseTime);
             AnimFadeOut.Completed += (a, b) =>
             {
-                _intermedianStep?.Invoke();
-                Presentor.Content = _temp_content;
+                if(!isGoBackStart)
+                {
+                    _intermedianStep?.Invoke();
+                    Presentor.Content = _temp_content;
+                }
+                else
+                {
+                    Presentor.GoBack();
+                }
                 Presentor.BeginAnimation(OpacityProperty, AnimFadeIn);
             };
             AnimFadeIn.Completed += (a, b) =>
             {
-                OnFrameLoadedComplete?.Invoke(Presentor.Content);
+                if(!isGoBackStart)
+                {
+                    OnFrameLoadedComplete?.Invoke(Presentor.Content);
+                }
+                else
+                {
+                    isGoBackStart = false;
+                }
             };
             this.SizeChanged += FramePresentor_SizeChanged;
         }
@@ -62,7 +78,8 @@ namespace Lunalipse.Presentation.LpsComponent
 
         public void BackWard()
         {
-            Presentor.GoBack();
+            isGoBackStart = true;
+            Presentor.BeginAnimation(OpacityProperty, AnimFadeOut);
         }
 
         public void Forward()

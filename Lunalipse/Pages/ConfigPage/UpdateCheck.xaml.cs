@@ -62,10 +62,7 @@ namespace Lunalipse.Pages.ConfigPage
         private void UpdateHelper_OnQueryCompleted()
         {
             bool hasUpdate = (updateInfo = updateHelper.UpdateAvailability()) != null;
-            if (hasUpdate)
-            {
-                UpdateIndicator(hasUpdate, updateInfo.Tag);
-            }
+            UpdateIndicator(hasUpdate, updateInfo == null ? "" : updateInfo.Tag);
         }
 
         private void UpdateCheck_Loaded(object sender, RoutedEventArgs e)
@@ -123,8 +120,11 @@ namespace Lunalipse.Pages.ConfigPage
                 AvailabilityIndicator.Visibility = Visibility.Visible;
                 StatusDisplay.Content = hasUpdate ? UpdateFound.FormateEx(current) : Latest;
                 Spinning.Visibility = Visibility.Hidden;
-                ReleaseNote.Document = markdownParser.CreateDocument(markdownParser.Parse(updateInfo.body));
-                DocContainer.BeginAnimation(HeightProperty, ExpandDocView);
+                if(hasUpdate)
+                {
+                    ReleaseNote.Document = markdownParser.CreateDocument(markdownParser.Parse(updateInfo.body));
+                    DocContainer.BeginAnimation(HeightProperty, ExpandDocView);
+                }
             });
         }
     }

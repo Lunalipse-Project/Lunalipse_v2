@@ -24,13 +24,13 @@ namespace Lunalipse.Core.PlayList
         static readonly object mlpLock = new object();
         internal static event MusicDeleted OnMusicDeleted;
 
-        CacheHub cacheSystem = CacheHub.INSTANCE();
+        CacheHub cacheSystem = CacheHub.Instance();
 
         LunalipseLogger Log;
 
         IMediaMetadataReader immdr = null;
 
-        public static MusicListPool INSATNCE(IMediaMetadataReader immdr = null)
+        public static MusicListPool Instance(IMediaMetadataReader immdr = null)
         {
             if (mlpInstance == null)
             {
@@ -54,7 +54,7 @@ namespace Lunalipse.Core.PlayList
 
         private MusicListPool(IMediaMetadataReader immdr)
         {
-            CPool = CataloguePool.INSATNCE;
+            CPool = CataloguePool.Instance;
             this.immdr = immdr ?? this.immdr;
             if (!CPool.Exists(x => x.MainCatalogue == true || x.Name.Equals("CORE_CATALOGUE_AllMusic")))
                 CPool.AddCatalogue(new Catalogue("CORE_CATALOGUE_AllMusic", true));

@@ -92,6 +92,9 @@
     <Compile Include="LpsComponent\LpsProgressBar.xaml.cs">
       <DependentUpon>LpsProgressBar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LpsComponent\LpsSpectrum.xaml.cs">
+      <DependentUpon>LpsSpectrum.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LpsComponent\LpsSpinner.xaml.cs">
       <DependentUpon>LpsSpinner.xaml</DependentUpon>
     </Compile>
@@ -163,6 +166,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="LpsComponent\LpsProgressBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LpsComponent\LpsSpectrum.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

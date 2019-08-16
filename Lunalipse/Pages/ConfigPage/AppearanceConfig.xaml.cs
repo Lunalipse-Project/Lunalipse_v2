@@ -103,11 +103,13 @@ namespace Lunalipse.Pages.ConfigPage
             ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
             Translate(TranslationManagerBase.AquireConverter());
             ReadManifest();
+            ThemeList.UpdateLayout();
             EnableSongHint.OnSwitchStatusChanged += OnSwitchStatusChanged;
             NonPassiveLyricDisp.OnSwitchStatusChanged += OnSwitchStatusChanged;
             EnableGuassianBlur.OnSwitchStatusChanged += OnSwitchStatusChanged;
             ThemeColorFollowAlbum.OnSwitchStatusChanged += OnSwitchStatusChanged;
             LyricFontFamily.OnSelectionChanged += LyricFontFamily_OnSelectionChanged;
+            ThemeList.SelectedIndex = 0;
         }
 
         private void LyricFontFamily_OnSelectionChanged(object obj)
@@ -176,8 +178,11 @@ namespace Lunalipse.Pages.ConfigPage
         {
             GlobalSetting.DefaultThemeUUID = SelectedStruc.Uid;
             LpsDetailedListItem old = ThemeList.Items[0];
-            ThemeList.Items[0] = ThemeList.Items[SelectedIndex];
-            ThemeList.Items[SelectedIndex] = old;
+            ThemeList.Items.RemoveAt(0);
+            ThemeList.Items.Insert(0, ThemeList.Items[SelectedIndex - 1]);
+            ThemeList.Items.RemoveAt(SelectedIndex);
+            ThemeList.Items.Insert(SelectedIndex, old);
+            ThemeList.UpdateLayout();
             LThemeManager.Instance.SelectTheme(SelectedStruc.Uid);
             ThemeList.SelectedIndex = 0;
         }

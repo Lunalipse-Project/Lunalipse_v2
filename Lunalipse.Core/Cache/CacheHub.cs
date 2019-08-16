@@ -13,7 +13,7 @@ namespace Lunalipse.Core.Cache
         static volatile CacheHub CHH_INSTANCE;
         static readonly object CHH_LOCK = new object();
 
-        public static CacheHub INSTANCE(string Basedir = "")
+        public static CacheHub Instance(string Basedir = "")
         {
             if (CHH_INSTANCE == null)
             {

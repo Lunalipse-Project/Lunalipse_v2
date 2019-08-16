@@ -13,17 +13,6 @@ namespace Lunalipse.Presentation.LpsComponent
         public LpsEqualizer()
         {
             InitializeComponent();
-            Loaded += LpsEqualizer_Loaded;
-        }
-
-        private void LpsEqualizer_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-            for (int i = 1; i <= 10; i++)
-            {
-                VerticalDragBar dragBar = FindName("p" + i) as VerticalDragBar;
-                dragBar.MaxValue = 24;
-                dragBar.Value = 12;
-            }
         }
 
         private void VerticalDragBar_OnValueChanged(object sender, double value)
@@ -35,17 +24,33 @@ namespace Lunalipse.Presentation.LpsComponent
             }
         }
 
-        
+        public void ApplyEqualizerValue(double[] value,double maxVal = 24)
+        {
+            int i = 0;
+            double middleVal = maxVal / 2d;
+            BandForEach((dragBar) =>
+            {
+                dragBar.MaxValue = maxVal;
+                dragBar.Value = value[i++] * 0.6d + middleVal;
+            });
+        }
 
         public void SetDragBarTheme(Brush track, Brush bar)
         {
-            for(int i=1;i<=10;i++)
+            BandForEach((dragBar) =>
             {
-                VerticalDragBar dragBar = FindName("p" + i) as VerticalDragBar;
                 dragBar.TrackColor = track;
                 dragBar.BarColor = bar;
+            });
+        }
+
+        void BandForEach(Action<VerticalDragBar> action)
+        {
+            for (int i = 1; i <= 10; i++)
+            {
+                VerticalDragBar dragBar = FindName("p" + i) as VerticalDragBar;
+                action.Invoke(dragBar);
             }
-            Brush b = p1.BarColor;
         }
     }
 }

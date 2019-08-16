@@ -15,7 +15,7 @@ namespace Lunalipse.Core.PlayList
     {
         static volatile CataloguePool cpinstance;
         static readonly object cpLock = new object();
-        public static CataloguePool INSATNCE
+        public static CataloguePool Instance
         {
             get
             {

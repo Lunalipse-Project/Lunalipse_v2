@@ -33,7 +33,7 @@ namespace Lunalipse.Pages
         public AddCatalogues()
         {
             InitializeComponent();
-            cataloguePool = CataloguePool.INSATNCE;
+            cataloguePool = CataloguePool.Instance;
         }
 
         public bool NegativeClicked()

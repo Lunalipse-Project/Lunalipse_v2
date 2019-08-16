@@ -13,7 +13,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Label Grid.Row="0" HorizontalContentAlignment="Center" x:Name="Message" Content="MESSAGE" Margin="0 10 0 0" Foreground="{Binding ElementName=PROGRESS_DIALOG, Path=Foreground}"/>
+        <Label Grid.Row="0" HorizontalContentAlignment="Left" x:Name="Message" Content="MESSAGE" Margin="0 10 0 0" Foreground="{Binding ElementName=PROGRESS_DIALOG, Path=Foreground}"/>
         <Lps:LpsProgressBar x:Name="Progress" Grid.Row="1" Height="10" Margin="20 10 20 0 "/>
     </Grid>
 </LpsWindow:LunalipseDialogue>

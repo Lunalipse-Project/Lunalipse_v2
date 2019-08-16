@@ -1,14 +1,17 @@
 ﻿using CSCore.DSP;
+using Lunalipse.Common.Interfaces.IVisualization;
 using Lunalipse.Core.LpsAudio;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Media.Media3D;
+using System.Windows.Shapes;
 
 namespace Lunalipse.Core.Visualization
 {
-    public class Wave : VisualizationBase, INotifyPropertyChanged
+    public class Wave
     {
+        /*
         private int _XMax, _YMax = 80;
 
         public delegate void GetFFTData(float[] fft);
@@ -43,7 +46,7 @@ namespace Lunalipse.Core.Visualization
 
         public double MaxOffset { get; set; }
         public double MaxHeight { get; set; }
-
+        /*
         public IEnumerable<Point3D> CreateWave()
         {
             //UpdateFrequencyMapping();
@@ -80,6 +83,6 @@ namespace Lunalipse.Core.Visualization
                     yield return p;
                 }
             }
-        }
+        }*/
     }
 }

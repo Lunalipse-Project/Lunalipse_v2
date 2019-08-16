@@ -38,14 +38,15 @@ namespace Lunalipse
             Log = LunalipseLogger.GetLogger();
             DispatcherUnhandledException += App_DispatcherUnhandledException;
             I18T = new I18NTokenizer();
-            cp = CataloguePool.INSATNCE;
-            cacheSystem = CacheHub.INSTANCE(currentFolder);
+            cp = CataloguePool.Instance;
+            cacheSystem = CacheHub.Instance(currentFolder);
             resourcesHandler = new ResourcesHandler(Assembly.GetEntryAssembly().GetName().Version);
-            RestoringConfig();
 
             CheckResources();
             InitializeI18NEnvironemnt();
             RegisterOperators();
+
+            RestoringConfig();
 
             PerpearThemeColor();
 
@@ -95,7 +96,7 @@ namespace Lunalipse
 
         void RestoringConfig()
         {
-            GLS.SetINSTANCE(GlobalSettingHelper<GLS>.INSTANCE.ReadSetting());
+            GLS.SetINSTANCE(GlobalSettingHelper<GLS>.Instance.ReadSetting());
         }
 
         void CheckResources()

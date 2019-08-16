@@ -7,6 +7,9 @@ using System.Windows.Threading;
 using System.Collections.Generic;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 
 using Lunalipse.Core;
 using Lunalipse.Core.PlayList;
@@ -14,6 +17,7 @@ using Lunalipse.Core.Metadata;
 using Lunalipse.Core.Cache;
 using Lunalipse.Core.LpsAudio;
 using Lunalipse.Core.Theme;
+using Lunalipse.Core.GlobalSetting;
 using Lunalipse.Common;
 using Lunalipse.Common.Data;
 using Lunalipse.Common.Generic.AudioControlPanel;
@@ -23,14 +27,15 @@ using Lunalipse.Common.Bus.Event;
 using Lunalipse.Common.Generic.I18N;
 using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Presentation.LpsWindow;
+using Lunalipse.Presentation.BasicUI;
 using Lunalipse.Pages;
 using Lunalipse.Windows;
 using Lunalipse.Auxiliary;
 using Lunalipse.Utilities;
 using Lunalipse.Utilities.Misc;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
+using Lunalipse.Core.Visualization;
+using Lunalipse.Common.Generic.Audio;
+using Lunalipse.Common.Interfaces.IVisualization;
 
 namespace Lunalipse
 {
@@ -60,6 +65,7 @@ namespace Lunalipse
         const int sliderSize = 200;
 
         private MusicListPool mlp;
+        private GlobalSettingHelper<GLS> globalSettingHelper;
         private CataloguePool CPOOL;
         private MediaMetaDataReader mmdr;
         private CacheHub cacheSystem;
@@ -70,6 +76,7 @@ namespace Lunalipse
         private VersionHelper versionHelper;
         private LThemeManager themeManager;
         private BitmapAnalyser bitmapAnalyser;
+        private VisualizationManager vManager;
 
         private MusicDetail musicDetailPage;
 
@@ -84,6 +91,10 @@ namespace Lunalipse
         private DesktopDisplay desktopDisplay;
 
         private string LinearMode, SingleLoop, ShuffleMode,NextSongHint;
+        private string SettingHash;
+        private string SaveSettingTitle;
+        private string SaveSettingContent;
+        private string BasePath;
 
         /// <summary>
         /// 检测<seealso cref="DesktopDisplay"/>是否还活着
@@ -92,6 +103,7 @@ namespace Lunalipse
 
         public MainWindow() : base()
         {
+            BasePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             InitializeComponent();
             InitializeModules();
             ExpandPanel = new DoubleAnimation(48, sliderSize, elapseTime);
@@ -112,7 +124,7 @@ namespace Lunalipse
             CataloguesRefleshAll();
 
             this.EnableBlur = GlobalSetting.EnableGuassianBlur;
-
+            SettingHash = GlobalSetting.ComputeHash();
         }
 
         private void EventBus_OnBoardcastRecieved(EventBusTypes busTypes, object Tag)
@@ -199,6 +211,8 @@ namespace Lunalipse
             SingleLoop = converter.ConvertTo(SupportedPages.CORE_FUNC, "CORE_MAINUI_MODE_SINGLELOOP");
             ShuffleMode = converter.ConvertTo(SupportedPages.CORE_FUNC, "CORE_MAINUI_MODE_SHUFFLE");
             NextSongHint = converter.ConvertTo(SupportedPages.CORE_FUNC, "CORE_MAINUI_TOAST_SONGHINT");
+            SaveSettingContent = converter.ConvertTo(SupportedPages.CORE_FUNC, "CORE_SETTING_SAVE_SETTING_CONTENT");
+            SaveSettingTitle = converter.ConvertTo(SupportedPages.CORE_FUNC, "CORE_SETTING_SAVE_SETTING_TITLE");
         }
 
         /// <summary>
@@ -206,14 +220,19 @@ namespace Lunalipse
         /// </summary>
         private void InitializeModules()
         {          
-            CPOOL = CataloguePool.INSATNCE;
-            core = LpsCore.Session("MAIN_AUDIO_SESSION");
-            cacheSystem = CacheHub.INSTANCE(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
-            mlp = MusicListPool.INSATNCE(mmdr = new MediaMetaDataReader());
-            Bus = EventBus.Instance;
-            playlistGuard = new PlaylistGuard();
+            CPOOL = CataloguePool.Instance;
             versionHelper = VersionHelper.Instance;
             themeManager = LThemeManager.Instance;
+            Bus = EventBus.Instance;
+            vManager = VisualizationManager.Instance;
+            cacheSystem = CacheHub.Instance(BasePath);
+            mlp = MusicListPool.Instance(mmdr = new MediaMetaDataReader());
+            globalSettingHelper = GlobalSettingHelper<GLS>.Instance;
+            desktopDisplay = new DesktopDisplay();
+
+            core = LpsCore.Session("MAIN_AUDIO_SESSION", GlobalSetting.ImmerseMode, GlobalSetting.AudioLatency);
+            playlistGuard = new PlaylistGuard();
+            
             bitmapAnalyser = new BitmapAnalyser();
 
             core.OnMusicComplete += PlayFinished;
@@ -222,6 +241,26 @@ namespace Lunalipse
 
             ControlPanel.Value = 0;
             core.CurrentMusicVolume = 70;
+
+            vManager.EnableSpectrum = GlobalSetting.FFTEnabled;
+            vManager.AddStyleProvider("SPECTRUM_CLASSIC", typeof(LineSpectrum));
+            vManager.ScalingStrategy = ScalingStrategy.Sqrt;
+            if (GlobalSetting.SpectrumDisplayers.Count > 0)
+            {
+                foreach(KeyValuePair<string,SpectrumDisplayCfg> pair in GlobalSetting.SpectrumDisplayers)
+                {
+                    vManager.RegisterDisplayer(pair.Key, null, pair.Value.Resolution, pair.Value.Style);
+                }
+            }
+            
+
+            globalSettingHelper.UseLZ78Compress =
+#if DEBUG
+                false
+                #else
+                true
+#endif
+                ;
 
             ControlPanel.OnProgressChanged += ControlPanel_OnProgressChanged;
             ControlPanel.OnVolumeChanged += ControlPanel_OnVolumeChanged;
@@ -238,18 +277,10 @@ namespace Lunalipse
 
             musicList = new MusicSelected();
             musicList.OnSelectedMusicChange += MusicList_OnSelectedMusicChange;
-            //GlobalSetting.OnSettingUpdated += GlobalSetting_OnSettingUpdated;
 
             musicDetailPage = new MusicDetail();
 
             this.OnMinimizClicked += MainWindow_OnMinimizClicked;
-        }
-
-        private void GlobalSetting_OnSettingUpdated(string obj)
-        {
-            //switch (obj)
-            //{             
-            //}
         }
 
         private void ControlPanel_OnModeChange(PlayMode mode, object append)
@@ -294,14 +325,18 @@ namespace Lunalipse
             this.WindowState = WindowState.Minimized;
         }
 
-        private void ControlPanel_OnProfilePictureClicked()
+        private void ControlPanel_OnProfilePictureClicked(bool isPanelOpen)
         {
-            if(core.AudioOut.Playing)
+            if(core.AudioOut.Playing && !isPanelOpen)
             {
                 musicDetailPage.musicEntity = core.CurrentPlaying;
                 musicDetailPage.source = ControlPanel.AlbumProfile;
                 musicDetailPage.FlushChanges();
                 FPresentor.ShowContent(musicDetailPage);
+            }
+            else if(isPanelOpen)
+            {
+                FPresentor.BackWard();
             }
         }
 
@@ -482,20 +517,20 @@ namespace Lunalipse
         /// <param name="tag">附加信息</param>
         private void DipMusic_ItemSelectionChanged(MusicEntity selected, object tag)
         {
-            #region disposed
+#region disposed
             //if (dia == null)
             //{
             //    dia = new Dialogue(new _3DVisualize(), "3D");
             //    dia.Show();
             //}
-            #endregion
+#endregion
         }
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             CATALOGUES.SelectedIndex = -1;
             LunalipseLogger.GetLogger().Info("Start Crossing Window");
-            desktopDisplay = new DesktopDisplay();
             desktopDisplay.Show();
             LunalipseLogger.GetLogger().Info("Loaded complete, rendering UI");
 #if BUILD
@@ -525,17 +560,73 @@ namespace Lunalipse
             if (GlobalSetting.UpdateArguments != string.Empty)
             {
                 LunalipseLogger.GetLogger().Info("Initiating Upgrade installation");
-                ProcessStartInfo info = new ProcessStartInfo("CeleUpdater.exe", GlobalSetting.UpdateArguments);
+                ProcessStartInfo info = new ProcessStartInfo(BasePath + @"\CeliUpdater.exe", GlobalSetting.UpdateArguments);
+                GlobalSetting.UpdateArguments = string.Empty;
                 Process.Start(info);
             }
             desktopDisplay?.Close();
+            
             LunalipseLogger.GetLogger().Debug("Saving Playlist");
             playlistGuard.SavePlaylist();
+
             LunalipseLogger.GetLogger().Info("Terminating Lunalipse.....");
-            core.Pause();
             core.Dispose();
             LunalipseLogger.GetLogger().Release();
             Environment.Exit(0);
+        }
+
+        private void LunalipseMainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            SaveSettings();
+            core.Pause();
+        }
+
+        private void SaveSettings()
+        {
+            bool hasChange = false;
+            foreach(KeyValuePair<string,SpectrumDisplayer> disp in vManager.Displayers)
+            {
+                hasChange = false;
+                if (GlobalSetting.SpectrumDisplayers.ContainsKey(disp.Key))
+                {
+                    SpectrumDisplayCfg spectrumDisplayCfg = GlobalSetting.SpectrumDisplayers[disp.Key];
+                    if (spectrumDisplayCfg.Resolution != disp.Value.DesireResolution)
+                    {
+                        hasChange = true;
+                        spectrumDisplayCfg.Resolution = disp.Value.DesireResolution;
+                    }
+                    if (spectrumDisplayCfg.Style != disp.Value.currentStyle)
+                    {
+                        hasChange = true;
+                        spectrumDisplayCfg.Style = disp.Value.currentStyle;
+                    }
+                    if(hasChange)
+                    {
+                        GlobalSetting.SpectrumDisplayers[disp.Key] = spectrumDisplayCfg;
+                    }
+                }
+                else
+                {
+                    GlobalSetting.SpectrumDisplayers.Add(disp.Key, new SpectrumDisplayCfg()
+                    {
+                        Resolution = disp.Value.DesireResolution,
+                        Style = disp.Value.currentStyle
+                    });
+                }
+            }
+            if (SettingHash != GLS.INSTANCE.ComputeHash())
+            {
+                CommonDialog UserShouldSave = new CommonDialog(SaveSettingTitle, SaveSettingContent, System.Windows.MessageBoxButton.OKCancel);
+                if (UserShouldSave.ShowDialog().Value)
+                {
+                    globalSettingHelper.SaveSetting(GLS.INSTANCE);
+                }
+            }
+        }
+
+        protected override void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
+        {
+            base.ThemeManagerBase_OnThemeApplying(obj);
         }
 
         /// <summary>

@@ -24,7 +24,7 @@ namespace Lunalipse.Core
         VersionHelper versionHelper;
         List<ReleaseInfo> releaseInfos = null;
 
-        readonly Regex TagPatternMatch = new Regex("v([0-9.]+)-([a-z]+)", RegexOptions.IgnoreCase);
+        readonly Regex TagPatternMatch = new Regex("v([0-9.]+)-[a-z]+([0-9]+)?", RegexOptions.IgnoreCase);
         readonly Regex UpdatePackDownload = new Regex("https://.*/license.clrss", RegexOptions.IgnoreCase);
         //readonly Regex UpdateProgram = new Regex("https://.*/update.exe", RegexOptions.IgnoreCase);
 
@@ -94,8 +94,8 @@ namespace Lunalipse.Core
             ReleaseInfo releaseInfo = releaseInfos.Find((ri) => ri.IsPreRelease == PreReleaseOnly);
             Match match = TagPatternMatch.Match(releaseInfo.Tag);
             if (match.Groups.Count == 0) return null;
-            Version v = new Version(match.Groups[1].Value);
-            releaseInfo.postFix = match.Groups[2].Value;
+            Version v = new Version(match.Groups[1].Value+"."+(match.Groups[2].Value==string.Empty?"0": match.Groups[2].Value));
+            //releaseInfo.postFix = match.Groups[2].Value;
             return v > versionHelper.Version ? releaseInfo : null;
         }
 

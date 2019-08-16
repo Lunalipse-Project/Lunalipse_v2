@@ -63,8 +63,6 @@ namespace Lunalipse.Presentation.BasicUI
             base.ThemeManagerBase_OnThemeApplying(obj);
             Progress.TrackBackgroundBrush = obj.Primary.SetOpacity(0.8).ToLuna();
             Progress.ProgressBackgroundBrush = obj.Secondary;
-        }
-
-        
+        }       
     }
 }

@@ -3,8 +3,10 @@ using Lunalipse.Common.Data;
 using Lunalipse.Common.Generic.I18N;
 using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Common.Interfaces.II18N;
+using Lunalipse.Common.Interfaces.IVisualization;
 using Lunalipse.Core.LpsAudio;
 using Lunalipse.Core.Lyric;
+using Lunalipse.Core.Visualization;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,6 +15,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Shapes;
 
 namespace Lunalipse.Pages
 {
@@ -30,6 +33,7 @@ namespace Lunalipse.Pages
         string LyricNotFoundHint = "";
 
         EventBus eventBus;
+        VisualizationManager vManager;
 
         ObservableCollection<LyricToken> lyricTokens = new ObservableCollection<LyricToken>();
         ThicknessAnimation thicknessAnimation = new ThicknessAnimation();
@@ -43,6 +47,9 @@ namespace Lunalipse.Pages
         {
             InitializeComponent();
             eventBus = EventBus.Instance;
+            vManager = VisualizationManager.Instance;
+            vManager.RegisterDisplayer(FFTSpectrum.Tag as string, FFTSpectrum.DisplayerDelegator, 30);
+
             converter = TranslationManagerBase.AquireConverter();
             TranslationManagerBase.OnI18NEnvironmentChanged += TranslationManagerBase_OnI18NEnvironmentChanged;
             ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
@@ -58,6 +65,9 @@ namespace Lunalipse.Pages
             thicknessAnimation.Duration = elapse;
             thicknessAnimation.EasingFunction = new SineEase();
 
+            FFTSpectrum.VisualManager = vManager;
+            FFTSpectrum.SetV11NHelper(typeof(VisualizationHelper));
+
             LyricEnumerator.OnLyricPrepared += LyricEnumerator_OnLyricPrepared;
 
             LyricEnumerator_OnLyricPrepared(LyricEnumerator.TryGetLyric());
@@ -69,6 +79,7 @@ namespace Lunalipse.Pages
         private void MusicDetail_Unloaded(object sender, RoutedEventArgs e)
         {
             AudioDelegations.LyricUpdated -= AudioDelegations_LyricUpdated;
+            AudioDelegations.OnFftDataUpdate -= AudioDelegations_OnFftDataUpdate;
         }
 
         public MusicDetail(MusicEntity musicEntity, Brush source) : this()
@@ -93,7 +104,13 @@ namespace Lunalipse.Pages
         private void MusicDetail_Loaded(object sender, RoutedEventArgs e)
         {
             AudioDelegations.LyricUpdated += AudioDelegations_LyricUpdated;
+            AudioDelegations.OnFftDataUpdate += AudioDelegations_OnFftDataUpdate;
             thicknessAnimation.Duration = elapse;
+        }
+
+        private void AudioDelegations_OnFftDataUpdate(float[] fft)
+        {
+            Dispatcher.Invoke(() => FFTSpectrum.DrawSpectrum(fft));
         }
 
         bool isReady = false;
@@ -186,6 +203,7 @@ namespace Lunalipse.Pages
         {
             background = obj.Primary;
             Foreground = obj.Foreground;
+            FFTSpectrum.UpdateSpectrumColor(obj.Secondary);
         }
 
         private void TranslationManagerBase_OnI18NEnvironmentChanged(II18NConvertor obj)

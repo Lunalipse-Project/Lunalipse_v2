@@ -19,23 +19,15 @@ namespace Lunalipse.Windows
     /// </summary>
     public partial class Settings : LunalipseDialogue , ITranslatable
     {
-        string SettingHash;
-        string SaveSettingTitle;
-        string SaveSettingContent;
-        GlobalSettingHelper<GLS> globalSettingHelper;
+        
         public Settings()
         {
             InitializeComponent();
             RegistCatas();
             SPlanelSlider.OnSelectionChanged += SPlanelSlider_OnSelectionChanged;
-            ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
-            ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
             TranslationManagerBase.OnI18NEnvironmentChanged += Translate;
             Translate(TranslationManagerBase.AquireConverter());
 
-            SettingHash = GLS.INSTANCE.ComputeHash();
-            globalSettingHelper = GlobalSettingHelper<GLS>.INSTANCE;
-            globalSettingHelper.UseLZ78Compress = true;
             this.Loaded += Settings_Loaded;
             Unloaded += Settings_Unloaded;
         }
@@ -43,7 +35,6 @@ namespace Lunalipse.Windows
         private void Settings_Unloaded(object sender, System.Windows.RoutedEventArgs e)
         {
             SPlanelSlider.OnSelectionChanged -= SPlanelSlider_OnSelectionChanged;
-            ThemeManagerBase.OnThemeApplying -= ThemeManagerBase_OnThemeApplying;
             TranslationManagerBase.OnI18NEnvironmentChanged -= Translate;
             this.Loaded -= Settings_Loaded;
             Unloaded -= Settings_Unloaded;
@@ -58,6 +49,7 @@ namespace Lunalipse.Windows
         private void SPlanelSlider_OnSelectionChanged(Common.Interfaces.ILpsUI.LpsDetailedListItem selected, object tag = null)
         {
             SettingCatalogue cata = (SettingCatalogue)selected;
+            Frame_Scrollviewer.ScrollToHome();
             switch (cata.CLASS)
             {
                 case SettingCatalogues.SETTING_GENERAL:
@@ -81,8 +73,9 @@ namespace Lunalipse.Windows
             }
         }
 
-        private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
+        protected override void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
         {
+            base.ThemeManagerBase_OnThemeApplying(obj);
             if (obj == null) return;
             Background = obj.Primary.SetOpacity(1).ToLuna();
         }
@@ -91,8 +84,6 @@ namespace Lunalipse.Windows
         {
             SPlanelSlider.Translate(i8c);
             Title = i8c.ConvertTo(SupportedPages.CORE_FUNC, Title);
-            SaveSettingContent = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_SETTING_SAVE_SETTING_CONTENT");
-            SaveSettingTitle = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_SETTING_SAVE_SETTING_TITLE");
         }
 
         void RegistCatas()
@@ -111,14 +102,7 @@ namespace Lunalipse.Windows
 
         private void LunalipseDialogue_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if(SettingHash != GLS.INSTANCE.ComputeHash())
-            {
-                CommonDialog UserShouldSave = new CommonDialog(SaveSettingTitle, SaveSettingContent, System.Windows.MessageBoxButton.OKCancel);
-                if(UserShouldSave.ShowDialog().Value)
-                {
-                    globalSettingHelper.SaveSetting(GLS.INSTANCE);
-                }
-            }
+            
         }
     }
 }

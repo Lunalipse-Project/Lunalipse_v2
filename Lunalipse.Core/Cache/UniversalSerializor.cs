@@ -23,7 +23,7 @@ namespace Lunalipse.Core.Cache
             List<FieldInfo> vars = new List<FieldInfo>();
             foreach (FieldInfo fi in type.GetFields(FieldFilter))
             {
-                if (fi.GetCustomAttribute<IFilter>() != null)
+                if (fi.GetCustomAttribute<IFilter>() == null)
                 {
                     vars.Add(fi);
                 }

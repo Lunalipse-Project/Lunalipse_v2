@@ -15,7 +15,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Lunalipse.Common.Bus.Event;
 using Lunalipse.Common.Generic.Themes;
+using Lunalipse.Common.Interfaces.IVisualization;
 using Lunalipse.Core.LpsAudio;
+using Lunalipse.Core.Visualization;
 using Lunalipse.Utilities;
 using Lunalipse.Utilities.Win32;
 
@@ -33,13 +35,23 @@ namespace Lunalipse.Windows
         DoubleAnimation FadeOut = new DoubleAnimation(1, 0, new Duration(TimeSpan.FromSeconds(2)));
 
         GLS GlobalSetting;
+        VisualizationManager vManager;
+
+        bool EnableLyricFFT = true;
 
         public DesktopDisplay()
         {
             InitializeComponent();
             Width = SystemParameters.PrimaryScreenWidth;
             eventBus = EventBus.Instance;
+            vManager = VisualizationManager.Instance;
+
             eventBus.AddUnicastReciever(GetType(), ReceiveAction);
+            vManager.RegisterDisplayer(FFTDrawing.Tag as string, FFTDrawing.DisplayerDelegator, 40);
+
+            FFTDrawing.VisualManager = vManager;
+            FFTDrawing.SetV11NHelper(typeof(VisualizationHelper));
+
             LocateWindow();
             AudioDelegations.LyricUpdated += token =>
             {
@@ -67,6 +79,7 @@ namespace Lunalipse.Windows
         private void DesktopDisplay_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             MainWindow.DesktopDisplayIndicator -= MainWindow_DesktopDisplayIndicator;
+            AudioDelegations.OnFftDataUpdate -= AudioDelegations_OnFftDataUpdate;
         }
 
         private void GlobalSetting_OnSettingUpdated(string obj)
@@ -86,6 +99,7 @@ namespace Lunalipse.Windows
         {
             Foreground = obj.Foreground;
             BorderDisplay.Background = obj.Primary;
+            FFTDrawing.UpdateSpectrumColor(obj.Secondary);
         }
 
         private void DesktopDisplay_OnToastSet(string Content, int ElapseTime)
@@ -103,16 +117,26 @@ namespace Lunalipse.Windows
             string action = param[0] as string;
             switch (eventBusTypes)
             {
-                case EventBusTypes.ON_ACTION_REQ_ENABLE:              
-                    if(action.ToLower() == "lyric")
+                case EventBusTypes.ON_ACTION_REQ_ENABLE:
+                    switch(action.ToLower())
                     {
-                        LyricDisplayArea.Visibility = Visibility.Visible;
+                        case "lyric":
+                            LyricDisplayArea.Visibility = Visibility.Visible;
+                            break;
+                        case "fft":
+                            EnableLyricFFT = true;
+                            break;
                     }
                     break;
                 case EventBusTypes.ON_ACTION_REQ_DISABLE:
-                    if (action.ToLower() == "lyric")
+                    switch (action.ToLower())
                     {
-                        LyricDisplayArea.Visibility = Visibility.Hidden;
+                        case "lyric":
+                            LyricDisplayArea.Visibility = Visibility.Hidden;
+                            break;
+                        case "fft":
+                            EnableLyricFFT = false;
+                            break;
                     }
                     break;
             }
@@ -124,6 +148,15 @@ namespace Lunalipse.Windows
             this.SetThroughableWindow();
             this.HideWindowFromAltTab();
             MainWindow.DesktopDisplayIndicator += MainWindow_DesktopDisplayIndicator;
+            AudioDelegations.OnFftDataUpdate += AudioDelegations_OnFftDataUpdate;
+        }
+
+        private void AudioDelegations_OnFftDataUpdate(float[] fft)
+        {
+            if(EnableLyricFFT)
+            {
+                Dispatcher.Invoke(() => FFTDrawing.DrawSpectrum(fft));
+            }
         }
 
         private void MainWindow_DesktopDisplayIndicator()

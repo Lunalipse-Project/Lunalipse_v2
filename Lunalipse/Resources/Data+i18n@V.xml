@@ -104,8 +104,35 @@
       <Key name="CORE_SETTING_I18N_LANG_OPTS">设置您的语言偏好</Key>
       <Key name="CORE_SETTING_I18N_LANG_FOLLOWSYS">跟随系统语言</Key>
 
+
+      <Key name="CORE_SETTING_AUDIO_IMMSERED">启用沉浸模式（仅限WASAPI支持的系统）</Key>
+      <Key name="CORE_SETTING_AUDIO_IMMSERED_DESC">通过采用沉浸模式音频可以更高效的播放，但这就意味着Lunalipse必须直接越过Windows音频引擎去直接操纵声卡驱动，从而会暂时屏蔽其他声音源，比如系统提示音，游戏的音频等等。</Key>
+      <Key name="CORE_SETTING_AUDIO_LATENCY">音频延迟率（毫秒）</Key>
+      <Key name="CORE_SETTING_AUDIO_LATENCY_DESC">从音频被解码到声音从扬声器中出来的时间间隔，建议保持默认值。</Key>
+      
+      <Key name="CORE_SETTING_SPECTRUM">音频与音频可视化</Key>
+      <Key name="CORE_SETTING_SPECTRUM_HINT">Lunalipse采用高效的快速傅里叶变换(FFT)算法并通过频谱来展现“声音”。您可以在此设置音频模块以及音频可视化模块的参数。</Key>
+      <Key name="CORE_SETTING_SPECTRUM_ENABLE">启用音频可视化</Key>
+      <Key name="CORE_SETTING_SPECTRUM_FRAMERATE">频谱帧率（帧每秒）</Key>
+      <Key name="CORE_SETTING_SPECTRUM_SCALING">频谱量化方案</Key>
+      <Key name="CORE_SETTING_SPECTRUM_SCALING_Decibel">分贝</Key>
+      <Key name="CORE_SETTING_SPECTRUM_SCALING_Linear">线性</Key>
+      <Key name="CORE_SETTING_SPECTRUM_SCALING_Sqrt">开方</Key>
+      <Key name="CORE_SETTING_SPECTRUM_CLASSIC">经典</Key>
+
+      <Key name="CORE_SETTING_SPECTRUM_DISP_HINT">配置频谱器，这是目前Lunalipse正在使用的频谱器</Key>
+      <Key name="CORE_SETTING_SPECTRUM_DISP_RESOLUTION">频谱器段数</Key>
+      <Key name="CORE_SETTING_SPECTRUM_DISP_STYLE">频谱器样式</Key>
+      <Key name="CORE_SETTING_SPECTRUM_DISP_APPLY">应用设置</Key>
+      
+      <Key name="CORE_SETTING_ALTER_TITLE">配置已更改</Key>
+      <Key name="CORE_SETTING_ALTER_RESTART">此配置的改动需要在Lunalipse下次启动时才会生效，确定更改？</Key>
+      <Key name="CORE_SETTING_ALTER_FFTENABLE">音频可视化采用的FFT算法会导致CPU使用率的增加，对低配置电脑可能不是很友好，确定更改？</Key>
+      
+
       <Key name="CORE_SETTING_HOTKEY">快捷键设置</Key>
       <Key name="CORE_SETTING_HOTKEY_HINT">通过编辑现有的快捷键，或着添加新的快捷键然后绑定到任意一个功能上，您可以更加快速与方便的操控Lunalipse</Key>
+      
     </Page>
     <Page key="CORE_APPEARANCE_SETTING">
       <Key name="CORE_SETTING_APPR_THEME_CAP">请为Lunalipse选定一个主题（配色方案）</Key>
