@@ -253,7 +253,7 @@ namespace Lunalipse.Core.PlayList
         public void SetMusic(MusicEntity entity)
         {
             int index = MusicList.IndexOf(entity);
-            if (index == -1) throw new InvalidOperationException("Entity {0} does not contains in {1}".FormateEx(entity.MusicName, UUID));
+            if (index == -1) throw new InvalidOperationException("Entity '{0}' does not contains in '{1}'".FormateEx(entity.MusicName, UUID));
             Currently = index;
         }
 
@@ -306,6 +306,11 @@ namespace Lunalipse.Core.PlayList
         public bool IsUserDefined()
         {
             return isUserDefined;
+        }
+
+        public MusicEntity getCurrent()
+        {
+            return MusicList[Currently];
         }
     }
 }

@@ -8,24 +8,24 @@ using System.Text;
 using System.Threading.Tasks;
 using Lunalipse.Common;
 
-namespace Lunalipse.Core.BehaviorScript
+namespace Lunalipse.Core.BehaviorScript.ScriptV1
 {
     public class Interpretation : IInterpretation
     {
         private Dictionary<int, string[]> ParameterPattern = new Dictionary<int, string[]>()
         {
             {0x0001,    // LUNA_PLAY
-                new string[]{"String","Single"} },
+                new string[]{"String", "Single" } },
             {0x0002,    // LUNA_PLAYN
                 new string[]{"Int32", "Single" } },
             {0x0003,    // LUNA_PLAYC
                 new string[]{"String","String", "Single" } },
             {0x0004,    // LUNA_EQZR
-                new string[]{"Int32", "Int32", "Int32", "Int32", "Int32", "Int32", "Int32", "Int32", "Int32", "Int32"} },
+                new string[]{"Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double", "Double" } },
             {0x0005,    // LUNA_NEXT
-                null},
+                new string[0]},
             {0x0006,    // LUNA_LOOP
-                null},
+                new string[0]},
             {0x0007,    // LUNA_SET
                 new string[]{"String"} },
             {0x1001,    // SUFX_RAND
@@ -95,7 +95,7 @@ namespace Lunalipse.Core.BehaviorScript
 
         public bool AddParameterPattern(int type, string[] pattern)
         {
-            return ParameterPattern.Add4nRep(type, pattern);
+            return ParameterPattern.AddNonRepeat(type, pattern);
         }
 
         public bool RemoveParameterPattern(int type)
@@ -176,13 +176,13 @@ namespace Lunalipse.Core.BehaviorScript
         public bool AddPrefix(uint type, string name)
         {
             if (type >= 0x1000) return false;
-            return CustomPrefix.Add4nRep((int)type, name);
+            return CustomPrefix.AddNonRepeat((int)type, name);
         }
 
         public bool AddSuffix(uint type, string name)
         {
             if (type < 0x1000) return false;
-            return CustomSuffix.Add4nRep((int)type, name);
+            return CustomSuffix.AddNonRepeat((int)type, name);
         }
 
         public bool RemovePrefix(int type)

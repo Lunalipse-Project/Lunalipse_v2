@@ -57,6 +57,7 @@ namespace Lunalipse.Presentation.LpsComponent
             if (helper.GetInterface("IV11nHelper") == null) return false;
             vHelper = Activator.CreateInstance(helper) as IV11nHelper;
             vHelper.SetScalingStrategy(VisualManager.AquireScalingStrategy());
+            vHelper.SetFftSize(VisualManager.AquireFftSize());
             return true;
         }
 
@@ -103,19 +104,35 @@ namespace Lunalipse.Presentation.LpsComponent
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             VisualizationManagerBase.OnScalingChanged += VisualizationManagerBase_OnScalingChanged;
+            VisualizationManagerBase.OnSizeChanged += VisualizationManagerBase_OnSizeChanged;
             VisualizationManagerBase.OnEnableFFTChanged += VisualizationManagerBase_OnEnableFFTChanged;
             ReloadSpectrumStyle(true);
+        }
+
+        private void VisualizationManagerBase_OnSizeChanged(CSCore.DSP.FftSize obj)
+        {
+            if(obj != vHelper.GetFftSize())
+            {
+                vHelper.SetFftSize(obj);
+                vHelper.UpdateFrequencyMapping();
+            }
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
             VisualizationManagerBase.OnScalingChanged -= VisualizationManagerBase_OnScalingChanged;
+            VisualizationManagerBase.OnSizeChanged -= VisualizationManagerBase_OnSizeChanged;
             VisualizationManagerBase.OnEnableFFTChanged -= VisualizationManagerBase_OnEnableFFTChanged;
         }
 
         public void DisplayerDelegator(bool full_reload)
         {
             ReloadSpectrumStyle(full_reload);
+        }
+
+        public void Clear()
+        {
+            spectrumDrawing.Children.Clear();
         }
     }
 }

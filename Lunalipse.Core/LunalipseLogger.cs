@@ -2,6 +2,7 @@
 using Lunalipse.Common.Data;
 using Lunalipse.Common.Data.Errors;
 using Lunalipse.Utilities;
+using Lunalipse.Utilities.Misc;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -48,6 +49,10 @@ namespace Lunalipse.Core
 #else
             LogLevel = LogLevel.INFO;
 #endif
+            logWriter.Write(SystemHelper.GetProcessorInfo());
+            logWriter.Write(SystemHelper.GetOSInfo());
+            logWriter.WriteLine();
+            logWriter.Flush();
         }
 
         private void ErrorDelegation_GenericError(string ExceptionMsg, string ExceptionStackTrace, string componentID = "")

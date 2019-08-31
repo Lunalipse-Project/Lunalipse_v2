@@ -4,6 +4,8 @@ using System.IO;
 using System.Reflection;
 using Lunalipse.Common.Data;
 using Lunalipse.Common.Generic.AudioControlPanel;
+using Lunalipse.Common.Interfaces.II18N;
+using Lunalipse.Common.Interfaces.IPlayList;
 using Lunalipse.Core.BehaviorScript;
 using Lunalipse.Core.LpsAudio;
 using Lunalipse.Core.Lyric;
@@ -17,7 +19,8 @@ namespace Lunalipse.Core
 
         public volatile static Dictionary<string, LpsCore> lpsCoresSessions = new Dictionary<string, LpsCore>();
 
-        private Interpreter executor;
+        private BScriptManager bsManager;
+        private SequenceControllerManager controllerManager;
         private UnrepeatedRandom random;
 
         public event Action OnMusicComplete;
@@ -40,13 +43,18 @@ namespace Lunalipse.Core
         protected LpsCore(bool immersed, int latency)
         {
             AudioOut = LpsAudio.LpsAudio.Instance(immersed,latency);
-            executor = Interpreter.INSTANCE(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
-            AudioDelegations.MusicLoaded += mLoaded;
-            AudioDelegations.PlayingFinished += mComplete;
-            AudioDelegations.PostionChanged += time => OnMusicProgressChanged?.Invoke(time);
+            bsManager = BScriptManager.Instance(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)+"/Scripts");
+            controllerManager = SequenceControllerManager.Instance;
+            AudioOut.LyricTokenzier = LyricTokenizer.INSTANCE;
             random = new UnrepeatedRandom();
 
-            AudioOut.LyricTokenzier = LyricTokenizer.INSTANCE;
+            AudioDelegations.MusicLoaded = mLoaded;
+            AudioDelegations.PlayingFinished = mComplete;
+            AudioDelegations.PostionChanged = time => OnMusicProgressChanged?.Invoke(time);
+
+            controllerManager.AddController("GENERAL", GeneralSeqController);
+            controllerManager.AddController("BSCRIPT", ScriptSeqController, true, true);
+            controllerManager.SetController("GENERAL");
         }
 
         private void mComplete()
@@ -55,48 +63,57 @@ namespace Lunalipse.Core
             OnMusicComplete?.Invoke();
         }
 
-        public void GetNext()
+
+        public void GeneralSeqController(Action<MusicEntity> prepareFunc, ICatalogue catalogue, PlayMode playmode, bool isNext)
         {
-            if (!executor.LBSLoaded)
+            if(isNext)
             {
                 switch (MusicPlayMode)
                 {
                     case PlayMode.RepeatOne:
+                        PrepareMusic(currentCatalogue.getCurrent());
+                        break;
                     case PlayMode.RepeatList:
-                        PerpareMusic(currentCatalogue.getNext());
+                        PrepareMusic(currentCatalogue.getNext());
                         break;
                     case PlayMode.Shuffle:
                         int i = random.Next();
-                        PerpareMusic(currentCatalogue.getMusic(i));
+                        PrepareMusic(currentCatalogue.getMusic(i));
                         break;
                 }
             }
             else
             {
-                PerpareMusic(executor.Stepping());
+                switch (MusicPlayMode)
+                {
+                    case PlayMode.RepeatOne:
+                    case PlayMode.RepeatList:
+                        PrepareMusic(currentCatalogue.getPrevious());
+                        break;
+                    case PlayMode.Shuffle:
+                        int i = random.Previous();
+                        PrepareMusic(currentCatalogue.getMusic(i));
+                        break;
+                }
             }
+        }
+
+        public void ScriptSeqController(Action<MusicEntity> prepareFunc, ICatalogue catalogue, PlayMode playmode, bool isNext)
+        {
+            if (isNext)
+            {
+                prepareFunc(bsManager.StepToNext());
+            }
+        }
+
+        public void GetNext()
+        {
+            controllerManager.CurrentController.controllerDelegation?.Invoke(PrepareMusic, currentCatalogue, MusicPlayMode, true);
         }
 
         public void GetPrevious()
         {
-            if (!executor.LBSLoaded)
-            {
-                switch (MusicPlayMode)
-                {
-                    case PlayMode.RepeatOne:
-                    case PlayMode.RepeatList:
-                        PerpareMusic(currentCatalogue.getPrevious());
-                        break;
-                    case PlayMode.Shuffle:
-                        int i = random.Previous();
-                        PerpareMusic(currentCatalogue.getMusic(i));
-                        break;
-                }
-            }
-            else
-            {
-                PerpareMusic(executor.Stepping());
-            }
+            controllerManager.CurrentController.controllerDelegation?.Invoke(PrepareMusic, currentCatalogue, MusicPlayMode, false);
         }
 
         private void mLoaded(MusicEntity Music, Track mTrack)
@@ -129,10 +146,14 @@ namespace Lunalipse.Core
 
         public Catalogue currentCatalogue { get; private set; }
 
-        public void PerpareMusic(MusicEntity entity)
+        public void PrepareMusic(MusicEntity entity)
         {
+            if (entity == null) return;
             if (AudioOut.Playing || AudioOut.isLoaded) AudioOut.Stop();
-            currentCatalogue.SetMusic(entity);
+            if (!bsManager.CurrentLoader.isScriptLoaded)
+            {
+                currentCatalogue?.SetMusic(entity);
+            }
             CurrentPlaying = entity;
             AudioOut.Load(entity);
             AudioOut.Play();

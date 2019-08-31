@@ -9,7 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Lunalipse.Core.BehaviorScript
+namespace Lunalipse.Core.BehaviorScript.ScriptV1
 {
     public class Parser : IParser
     {
@@ -30,8 +30,10 @@ namespace Lunalipse.Core.BehaviorScript
         /// </summary>
         public Action<string, string, int> ErrorOccured;
 
-        Regex preExract = new Regex(@"(.*?)[(?=(\()]|[^:]*[0-9]");
-        Regex argExract = new Regex(@"(?<=\"").*?(?=\"")|[^,]*[0-9]|[a-z]+");
+        Regex preExract = new Regex(@"(.*?)[(?=(\()]|[^:]*[0-9]",RegexOptions.Compiled);
+        Regex MLCommentRemoval = new Regex(@"\!\-.*\-\!", RegexOptions.Singleline | RegexOptions.Compiled);
+        Regex SLCommentRemoval = new Regex(@"\!\!.*", RegexOptions.Compiled);
+        Regex argExract = new Regex(@"([^,]+)", RegexOptions.Compiled);
 
         public bool Load(string id, bool append = false)
         {
@@ -141,6 +143,10 @@ namespace Lunalipse.Core.BehaviorScript
                     args.Add(ScriptUtil.SanitaizeParameter(m.Groups[0].Value));
                 }
             }
+            else if(mc.Count > 2)
+            {
+                args.Add(mc[2].Value);
+            }
             else
             {
                 st.TailFix = "COUNT";
@@ -172,13 +178,21 @@ namespace Lunalipse.Core.BehaviorScript
                     string line;
                     while ((line = sr.ReadLine()) != null)
                     {
-                        read += Regex.Replace(line, "(!!)+.*", "") + "\n";
+                        if (!string.IsNullOrEmpty(line))
+                        {
+                            line = SLCommentRemoval.Replace(line, string.Empty);
+                            line = MLCommentRemoval.Replace(line, string.Empty);
+                            if (!string.IsNullOrEmpty(line))
+                            {
+                                read += line + "\n";
+                            }
+                        }
                     }
                 }
-                read = Regex.Replace(read, @"\!\-(.|\n)*?\-\!", "");
+                read = MLCommentRemoval.Replace(read, string.Empty);
                 return read;
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 ErrorOccured?.Invoke("CORE_LBS_FileNotFound", absPath, -1);
                 return "";

@@ -49,6 +49,33 @@ namespace Lunalipse.Presentation.LpsComponent
         //// object是MusicEntity
         //private Func<object> ScriptSteppingFunc;
 
+        private double vol = 70;
+
+        public double Volume
+        {
+            get => vol;
+            set
+            {
+                vol = value;
+                if (vol >= 25 && vol < 75)
+                {
+                    VolumeAdj.Content = FindResource("Volume_025");
+                }
+                else if (vol >= 75)
+                {
+                    VolumeAdj.Content = FindResource("Volume_075");
+                }
+                else if (vol >= 1)
+                {
+                    VolumeAdj.Content = FindResource("Volume_0");
+                }
+                else
+                {
+                    VolumeAdj.Content = FindResource("Volume_off");
+                }
+            }
+        }
+
         public AudioControlPanel()
         {
             InitializeComponent();
@@ -78,6 +105,7 @@ namespace Lunalipse.Presentation.LpsComponent
                 {
                     VolumeAdj.Content = FindResource("Volume_off");
                 }
+                Volume = x;
                 OnVolumeChanged?.Invoke(x);
             };
             VolumeAdj.Click += VolumeAdj_Click;
@@ -99,6 +127,8 @@ namespace Lunalipse.Presentation.LpsComponent
             }
             else
             {
+                OnTrigging?.Invoke(AudioPanelTrigger.Volume, null);
+                VolumeBar.Value = Volume;
                 VolumePlanePopup.IsOpen = true;
                 VolumeBar.BeginAnimation(OpacityProperty, FadeIn);
             }
@@ -269,7 +299,7 @@ namespace Lunalipse.Presentation.LpsComponent
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             VolumeBar.MaxValue = 100;
-            VolumeBar.Value = 70;
+            VolumeBar.Value = Volume;
         }
 
         private void AlbProfile_MouseEnter(object sender, MouseEventArgs e)

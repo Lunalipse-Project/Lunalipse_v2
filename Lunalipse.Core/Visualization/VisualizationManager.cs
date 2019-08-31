@@ -1,4 +1,5 @@
-﻿using Lunalipse.Common.Generic.Audio;
+﻿using CSCore.DSP;
+using Lunalipse.Common.Generic.Audio;
 using Lunalipse.Common.Interfaces.IVisualization;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,7 @@ namespace Lunalipse.Core.Visualization
 
         bool _enableFFT = true;
         ScalingStrategy _scaling = ScalingStrategy.Decibel;
+
         public bool EnableSpectrum
         {
             get => _enableFFT;
@@ -50,6 +52,14 @@ namespace Lunalipse.Core.Visualization
                 _scaling = value;
                 NotifyScalingChanged(_scaling);
             }
+        }
+
+        public FftSize FftSize { get; set; } = FftSize.Fft4096;
+
+        public VisualizationManager()
+        {
+            OnScalingAquired = () => ScalingStrategy;
+            OnSizeAquired = () => FftSize;
         }
 
 
@@ -101,6 +111,16 @@ namespace Lunalipse.Core.Visualization
                 }
             }
             return unit;
+        }
+
+        public override FftSize AquireFftSize()
+        {
+            return FftSize;
+        }
+
+        public override ScalingStrategy AquireScalingStrategy()
+        {
+            return _scaling;
         }
 
         public void AddStyleProvider(string styleID, Type styleProvider)

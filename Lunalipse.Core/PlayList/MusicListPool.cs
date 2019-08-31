@@ -59,7 +59,7 @@ namespace Lunalipse.Core.PlayList
             if (!CPool.Exists(x => x.MainCatalogue == true || x.Name.Equals("CORE_CATALOGUE_AllMusic")))
                 CPool.AddCatalogue(new Catalogue("CORE_CATALOGUE_AllMusic", true));
             AllMusic = CPool.MainCatalogue;
-            ConsoleAdapter.INSTANCE.RegisterComponent("lpslist", this);
+            ConsoleAdapter.Instance.RegisterComponent("lpslist", this);
             Log = LunalipseLogger.GetLogger();
         }
 

@@ -67,12 +67,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BehaviorScript\BScriptManager.cs" />
-    <Compile Include="BehaviorScript\InstructionProc.cs" />
-    <Compile Include="BehaviorScript\Interpretation.cs" />
-    <Compile Include="BehaviorScript\Parser.cs" />
-    <Compile Include="BehaviorScript\Interpreter.cs" />
+    <Compile Include="BehaviorScript\ScriptV1\InstructionProc.cs" />
+    <Compile Include="BehaviorScript\ScriptV1\Interpretation.cs" />
+    <Compile Include="BehaviorScript\ScriptV1\Parser.cs" />
+    <Compile Include="BehaviorScript\ScriptV1\Interpreter.cs" />
     <Compile Include="BehaviorScript\ScriptSerializor.cs" />
-    <Compile Include="BehaviorScript\ScriptUtil.cs" />
+    <Compile Include="BehaviorScript\ScriptV1\ScriptUtil.cs" />
+    <Compile Include="BehaviorScript\ScriptV2\Exceptions.cs" />
+    <Compile Include="BehaviorScript\ScriptV2\Executor.cs" />
+    <Compile Include="BehaviorScript\ScriptV2\FunctionProc.cs" />
+    <Compile Include="BehaviorScript\ScriptV2\LexicalAnalyzer.cs" />
+    <Compile Include="BehaviorScript\ScriptV2\LexicalLibs.cs" />
+    <Compile Include="BehaviorScript\ScriptV2\LexicalUtils.cs" />
+    <Compile Include="BehaviorScript\ScriptV2\ScriptLoader.cs" />
+    <Compile Include="BehaviorScript\ScriptV2\SemanticAnalyzer.cs" />
     <Compile Include="Cache\CacheHub.cs" />
     <Compile Include="Cache\CacheSerializor.cs" />
     <Compile Include="Cache\CacheUtils.cs" />
@@ -82,7 +90,6 @@
     <Compile Include="Cache\UniversalSerializor.cs" />
     <Compile Include="Console\ConsoleAdapter.cs" />
     <Compile Include="GlobalSetting\GlobalSettingHelper.cs" />
-    <Compile Include="GlobalSetting\GSetting.cs" />
     <Compile Include="I18N\I18NCollection.cs" />
     <Compile Include="I18N\I18NPages.cs" />
     <Compile Include="I18N\I18NTokenizer.cs" />
@@ -91,6 +98,7 @@
     <Compile Include="LpsAudio\LpsAudio.cs" />
     <Compile Include="LpsAudio\LpsFFTProvider.cs" />
     <Compile Include="LpsAudio\LpsFftWarp.cs" />
+    <Compile Include="LpsAudio\SequenceControllerManager.cs" />
     <Compile Include="LpsCore.cs" />
     <Compile Include="LunalipseLogger.cs" />
     <Compile Include="Markdown\Markdown.cs" />

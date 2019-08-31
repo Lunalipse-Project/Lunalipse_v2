@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -22,7 +23,7 @@ namespace LunalipseUpdate
                 int size = 0;
                 for(int i = 0; i < args.Length - 1;)
                 {
-                    switch(args[i])
+                    switch (args[i])
                     {
                         case "-s:u":
                             url = args[i + 1];
@@ -36,6 +37,7 @@ namespace LunalipseUpdate
                     }
                     i += 2;
                 }
+                Thread.Sleep(1000);
                 if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
                 {
                     MainWindow mainwindow = new MainWindow(url, version, size);

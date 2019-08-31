@@ -23,7 +23,18 @@ namespace Lunalipse.Core.Lyric
             {
                 return false;
             }
-            tokens = Tokenizer.CreateTokensFromFile(TryGetLyric(Music));
+            if (Music.HasLyricLocal)
+            {
+                tokens = Tokenizer.CreateTokensFromFile(Music.LyricPath);
+            }
+            else if (Music.HasLyricOnline)
+            {
+                tokens = Tokenizer.CreateTokensFromWeb(Music.LyricURI);
+            }
+            else
+            {
+                tokens = null;
+            }
             OnLyricPrepared?.Invoke(tokens);
             if (tokens == null) return false;
             OnTryGetLyric += () =>
@@ -42,6 +53,7 @@ namespace Lunalipse.Core.Lyric
         {
             if (tokens != null)
             {
+                if (tokens.Count == 0) return null;
                 if (CurrentToken != null)
                 {
                     int index = tokens.IndexOf(CurrentToken);
@@ -71,24 +83,6 @@ namespace Lunalipse.Core.Lyric
                 return tokens[middle];
             }
             return null;
-        }
-
-        private string GetLyricFile(string path, string name)
-        {
-            return "{0}/{1}/{2}.lrc".FormateEx(Path.GetDirectoryName(path), LyricDefaultDir, name);
-        }
-
-        private string TryGetLyric(MusicEntity me)
-        {
-            string path = "";
-            if (File.Exists(path = GetLyricFile(me.Path, me.MusicName)))
-            {
-                return path;
-            }
-            else
-            {
-                return path = GetLyricFile(me.Path, me.Name);
-            }
         }
 
         private bool isInRangeBetween(TimeSpan first, TimeSpan last, TimeSpan current)

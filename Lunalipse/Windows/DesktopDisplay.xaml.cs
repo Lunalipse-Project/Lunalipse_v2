@@ -136,6 +136,7 @@ namespace Lunalipse.Windows
                             break;
                         case "fft":
                             EnableLyricFFT = false;
+                            FFTDrawing.Clear();
                             break;
                     }
                     break;

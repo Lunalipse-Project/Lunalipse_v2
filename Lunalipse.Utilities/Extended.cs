@@ -55,7 +55,7 @@ namespace Lunalipse.Utilities
             return true;
         }
 
-        public static bool Add4nRep<TKey, TValue>(this IDictionary<TKey, TValue> d, TKey key, TValue val)
+        public static bool AddNonRepeat<TKey, TValue>(this IDictionary<TKey, TValue> d, TKey key, TValue val)
         {
             if (!d.ContainsKey(key))
             {

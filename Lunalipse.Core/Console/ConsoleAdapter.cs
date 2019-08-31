@@ -13,7 +13,7 @@ namespace Lunalipse.Core.Console
         static volatile ConsoleAdapter CA_INSTANCE;
         static readonly object CA_LOCK = new object();
 
-        public static ConsoleAdapter INSTANCE
+        public static ConsoleAdapter Instance
         {
             get
             {
@@ -38,7 +38,7 @@ namespace Lunalipse.Core.Console
 
         public bool RegisterComponent(string component, ComponentHandler CH)
         {
-            return Handler.Add4nRep(component, CH);
+            return Handler.AddNonRepeat(component, CH);
         }
 
         public bool UnregisterComponent(string component)

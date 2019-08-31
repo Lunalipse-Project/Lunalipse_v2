@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Lunalipse.Core.BehaviorScript
+namespace Lunalipse.Core.BehaviorScript.ScriptV1
 {
     public class Interpreter : ComponentHandler , IInterpreter
     {
@@ -58,11 +58,14 @@ namespace Lunalipse.Core.BehaviorScript
 
         int Pointer = 0;
         int singleStepCount = 1;
+        int targetCount = 1;
         bool RandomPlay = false;
         bool Switchable = false;
         MusicEntity cache;
         Catalogue chosenCatalogue;
         Random randomControl;
+
+        public Catalogue CurrentUsingCatalogue { get => chosenCatalogue; }
 
         protected Interpreter()
         {
@@ -83,6 +86,7 @@ namespace Lunalipse.Core.BehaviorScript
             onCExecutionRequest += InstructionProc.PROC_LUNA_NEXT;
             onCExecutionRequest += InstructionProc.PROC_LUNA_LLOOP;
             onCExecutionRequest += InstructionProc.PROC_LUNA_SET;
+            onCExecutionRequest += InstructionProc.PROC_LUNA_EQZR;
 
             //Register Lunalipse Behavior Script Suffix Instructions
             onSExecutionRequest += InstructionProc.PROC_SUFX_COUNT;
@@ -99,7 +103,7 @@ namespace Lunalipse.Core.BehaviorScript
             });
 
             //Register for Lunalipse prompt
-            ConsoleAdapter.INSTANCE.RegisterComponent("lbsi", this);
+            ConsoleAdapter.Instance.RegisterComponent("lbsi", this);
         }
         protected Interpreter(string basePath)
             : this()
@@ -132,48 +136,51 @@ namespace Lunalipse.Core.BehaviorScript
             try
             {
                 if (Pointer >= Actions.Count) return null;
-                ActionToken atoken = Actions[Pointer];
-                if (singleStepCount == 1)
+                if (singleStepCount > targetCount)
                 {
-                    foreach (Delegate delg in onCExecutionRequest.GetInvocationList())
-                        if ((cache = ((CommandExecutor)delg).Invoke(atoken.CommandType, atoken.ct_args, CataPool, ref chosenCatalogue, ref Pointer))
-                                != null)
-                            break;
-
+                    targetCount = 1;
+                    singleStepCount = 1;
+                    if (RandomPlay)
+                    {
+                        Pointer = randomControl.Next(0, Actions.Count);
+                    }
+                    else
+                    {
+                        Pointer++;
+                    }
+                    if (Pointer >= Actions.Count)
+                    {
+                        LBSLoaded = false;
+                        Actions.Clear();
+                        Pointer = 0;
+                        return null;
+                    }
+                }
+                ActionToken atoken = Actions[Pointer];
+                foreach(CommandExecutor executor in onCExecutionRequest.GetInvocationList())
+                {
+                    cache = executor.Invoke(atoken.CommandType, atoken.ct_args, CataPool, ref chosenCatalogue, ref Pointer);
                     if (cache != null)
                     {
-                        foreach (Delegate delg in onSExecutionRequest.GetInvocationList())
-                            if (((SuffixExecutor)delg).Invoke(atoken.SuffixType, atoken.st_args, ref singleStepCount))
-                                break;
+                        break;
                     }
-                    singleStepCount++;
-                    if (RandomPlay)
-                        Pointer = randomControl.Next(0, Actions.Count);
-                    else
-                        Pointer++;
                 }
-                if (cache == null) Stepping();
+                foreach(SuffixExecutor executor in onSExecutionRequest.GetInvocationList())
+                {
+                    if(executor.Invoke(atoken.SuffixType, atoken.st_args, ref targetCount))
+                    {
+                        break;
+                    }
+                }
+                singleStepCount++;
+                if (atoken.CommandType == (int)DefinedCmd.LUNA_LLOOP || atoken.CommandType == (int)DefinedCmd.LUNA_EQZR)
+                {
+                    return Stepping();
+                }
                 else
                 {
-                    singleStepCount = singleStepCount > 1 ? singleStepCount - 1 : singleStepCount;
-                    if (singleStepCount > 1)
-                    {
-                        return cache;
-                    }
-                    else if (singleStepCount < 1)
-                    {
-                        singleStepCount = 1;
-                    }
+                    return cache;
                 }
-                //If no LLOOP defined and pointer comes to last.
-                //Execution completed.
-                if (Pointer >= Actions.Count)
-                {
-                    LBSLoaded = false;
-                    Actions.Clear();
-                    return null;
-                }
-                return cache;
             }
             catch (StackOverflowException)
             {
@@ -204,10 +211,11 @@ namespace Lunalipse.Core.BehaviorScript
             }
             Actions = Helper.Interpret(ScriptParser.Tokens);
             if (!Actions.All(x => x != null)) return false;
+            LBSLoaded = true;
             //Notify the mainframe that the script is ready to execute
             LpsAudio.AudioDelegations.PlayingFinished?.Invoke();
             randomControl = new Random();
-            return LBSLoaded = true;
+            return LBSLoaded;
         }
 
         private void MarcoHandler(PRAGMA p, string[] args)

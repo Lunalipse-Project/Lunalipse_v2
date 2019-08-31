@@ -3,9 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Lunalipse.Core.BehaviorScript
+namespace Lunalipse.Core.BehaviorScript.ScriptV1
 {
     internal class ScriptUtil
     {
@@ -28,6 +29,10 @@ namespace Lunalipse.Core.BehaviorScript
 
         public static string RemoveExtension(string name)
         {
+            if(!Regex.IsMatch(name, @".*\.(mp3|flac|acc|wav|aiff)", RegexOptions.IgnoreCase))
+            {
+                return name;
+            }
             string[] p = name.Split('.');
             int len = p[p.Length - 1].Length;
             return name.Remove(name.Length - len - 1, len + 1);

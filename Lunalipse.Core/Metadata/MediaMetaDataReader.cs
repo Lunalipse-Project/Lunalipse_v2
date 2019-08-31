@@ -12,6 +12,7 @@ namespace Lunalipse.Core.Metadata
 {
     public class MediaMetaDataReader : IMediaMetadataReader
     {
+        const string LyricPathFormat = "{0}\\Lyrics\\{1}.lrc";
         public MusicEntity CreateEntity(string path)
         {
             MusicEntity me = new MusicEntity()
@@ -20,6 +21,7 @@ namespace Lunalipse.Core.Metadata
                 Name = Path.GetFileNameWithoutExtension(path),
                 Path = path,
             };
+            me.LyricPath = string.Format(LyricPathFormat, Path.GetDirectoryName(path), me.Name);
             try
             {
                 TL.File media = TL.File.Create(path);
@@ -28,6 +30,7 @@ namespace Lunalipse.Core.Metadata
                 me.ID3Name = string.IsNullOrEmpty(media.Tag.Title) ? "" : media.Tag.Title;
                 me.Year = media.Tag.Year.ToString();
                 me.EstDuration = media.Properties.Duration;
+                me.HasLyricLocal = File.Exists(me.LyricPath);
                 if (media.Tag.Pictures != null)
                     me.HasImage = media.Tag.Pictures.Length != 0;
                 media.Dispose();

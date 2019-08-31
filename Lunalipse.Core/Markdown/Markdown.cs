@@ -9,10 +9,11 @@ using DocParagraph = System.Windows.Documents.Paragraph;
 using System.Windows.Media;
 using System.Windows;
 using System.Text.RegularExpressions;
+using Lunalipse.Common.Interfaces;
 
 namespace Lunalipse.Core.Markdown
 {
-    public class Markdown
+    public class Markdown : IMarkdownParser
     {
         Regex regex = new Regex(@"[+|-]\s?(.*)", RegexOptions.Compiled);
         public Brush DocumentForeground { get; set; }
@@ -25,13 +26,14 @@ namespace Lunalipse.Core.Markdown
             paragraph = new ParseParagraph();
 
         }
-        public List<PARA> Parse(string markdown)
+        private List<PARA> Parse(string markdown)
         {
             List<PARA> result = new List<PARA>();
             string[] elements = markdown.Split(new[] { "\r\n" }, StringSplitOptions.None);
             string paragraphBlock = "";
             for (int i = 0; i < elements.Length; i++) 
             {
+                elements[i] = elements[i].Trim('\n', '\t', '\r', ' ');
                 if (string.IsNullOrEmpty(elements[i]) || i + 1 >= elements.Length ? true : regex.IsMatch(elements[i + 1])) 
                 {
                     paragraphBlock += elements[i].Trim() + " ";
@@ -48,10 +50,11 @@ namespace Lunalipse.Core.Markdown
             return result;
         }
 
-        public FlowDocument CreateDocument(List<PARA> paragraphs)
+        public FlowDocument CreateDocument(string markdown)
         {
             FlowDocument flowDocument = new FlowDocument();
             List list = null;
+            List<PARA> paragraphs = Parse(markdown);
             foreach(PARA par in paragraphs)
             {
                 if (par.isList)
@@ -78,7 +81,7 @@ namespace Lunalipse.Core.Markdown
             return flowDocument;
         }
 
-        public DocParagraph CreateParagraph(PARA par)
+        private DocParagraph CreateParagraph(PARA par)
         {
             DocParagraph paragraph = new DocParagraph();
             paragraph.FontFamily = ParagraphFontFamily;

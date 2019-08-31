@@ -21,6 +21,7 @@ using System.IO;
 using Lunalipse.Core.Visualization;
 using System.Windows.Shapes;
 using Lunalipse.Common.Interfaces.IVisualization;
+using CSCore.DSP;
 
 namespace Lunalipse.Core.LpsAudio
 {
@@ -50,6 +51,8 @@ namespace Lunalipse.Core.LpsAudio
         bool isPlaying = false;
         bool isSoundThreadFinished = false;
         float _vol = 0.7f;
+
+        double[] equalizerSetting_temp = new double[10];
 
         VisualizationManager vManager;
 
@@ -103,17 +106,26 @@ namespace Lunalipse.Core.LpsAudio
                 lEnum.Tokenizer = value;
             }
         }
+
+
         public bool isLoaded { get; private set; }
 
         // Constructor
         private LpsAudio(bool immersed, int latency)
         {
             wasapiOut = WasapiOut.IsSupportedOnCurrentPlatform ? GetWasapiSoundOut(immersed, latency) : GetDirectSoundOut(latency);
-            lfw = LpsFftWarp.INSTANCE;
-            lEnum = new LyricEnumerator();
-            lEnum.LyricDefaultDir = "Lyrics";
-            ConsoleAdapter.INSTANCE.RegisterComponent("lpsa", this);
+            lfw = LpsFftWarp.Instance;
             vManager = VisualizationManager.Instance;
+            lEnum = new LyricEnumerator();
+
+            lfw.FFTBufferSize = vManager.AquireFftSize();
+            VisualizationManagerBase.OnSizeChanged += VisualizationManagerBase_OnSizeChanged;
+            lEnum.LyricDefaultDir = "Lyrics";
+            ConsoleAdapter.Instance.RegisterComponent("lpsa", this);
+
+            AudioDelegations.ChangeEqualizerSetting = SetEqualizer;
+
+
             wasapiOut.Stopped += (s, e) =>
             {
                 //Counter?.Abort();
@@ -121,10 +133,15 @@ namespace Lunalipse.Core.LpsAudio
             };
             AudioDelegations.ChangeVolume += vol =>
             {
-                wasapiOut.Volume = vol;
+                Volume = vol;
             };
             isLoaded = false;
             //Counter = new Thread(new ThreadStart(CountTimerDelegate));
+        }
+
+        private void VisualizationManagerBase_OnSizeChanged(FftSize obj)
+        {
+            lfw.FFTBufferSize = obj;
         }
 
         //Interface implements
@@ -193,6 +210,7 @@ namespace Lunalipse.Core.LpsAudio
         {
             if (inx >= mEqualizer.SampleFilters.Count) return false;
             mEqualizer.SampleFilters[inx].AverageGainDB = data;
+            equalizerSetting_temp[inx] = data;
             return true;
         }
 
@@ -244,11 +262,17 @@ namespace Lunalipse.Core.LpsAudio
         {
             iws?.Dispose();
             iws = GetCodec(music.Extension, music.Path);
+            lfw.FFTBufferSize = vManager.FftSize;
             iws = lfw.Initialize(
                 iws.ToSampleSource()
                     .ChangeSampleRate(32000)
                     .AppendSource(Equalizer.Create10BandEqualizer, out mEqualizer));
             wasapiOut.Initialize(iws);
+            vManager.NotifySizeChanged(vManager.FftSize);
+            for(int i = 0; i < 10; i++)
+            {
+                SetEqualizerIndex(i, equalizerSetting_temp[i]);
+            }
         }
         
         private void CountTimerDelegate()

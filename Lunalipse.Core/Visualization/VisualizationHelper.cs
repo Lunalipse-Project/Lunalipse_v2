@@ -120,6 +120,11 @@ namespace Lunalipse.Core.Visualization
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public FftSize GetFftSize()
+        {
+            return FftSize;
+        }
+
         public void UpdateFrequencyMapping()
         {
             _maximumFrequencyIndex = Math.Min(AudioDelegations.FftInxAcquired(MaximumFrequency) + 1, _maxFftIndex);
@@ -222,6 +227,11 @@ namespace Lunalipse.Core.Visualization
         public void SetScalingStrategy(ScalingStrategy scalingStrategy)
         {
             ScalingStrategy = scalingStrategy;
+        }
+
+        public void SetFftSize(FftSize size)
+        {
+            FftSize = size;
         }
     }
 }

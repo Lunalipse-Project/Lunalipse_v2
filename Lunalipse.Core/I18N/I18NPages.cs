@@ -18,7 +18,7 @@ namespace Lunalipse.Core.I18N
         private Dictionary<string, II18NCollection> Pages = new Dictionary<string, II18NCollection>();
         public bool AddPage(string name, II18NCollection pageCollection)
         {
-            return Pages.Add4nRep(name, pageCollection);
+            return Pages.AddNonRepeat(name, pageCollection);
         }
 
         public bool DropPage(string name)

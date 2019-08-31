@@ -1,4 +1,5 @@
-﻿using Lunalipse.Common.Generic.Audio;
+﻿using CSCore.DSP;
+using Lunalipse.Common.Generic.Audio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,9 @@ namespace Lunalipse.Common.Interfaces.IVisualization
     public class VisualizationManagerBase
     {
         public static event Action<ScalingStrategy> OnScalingChanged;
-        protected static event Func<ScalingStrategy> OnScalingAquired;
+        protected static Func<ScalingStrategy> OnScalingAquired;
+        protected static Func<FftSize> OnSizeAquired;
+        public static event Action<FftSize> OnSizeChanged;
         public static event Action<bool> OnEnableFFTChanged;
 
         public virtual SpectrumUnit GetSpectrumUnit(string DisplayerTag)
@@ -34,9 +37,14 @@ namespace Lunalipse.Common.Interfaces.IVisualization
 
         }
 
-        public ScalingStrategy AquireScalingStrategy()
+        public virtual ScalingStrategy AquireScalingStrategy()
         {
             return OnScalingAquired == null ? ScalingStrategy.Decibel : OnScalingAquired.Invoke();
+        }
+
+        public virtual FftSize AquireFftSize()
+        {
+            return OnSizeAquired == null ? FftSize.Fft4096 : OnSizeAquired.Invoke();
         }
 
         protected void NotifyFFTEnable(bool isenable)
@@ -47,6 +55,10 @@ namespace Lunalipse.Common.Interfaces.IVisualization
         protected void NotifyScalingChanged(ScalingStrategy scalingStrategy)
         {
             OnScalingChanged?.Invoke(scalingStrategy);
+        }
+        public void NotifySizeChanged(FftSize size)
+        {
+            OnSizeChanged?.Invoke(size);
         }
     }
 }

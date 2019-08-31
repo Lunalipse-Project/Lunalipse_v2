@@ -30,9 +30,13 @@ namespace Lunalipse.Common.Data
         public bool HasImage = false;
 
         //Internet music support
-
         public bool IsInternetLocation = false;
-        public string URI;
+
+        public bool HasLyricLocal = false;
+        public bool HasLyricOnline = false;
+        public string LyricPath = "";
+        public string MusicURI;
+        public string LyricURI;
 
         public string ArtistFrist
         {

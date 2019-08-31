@@ -11,6 +11,7 @@ namespace Lunalipse.Common.Interfaces.ILyric
     {
         List<LyricToken> CreateTokens(string lyrics);
         List<LyricToken> CreateTokensFromFile(string path);
+        List<LyricToken> CreateTokensFromWeb(string uri);
 
     }
 }

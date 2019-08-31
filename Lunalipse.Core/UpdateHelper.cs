@@ -25,7 +25,7 @@ namespace Lunalipse.Core
         List<ReleaseInfo> releaseInfos = null;
 
         readonly Regex TagPatternMatch = new Regex("v([0-9.]+)-[a-z]+([0-9]+)?", RegexOptions.IgnoreCase);
-        readonly Regex UpdatePackDownload = new Regex("https://.*/license.clrss", RegexOptions.IgnoreCase);
+        readonly Regex UpdatePackDownload = new Regex("https://.*/update.clrss", RegexOptions.IgnoreCase);
         //readonly Regex UpdateProgram = new Regex("https://.*/update.exe", RegexOptions.IgnoreCase);
 
         public event Action OnQueryCompleted;

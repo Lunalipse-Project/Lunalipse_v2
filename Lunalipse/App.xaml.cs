@@ -36,7 +36,9 @@ namespace Lunalipse
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             Log = LunalipseLogger.GetLogger();
+#if !DEBUG
             DispatcherUnhandledException += App_DispatcherUnhandledException;
+#endif
             I18T = new I18NTokenizer();
             cp = CataloguePool.Instance;
             cacheSystem = CacheHub.Instance(currentFolder);
@@ -96,6 +98,13 @@ namespace Lunalipse
 
         void RestoringConfig()
         {
+            GlobalSettingHelper<GLS>.Instance.UseLZ78Compress =
+#if DEBUG
+                false
+#else
+                false
+#endif
+                ;
             GLS.SetINSTANCE(GlobalSettingHelper<GLS>.Instance.ReadSetting());
         }
 

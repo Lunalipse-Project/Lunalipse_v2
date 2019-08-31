@@ -2,14 +2,14 @@
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using System.Threading.Tasks;
 using System.Windows.Threading;
-using System.Collections.Generic;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Lunalipse.Core;
 using Lunalipse.Core.PlayList;
@@ -18,14 +18,16 @@ using Lunalipse.Core.Cache;
 using Lunalipse.Core.LpsAudio;
 using Lunalipse.Core.Theme;
 using Lunalipse.Core.GlobalSetting;
+using Lunalipse.Core.Visualization;
 using Lunalipse.Common;
 using Lunalipse.Common.Data;
 using Lunalipse.Common.Generic.AudioControlPanel;
 using Lunalipse.Common.Generic.Catalogue;
-using Lunalipse.Common.Interfaces.II18N;
-using Lunalipse.Common.Bus.Event;
 using Lunalipse.Common.Generic.I18N;
 using Lunalipse.Common.Generic.Themes;
+using Lunalipse.Common.Interfaces.II18N;
+using Lunalipse.Common.Interfaces.IVisualization;
+using Lunalipse.Common.Bus.Event;
 using Lunalipse.Presentation.LpsWindow;
 using Lunalipse.Presentation.BasicUI;
 using Lunalipse.Pages;
@@ -33,9 +35,8 @@ using Lunalipse.Windows;
 using Lunalipse.Auxiliary;
 using Lunalipse.Utilities;
 using Lunalipse.Utilities.Misc;
-using Lunalipse.Core.Visualization;
-using Lunalipse.Common.Generic.Audio;
-using Lunalipse.Common.Interfaces.IVisualization;
+using Lunalipse.Core.BehaviorScript;
+using Lunalipse.Core.BehaviorScript.ScriptV2;
 
 namespace Lunalipse
 {
@@ -77,6 +78,9 @@ namespace Lunalipse
         private LThemeManager themeManager;
         private BitmapAnalyser bitmapAnalyser;
         private VisualizationManager vManager;
+        private BScriptManager bsManager;
+        private SequenceControllerManager controllerManager;
+        private II18NConvertor i18NConvertor;
 
         private MusicDetail musicDetailPage;
 
@@ -205,6 +209,7 @@ namespace Lunalipse
 
         public void Translate(II18NConvertor converter)
         {
+            i18NConvertor = converter;
             CATALOGUES.Translate(converter);
             playlistGuard.Translate(converter);
             LinearMode = converter.ConvertTo(SupportedPages.CORE_FUNC, "CORE_MAINUI_MODE_LINEAR");
@@ -224,27 +229,25 @@ namespace Lunalipse
             versionHelper = VersionHelper.Instance;
             themeManager = LThemeManager.Instance;
             Bus = EventBus.Instance;
-            vManager = VisualizationManager.Instance;
             cacheSystem = CacheHub.Instance(BasePath);
             mlp = MusicListPool.Instance(mmdr = new MediaMetaDataReader());
             globalSettingHelper = GlobalSettingHelper<GLS>.Instance;
             desktopDisplay = new DesktopDisplay();
-
-            core = LpsCore.Session("MAIN_AUDIO_SESSION", GlobalSetting.ImmerseMode, GlobalSetting.AudioLatency);
             playlistGuard = new PlaylistGuard();
-            
             bitmapAnalyser = new BitmapAnalyser();
 
+            core = LpsCore.Session("MAIN_AUDIO_SESSION", GlobalSetting.ImmerseMode, GlobalSetting.AudioLatency);
             core.OnMusicComplete += PlayFinished;
             core.OnMusicPrepared += MusicPerpeared;
             core.OnMusicProgressChanged += NotifyChanged;
-
-            ControlPanel.Value = 0;
             core.CurrentMusicVolume = 70;
 
+            vManager = VisualizationManager.Instance;
             vManager.EnableSpectrum = GlobalSetting.FFTEnabled;
             vManager.AddStyleProvider("SPECTRUM_CLASSIC", typeof(LineSpectrum));
-            vManager.ScalingStrategy = ScalingStrategy.Sqrt;
+            vManager.ScalingStrategy = GlobalSetting.scalingStrategy;
+            vManager.FftSize = GlobalSetting.fftSize;
+
             if (GlobalSetting.SpectrumDisplayers.Count > 0)
             {
                 foreach(KeyValuePair<string,SpectrumDisplayCfg> pair in GlobalSetting.SpectrumDisplayers)
@@ -252,16 +255,8 @@ namespace Lunalipse
                     vManager.RegisterDisplayer(pair.Key, null, pair.Value.Resolution, pair.Value.Style);
                 }
             }
-            
 
-            globalSettingHelper.UseLZ78Compress =
-#if DEBUG
-                false
-                #else
-                true
-#endif
-                ;
-
+            ControlPanel.Value = 0;
             ControlPanel.OnProgressChanged += ControlPanel_OnProgressChanged;
             ControlPanel.OnVolumeChanged += ControlPanel_OnVolumeChanged;
             ControlPanel.OnTrigging += ControlPanel_OnTrigging;
@@ -281,6 +276,24 @@ namespace Lunalipse
             musicDetailPage = new MusicDetail();
 
             this.OnMinimizClicked += MainWindow_OnMinimizClicked;
+
+            bsManager = BScriptManager.Instance();
+            bsManager.CurrentLoader.OnErrorArised += CurrentLoader_OnErrorArised;
+
+            controllerManager = SequenceControllerManager.Instance;
+            controllerManager.SetController(GlobalSetting.SelectedController);
+        }
+
+        private void CurrentLoader_OnErrorArised(Exception obj)
+        {
+            ScriptException scriptException = obj as ScriptException;
+            if (scriptException == null)
+            {
+                return;
+            }
+            string body = i18NConvertor.ConvertTo(SupportedPages.CORE_FUNC, scriptException.Message, scriptException.Args);
+            string caption = i18NConvertor.ConvertTo(SupportedPages.CORE_FUNC, "CORE_BSCRIPTV2_ERROR_T_" + scriptException.ExceptionType.ToString());
+            (new CommonDialog(caption, body, MessageBoxButton.OK)).ShowDialog();
         }
 
         private void ControlPanel_OnModeChange(PlayMode mode, object append)
@@ -344,7 +357,7 @@ namespace Lunalipse
         {
             if (core.CurrentPlaying == arg1) return;
             core.SetCatalogue(musicList.SelectedCatalogue);
-            core.PerpareMusic(arg1);
+            core.PrepareMusic(arg1);
         }
 
         private void Showcase_CatalogueSelected(Catalogue obj)
@@ -400,6 +413,7 @@ namespace Lunalipse
             core.PositionMoveTo(value);
         }
 
+        bool desktopEnable = true;
         /// <summary>
         /// 音乐控制面板开关选项发生状态改变触发事件
         /// </summary>
@@ -407,7 +421,7 @@ namespace Lunalipse
         /// <param name="args">附加参数</param>
         private void ControlPanel_OnTrigging(AudioPanelTrigger identifier, object args)
         {
-            if (!core.AudioOut.isLoaded)
+            if (!core.AudioOut.isLoaded && identifier != AudioPanelTrigger.LBScript)
             {
                 if (core.currentCatalogue == null && musicList.SelectedCatalogue != null)
                 {
@@ -443,9 +457,24 @@ namespace Lunalipse
                         typeof(DesktopDisplay), "lyric");
                     GlobalSetting.LyricEnabled = !GlobalSetting.LyricEnabled;
                     break;
+                case AudioPanelTrigger.Spectrum:
+                    Bus.Unicast(
+                        desktopEnable ?
+                            EventBusTypes.ON_ACTION_REQ_DISABLE :
+                            EventBusTypes.ON_ACTION_REQ_ENABLE,
+                        typeof(DesktopDisplay), "fft");
+                    desktopEnable = !desktopEnable;
+                    break;
                 case AudioPanelTrigger.Equalizer:
                     MyEqualizer myEqualizer = new MyEqualizer();
                     myEqualizer.Show();
+                    break;
+                case AudioPanelTrigger.LBScript:
+                    LpsScriptLoader scriptLoader = new LpsScriptLoader();
+                    scriptLoader.ShowDialog();
+                    break;
+                case AudioPanelTrigger.Volume:
+                    ControlPanel.Volume = core.CurrentMusicVolume;
                     break;
             }
         }
@@ -488,8 +517,7 @@ namespace Lunalipse
                     }
                     else
                     {
-                        bitmapAnalyser.GetRegions(Graphic.BitmapSource2Bitmap(source));
-                        bitmapAnalyser.CalcHighestContrastColor();
+                        bitmapAnalyser.CalcHighestContrastColor(Graphic.BitmapSource2Bitmap(source));
                         ThemeTuple themeTuple = new ThemeTuple(
                             bitmapAnalyser.Foreground.ToBrush(),
                             bitmapAnalyser.Background.ToBrush(),
@@ -501,7 +529,10 @@ namespace Lunalipse
                 ControlPanel.StartPlaying();
                 ControlPanel.MaxValue = mTrack.Duration.TotalSeconds;
                 ControlPanel.Value = 0;
-                musicList.PlayingIndex = musicList.SelectedCatalogue.CurrentIndex;
+                if (musicList.SelectedCatalogue != null)
+                {
+                    musicList.PlayingIndex = musicList.SelectedCatalogue.CurrentIndex;
+                }
                 ControlPanel.CurrentMusic = Music.Artist[0] +" - "+ Music.MusicName;
                 ControlPanel.TotalLength = mTrack.Duration;
                 AudioDelegations.InvokeLyricUpdate(null);
@@ -560,9 +591,10 @@ namespace Lunalipse
             if (GlobalSetting.UpdateArguments != string.Empty)
             {
                 LunalipseLogger.GetLogger().Info("Initiating Upgrade installation");
-                ProcessStartInfo info = new ProcessStartInfo(BasePath + @"\CeliUpdater.exe", GlobalSetting.UpdateArguments);
-                GlobalSetting.UpdateArguments = string.Empty;
+                ProcessStartInfo info = new ProcessStartInfo("CeliUpdater.exe", GlobalSetting.UpdateArguments);
+                info.WorkingDirectory = BasePath;
                 Process.Start(info);
+                GlobalSetting.UpdateArguments = string.Empty;
             }
             desktopDisplay?.Close();
             

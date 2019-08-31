@@ -97,6 +97,8 @@
     <Compile Include="Pages\ConfigPage\Licenses.xaml.cs">
       <DependentUpon>Licenses.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ConfigPage\Structures\BScriptLocationStruc.cs" />
+    <Compile Include="Pages\ConfigPage\Structures\SControllerStruc.cs" />
     <Compile Include="Pages\ConfigPage\Structures\SpectrumDispStruc.cs" />
     <Compile Include="Pages\ConfigPage\Structures\ThemeListStruc.cs" />
     <Compile Include="Pages\ConfigPage\Structures\PlaylistStruc.cs" />
@@ -121,6 +123,12 @@
     </Compile>
     <Compile Include="Windows\DesktopDisplay.xaml.cs">
       <DependentUpon>DesktopDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\LpsScriptLoader.xaml.cs">
+      <DependentUpon>LpsScriptLoader.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MusicInfoEditor.xaml.cs">
+      <DependentUpon>MusicInfoEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\MyEqualizer.xaml.cs">
       <DependentUpon>MyEqualizer.xaml</DependentUpon>
@@ -209,6 +217,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\DesktopDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\LpsScriptLoader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MusicInfoEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

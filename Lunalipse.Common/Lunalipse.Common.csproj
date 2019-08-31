@@ -63,6 +63,7 @@
     <Compile Include="Data\Attribute\Cachable.cs" />
     <Compile Include="Data\Attribute\ExportedSettingItem.cs" />
     <Compile Include="Data\BehaviorScript\ActionToken.cs" />
+    <Compile Include="Data\BehaviorScript\BScriptLocation.cs" />
     <Compile Include="Data\BehaviorScript\DefinedCmd.cs" />
     <Compile Include="Data\BehaviorScript\DefinedSuffix.cs" />
     <Compile Include="Data\BehaviorScript\PRAGMA.cs" />
@@ -95,9 +96,12 @@
     <Compile Include="Generic\IWaitable.cs" />
     <Compile Include="Generic\Themes\ThemeContainer.cs" />
     <Compile Include="Generic\Themes\ThemeManagerBase.cs" />
+    <Compile Include="Interfaces\IBehaviorScript\IExecutor.cs" />
+    <Compile Include="Interfaces\IBehaviorScript\IScriptLoader.cs" />
     <Compile Include="Interfaces\ICommunicator\IProgressIndicator.cs" />
     <Compile Include="Interfaces\ILpsUI\IDialogPage.cs" />
     <Compile Include="Interfaces\ILpsUI\LpsDetailedListItem.cs" />
+    <Compile Include="Interfaces\IMarkdownParser.cs" />
     <Compile Include="Interfaces\IThemes\IJThemeParser.cs" />
     <Compile Include="Interfaces\IThemes\IThemeCustomizable.cs" />
     <Compile Include="Generic\Themes\ThemeTuple.cs" />

@@ -42,7 +42,7 @@ namespace Lunalipse.Pages
                     license = AppConst.LICENSE_GUNGPL_LUNALIPSE;
                     break;
             }
-            LicenseDocument.Document = markdown.CreateDocument(markdown.Parse(license));
+            LicenseDocument.Document = markdown.CreateDocument(license);
         }
 
         public bool NegativeClicked()

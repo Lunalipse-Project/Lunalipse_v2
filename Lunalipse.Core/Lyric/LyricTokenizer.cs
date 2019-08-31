@@ -82,5 +82,10 @@ namespace Lunalipse.Core.Lyric
         {
             return line.Substring(line.IndexOf(":") + 1).TrimEnd(']');
         }
+
+        public List<LyricToken> CreateTokensFromWeb(string uri)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace Lunalipse.Core.I18N
         public Dictionary<string, string> Maps = new Dictionary<string, string>();
         public bool AddToCollection(string indexer, string context)
         {
-            return Maps.Add4nRep(indexer, context);
+            return Maps.AddNonRepeat(indexer, context);
         }
 
         public string getContext(string indexer)

@@ -60,9 +60,10 @@ namespace Lunalipse.Presentation.LpsComponent
             get => VolumBar.Value;
             set {
                 VolumBar.Value = value;
-                ValueDisp.Content = value;
+                ValueDisp.Content = value.ToString("0.0");
             }
         }
+
         public bool IsHold
         {
             get => VolumBar.IsHold;

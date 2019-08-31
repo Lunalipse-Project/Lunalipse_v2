@@ -22,7 +22,6 @@
                                     <ColumnDefinition Width="45"/>
                                     <ColumnDefinition Width="45"/>
                                 </Grid.ColumnDefinitions>
-                                <Button Grid.Column="0" x:Name="BtnSetting" Style="{DynamicResource IconButton}" FontSize="{DynamicResource IconMedium}" Content="{DynamicResource Setting}" Foreground="{TemplateBinding Foreground}" Width="45" Height="45"/>
                                 <Button Grid.Column="2" x:Name="BtnMinimiz"  Style="{DynamicResource IconButton}" FontSize="{DynamicResource IconMedium}" Content="{DynamicResource Minimize}" Foreground="{TemplateBinding Foreground}" Width="45" Height="45"/>
                                 <Button Grid.Column="3" x:Name="BtnCloseWn"  Style="{DynamicResource IconButton}" FontSize="{DynamicResource IconMedium}" Content="{DynamicResource Close}" Foreground="{TemplateBinding Foreground}" Width="45" Height="45"/>
                             </Grid>

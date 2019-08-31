@@ -3,4 +3,5 @@
                     xmlns:local="clr-namespace:Lunalipse.Presentation.font">
     <FontFamily x:Key="MaterialIcon">./#Material-Design-Iconic-Font</FontFamily>
     <FontFamily x:Key="Equestria">./#Equestria</FontFamily>
+    <FontFamily x:Key="Consolas">./#Consolas</FontFamily>
 </ResourceDictionary>

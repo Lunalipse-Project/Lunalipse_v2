@@ -100,6 +100,11 @@ namespace Lunalipse.Presentation.LpsComponent
                 }
             }
         }
+
+        public void Clear()
+        {
+            DropdownsSource.Clear();
+        }
     }
     class DropDownItem
     {

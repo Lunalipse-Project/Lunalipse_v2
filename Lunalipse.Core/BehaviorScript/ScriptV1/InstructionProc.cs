@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lunalipse.Core.BehaviorScript
+namespace Lunalipse.Core.BehaviorScript.ScriptV1
 {
     static class InstructionProc
     {
@@ -18,7 +18,7 @@ namespace Lunalipse.Core.BehaviorScript
                 if (chosen == null)
                     chosen = cp.GetCatalogue(0);
                 if (args.Length > 1)
-                    LpsAudio.AudioDelegations.ChangeVolume((float)args[1] / 100f);
+                    LpsAudio.AudioDelegations.ChangeVolume((float)args[1]);
                 return chosen.getMusic(ScriptUtil.RemoveExtension(args[0] as string));
             }
             return null;
@@ -30,7 +30,7 @@ namespace Lunalipse.Core.BehaviorScript
                 if (chosen == null)
                     chosen = cp.GetCatalogue(0);
                 if (args.Length > 1)
-                    LpsAudio.AudioDelegations.ChangeVolume((float)args[1] / 100f);
+                    LpsAudio.AudioDelegations.ChangeVolume((float)args[1]);
                 int num = (int)args[0];
                 if (num < 0)
                     return chosen.getMusic(new Random().Next(0, chosen.GetCount()));
@@ -45,7 +45,7 @@ namespace Lunalipse.Core.BehaviorScript
             if (type == (int)DefinedCmd.LUNA_PLAYC)
             {
                 if (args.Length > 2)
-                    LpsAudio.AudioDelegations.ChangeVolume((float)args[2] / 100f);
+                    LpsAudio.AudioDelegations.ChangeVolume((float)args[2]);
                 return cp.GetCatalogueFirst(args[0] as string).getMusic(ScriptUtil.RemoveExtension(args[1] as string));
             }
             return null;
@@ -57,7 +57,7 @@ namespace Lunalipse.Core.BehaviorScript
                 if (chosen == null)
                     chosen = cp.GetCatalogue(0);
                 if (args.Length > 2)
-                    LpsAudio.AudioDelegations.ChangeVolume((float)args[2] / 100f);
+                    LpsAudio.AudioDelegations.ChangeVolume((float)args[2]);
                 return chosen.getNext();
             }
             return null;
@@ -67,6 +67,29 @@ namespace Lunalipse.Core.BehaviorScript
             if (type == (int)DefinedCmd.LUNA_LLOOP)
             {
                 ptr = 0;
+                return null;
+            }
+            return null;
+        }
+        public static MusicEntity PROC_LUNA_EQZR(int type, object[] args, CataloguePool cp, ref Catalogue chosen, ref int ptr)
+        {
+            if (type == (int)DefinedCmd.LUNA_EQZR)
+            {
+                double[] dat = new double[10];
+                for (int i = 0; i < 10; i++)
+                {
+                    double d = (double)args[i];
+                    if (d > 12)
+                    {
+                        d = 12;
+                    }
+                    else if (d < -12)
+                    {
+                        d = -12;
+                    }
+                    dat[i] = d;
+                }
+                LpsAudio.AudioDelegations.ChangeEqualizerSetting?.Invoke(dat);
                 return null;
             }
             return null;
@@ -87,7 +110,28 @@ namespace Lunalipse.Core.BehaviorScript
         {
             if (type != (int)DefinedSuffix.SUFX_RAND) return false;
             Random r = new Random();
-            Count = r.Next((int)args[0], (int)args[1]);
+            if (args.Length < 2)
+            {
+                if((int)args[0]<=1)
+                {
+                    Count = 1;
+                }
+                else
+                {
+                    Count = r.Next(1, (int)args[0]);
+                }
+            }
+            else
+            {
+                if ((int)args[1] <= (int)args[0])
+                {
+                    Count = 1;
+                }
+                else
+                {
+                    Count = r.Next((int)args[0], (int)args[1]);
+                }
+            }
             return true;
         }
         public static bool PROC_SUFX_COUNT(int type, object[] args, ref int Count)

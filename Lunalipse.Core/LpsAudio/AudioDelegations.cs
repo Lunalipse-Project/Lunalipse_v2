@@ -30,6 +30,8 @@ namespace Lunalipse.Core.LpsAudio
         public static event OnLyricUpdate LyricUpdated;
         public static OnLyricLoadStatus LyricLoadStatus;
         public static VolumeChangeInvoke ChangeVolume;
+        public static Action<double[]> ChangeEqualizerSetting;
+        public static Func<double[]> GetUserDefinedEqualizerSetting;
 
         public static event Action<float[]> OnFftDataUpdate;
 

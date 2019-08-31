@@ -122,7 +122,7 @@ namespace Lunalipse.Pages.ConfigPage
                 Spinning.Visibility = Visibility.Hidden;
                 if(hasUpdate)
                 {
-                    ReleaseNote.Document = markdownParser.CreateDocument(markdownParser.Parse(updateInfo.body));
+                    ReleaseNote.Document = markdownParser.CreateDocument(updateInfo.body);
                     DocContainer.BeginAnimation(HeightProperty, ExpandDocView);
                 }
             });

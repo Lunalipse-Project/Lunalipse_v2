@@ -20,7 +20,8 @@
       <Key name="CORE_DIALOG_YES">好的</Key>
       <Key name="CORE_DIALOG_CANCEL">算了</Key>
       
-      
+      <Key name="CORE_MSELECTION_NOVAV_TITLE">不支持的操作</Key>
+      <Key name="CORE_MSELECTION_NOVAV_CONTENT">该操作在“普通行为”控制器未作为首选行为控制器时为不可用状态。</Key>
 
       <Key name="CORE_PLAYLISTGUARD_MISSING_TITLE">丢失的条目</Key>
       <Key name="CORE_PLAYLISTGUARD_MISSING_CONTENT">检测到先前保存的播放列表，但在恢复的时候出现了些问题：一些播放列表中保存的歌曲貌似不在本地磁盘中。有可能这些歌曲已被重命名或永久的移动到了新的位置。</Key>
@@ -86,6 +87,43 @@
       <Key name="CORE_THEMEPARSER_ERR_INVALIDRANGE">无效的范围，"{0}"的取值范围必须要在"{1}"与"{2}"之间。</Key>
       <Key name="CORE_THEMEPARSER_ERR_INVALIDTYPE">无效的类型定义，类型"{0}"形式必须为"{1}"</Key>
       <Key name="CORE_THEMEPARSER_ERR_COLORNOTFOUND">未找到名称为"{0}"的颜色定义，请确保使用了已定义的值。</Key>
+      
+      <!-- BScript Loader -->
+      <Key name="CORE_BSLOADER_TITLE">播放行为脚本加载器</Key>
+      <Key name="CORE_BSLOADER_ADD">添加一个脚本</Key>
+      <Key name="CORE_BSLOADER_DELETE">删除选定</Key>
+      <Key name="CORE_BSLOADER_LOAD">加载选定</Key>
+      <Key name="CORE_BSLOADER_LOADED">正在运行：{0}</Key>
+      <Key name="CORE_BSLOADER_INNERPTR">块内指针：</Key>
+      <Key name="CORE_BSLOADER_OUTERPTR">块指针：</Key>
+      <Key name="CORE_BSLOADER_FUNC_ORIGIN">指向的源文件中函数定义：</Key>
+      <Key name="CORE_BSLOADER_FUNC_PARSED">解释器对此函数的解析：</Key>
+      <Key name="CORE_BSLOADER_FUNC_CTRLLER_UNLOAD_TITLE">不支持的控制器</Key>
+      <Key name="CORE_BSLOADER_FUNC_CTRLLER_UNLOAD_CONTENT">无法加载选定脚本因为检测到当前的控制器不支持Lunalipse行为脚本。&#xD;&#xA;请您务必先到“设置” -> “通用” -> “行为控制与行为脚本”处将“脚本行为”设为默认控制器。</Key>
+
+      <Key name="CORE_SEQCTRLER_GENERAL">普通行为</Key>
+      <Key name="CORE_SEQCTRLER_GENERAL_DESC">该控制器定义了传统播放器采用的音乐播放控制逻辑。其中支持的播放模式：随机播放，列表循环，单曲循环；支持的控制方式：暂停与继续，前后切换。</Key>
+      <Key name="CORE_SEQCTRLER_BSCRIPT">脚本行为</Key>
+      <Key name="CORE_SEQCTRLER_BSCRIPT_DESC">该控制器允许用户通过Lunalipse行为脚本来个性化音乐播放控制逻辑。支持的播放模式：暂停与继续，向前切换</Key>
+
+      <Key name="CORE_BSCRIPTV2_ERROR_FUNCNDEF">方法{0}未定义。</Key>
+      <Key name="CORE_BSCRIPTV2_ERROR_MOREARGS">方法{0}仅支持{1}个参数，而非{2}个参数。</Key>
+      <Key name="CORE_BSCRIPTV2_ERROR_FEWARGS">方法{0}最少支持{1}个参数。</Key>
+      <Key name="CORE_BSCRIPTV2_ERROR_DELEG_NDEF">方法{0}的方法远程委托调用未定义，此为Lunalipse核心错误或者由某些插件引起的错误，请停用相关插件或者联系Lunalipse开发者以上报错误。</Key>
+      <Key name="CORE_BSCRIPTV2_ERROR_TYPEERR">方法{2}的第{0}个类别为{1}的参数未定义。</Key>
+      <Key name="CORE_BSCRIPTV2_ERROR_LEXINCOMCB">该脚本存在未封闭的代码块。</Key>
+      <Key name="CORE_BSCRIPTV2_ERROR_LEXLMBDLDG">该脚本存在非法的Lambda表达式前缀，应当为数值或者是返回数值类型的方法。</Key>
+      <Key name="CORE_BSCRIPTV2_ERROR_RT_CATANFOUND">无法找到名称为 “{0}” 的歌单或歌曲分类。&#xD;&#xA;Lunalipse将尝试执行下一个代码块。</Key>
+      <Key name="CORE_BSCRIPTV2_ERROR_RT_MAXVALNDEF">未指定随机函数的上界。</Key>
+      <Key name="CORE_BSCRIPTV2_ERROR_RT_MINVALNDEF">未指定随机函数的下界。</Key>
+      <Key name="CORE_BSCRIPTV2_ERROR_RT_INDEXOFR">歌曲编号索引超出范围。&#xD;&#xA;Lunalipse将尝试执行下一个代码块。</Key>
+      <Key name="CORE_BSCRIPTV2_ERROR_RT_MUSICNFPUND">无法在名称为 “{1}” 的歌曲分类或歌单中找到名称为 “{0}” 的歌曲。&#xD;&#xA;Lunalipse将尝试执行下一个代码块。</Key>
+      <Key name="CORE_BSCRIPTV2_ERROR_DETAIL">&#xD;&#xA;错误来源：第{0}代码块的第{1}行.</Key>      
+
+      <Key name="CORE_BSCRIPTV2_ERROR_T_LEXICAL">行为脚本发生词法分析错误</Key>
+      <Key name="CORE_BSCRIPTV2_ERROR_T_SEMANTIC">行为脚本发生语义分析错误</Key>
+      <Key name="CORE_BSCRIPTV2_ERROR_T_RUNTIME">行为脚本发生运行时错误</Key>
+      
     </Page>
     <Page key="CORE_MUSIC_DETAIL">
       <Key name="CORE_MUSIC_DETAIL_NOLYRIC">未找到与之匹配的歌词</Key>
@@ -104,21 +142,33 @@
       <Key name="CORE_SETTING_I18N_LANG_OPTS">设置您的语言偏好</Key>
       <Key name="CORE_SETTING_I18N_LANG_FOLLOWSYS">跟随系统语言</Key>
 
-
+      <Key name="CORE_SETTING_HELP">帮助</Key>
       <Key name="CORE_SETTING_AUDIO_IMMSERED">启用沉浸模式（仅限WASAPI支持的系统）</Key>
-      <Key name="CORE_SETTING_AUDIO_IMMSERED_DESC">通过采用沉浸模式音频可以更高效的播放，但这就意味着Lunalipse必须直接越过Windows音频引擎去直接操纵声卡驱动，从而会暂时屏蔽其他声音源，比如系统提示音，游戏的音频等等。</Key>
+      <Key name="CORE_SETTING_AUDIO_IMMSERED_DESC">###何为沉浸模式？&#xD;&#xA;&#xD;&#xA;通过采用沉浸模式音频可以更高效的播放，但这就意味着Lunalipse必须直接越过Windows音频引擎去直接操纵声卡驱动，此举能够有效减少音频延迟，但会暂时屏蔽其他声音源，比如系统提示音，游戏的音频等等。&#xD;&#xA;&#xD;&#xA;###何为WASAPI？&#xD;&#xA;&#xD;&#xA;WASAPI是Windows Audio Session API的缩写，即Windows音频会话应用程序接口。用于应用程序（Ring 3级别）与音频驱动（Ring 1、2级别）之间的**直接**沟通。WASAPI仅支持Windows Vista以及后的系统。
+      </Key>
       <Key name="CORE_SETTING_AUDIO_LATENCY">音频延迟率（毫秒）</Key>
-      <Key name="CORE_SETTING_AUDIO_LATENCY_DESC">从音频被解码到声音从扬声器中出来的时间间隔，建议保持默认值。</Key>
+      <Key name="CORE_SETTING_AUDIO_LATENCY_DESC">###音频延迟&#xD;&#xA;&#xD;&#xA;从音频被解码到声音从扬声器中出来的时间间隔，建议保持默认值。&#xD;&#xA;一般为100~120毫秒左右为佳。请勿设置过短的间隔，因为系统的声卡驱动可能无法达到您给定的要求，有可能从而导致错误或者蓝屏。</Key>
       
       <Key name="CORE_SETTING_SPECTRUM">音频与音频可视化</Key>
       <Key name="CORE_SETTING_SPECTRUM_HINT">Lunalipse采用高效的快速傅里叶变换(FFT)算法并通过频谱来展现“声音”。您可以在此设置音频模块以及音频可视化模块的参数。</Key>
       <Key name="CORE_SETTING_SPECTRUM_ENABLE">启用音频可视化</Key>
+      <Key name="CORE_SETTING_SPECTRUM_ENABLE_DESC">###启用音频可视化&#xD;&#xA;&#xD;&#xA;音频可视化基于FFT（快速傅里叶变换），使用常见的Cooley–Tukey算法将音频波形某一段的从时域（振幅-时间）转换为频域（振幅与频率）其后者就是我们的频谱图。&#xD;&#xA;&#xD;&#xA;Lunalipse会根据您指定的频率（频谱频率）对音频采样进行FFT。这就意味着这将会消耗大量的CPU资源。&#xD;&#xA;&#xD;&#xA;**注意：如果您对您的电脑CPU没有信心的话，请务必停用FFT或者将频率适当的降低。以免造成不必要的损失**</Key>
       <Key name="CORE_SETTING_SPECTRUM_FRAMERATE">频谱帧率（帧每秒）</Key>
       <Key name="CORE_SETTING_SPECTRUM_SCALING">频谱量化方案</Key>
+      <Key name="CORE_SETTING_SPECTRUM_FFTSIZE">FFT解算规模（精度）</Key>
+      <Key name="CORE_SETTING_SPECTRUM_FFTSIZE_DESC">
+        ###FFT解算规模&#xD;&#xA;&#xD;&#xA;因为Lunalipse使用的是离散的傅里叶变换，所以算法会必然产生一个复数数列，这个解算规模就是指这个复数数列的长度，也就是有几个复数。解算规模越大，占用内存越高，使用的CPU资源越多，对性能的要求也就越高。&#xD;&#xA;&#xD;&#xA;
+        从理论上讲，越大的解算规模会产生更加平滑细腻的频谱变化，有着良好的视觉体验。
+      </Key>
       <Key name="CORE_SETTING_SPECTRUM_SCALING_Decibel">分贝</Key>
       <Key name="CORE_SETTING_SPECTRUM_SCALING_Linear">线性</Key>
       <Key name="CORE_SETTING_SPECTRUM_SCALING_Sqrt">开方</Key>
       <Key name="CORE_SETTING_SPECTRUM_CLASSIC">经典</Key>
+
+      <Key name="CORE_SETTING_PLAYNBS">行为控制与行为脚本</Key>
+      <Key name="CORE_SETTING_PLAYNBS_HINT">从这里管理Lunalipse默认的播放行为控制器以及自定义的播放行为脚本</Key>
+      <Key name="CORE_SETTING_PLAYNBS_CONTROLLER_HINT">这些是Lunalipse目前已加载的行为控制器，请选择一个作为默认选项</Key>
+      <Key name="CORE_SETTING_PLAYNBS_SETDEFAULT">设为默认</Key>
 
       <Key name="CORE_SETTING_SPECTRUM_DISP_HINT">配置频谱器，这是目前Lunalipse正在使用的频谱器</Key>
       <Key name="CORE_SETTING_SPECTRUM_DISP_RESOLUTION">频谱器段数</Key>
@@ -159,12 +209,19 @@
       <Key name="CORE_SETTING_ABOUT_COPYRIGHT">版权所有 © 2019 Lunaixsky</Key>
     </Page>
     <Page key="CORE_MUSICENTITY_EDITOR">
-      <Key name="CORE_MEEDITOR_NOTALLOWED">禁止编辑播放中的歌曲</Key>
       <Key name="CORE_MEEDITOR_NAME">名称</Key>
       <Key name="CORE_MEEDITOR_ABLUM">专辑</Key>
+      <Key name="CORE_MEEDITOR_LYRIC">歌词</Key>
+      <Key name="CORE_MEEDITOR_CHANGELYRIC">查找歌词</Key>
+      <Key name="CORE_MEEDITOR_ONLOCAL">在本地缓存上</Key>
+      <Key name="CORE_MEEDITOR_ONWEB">在云端乐库里</Key>
+      <Key name="CORE_MEEDITOR_NONE">无法找到</Key>
       <Key name="CORE_MEEDITOR_ARTIST">艺术家</Key>
       <Key name="CORE_MEEDITOR_ERR_CAP">无法保存</Key>
-      <Key name="CORE_MEEDITOR_ERR_MSG">该音频文件正在播放或已被其他应用打开，Lunalipse无法写入更新的元数据。</Key>
+      <Key name="CORE_MEEDITOR_ERR_MSG_LOCAL">禁止编辑播放中的歌曲！&#xD;&#xA;该音频文件正在播放或已被其他应用打开，Lunalipse无法写入更新的元数据。</Key>
+      <Key name="CORE_MEEDITOR_ERR_MSG_WEB">禁止编辑未缓存的歌曲！&#xD;&#xA;该音频文件并非本地缓存的文件，Lunalipse无法写入更新的元数据。</Key>
+      <Key name="CORE_MEEDITOR_ISSVAE_CAP">写入到文件元数据</Key>
+      <Key name="CORE_MEEDITOR_ISSVAE_MSG">元数据已发生改变，是否写入至歌曲文件"{0}"？&#xD;&#xA;目录路径：{1}</Key>
     </Page>
     <Page key="CORE_UPDATE_CHECKER">
       <Key name="CORE_UPDATECHECKER_CHECKING">正在检查更新</Key>

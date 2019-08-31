@@ -59,6 +59,19 @@ namespace Lunalipse.Presentation.LpsComponent.Base
             {
                 NoItem.Visibility = Visibility.Visible;
             }
+            Items.CollectionChanged += Items_CollectionChanged;
+        }
+
+        private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (Items.Count == 0)
+            {
+                NoItem.Visibility = Visibility.Visible;
+            }
+            else if (NoItem.Visibility == Visibility.Visible)
+            {
+                NoItem.Visibility = Visibility.Hidden;
+            }
         }
 
         public SolidColorBrush ItemHovered
@@ -141,8 +154,7 @@ namespace Lunalipse.Presentation.LpsComponent.Base
         public void Add(LpsDetailedListItem sc)
         {
             Items.Add(sc);
-            if (NoItem.Visibility != Visibility.Hidden)
-                NoItem.Visibility = Visibility.Hidden;
+            NoItem.Visibility = Visibility.Hidden;
         }
 
         public void Clear()
@@ -156,6 +168,15 @@ namespace Lunalipse.Presentation.LpsComponent.Base
             Items.Remove(sc);
             if (NoItem.Visibility == Visibility.Hidden && Items.Count == 0)
                 NoItem.Visibility = Visibility.Visible;
+        }
+
+        public void Swap(int srcIndex,int destIndex)
+        {
+            Items.Insert(destIndex, Items[srcIndex]);
+            Items.Insert(srcIndex + 1, Items[destIndex + 1]);
+            Items.RemoveAt(srcIndex + 2);
+            Items.RemoveAt(destIndex + 1);
+            this.UpdateLayout();
         }
 
         public LpsDetailedItem GetContainer(int index)

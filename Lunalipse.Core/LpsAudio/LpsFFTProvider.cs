@@ -11,6 +11,7 @@ namespace Lunalipse.Core.LpsAudio
     public class LpsFFTProvider : FftProvider, ILpsFFTProvider
     {
         private readonly int _sampleRate;
+        private readonly object locker = new object();
         private readonly List<object> _contexts = new List<object>();
 
         public LpsFFTProvider(int channels, int sampleRate, FftSize fftSize = FftSize.Fft4096)
@@ -34,7 +35,10 @@ namespace Lunalipse.Core.LpsAudio
             if (_contexts.Contains(context))
                 return false;
 
-            _contexts.Add(context);
+            lock(locker)
+            {
+                _contexts.Add(context);
+            }
             GetFftData(fftResultBuffer);
             return true;
         }
@@ -44,13 +48,21 @@ namespace Lunalipse.Core.LpsAudio
         {
             base.Add(samples, count);
             if (count > 0)
-                _contexts.Clear();
+            {
+                lock(locker)
+                {
+                    _contexts.Clear();
+                }
+            }
         }
 
         public override void Add(float left, float right)
         {
             base.Add(left, right);
-            _contexts.Clear();
+            lock (locker)
+            {
+                _contexts.Clear();
+            }
         }
     }
 }

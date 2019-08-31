@@ -36,8 +36,6 @@
             </Border>
         </Grid>
     </ControlTemplate>
-    
-    
 
     <Style x:Key="LunalipseDialogue" TargetType="{x:Type Window}">
         <Setter Property="Template" Value="{StaticResource LunalipseDialogueBaseTemplate}"/>

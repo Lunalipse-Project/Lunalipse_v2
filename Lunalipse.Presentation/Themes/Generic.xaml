@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:Lunalipse.Presentation.Themes">
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Lunalipse.Presentation;component/Themes/Resources/StyleOverriding.xaml"/>
         <ResourceDictionary Source="/Lunalipse.Presentation;component/Themes/Resources/ColorDefinition.xaml"/>
         <ResourceDictionary Source="/Lunalipse.Presentation;component/Themes/Resources/ValueDefine.xaml"/>
         <!-- Font Resources -->

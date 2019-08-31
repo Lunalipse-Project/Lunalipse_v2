@@ -1,4 +1,5 @@
-﻿using Lunalipse.Common.Data.Attribute;
+﻿using CSCore.DSP;
+using Lunalipse.Common.Data.Attribute;
 using Lunalipse.Common.Generic.Audio;
 using Lunalipse.Common.Interfaces.ISetting;
 using System;
@@ -112,6 +113,8 @@ namespace Lunalipse
 
         public ScalingStrategy scalingStrategy = ScalingStrategy.Decibel;
 
+        public FftSize fftSize = FftSize.Fft4096;
+
         public int SpectrumFPS = 64;
 
         public int AudioLatency = 100;
@@ -122,6 +125,7 @@ namespace Lunalipse
 #else
             "INFO";
 #endif
+        public string SelectedController = string.Empty;
 
         public double[] EqualizerSets = new double[10];
 

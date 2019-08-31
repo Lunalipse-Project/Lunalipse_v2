@@ -47,12 +47,27 @@ namespace Lunalipse.Utilities
             else return Colors.Black;
         }
 
+        public static System.Drawing.Color GetForeground(this System.Drawing.Color background, double tolerance = 0)
+        {
+            if (tolerance < 0 && tolerance > 100) tolerance = 0;
+            if (background.Distance() > 220.8 * (1 - tolerance)) return System.Drawing.Color.White;
+            else return System.Drawing.Color.Black;
+        }
+
         public static SolidColorBrush GetForegroundBrush(this SolidColorBrush brush,double tolerance = 0)
         {
             return new SolidColorBrush(brush.Color.GetForeground(tolerance));
         }
 
         public static double Distance(this Color color)
+        {
+            int dr = 255 - color.R;
+            int dg = 255 - color.G;
+            int db = 255 - color.B;
+            return Math.Sqrt(dr * dr + dg * dg + db * db);
+        }
+
+        public static double Distance(this System.Drawing.Color color)
         {
             int dr = 255 - color.R;
             int dg = 255 - color.G;

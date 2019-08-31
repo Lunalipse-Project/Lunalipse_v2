@@ -177,12 +177,7 @@ namespace Lunalipse.Pages.ConfigPage
         private void SetDefault_Click(object sender, RoutedEventArgs e)
         {
             GlobalSetting.DefaultThemeUUID = SelectedStruc.Uid;
-            LpsDetailedListItem old = ThemeList.Items[0];
-            ThemeList.Items.RemoveAt(0);
-            ThemeList.Items.Insert(0, ThemeList.Items[SelectedIndex - 1]);
-            ThemeList.Items.RemoveAt(SelectedIndex);
-            ThemeList.Items.Insert(SelectedIndex, old);
-            ThemeList.UpdateLayout();
+            ThemeList.Swap(SelectedIndex, 0);
             LThemeManager.Instance.SelectTheme(SelectedStruc.Uid);
             ThemeList.SelectedIndex = 0;
         }

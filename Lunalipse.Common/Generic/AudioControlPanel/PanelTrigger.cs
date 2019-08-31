@@ -15,6 +15,7 @@ namespace Lunalipse.Common.Generic.AudioControlPanel
         LBScript,
         FullScreen,
         SkipNext,
-        SkipPrev
+        SkipPrev,
+        Volume
     }
 }

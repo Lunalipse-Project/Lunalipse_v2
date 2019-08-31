@@ -1,4 +1,5 @@
-﻿using Lunalipse.Common.Generic.Audio;
+﻿using CSCore.DSP;
+using Lunalipse.Common.Generic.Audio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace Lunalipse.Common.Interfaces.IVisualization
 
         void UpdateSpectrumResolution(int resolution);
         void SetScalingStrategy(ScalingStrategy scalingStrategy);
+        void SetFftSize(FftSize size);
+        FftSize GetFftSize();
     }
     public struct SpectrumPointData
     {

@@ -52,7 +52,6 @@ namespace Lunalipse.Presentation.LpsWindow
             ControlTemplate ct = (ControlTemplate)Application.Current.Resources["LunalipseMainWindowTemplate"];
             (ct.FindName("TitleBar", this) as Grid).MouseLeftButtonDown += LunalipseMainWindow_MouseLeftButtonDown; ;
             (ct.FindName("BtnCloseWn", this) as Button).Click += CloseWnd ;
-            (ct.FindName("BtnSetting", this) as Button).Click += (a, b) => OnSettingClicked?.Invoke(a, b);
             (ct.FindName("BtnMinimiz", this) as Button).Click += (a, b) => OnMinimizClicked?.Invoke(a, b);
             VersionNumber = ct.FindName("VersionNumber", this) as Label;
             if (EnableBlur)

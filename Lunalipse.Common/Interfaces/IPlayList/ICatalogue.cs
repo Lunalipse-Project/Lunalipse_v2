@@ -23,6 +23,7 @@ namespace Lunalipse.Common.Interfaces.IPlayList
         MusicEntity getMusic(int index);
         MusicEntity getMusic(string name);
         MusicEntity getNext();
+        MusicEntity getCurrent();
         List<MusicEntity> SearchMusic(string name);
         void SortByYear();
         void SortByAlbum();

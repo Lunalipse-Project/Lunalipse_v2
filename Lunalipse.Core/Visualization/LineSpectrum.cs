@@ -48,7 +48,6 @@ namespace Lunalipse.Core.Visualization
 
         public IEnumerable<UIElement> OnDrawSpectrum(float[] fftData)
         {
-            if (fftData == null) yield break;
             double height = cur_RegionSize.Height;
             //prepare the fft result for rendering 
             SpectrumPointData[] spectrumPoints = helper.CalculateSpectrumPoints(fftData, height);
