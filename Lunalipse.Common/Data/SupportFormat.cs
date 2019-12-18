@@ -13,10 +13,12 @@ namespace Lunalipse.Common.Data
         public const string FLAC = ".flac";
         public const string WAV = ".wav";
         public const string ACC = ".acc";
+        public const string OGG = ".ogg";
 
         public static bool AllQualified(string extension)
         {
-            return (extension.Equals(MP3) || extension.Equals(AIFF) || extension.Equals(FLAC) || extension.Equals(WAV) || extension.Equals(ACC)) ;
+            return (extension.Equals(MP3) || extension.Equals(AIFF) || extension.Equals(FLAC) || extension.Equals(WAV) || extension.Equals(ACC) || 
+                extension.Equals(OGG)) ;
         }
     }
 }

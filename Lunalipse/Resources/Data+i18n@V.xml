@@ -236,11 +236,12 @@
     </Page>
     <Page key="CORE_OPENSOURCE_LICENSE">
       <Key name="CORE_OPENSOURCE_LICENSE_DESC">Lunalipse的诞生离不开这些优秀的第三方库。凭借着开源精神以及开源社区优势，Lunalipse才得以使用库中那些设计优良以及高效率的算法，大幅度缩短了开发周期以及避免许多重复性的工作和一些自己垃圾的算法设计。</Key>
-      <Key name="CORE_OPENSOURCE_LICENSE_LPS_DESC">为弘扬开源精神，Lunalipse音乐播放器（本软件）遵循GNU General Public License v3.0开源许可。</Key>
+      <Key name="CORE_OPENSOURCE_LICENSE_LPS_DESC">为弘扬开源精神，Lunalipse音乐播放器（本软件）开放了全部源代码并遵循GNU GPL v3.0开源许可。</Key>
       <Key name="CORE_OPENSOURCE_LICENSE_VIEW">查看许可证</Key>
       <Key name="CORE_OPENSOURCE_LICENSE_TAGLIB">Taglib#</Key>
       <Key name="CORE_OPENSOURCE_LICENSE_JSON">Newtonsoft.Json</Key>
       <Key name="CORE_OPENSOURCE_LICENSE_CSCORE">CSCore</Key>
+      <Key name="CORE_OPENSOURCE_LICENSE_NVORBIS">NVorbis</Key>
       <Key name="CORE_OPENSOURCE_LICENSE_LPS">Lunalipse</Key>
       <Key name="CORE_OPENSOURCE_LICENSE_DIALOGUE_TITLE">开源许可证以及版权声明</Key>
       

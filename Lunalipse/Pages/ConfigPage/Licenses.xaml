@@ -43,6 +43,15 @@
                 <Button Style="{StaticResource GenericButton}" Tag="CORE_OPENSOURCE_LICENSE_VIEW" x:Name="ViewLicense_Cscore" Grid.Column="1" Margin="5" Padding="5" Click="ViewLicense_Click"
                         Foreground="{Binding ElementName=OPENSOURLICENSE,Path=Foreground}"/>
             </Grid>
+            <Grid Margin="20 0 20 20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.8*"/>
+                    <ColumnDefinition Width="0.3*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Tag="CORE_OPENSOURCE_LICENSE_NVORBIS" Margin="10 0 0 0" FontSize="{StaticResource FontNormal}" Foreground="{Binding ElementName=OPENSOURLICENSE,Path=Foreground}"/>
+                <Button Style="{StaticResource GenericButton}" Tag="CORE_OPENSOURCE_LICENSE_VIEW" x:Name="ViewLicense_NVorbis" Grid.Column="1" Margin="5" Padding="5" Click="ViewLicense_Click"
+                        Foreground="{Binding ElementName=OPENSOURLICENSE,Path=Foreground}"/>
+            </Grid>
             <Grid Margin="0 10 0 0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>

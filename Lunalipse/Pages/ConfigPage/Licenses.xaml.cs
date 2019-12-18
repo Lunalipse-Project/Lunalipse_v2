@@ -91,6 +91,7 @@ namespace Lunalipse.Pages.ConfigPage
                     viewLicensePage = new ViewLicensePage("MIT");
                     break;
                 case "ViewLicense_Cscore":
+                case "ViewLicense_NVorbis":
                     viewLicensePage = new ViewLicensePage("MSPL");
                     break;
                 case "ViewLicense_Lunalipse":

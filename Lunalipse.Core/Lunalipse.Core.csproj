@@ -98,6 +98,7 @@
     <Compile Include="LpsAudio\LpsAudio.cs" />
     <Compile Include="LpsAudio\LpsFFTProvider.cs" />
     <Compile Include="LpsAudio\LpsFftWarp.cs" />
+    <Compile Include="LpsAudio\NVorbisOggSource.cs" />
     <Compile Include="LpsAudio\SequenceControllerManager.cs" />
     <Compile Include="LpsCore.cs" />
     <Compile Include="LunalipseLogger.cs" />
@@ -143,6 +144,10 @@
     <ProjectReference Include="..\LunaNetCore\LunaNetCore.csproj">
       <Project>{0370c0cb-20b3-4e1a-9f5f-1a846bc1c1b8}</Project>
       <Name>LunaNetCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NVorbis\NVorbis.csproj">
+      <Project>{a73f63cc-cf0a-4db2-b580-184cecd61888}</Project>
+      <Name>NVorbis</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

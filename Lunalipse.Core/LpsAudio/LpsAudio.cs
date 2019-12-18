@@ -23,6 +23,9 @@ using System.Windows.Shapes;
 using Lunalipse.Common.Interfaces.IVisualization;
 using CSCore.DSP;
 
+
+
+
 namespace Lunalipse.Core.LpsAudio
 {
     public class LpsAudio : ComponentHandler, ILpsAudio, IDisposable
@@ -231,6 +234,8 @@ namespace Lunalipse.Core.LpsAudio
                     return new AacDecoder(file);
                 case SupportFormat.AIFF:
                     return new AiffReader(file);
+                case SupportFormat.OGG:
+                    return new NVorbisOggSource(file).ToWaveSource();
                 default:
                     return null;
             }

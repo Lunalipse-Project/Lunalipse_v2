@@ -48,8 +48,11 @@ namespace Lunalipse.Auxiliary
                 if(!WarningToDelete.ShowDialog().Value) return;
 
                 string SavedCatalogue = savedFolder + CatalogueUid + ".cata";
-                if (!File.Exists(SavedCatalogue)) return;
-                File.Delete(savedFolder + CatalogueUid + ".cata");
+                if (File.Exists(SavedCatalogue))
+                {
+                    File.Delete(SavedCatalogue);
+                }
+                cataloguePool.RemoveCatalogue(tobeDelete);
                 EVENT_BUS.Boardcast(EventBusTypes.ON_ACTION_COMPLETE, "C_UPD_USR");
             }
         }
