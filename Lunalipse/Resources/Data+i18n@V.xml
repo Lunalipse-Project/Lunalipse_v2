@@ -14,6 +14,7 @@
       <Key name="CORE_LBS_NoSuchPara">请提供{0}所对应的形参</Key>
       <Key name="CORE_LBS_DataTypeOverflow">数据结构溢出</Key>
       <Key name="CORE_LBS_InvalidCommandExecutor">使用了非法的指令执行器定义</Key>
+      <Key name="CORE_CONSOLE_TITLE">Lunalipse控制台</Key>
 
       <Key name="CORE_DIALOG_OK">确认</Key>
       <Key name="CORE_DIALOG_NO">取消</Key>
@@ -174,6 +175,11 @@
       <Key name="CORE_SETTING_SPECTRUM_DISP_RESOLUTION">频谱器段数</Key>
       <Key name="CORE_SETTING_SPECTRUM_DISP_STYLE">频谱器样式</Key>
       <Key name="CORE_SETTING_SPECTRUM_DISP_APPLY">应用设置</Key>
+
+      <Key name="CORE_SETTING_CONSOLE">命令行控制台</Key>
+      <Key name="CORE_SETTING_CONSOLE_HINT">您可以通过内嵌的命令行控制台来访问并修改一些位于Lunalipse内核的配置项或功能。注意：该功能仅限开发者调试或高级用户装逼使用，使用前请确保您对Lunalipse的源代码有着充分的了解，这样您能够更加清楚地了解到每一个指令的用途以及其影响。如果因为操作不当而造成损失，其后果自负。</Key>
+      <Key name="CORE_SETTING_CONSOLE_ENTER_HINT">控制台</Key>
+      <Key name="CORE_SETTING_CONSOLE_ENTER">进入控制台</Key>
       
       <Key name="CORE_SETTING_ALTER_TITLE">配置已更改</Key>
       <Key name="CORE_SETTING_ALTER_RESTART">此配置的改动需要在Lunalipse下次启动时才会生效，确定更改？</Key>

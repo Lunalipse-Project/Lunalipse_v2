@@ -15,6 +15,7 @@ using Lunalipse.Pages.ConfigPage.Structures;
 using Lunalipse.Presentation.BasicUI;
 using Lunalipse.Presentation.LpsComponent;
 using Lunalipse.Utilities;
+using Lunalipse.Windows;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -231,6 +232,7 @@ namespace Lunalipse.Pages.ConfigPage
             ST_TN_F8.Text = i8c.ConvertTo(SupportedPages.CORE_GENERAL_SETTING, ST_TN_F8.Tag as string);
             ST_TN_F9.Text = i8c.ConvertTo(SupportedPages.CORE_GENERAL_SETTING, ST_TN_F9.Tag as string);
             ST_TN_F11.Text = i8c.ConvertTo(SupportedPages.CORE_GENERAL_SETTING, ST_TN_F11.Tag as string);
+            ST_TN_F12.Text = i8c.ConvertTo(SupportedPages.CORE_GENERAL_SETTING, ST_TN_F12.Tag as string);
             Alter_Title = i8c.ConvertTo(SupportedPages.CORE_GENERAL_SETTING, "CORE_SETTING_ALTER_TITLE");
             Alter_Restart = i8c.ConvertTo(SupportedPages.CORE_GENERAL_SETTING, "CORE_SETTING_ALTER_RESTART");
             Alter_FFTEnable = i8c.ConvertTo(SupportedPages.CORE_GENERAL_SETTING, "CORE_SETTING_ALTER_FFTENABLE");
@@ -324,6 +326,12 @@ namespace Lunalipse.Pages.ConfigPage
                         SpectrumFPS.Text = fps.ToString();
                     break;
             }
+        }
+
+        private void EnterConsole_Click(object sender, RoutedEventArgs e)
+        {
+            LpsConsole lpsConsole = new LpsConsole();
+            lpsConsole.Show();
         }
 
         private void Help_Click(object sender, RoutedEventArgs e)

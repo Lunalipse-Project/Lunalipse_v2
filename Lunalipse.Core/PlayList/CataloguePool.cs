@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Lunalipse.Core.PlayList
 {
-    public class CataloguePool : ComponentHandler, ICataloguePool<Catalogue>, ICachable
+    public class CataloguePool : IConsoleComponent, ICataloguePool<Catalogue>, ICachable
     {
         static volatile CataloguePool cpinstance;
         static readonly object cpLock = new object();
@@ -186,6 +186,26 @@ namespace Lunalipse.Core.PlayList
         public void AddLocation(string location,string Uuid)
         {
             LocationTable.Add(location, Uuid);
+        }
+
+        public void OnEnvironmentLoaded(ILunaConsole console)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool OnCommand(ILunaConsole console, params string[] args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICommandRegistry GetCommandRegistry()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetContextDescription()
+        {
+            throw new NotImplementedException();
         }
     }
 }

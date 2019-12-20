@@ -1,5 +1,6 @@
 ﻿using Lunalipse.Common.Data.Attribute;
 using Lunalipse.Common.Interfaces.ICache;
+using Lunalipse.Utilities;
 using System;
 using System.Runtime.Serialization;
 using System.Windows.Media;
@@ -86,5 +87,26 @@ namespace Lunalipse.Common.Data
             get => EstDuration;
         }
 
+        public override string ToString()
+        {
+            return ("{6}=>(\n" +
+                    "\tName = \"{0}\"\n" +
+                    "\tFullName = \"{1}\"\n" +
+                    "\tArtist = \"{2}\"\n" +
+                    "\tAlbum = \"{3}\"\n" +
+                    "\tHasAlbumImage = {7}\n" +
+                    "\tIsInternetLocation = {8}\n" +
+                    "\tHasLyric = {4}\n" +
+                    "\tDuration = {5}\n" +
+                    ")").FormateEx(MusicName, 
+                                  Path, 
+                                  Artist.Length == 0 ? "Unknown" : ArtistFrist, 
+                                  Album, 
+                                  HasLyricLocal.ToString(), 
+                                  EstimateDurSecond.ToString(@"hh\:mm\:ss"),
+                                  GetType().Name,
+                                  HasImage.ToString(),
+                                  IsInternetLocation.ToString());
+        }
     }
 }

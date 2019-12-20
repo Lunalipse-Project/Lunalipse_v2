@@ -65,6 +65,8 @@
     <Compile Include="Extended.cs" />
     <Compile Include="Graphic.cs" />
     <Compile Include="Misc\BitmapAnalyser.cs" />
+    <Compile Include="Misc\LpsCommandParser.cs" />
+    <Compile Include="Misc\ReflectionHelper.cs" />
     <Compile Include="Misc\SystemHelper.cs" />
     <Compile Include="Misc\UnrepeatedRandom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

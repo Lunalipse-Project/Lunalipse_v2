@@ -19,7 +19,7 @@ using System.Xml;
 
 namespace Lunalipse.Core.GlobalSetting
 {
-    public class GlobalSettingHelper<T> : ComponentHandler, ISettingHelper<T> where T : IGlobalSetting
+    public class GlobalSettingHelper<T> : IConsoleComponent, ISettingHelper<T> where T : IGlobalSetting
     {
         static volatile GlobalSettingHelper<T> GSH_INSTANCE;
         static readonly object GSH_LOCK = new object();
@@ -34,14 +34,13 @@ namespace Lunalipse.Core.GlobalSetting
             }
         }
 
-        UniversalSerializor<NonConfigField, IGlobalSetting> USerializor;
         string VERSION;
         public string OutputFile { get; set; }
         public bool UseLZ78Compress { get; set; }
         private GlobalSettingHelper()
         {
             VERSION = Assembly.GetEntryAssembly().GetName().Version.ToString();
-            ConsoleAdapter.Instance.RegisterComponent("lpsseting", this);
+            ConsoleAdapter.Instance.RegisterComponent("GlobalSettingHelper", this);
             //Set default value
             OutputFile = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "/config.lps";
             //USerializor = new UniversalSerializor<NonConfigField, IGlobalSetting>();
@@ -78,9 +77,24 @@ namespace Lunalipse.Core.GlobalSetting
         }
 
         #region Command Handler
-        public override bool OnCommand(params string[] args)
+        public bool OnCommand(ILunaConsole console, params string[] args)
         {
-            return true;
+            return false;
+        }
+
+        public void OnEnvironmentLoaded(ILunaConsole console)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICommandRegistry GetCommandRegistry()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetContextDescription()
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }

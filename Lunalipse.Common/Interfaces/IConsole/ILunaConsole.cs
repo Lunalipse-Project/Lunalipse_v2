@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Lunalipse.Common.Interfaces.IConsole
 {
-    public abstract class ComponentHandler
-    {       
-        public virtual bool OnCommand(params string[] args)
-        {
-            return false;
-        }
+    public interface ILunaConsole
+    {
+        void WriteLine(string fmt, params string[] args);
+        void FinishTask();
+        void ClearScreen();
     }
 }

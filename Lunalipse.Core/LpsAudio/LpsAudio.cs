@@ -28,7 +28,7 @@ using CSCore.DSP;
 
 namespace Lunalipse.Core.LpsAudio
 {
-    public class LpsAudio : ComponentHandler, ILpsAudio, IDisposable
+    public class LpsAudio : IConsoleComponent, ILpsAudio, IDisposable
     {
         volatile static LpsAudio LA_instance;
         readonly static object LA_lock = new object();
@@ -124,7 +124,7 @@ namespace Lunalipse.Core.LpsAudio
             lfw.FFTBufferSize = vManager.AquireFftSize();
             VisualizationManagerBase.OnSizeChanged += VisualizationManagerBase_OnSizeChanged;
             lEnum.LyricDefaultDir = "Lyrics";
-            ConsoleAdapter.Instance.RegisterComponent("lpsa", this);
+            ConsoleAdapter.Instance.RegisterComponent(GetType().Name, this);
 
             AudioDelegations.ChangeEqualizerSetting = SetEqualizer;
 
@@ -158,6 +158,7 @@ namespace Lunalipse.Core.LpsAudio
             AudioDelegations.MusicLoaded?.Invoke(music,iws.ToTrack());
         }
 
+        [AttrConsoleSupportable]
         public void MoveTo(double secs)
         {
             if (!isLoaded) return;
@@ -167,6 +168,7 @@ namespace Lunalipse.Core.LpsAudio
             }
         }
 
+        [AttrConsoleSupportable]
         public void Pause()
         {
             isPlaying = false;
@@ -174,6 +176,7 @@ namespace Lunalipse.Core.LpsAudio
             AudioDelegations.StatuesChanged?.Invoke(isPlaying);
         }
 
+        [AttrConsoleSupportable]
         public void Play()
         {
             isPlaying = true;
@@ -186,6 +189,7 @@ namespace Lunalipse.Core.LpsAudio
             AudioDelegations.StatuesChanged?.Invoke(isPlaying);
         }
 
+        [AttrConsoleSupportable]
         public void Resume()
         {
             isPlaying = true;
@@ -193,6 +197,7 @@ namespace Lunalipse.Core.LpsAudio
             AudioDelegations.StatuesChanged?.Invoke(isPlaying);
         }
 
+        [AttrConsoleSupportable]
         public void Stop()
         {
             isPlaying = false;
@@ -201,6 +206,7 @@ namespace Lunalipse.Core.LpsAudio
             Counter?.Abort();
         }
 
+        
         public void SetEqualizer(double[] data)
         {
             for(int i = 0; i < data.Length; i++)
@@ -209,6 +215,7 @@ namespace Lunalipse.Core.LpsAudio
             }
         }
 
+        [AttrConsoleSupportable]
         public bool SetEqualizerIndex(int inx, double data)
         {
             if (inx >= mEqualizer.SampleFilters.Count) return false;
@@ -320,9 +327,24 @@ namespace Lunalipse.Core.LpsAudio
         }
 
         #region Command Handler
-        public override bool OnCommand(params string[] args)
+        public bool OnCommand(ILunaConsole console, params string[] args)
         {
-            return true;
+            return false;
+        }
+
+        public void OnEnvironmentLoaded(ILunaConsole console)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICommandRegistry GetCommandRegistry()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetContextDescription()
+        {
+            return "Manage all audio playbacks and audio file decoding in Lunalipse.";
         }
         #endregion
 
@@ -360,6 +382,8 @@ namespace Lunalipse.Core.LpsAudio
             Dispose(true);
             // GC.SuppressFinalize(this);
         }
+
+        
         #endregion
     }
 }

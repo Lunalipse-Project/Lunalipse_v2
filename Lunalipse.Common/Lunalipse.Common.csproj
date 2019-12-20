@@ -68,6 +68,7 @@
     <Compile Include="Data\BehaviorScript\DefinedSuffix.cs" />
     <Compile Include="Data\BehaviorScript\PRAGMA.cs" />
     <Compile Include="Data\BehaviorScript\ScriptToken.cs" />
+    <Compile Include="Data\ConsoleCommand.cs" />
     <Compile Include="Data\Errors\ErrorAudio.cs" />
     <Compile Include="Data\Errors\ErrorI18N.cs" />
     <Compile Include="Data\KeyEventProc.cs" />
@@ -99,6 +100,9 @@
     <Compile Include="Interfaces\IBehaviorScript\IExecutor.cs" />
     <Compile Include="Interfaces\IBehaviorScript\IScriptLoader.cs" />
     <Compile Include="Interfaces\ICommunicator\IProgressIndicator.cs" />
+    <Compile Include="Interfaces\IConsole\AttrConsoleSupportable.cs" />
+    <Compile Include="Interfaces\IConsole\ICommandRegistry.cs" />
+    <Compile Include="Interfaces\IConsole\ILunaConsole.cs" />
     <Compile Include="Interfaces\ILpsUI\IDialogPage.cs" />
     <Compile Include="Interfaces\ILpsUI\LpsDetailedListItem.cs" />
     <Compile Include="Interfaces\IMarkdownParser.cs" />
@@ -116,8 +120,7 @@
     <Compile Include="Interfaces\ICache\ICacheHub.cs" />
     <Compile Include="Interfaces\ICache\ICacheOperator.cs" />
     <Compile Include="Interfaces\ICommunicator\IGeneralImporter.cs" />
-    <Compile Include="Interfaces\IConsole\ComponentHandler.cs" />
-    <Compile Include="Interfaces\IConsole\ConsoleOut.cs" />
+    <Compile Include="Interfaces\IConsole\IConsoleComponent.cs" />
     <Compile Include="Interfaces\IConsole\IConsoleAdapter.cs" />
     <Compile Include="Interfaces\ICommunicator\IGeneralExporter.cs" />
     <Compile Include="Interfaces\II18N\II18NCollection.cs" />
@@ -145,6 +148,10 @@
     <ProjectReference Include="..\CSCore\CSCore.csproj">
       <Project>{c3dccfe3-dd3f-4eee-849b-33e355b1e064}</Project>
       <Name>CSCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lunalipse.Utilities\Lunalipse.Utilities.csproj">
+      <Project>{D273FBB2-C02A-45FF-B672-9E6930ECFAD7}</Project>
+      <Name>Lunalipse.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

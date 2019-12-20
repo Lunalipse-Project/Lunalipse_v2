@@ -88,7 +88,10 @@
     <Compile Include="Cache\MusicCacheIndexer.cs" />
     <Compile Include="Cache\UniversalObjectSerializor.cs" />
     <Compile Include="Cache\UniversalSerializor.cs" />
+    <Compile Include="Console\CommandRegistry.cs" />
     <Compile Include="Console\ConsoleAdapter.cs" />
+    <Compile Include="Console\ConsoleEnvironment.cs" />
+    <Compile Include="Console\LunaConsole.cs" />
     <Compile Include="GlobalSetting\GlobalSettingHelper.cs" />
     <Compile Include="I18N\I18NCollection.cs" />
     <Compile Include="I18N\I18NPages.cs" />

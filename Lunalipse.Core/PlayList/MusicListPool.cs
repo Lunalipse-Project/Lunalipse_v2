@@ -14,17 +14,20 @@ using Lunalipse.Common.Generic.Cache;
 using Lunalipse.Utilities;
 using Lunalipse.Common.Interfaces.ICommunicator;
 using System.Windows.Threading;
+using System.Linq;
+using Lunalipse.Utilities.Misc;
 
 namespace Lunalipse.Core.PlayList
 {
     internal delegate bool MusicDeleted(string uuid);
-    public class MusicListPool : ComponentHandler, IMusicListPool , ICachable
+    public class MusicListPool : IConsoleComponent, IMusicListPool , ICachable
     {
         static volatile MusicListPool mlpInstance;
         static readonly object mlpLock = new object();
         internal static event MusicDeleted OnMusicDeleted;
 
         CacheHub cacheSystem = CacheHub.Instance();
+        CommandRegistry commandRegistry = new CommandRegistry();
 
         LunalipseLogger Log;
 
@@ -59,7 +62,7 @@ namespace Lunalipse.Core.PlayList
             if (!CPool.Exists(x => x.MainCatalogue == true || x.Name.Equals("CORE_CATALOGUE_AllMusic")))
                 CPool.AddCatalogue(new Catalogue("CORE_CATALOGUE_AllMusic", true));
             AllMusic = CPool.MainCatalogue;
-            ConsoleAdapter.Instance.RegisterComponent("lpslist", this);
+            ConsoleAdapter.Instance.RegisterComponent(GetType().Name, this);
             Log = LunalipseLogger.GetLogger();
         }
 
@@ -97,6 +100,7 @@ namespace Lunalipse.Core.PlayList
             return pathCatalogue.UUID;
         }
 
+
         public List<string> AddToPool(string[] pathes)
         {
             List<string> uuids = new List<string>();
@@ -123,6 +127,7 @@ namespace Lunalipse.Core.PlayList
             return uuids;
         }
 
+        [AttrConsoleSupportable]
         public void CreateAlbumClasses()
         {
             if (AllMusic.MusicList.Count == 0) return;
@@ -158,6 +163,8 @@ namespace Lunalipse.Core.PlayList
                     CPool.AddCatalogue(cat);
             }
         }
+
+        [AttrConsoleSupportable]
         public void CreateArtistClasses()
         {
             //if (CPool.Exists(x => x.isArtistClassified == true)) return;
@@ -202,6 +209,7 @@ namespace Lunalipse.Core.PlayList
             AllMusic.DeleteMusic(entity);
         }
 
+        [AttrConsoleSupportable]
         public bool AddFileToPool(string MediaPath)
         {
             if (SupportFormat.AllQualified(Path.GetExtension(MediaPath)))
@@ -230,6 +238,7 @@ namespace Lunalipse.Core.PlayList
             });
         }
 
+        [AttrConsoleSupportable]
         public MusicEntity GetMusic(int index)
         {
             return index > AllMusic.MusicList.Count - 1 ? null : AllMusic.MusicList[index];
@@ -245,6 +254,7 @@ namespace Lunalipse.Core.PlayList
             return Musics;
         }
 
+        [AttrConsoleSupportable]
         public void LoadAllMusics()
         {
             if (cacheSystem.ComponentCacheExists(CacheType.MUSIC_CATALOGUE_CACHE))
@@ -261,6 +271,27 @@ namespace Lunalipse.Core.PlayList
                 //查看是否存在用户设置
                 //if(cacheSystem.ComponentCacheExists(CacheType.))
             }
+        }
+
+        public void OnEnvironmentLoaded(ILunaConsole console)
+        {
+            console.WriteLine("Welcome to MusicListPool.\nUse \"help\" for more information.");
+        }
+
+        public bool OnCommand(ILunaConsole console, params string[] args)
+        {
+            
+            return true;
+        }
+
+        public ICommandRegistry GetCommandRegistry()
+        {
+            return commandRegistry;
+        }
+
+        public string GetContextDescription()
+        {
+            return "Manage all musics that are loaded by Lunalipse.";
         }
     }
 }

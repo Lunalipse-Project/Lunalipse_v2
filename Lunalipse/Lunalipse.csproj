@@ -124,6 +124,9 @@
     <Compile Include="Windows\DesktopDisplay.xaml.cs">
       <DependentUpon>DesktopDisplay.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\LpsConsole.xaml.cs">
+      <DependentUpon>LpsConsole.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\LpsScriptLoader.xaml.cs">
       <DependentUpon>LpsScriptLoader.xaml</DependentUpon>
     </Compile>
@@ -217,6 +220,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\DesktopDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\LpsConsole.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -13,7 +13,7 @@ using System.Windows.Forms;
 
 namespace Lunalipse.Core.BehaviorScript.ScriptV1
 {
-    public class Interpreter : ComponentHandler , IInterpreter
+    public class Interpreter : IConsoleComponent , IInterpreter
     {
         static volatile Interpreter INT_INSTANCE;
         static readonly object LOCK_OBJ = new object();
@@ -189,9 +189,9 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV1
             }
         }
 
-        public override bool OnCommand(params string[] args)
+        public bool OnCommand(ILunaConsole console, params string[] args)
         {
-            return base.OnCommand(args);
+            return false;
         }
 
         public bool SaveAs(string path)
@@ -241,6 +241,21 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV1
                 if (RandomPlay) RandomPlay = false;
                 else RandomPlay = true;
             }
+        }
+
+        public void OnEnvironmentLoaded(ILunaConsole console)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICommandRegistry GetCommandRegistry()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetContextDescription()
+        {
+            throw new NotImplementedException();
         }
     }
 }

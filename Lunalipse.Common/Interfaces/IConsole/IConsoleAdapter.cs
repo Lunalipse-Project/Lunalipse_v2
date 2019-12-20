@@ -9,9 +9,9 @@ namespace Lunalipse.Common.Interfaces.IConsole
 {
     public interface IConsoleAdapter
     {
-        bool RegisterComponent(string component, ComponentHandler CH);
+        bool RegisterComponent(string component, IConsoleComponent CH);
         bool UnregisterComponent(string component);
-        ComponentHandler getComponent(string component);
-        bool InvokeCommand(string cmd, params string[] args);
+        IConsoleComponent getComponent(string component);
+        void InvokeCommand(string cmd, params string[] args);
     }
 }

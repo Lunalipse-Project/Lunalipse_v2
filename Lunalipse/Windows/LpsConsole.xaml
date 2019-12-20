@@ -1,0 +1,32 @@
+﻿<base1:LunalipseDialogue x:Class="Lunalipse.Windows.LpsConsole"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:base1="clr-namespace:Lunalipse.Presentation.LpsWindow;assembly=Lunalipse.Presentation"
+        xmlns:local="clr-namespace:Lunalipse.Windows"
+        mc:Ignorable="d" x:Name="LpsConsoleWindow" Loaded="LpsConsoleWindow_Loaded"
+        Title="LpsConsole" Height="450" Width="700">
+    <Grid>
+        <ScrollViewer x:Name="contextScroll">
+            <StackPanel>
+                <ItemsControl ItemsSource="{Binding Outputs, Mode=OneWay}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Label Content="{Binding Path=.}" Foreground="{Binding ElementName=LpsConsoleWindow,Path=Foreground}" FontFamily="{StaticResource Consolas}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Grid x:Name="InputArea">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Foreground="{Binding ElementName=LpsConsoleWindow,Path=Foreground}" Grid.Column="0" x:Name="Prompt" FontFamily="{StaticResource Consolas}"/>
+                    <TextBox Grid.Column="1" HorizontalAlignment="Left" Background="Transparent" BorderThickness="0" FontFamily="{StaticResource Consolas}" MinWidth="15"
+                             Foreground="{Binding ElementName=LpsConsoleWindow,Path=Foreground}" x:Name="CommandInput"/>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</base1:LunalipseDialogue>

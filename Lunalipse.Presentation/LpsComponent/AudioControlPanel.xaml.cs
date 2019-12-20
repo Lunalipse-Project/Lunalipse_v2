@@ -38,17 +38,6 @@ namespace Lunalipse.Presentation.LpsComponent
 
         private const string UI_COMPONENT_THEME_UID = "PR_COMP_AudioControlPanel";
 
-        /* TODO 新的架构调整：
-         * 音乐播放顺序现在由该类掌管。
-         * 在专辑页面中选中一个专辑，相应的catalogue类将会传递到此类的ICatalogue字段，用于进行播放。
-         * 当专辑改变时，catalogue类改变，播放新的catalogue。
-         * 如用户使用LPScript时，通过Script组建一个catalogue。
-         */
-        //private ICatalogue SelectedCatalogue = null;
-        //private bool isUsingScript = false;
-        //// object是MusicEntity
-        //private Func<object> ScriptSteppingFunc;
-
         private double vol = 70;
 
         public double Volume

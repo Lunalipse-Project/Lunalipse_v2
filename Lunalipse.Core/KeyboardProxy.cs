@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace Lunalipse.Core
 {
-    public class KeyboardProxy : ComponentHandler, IKeyboardProxy , IDisposable
+    public class KeyboardProxy : IConsoleComponent, IKeyboardProxy , IDisposable
     {
         static volatile KeyboardProxy K_PROXY_INSTANCE;
         static readonly object K_PROXY_LOCK = new object();
@@ -90,21 +90,25 @@ namespace Lunalipse.Core
             return EventList.Remove(proc);
         }
 
+        [AttrConsoleSupportable]
         public bool RemoveKeyEvent(string name)
         {
             return EventList.Remove(EventList.Find(x => x.Name == name));
         }
 
+        [AttrConsoleSupportable]
         public KeyEventProc GetKeyEvent(string name)
         {
             return EventList.Find(x => x.Name == name);
         }
 
+        [AttrConsoleSupportable]
         public KeyEventProc GetKeyEvent(int index)
         {
             return index < EventList.Count ? EventList[index] : null;
         }
 
+        [AttrConsoleSupportable]
         public bool ChangeShortCut(int index, int Key, int Modifier)
         {
             if (EventList.Exists(x => x.SubKey == Key && x.ModifierKey == Modifier))
@@ -114,6 +118,7 @@ namespace Lunalipse.Core
             return true;
         }
 
+        [AttrConsoleSupportable]
         public bool ChangeShortCut(string name, int Key, int Modifier)
         {
             if (EventList.Exists(x => x.SubKey == Key && x.ModifierKey == Modifier))
@@ -130,9 +135,9 @@ namespace Lunalipse.Core
             return EventList;
         }
 
-        public override bool OnCommand(params string[] args)
+        public bool OnCommand(ILunaConsole console, params string[] args)
         {
-            return base.OnCommand(args);
+            return false;
         }
 
         #region IDisposable Support
@@ -155,6 +160,21 @@ namespace Lunalipse.Core
         public void Dispose()
         {
             Dispose(true);
+        }
+
+        public void OnEnvironmentLoaded(ILunaConsole console)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICommandRegistry GetCommandRegistry()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetContextDescription()
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }
