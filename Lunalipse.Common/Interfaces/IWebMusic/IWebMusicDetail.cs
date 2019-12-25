@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lunalipse.Common.Interfaces
+namespace Lunalipse.Common.Interfaces.IWebMusic
 {
-    interface IWebMusicDetail
+    public interface IWebMusicDetail
     {
         
     }

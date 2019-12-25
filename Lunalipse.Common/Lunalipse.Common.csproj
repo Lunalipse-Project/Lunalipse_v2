@@ -142,7 +142,8 @@
     <Compile Include="Interfaces\IVisualization\IV11nHelper.cs" />
     <Compile Include="Interfaces\IVisualization\IV11nManager.cs" />
     <Compile Include="Interfaces\IVisualization\VisualizationManagerBase.cs" />
-    <Compile Include="Interfaces\IWebMusicDetail.cs" />
+    <Compile Include="Interfaces\IWebMusic\ISearchResultMetadata.cs" />
+    <Compile Include="Interfaces\IWebMusic\IWebMusicDetail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VersionHelper.cs" />
   </ItemGroup>

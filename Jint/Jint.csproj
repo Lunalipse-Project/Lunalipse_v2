@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <AssemblyOriginatorKeyFile>Jint.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>Lunalipse.Jint</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Esprima" Version="1.0.1251" />
+  </ItemGroup>
+</Project>
