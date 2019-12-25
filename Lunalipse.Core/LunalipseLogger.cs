@@ -37,6 +37,8 @@ namespace Lunalipse.Core
 
         public LogLevel LogLevel;
 
+        readonly object LOCKER = new object();
+
         public LunalipseLogger()
         {
             ErrorDelegation.GenericError += ErrorDelegation_GenericError;
@@ -67,10 +69,10 @@ namespace Lunalipse.Core
                 if (LogLevel <= LogLevel.ERROR)
                 {
                     string name = ID == "" ? new StackFrame(1).GetMethod().ReflectedType.Name : ID;
-                    logWriter.WriteLine(FormateMessage("ERROR", name, message));
+                    WriteStuff(FormatingMessage("ERROR", name, message));
                     if (trace != "")
                     {
-                        logWriter.WriteLine(trace);
+                        WriteStuff(trace);
                     }
                 }
             }
@@ -92,6 +94,7 @@ namespace Lunalipse.Core
             Error(e.InnerException.Source, name);
             Error(e.InnerException.StackTrace, name);
             Error(e.ToString());
+            logWriter.Flush();
         }
 
         public void Debug(string message, string ID = "")
@@ -99,7 +102,7 @@ namespace Lunalipse.Core
             if(LogLevel==LogLevel.DEBUG)
             {
                 string name = ID == "" ? new StackFrame(1).GetMethod().ReflectedType.Name : ID;
-                logWriter.WriteLine(FormateMessage("DEBUG", name, message));
+                WriteStuff(FormatingMessage("DEBUG", name, message));
             }
         }
 
@@ -108,7 +111,7 @@ namespace Lunalipse.Core
             if(LogLevel<=LogLevel.INFO)
             {
                 string name = ID == "" ? new StackFrame(1).GetMethod().ReflectedType.Name : ID;
-                logWriter.WriteLine(FormateMessage("INFO", name, message));
+                WriteStuff(FormatingMessage("INFO", name, message));
             }
         }
 
@@ -117,12 +120,21 @@ namespace Lunalipse.Core
             if(LogLevel<=LogLevel.WARNING)
             {
                 string name = ID == "" ? new StackFrame(1).GetMethod().ReflectedType.Name : ID;
-                logWriter.WriteLine(FormateMessage("Warning", name, message));
+                WriteStuff(FormatingMessage("Warning", name, message));
+            }
+        }
+
+        public void WriteStuff(string content)
+        {
+            lock(LOCKER)
+            {
+                logWriter.WriteLine(content);
             }
         }
 
         public void Release()
         {
+            logWriter.Flush();
             logWriter.Close();
         }
 
@@ -132,9 +144,9 @@ namespace Lunalipse.Core
             return "Lunalipse_{0}.log".FormateEx(dt.ToString("MM-dd-yy HHmmss"));
         }
 
-        private string FormateMessage(string TypeOfMessage, string ComponentName, string Message)
+        private string FormatingMessage(string TypeOfMessage, string ComponentName, string Message)
         {
-            return "{0} [{1}] ({2}) : {3}".FormateEx(DateTime.Now.ToString("HH:mm:ss"), TypeOfMessage, ComponentName, Message);
+            return "{0} [{1}] ({2}) : {3}".FormateEx(DateTime.Now.ToString("HH:mm:ss.ffff"), TypeOfMessage, ComponentName, Message);
         }
     }
 }

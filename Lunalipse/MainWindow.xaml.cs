@@ -81,11 +81,13 @@ namespace Lunalipse
         private BScriptManager bsManager;
         private SequenceControllerManager controllerManager;
         private II18NConvertor i18NConvertor;
+        
 
         private MusicDetail musicDetailPage;
 
         private CatalogueShowCase showcase;
         private MusicSelected musicList;
+        private InternetMusic internetMusicPage;
 
         private Duration elapseTime = new Duration(TimeSpan.FromMilliseconds(250));
         private DoubleAnimation ExpandPanel;
@@ -119,10 +121,15 @@ namespace Lunalipse
             TranslationManagerBase.OnI18NEnvironmentChanged += Translate;
             Translate(TranslationManagerBase.AquireConverter());
 
-            foreach (string path in GLS.INSTANCE.MusicBaseDirs)
+            ProgressDialogue progressDialogue = new ProgressDialogue(indicator =>
             {
-                mlp.AddToPool(path);
-            }
+                foreach (string path in GLS.INSTANCE.MusicBaseDirs)
+                {
+                    mlp.AddToPool(path, indicator, true);
+                }
+                indicator.Complete();
+            });
+            progressDialogue.ShowDialog();
             playlistGuard.Restore();
 
             CataloguesRefleshAll();
@@ -269,6 +276,7 @@ namespace Lunalipse
 
             showcase = new CatalogueShowCase();
             showcase.CatalogueSelected += Showcase_CatalogueSelected;
+            internetMusicPage = new InternetMusic();
 
             musicList = new MusicSelected();
             musicList.OnSelectedMusicChange += MusicList_OnSelectedMusicChange;
@@ -388,8 +396,8 @@ namespace Lunalipse
                 case CatalogueSections.ARTIST_COLLECTIONS:
                     FPresentor.ShowContent(showcase, false, () => showcase.SetCatalogues(ByArtist));
                     break;
-                case CatalogueSections.ALL_MUSIC:
-                    FPresentor.ShowContent(musicList, false, () => musicList.SetCatalogue(CPOOL.MainCatalogue));
+                case CatalogueSections.INTERNET_MUSIC:
+                    FPresentor.ShowContent(internetMusicPage);
                     break;
             }
         }
@@ -508,7 +516,7 @@ namespace Lunalipse
                 if (GlobalSetting.ShowNextSongHint)
                     DesktopDisplay.ShowToast(NextSongHint.FormateEx(Music.MusicName), 4000);
                 BitmapSource source;
-                ControlPanel.AlbumProfile = (source = MediaMetaDataReader.GetPicture(Music.Path)) == null ? null : new ImageBrush(source);
+                ControlPanel.AlbumProfile = (source = MediaMetaDataReader.GetPicture(Music)) == null ? null : new ImageBrush(source);
                 if (GlobalSetting.ThemeColorFollowAlbum)
                 {
                     if (source == null)
@@ -600,6 +608,7 @@ namespace Lunalipse
             
             LunalipseLogger.GetLogger().Debug("Saving Playlist");
             playlistGuard.SavePlaylist();
+            playlistGuard.SaveMusicCache();
 
             LunalipseLogger.GetLogger().Info("Terminating Lunalipse.....");
             core.Dispose();

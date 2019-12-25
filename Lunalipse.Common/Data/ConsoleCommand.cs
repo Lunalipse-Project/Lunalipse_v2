@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,6 +13,8 @@ namespace Lunalipse.Common.Data
         public string HelperText { get; private set; }
         public string Command { get; private set; }
         public string CommandDesc { get; private set; }
+        public string HandlerFuncName { get; private set; }
+        public string HandlerContext { get; private set; }
         public Func<ILunaConsole, string[], ConsoleCommand,bool> Handler { get; private set; }
         public ConsoleCommand(string Command, string HelperText, string CommandDesc, Func<ILunaConsole, string[], ConsoleCommand, bool> Handler)
         {

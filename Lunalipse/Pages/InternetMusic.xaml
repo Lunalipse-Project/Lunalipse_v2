@@ -1,0 +1,76 @@
+﻿<Page x:Class="Lunalipse.Pages.InternetMusic"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Lunalipse.Pages"
+      mc:Ignorable="d" x:Name="InternetMusicSearch"
+      d:DesignHeight="450" d:DesignWidth="800" Loaded="InternetMusicSearch_Loaded" Unloaded="InternetMusicSearch_Unloaded"
+      Title="InternetMusic">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!-- Search area -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.15*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="0.15*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.8*"/>
+                    <ColumnDefinition Width="0.2*"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" x:Name="SearchBox" Margin="10 0 0 0" FontSize="{StaticResource FontMedium}" Padding="5 5 0 5" Background="Transparent"
+                         BorderThickness="3 3 0 3" HorizontalContentAlignment="Left" Foreground="{Binding ElementName=InternetMusicSearch,Path=Foreground}"
+                         CaretBrush="{Binding ElementName=InternetMusicSearch,Path=Foreground}">
+                    <TextBox.Template>
+                        <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                            <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="7 0 0 7"
+                                    SnapsToDevicePixels="True">
+                                <ScrollViewer x:Name="PART_ContentHost" 
+                                            Focusable="false" 
+                                            HorizontalScrollBarVisibility="Hidden" 
+                                            VerticalScrollBarVisibility="Hidden" /> 
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsEnabled" Value="false">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.56"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </TextBox.Template>
+                </TextBox>
+                <Button Grid.Column="1" x:Name="SearchIt" Style="{StaticResource GenericButton}" Margin="0 5 10 5"
+                        FontSize="{StaticResource FontMedium}" Tag="CORE_CLOUD_LIB_SERACH" Foreground="{Binding ElementName=InternetMusicSearch,Path=Foreground}">
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="0 5 5 0" BorderThickness="3" BorderBrush="{TemplateBinding BorderBrush}">
+                                <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="{TemplateBinding FontSize}"
+                               Width="{TemplateBinding Width}" Padding="{TemplateBinding Padding}" 
+                               Foreground="{TemplateBinding Foreground}">
+                                    <ContentPresenter/>
+                                </Label>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+        </Grid>
+
+        <!-- Display result -->
+        <Grid Grid.Row="2">
+            
+        </Grid>
+    </Grid>
+</Page>

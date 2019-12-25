@@ -9,8 +9,7 @@ namespace Lunalipse.Common.Interfaces.ICache
 {
     public interface ICacheOperator
     {
-        object InvokeOperator(CacheResponseType crt, params object[] args);
+        object InvokeOperator(CacheResponseType crt,object data_to_cache, params object[] args);
         void SetCacheDir(string BaseDir);
-        string OperatorUID();
     }
 }

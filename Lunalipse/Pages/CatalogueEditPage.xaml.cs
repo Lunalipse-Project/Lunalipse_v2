@@ -4,6 +4,7 @@ using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Common.Interfaces.ILpsUI;
 using Lunalipse.Common.Interfaces.IPlayList;
 using Lunalipse.Core.PlayList;
+using Lunalipse.Presentation.BasicUI;
 using System;
 using System.Windows.Controls;
 

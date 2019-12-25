@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Text;
@@ -13,6 +14,8 @@ namespace Lunalipse.Utilities
 {
     public static class Extended
     {
+        private static DateTime creationDate = new DateTime(2018, 9, 25, 0, 0, 0);
+
         public static string FormateEx(this string target, params object[] s)
         {
             return string.Format(target, s);
@@ -29,6 +32,11 @@ namespace Lunalipse.Utilities
                 return File.Exists(path);
             else
                 return Directory.Exists(path);
+        }
+
+        public static int ToLunalipseTimeStamp(this DateTime now)
+        {
+            return (int)(now - creationDate).TotalSeconds;
         }
 
         /// <summary>
@@ -136,6 +144,26 @@ namespace Lunalipse.Utilities
         public static bool isLinearGradientBrush(this Brush brush)
         {
             return brush.GetType() == typeof(LinearGradientBrush);
+        }
+
+        public static byte[] ToBytes<T>(this T structure) where T : struct
+        {
+            int size = Marshal.SizeOf(structure);
+            byte[] arr = new byte[size];
+            IntPtr ptr = Marshal.AllocHGlobal(size);
+            Marshal.StructureToPtr(structure, ptr, true);
+            Marshal.Copy(ptr, arr, 0, size);
+            Marshal.FreeHGlobal(ptr);
+            return arr;
+        }
+
+        public static T ToStruct<T>(this byte[] bytes) where T : struct
+        {
+            IntPtr ptr = Marshal.AllocHGlobal(bytes.Length);
+            Marshal.Copy(bytes, 0, ptr, bytes.Length);
+            T structure = (T)Marshal.PtrToStructure(ptr, typeof(T));
+            Marshal.FreeHGlobal(ptr);
+            return structure;
         }
 
         public enum FType

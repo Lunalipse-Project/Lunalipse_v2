@@ -11,33 +11,31 @@ namespace Lunalipse.Common.Data
     [Serializable]
     public class MusicEntity :ICachable
     {
-        [NonSerialized]
-        public string Album, ID3Name="", Year;
-
         /// <summary>
         /// This is the fucking FILE NAME!!!
         /// </summary>
+        [NonSerialized]
         public string Name;
-        public string Path, Extension;
-        [NonSerialized]
-        public string[] Artist;
-        [NonSerialized]
-        public TimeSpan EstDuration;
         [NonSerialized]
         public bool AlbumClassfied = false;
         [NonSerialized]
         public bool ArtistClassfied = false;
         [NonSerialized]
+        public byte[] AlbumPicture = null;
+        [NonSerialized]
+        public string LyricPath = "";
+        [NonSerialized]
+        public string Extension;
+        
+        public string Path;
+        public string MusicID;
         public bool HasImage = false;
-
         //Internet music support
         public bool IsInternetLocation = false;
-
-        public bool HasLyricLocal = false;
-        public bool HasLyricOnline = false;
-        public string LyricPath = "";
-        public string MusicURI;
-        public string LyricURI;
+        public string[] Artist;
+        public TimeSpan EstDuration;
+        public string Album;
+        public string ID3Name = "";
 
         public string ArtistFrist
         {
@@ -45,7 +43,7 @@ namespace Lunalipse.Common.Data
             {
                 return Artist[0];
             }
-        }
+        }        
 
         // Use file name as music name
         public string MusicName
@@ -53,15 +51,6 @@ namespace Lunalipse.Common.Data
             get
             {
                 if (ID3Name == "") return Name;
-                return ID3Name;
-            }
-        }
-
-        // Name stored in ID3v2 tag
-        public string IDv3Name
-        {
-            get
-            {
                 return ID3Name;
             }
         }
@@ -87,6 +76,16 @@ namespace Lunalipse.Common.Data
             get => EstDuration;
         }
 
+        public void InitializePicture(byte[] picture)
+        {
+            AlbumPicture = picture;
+        }
+
+        public void DisposePicture()
+        {
+            AlbumPicture = null;
+        }
+
         public override string ToString()
         {
             return ("{6}=>(\n" +
@@ -102,7 +101,7 @@ namespace Lunalipse.Common.Data
                                   Path, 
                                   Artist.Length == 0 ? "Unknown" : ArtistFrist, 
                                   Album, 
-                                  HasLyricLocal.ToString(), 
+                                  LyricPath!=null, 
                                   EstimateDurSecond.ToString(@"hh\:mm\:ss"),
                                   GetType().Name,
                                   HasImage.ToString(),

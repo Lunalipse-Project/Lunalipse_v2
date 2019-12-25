@@ -68,6 +68,7 @@
     <Compile Include="Data\BehaviorScript\DefinedSuffix.cs" />
     <Compile Include="Data\BehaviorScript\PRAGMA.cs" />
     <Compile Include="Data\BehaviorScript\ScriptToken.cs" />
+    <Compile Include="Data\CatalogueMetadata.cs" />
     <Compile Include="Data\ConsoleCommand.cs" />
     <Compile Include="Data\Errors\ErrorAudio.cs" />
     <Compile Include="Data\Errors\ErrorI18N.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Interfaces\IVisualization\IV11nHelper.cs" />
     <Compile Include="Interfaces\IVisualization\IV11nManager.cs" />
     <Compile Include="Interfaces\IVisualization\VisualizationManagerBase.cs" />
+    <Compile Include="Interfaces\IWebMusicDetail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VersionHelper.cs" />
   </ItemGroup>

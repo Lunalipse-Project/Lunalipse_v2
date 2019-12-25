@@ -9,6 +9,7 @@ using Lunalipse.Common.Interfaces.IPlayList;
 using Lunalipse.Core.BehaviorScript;
 using Lunalipse.Core.LpsAudio;
 using Lunalipse.Core.Lyric;
+using Lunalipse.Core.Metadata;
 using Lunalipse.Core.PlayList;
 using Lunalipse.Utilities.Misc;
 
@@ -22,6 +23,7 @@ namespace Lunalipse.Core
         private BScriptManager bsManager;
         private SequenceControllerManager controllerManager;
         private UnrepeatedRandom random;
+        //private MusicEntity CurrentPlaying = null;
 
         public event Action OnMusicComplete;
         public event Action<MusicEntity, Track> OnMusicPrepared;
@@ -59,6 +61,7 @@ namespace Lunalipse.Core
 
         private void mComplete()
         {
+            CurrentPlaying?.DisposePicture();
             GetNext();
             OnMusicComplete?.Invoke();
         }
@@ -118,7 +121,6 @@ namespace Lunalipse.Core
 
         private void mLoaded(MusicEntity Music, Track mTrack)
         {
-
             OnMusicPrepared?.Invoke(Music, mTrack);
         }
 
@@ -149,12 +151,14 @@ namespace Lunalipse.Core
         public void PrepareMusic(MusicEntity entity)
         {
             if (entity == null) return;
+            CurrentPlaying?.DisposePicture();
             if (AudioOut.Playing || AudioOut.isLoaded) AudioOut.Stop();
             if (!bsManager.CurrentLoader.isScriptLoaded)
             {
                 currentCatalogue?.SetMusic(entity);
             }
             CurrentPlaying = entity;
+            MediaMetaDataReader.RetrievePictureFromCache(CurrentPlaying);
             AudioOut.Load(entity);
             AudioOut.Play();
         }

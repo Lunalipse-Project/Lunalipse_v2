@@ -12,56 +12,38 @@ using static Lunalipse.Common.Generic.Cache.SerializeInfo;
 using System.Collections;
 using System.Runtime.Serialization;
 using Lunalipse.Common.Generic.Cache;
+using Lunalipse.Utilities;
+using System.Runtime.InteropServices;
 
 namespace Lunalipse.Core.Cache
 {
     public class CacheSerializor : ICache
     {
-        UniversalSerializor<Cachable, ICachable> USerializor;
         public CacheSerializor()
         {
-            USerializor = new UniversalSerializor<Cachable, ICachable>();
-        }
-        public string CacheTo<T>(T instance, WinterWrapUp wwu, string fieldName = null) where T : ICachable
-        {
-            JObject final = new JObject();
-            final["name"] = wwu.markName;
-            final["date"] = wwu.createDate;
-            final["clean"] = wwu.deletable;
-            final["ctx"] = fieldName == null ?
-                    USerializor.WriteNested(instance).ToString() : 
-                    USerializor.WriteSingleField(instance, fieldName).ToString();
-            return final.ToString();
+
         }
 
         public byte[] CacheToBin<T>(T instance, WinterWrapUp wwu)
         {
-            CacheFile<T> cache = new CacheFile<T>()
-            {
-                Content = instance,
-                CreateDate = wwu.createDate,
-                Deletable = wwu.deletable,
-                MarkName = wwu.markName
-            };
-            return UniversalObjectSerializor<CacheFile<T>>.Serialize(cache);
-        }
-
-        public T RestoreTo<T>(object ctx) where T : ICachable
-        {
-            return (T)USerializor.ReadNested(typeof(T), (JObject)ctx);
-        }
-
-
-
-        public object RestoreField<T>(T ancestor, object ctx, string fieldName)
-        {
-            return USerializor.ReadSingleField((JObject)ctx, fieldName, ancestor);
+            byte[] content = UniversalObjectSerializor<T>.Serialize(instance);
+            wwu.dataSize = content.Length;
+            byte[] header = wwu.ToBytes();
+            byte[] file = new byte[content.Length + header.Length];
+            Array.Copy(header, 0, file, 0, header.Length);
+            Array.Copy(content, 0, file, header.Length, content.Length);
+            return file;
         }
 
         public T BinRestoreTo<T>(byte[] bytes)
         {
-            CacheFile<T> restored = UniversalObjectSerializor<CacheFile<T>>.Deserialize(bytes);
-            return restored.Content;
+            int headerSize = Marshal.SizeOf(typeof(WinterWrapUp));
+            //Since we do not need any information in header, so just skip it
+            byte[] content = new byte[bytes.Length - headerSize];
+            Array.Copy(bytes, headerSize, content, 0, content.Length);
+            return UniversalObjectSerializor<T>.Deserialize(content);
         }
+
+
     }
 }

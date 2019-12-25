@@ -148,6 +148,8 @@ namespace Lunalipse.Presentation.LpsComponent
                         UserPlaylist.SetUnselected();
                     else if (__index == -4)
                         ArtistCollection.SetUnselected();
+                    else if (__index == -5)
+                        InternetMusic.SetUnselected();
                 }
                 switch ((string)csli.Tag)
                 {
@@ -167,9 +169,9 @@ namespace Lunalipse.Presentation.LpsComponent
                         __index = -4;
                         TAG = CatalogueSections.ARTIST_COLLECTIONS;
                         break;
-                    case "ALL_MUSIC":
+                    case "INTERNET_MUSIC":
                         __index = -5;
-                        TAG = CatalogueSections.ALL_MUSIC;
+                        TAG = CatalogueSections.INTERNET_MUSIC;
                         break;
                 }
                 csli.SetSelected();
@@ -183,7 +185,7 @@ namespace Lunalipse.Presentation.LpsComponent
             AlbumCollection.CatalogueText = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_" + AlbumCollection.Tag);
             UserPlaylist.CatalogueText = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_" + UserPlaylist.Tag);
             ArtistCollection.CatalogueText = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_" + ArtistCollection.Tag);
-            AllMusic.CatalogueText = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_" + AllMusic.Tag);
+            InternetMusic.CatalogueText = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_" + InternetMusic.Tag);
             ConfigEntry.CatalogueText = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_" + ConfigEntry.Tag);
             DetailedMenu.CatalogueText = "";
         }

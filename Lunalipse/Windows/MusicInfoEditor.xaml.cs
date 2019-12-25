@@ -82,24 +82,22 @@ namespace Lunalipse.Windows
         {
             base.DialogueLoaded(sender, args);
             TranslationManagerBase_OnI18NEnvironmentChanged(TranslationManagerBase.AquireConverter());
-            profileImage = MediaMetaDataReader.GetPicture(musicEntity.Path);
+            MediaMetaDataReader.RetrievePictureFromCache(musicEntity);
+            profileImage = MediaMetaDataReader.GetPicture(musicEntity);
             if (musicEntity.HasImage)
             {
                 MusicProfileImage.Background = new ImageBrush(profileImage);
                 SetFocusedBackground(profileImage);
             }
-            if (musicEntity.HasLyricLocal)
+            if (musicEntity.LyricPath != null)
             {
                 LyricFileName.Content = LyricOnLocal;
-            }
-            else if (musicEntity.HasLyricOnline)
-            {
-                LyricFileName.Content = LyricOnWeb;
             }
             else
             {
                 LyricFileName.Content = LyricNotFound;
             }
+            musicEntity.DisposePicture();
         }
 
         protected override void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)

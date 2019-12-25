@@ -60,14 +60,15 @@ namespace Lunalipse.Core.Console
                                         "\t\t-lld, --listLoaded     List all loaded (child) context\n" +
                                         "\t\t-q, --quit             Dispose all opened (child) context and back to mother context\n" +
                                         "\t\t-b, --back             Navigate to previous (child) context";
-        const string DescTextrfInvoke = "Manage functions in current context";
+        const string DescTextrfInvoke = "Calling the function in any context";
         const string HelperTextrfInvoke = "Reflection Call.\n" +
-                                          "Manage functions in current context\n" +
+                                          "Calling the function in either local or remote context. It provide an insecure way to call function in most parts" +
+                                            " of Lunalipse directly via Reflection." +
                                             "Usage:\n" +
                                             "\trfcall [OPTIONS] [-f, --function FUNC_NAME] [-p, --paras (ARGS,..)] [CTXNAME]\n\n" +
                                             "\tFUNC_NAME            Name of calling function\n" +
                                             "\tCTXNAME              Name of context, use when '-ctx, --context' is specified\n" +
-                                            "\t(ARGS,..)            Array of arguments in form (arg1,arg2,...) for function\n\n" +
+                                            "\t(ARGS,..)            Arguments in tuple form (inline Lunascript may used for non-primitive type)\n\n" +
                                             "\t\tOPTIONS:\n" +
                                             "\t\t-l, --list         List all functions availiable\n" +
                                             "\t\t-h, --help         Print this information\n" +
@@ -83,7 +84,7 @@ namespace Lunalipse.Core.Console
         const string HelperTextHelp = "This command allow you to see the detailed usage of any command in any context.\n" +
                                         "Usage:\n" +
                                         "\thelp [-h, --help] [-n, --name COMMAND] [-ctx, --context CTXNAME]\n\n" +
-                                        "\t-n, --name         Specify a command you interested." +
+                                        "\t-n, --name         Specify a command you interested.\n" +
                                         "\tCOMMAND            Name of the command, use together with '-n, --name'\n" +
                                         "\t-ctx, --context    Specify a context which COMMAND located.\n" +
                                         "\tCTXNAME            Name of the context, use together with '-ctx, --context'.\n" +
@@ -314,7 +315,7 @@ namespace Lunalipse.Core.Console
             object ctx = setContext(ref context, console);
             if (requireListing)
             {
-                string listFunc = ReflectionHelper.GetFormatedCommandList(ctx.GetType(), true, typeof(AttrConsoleSupportable));
+                string listFunc = ReflectionHelper.GetFormatedCommandList(ctx.GetType(), true);
                 if (string.IsNullOrEmpty(listFunc))
                 {
                     console.WriteLine("There are no function avaliable under {0}.",context=="" ? "current context": $"context '{context}'");

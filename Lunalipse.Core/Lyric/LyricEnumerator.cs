@@ -23,13 +23,9 @@ namespace Lunalipse.Core.Lyric
             {
                 return false;
             }
-            if (Music.HasLyricLocal)
+            if (Music.LyricPath != null)
             {
                 tokens = Tokenizer.CreateTokensFromFile(Music.LyricPath);
-            }
-            else if (Music.HasLyricOnline)
-            {
-                tokens = Tokenizer.CreateTokensFromWeb(Music.LyricURI);
             }
             else
             {

@@ -27,6 +27,7 @@ namespace Lunalipse.Presentation.LpsWindow
         public LunalipseDialogue()
         {
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            ShowInTaskbar = false;
             this.Style = (Style)Application.Current.Resources["LunalipseDialogue"];
             Loaded += DialogueLoaded;
 

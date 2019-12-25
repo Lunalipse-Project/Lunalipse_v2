@@ -10,15 +10,16 @@ namespace Lunalipse.Common.Interfaces.ICache
 {
     public interface ICacheHub
     {
-        bool CacheObject<T>(T obj, CacheType type) where T : ICachable;
-        bool CacheObjects<T>(List<T> obj, CacheType type) where T : ICachable;
+        bool CacheObject<T>(T obj, CacheType type, params object[] aux_data);
+        bool CacheObjects<T>(List<T> obj, CacheType type, params object[] aux_data);
         bool CacheField<T>(T ancestor, CacheType type, string FieldName);
 
-        T RestoreObject<T>(Func<WinterWrapUp, bool> Conditions, CacheType type);
+        T RestoreObject<T>(string id, CacheType type);
         object RestoreField(Func<WinterWrapUp, bool> Conditions, CacheType type, string FieldName);
-        IEnumerable<T> RestoreObjects<T>(Func<WinterWrapUp, bool> Conditions, CacheType type);
+        IEnumerable<T> RestoreObjects<T>(CacheType type);
 
-        void DeleteCaches(bool forced = false);
+        void DeleteCaches(CacheType cacheType);
+        void DeleteCache(CacheType cacheType, string id);
 
     }
 }

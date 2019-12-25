@@ -153,9 +153,6 @@ namespace Lunalipse.Core.LpsAudio
             bool LyrciPerpared = lEnum.AcquireLyric(music);
             AudioDelegations.LyricLoadStatus?.Invoke(LyrciPerpared);
             initializeSoundSource(music);
-            isLoaded = true;
-            wasapiOut.Volume = _vol / 100;
-            AudioDelegations.MusicLoaded?.Invoke(music,iws.ToTrack());
         }
 
         [AttrConsoleSupportable]
@@ -248,7 +245,7 @@ namespace Lunalipse.Core.LpsAudio
             }
         }
 
-        private IWaveSource GetCodecWebMp3(string type, string Address)
+        private IWaveSource GetCodecWebStream(string type, string Address)
         {
             switch (type)
             {
@@ -273,20 +270,43 @@ namespace Lunalipse.Core.LpsAudio
         private void initializeSoundSource(MusicEntity music)
         {
             iws?.Dispose();
-            iws = GetCodec(music.Extension, music.Path);
+            if(!music.IsInternetLocation)
+            {
+                iws = GetCodec(music.Extension, music.Path);
+                prepareSoundOut(music);
+            }
+            else
+            {
+                iws = GetCodecWebStream(music.Extension, music.Path);
+                if (iws == null)
+                {
+                    throw new Exception("Not supported format for the playback of this streamed audio.");
+                }
+                ((Mp3WebStream)iws).ConnectionEstablished += (sender, conn_establish) =>
+                {
+                    prepareSoundOut(music);
+                };
+            }
             lfw.FFTBufferSize = vManager.FftSize;
+        }
+
+        private void prepareSoundOut(MusicEntity music)
+        {
             iws = lfw.Initialize(
                 iws.ToSampleSource()
                     .ChangeSampleRate(32000)
                     .AppendSource(Equalizer.Create10BandEqualizer, out mEqualizer));
             wasapiOut.Initialize(iws);
             vManager.NotifySizeChanged(vManager.FftSize);
-            for(int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 SetEqualizerIndex(i, equalizerSetting_temp[i]);
             }
+            isLoaded = true;
+            wasapiOut.Volume = _vol / 100;
+            AudioDelegations.MusicLoaded?.Invoke(music, iws.ToTrack());
         }
-        
+
         private void CountTimerDelegate()
         {          
             double totalMS = iws.GetLength().TotalMilliseconds;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,21 +19,18 @@ namespace Lunalipse.Common.Generic.Cache
         /// </summary>
         public struct WinterWrapUp
         {
-            public string markName;
-            public string createDate;
-            public bool deletable;
-            public string HashCode;
-            public bool LZ78Enc;
-            /// <summary>
-            /// B : Binary Serialized;
-            /// S : Json Serialized
-            /// </summary>
-            public string FileType;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+            public string comment;
+            public uint createDate;
+            public byte reserved;
+            public int dataSize;
         }
 
-        public struct SettingWrapUp
+        public struct CacheFileInfo
         {
-            public string Version;
+            public CacheType cacheType;
+            public string id;
         }
+
     }
 }

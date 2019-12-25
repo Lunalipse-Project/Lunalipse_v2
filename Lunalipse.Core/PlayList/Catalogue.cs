@@ -1,8 +1,10 @@
 ﻿using Lunalipse.Common.Bus.Event;
 using Lunalipse.Common.Data;
 using Lunalipse.Common.Data.Attribute;
+using Lunalipse.Common.Generic.Cache;
 using Lunalipse.Common.Interfaces.ICache;
 using Lunalipse.Common.Interfaces.IPlayList;
+using Lunalipse.Core.Cache;
 using Lunalipse.Core.Metadata;
 using Lunalipse.Utilities;
 using System;
@@ -27,12 +29,11 @@ namespace Lunalipse.Core.PlayList
         private int ImageIndex = -1;
 
         [NonSerialized]
-        private bool CatalogueModified = false;
+        private int CatalogueChanges = 0;
 
         public bool IsModified
         {
-            get => CatalogueModified;
-            set => CatalogueModified = value;
+            get => CatalogueChanges == 0;
         }
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace Lunalipse.Core.PlayList
         public string Name { get => name;
             set {
                 name = value;
-                IsModified = true;
+                CatalogueChanges++;
             }
         }
 
@@ -161,7 +162,8 @@ namespace Lunalipse.Core.PlayList
                 if (me.Name.Equals(ME.Name)) return false;
             }
             MusicList.Add(ME);
-            CatalogueModified = true;
+            // '2' for entry added or removed.
+            CatalogueChanges += 2;
             return true;
         }
 
@@ -188,11 +190,6 @@ namespace Lunalipse.Core.PlayList
             MusicList.Sort((a, b) => a.Name.CompareTo(b.Name));
         }
 
-        public void SortByYear()
-        {
-            MusicList.Sort((a, b) => a.Year.CompareTo(b.Year));
-        }
-
         /// <summary>
         /// Delete Music when a music is deleted from "Mother" catalogue
         /// </summary>
@@ -200,28 +197,29 @@ namespace Lunalipse.Core.PlayList
         /// <returns></returns>
         public bool DeleteMusic(string name)
         {
-            CatalogueModified = true;
-            return MusicList.Remove(MusicList.Find(e => e.Name == name));
+            return DeleteMusic(
+                MusicList.Find(
+                    e => e.Name == name
+                    )
+                );
         }
 
         public bool DeleteMusic(int index)
         {
             if (index > MusicList.Count - 1) return false;
-            MusicList.RemoveAt(index);
-            CatalogueModified = true;
-            return true;
+            return DeleteMusic(MusicList[index]);
         }
 
         public bool DeleteMusic(MusicEntity ME)
         {
-            CatalogueModified = true;
+            CatalogueChanges -= 2;
             return MusicList.Remove(ME);
         }
 
         public bool DeleteMusic(int start, int count)
         {
             if (start < 0 || start + count > MusicList.Count) return false;
-            CatalogueModified = true;
+            CatalogueChanges -= 2;
             MusicList.RemoveRange(start, count);
             return true;
         }
@@ -281,12 +279,16 @@ namespace Lunalipse.Core.PlayList
         {
             if (ImageIndex != -1)
             {
-                return MediaMetaDataReader.GetPicture(MusicList[ImageIndex].Path);
+                return MediaMetaDataReader.GetPicture(MusicList[ImageIndex]);
             }
             List<MusicEntity> PictureHolder = MusicList.FindAll(x => x.HasImage);
             if (PictureHolder.Count == 0) return null;
             Random random = new Random();
-            return MediaMetaDataReader.GetPicture(PictureHolder[random.Next(PictureHolder.Count)].Path);
+            MusicEntity holder = PictureHolder[random.Next(PictureHolder.Count)];
+            MediaMetaDataReader.RetrievePictureFromCache(holder);
+            BitmapSource bitmap = MediaMetaDataReader.GetPicture(holder);
+            holder.DisposePicture();
+            return bitmap;
         }
 
         public IEnumerable<MusicEntity> GetAll()

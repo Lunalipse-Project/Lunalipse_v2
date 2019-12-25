@@ -8,8 +8,11 @@ namespace Lunalipse.Common.Generic.Cache
 {
     public enum CacheType
     {
-        MUSIC_CATALOGUE_CACHE,
-        LPS_SCRIPT_CACHE
+        OTHER = 0,
+        ALBUM_PIC = 1,
+        WebAlbumPic = 2,
+        PlayList = 3,
+        MusicList = 4
     }
 
     public enum CacheResponseType
@@ -18,7 +21,8 @@ namespace Lunalipse.Common.Generic.Cache
         BULK_CACHE,
         SINGLE_RESTORE,
         BULK_RESTORE,
-        FIELD_CACHE,
-        FIELD_RESTORE
+        CACHE_EXIST,
+        DELETE_CACHE,
+        DELETE_ALL_CACHE
     }
 }

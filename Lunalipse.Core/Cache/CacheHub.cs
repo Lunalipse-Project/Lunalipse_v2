@@ -25,7 +25,7 @@ namespace Lunalipse.Core.Cache
             return CHH_INSTANCE;
         }
 
-        private List<WinterWrapUp> CacheWraps;
+        private List<CacheFileInfo> CacheWraps;
         private Dictionary<CacheType, ICacheOperator> Operators;
 
         public string baseDir = "";
@@ -33,7 +33,7 @@ namespace Lunalipse.Core.Cache
         public CacheHub(string dir)
         {
             Operators = new Dictionary<CacheType, ICacheOperator>();
-            CacheWraps = new List<WinterWrapUp>();
+            CacheWraps = new List<CacheFileInfo>();
             baseDir = dir == "" ? baseDir : dir;
             ReflushCaches();
         }
@@ -47,7 +47,7 @@ namespace Lunalipse.Core.Cache
         public bool RegisterOperator(CacheType type ,ICacheOperator op)
         {
             if (Operators.ContainsKey(type)) return false;
-            op.SetCacheDir(baseDir + "//mcdata");
+            op.SetCacheDir(baseDir);
             Operators.Add(type, op);
             return true;
         }
@@ -59,9 +59,10 @@ namespace Lunalipse.Core.Cache
         /// <param name="obj">对象的实例</param>
         /// <param name="type">要使用的缓存类型</param>
         /// <returns></returns>
-        public bool CacheObject<T>(T obj, CacheType type) where T : ICachable
+        public bool CacheObject<T>(T obj, CacheType type, params object[] aux_data)
         {
-            Operators[type].InvokeOperator(CacheResponseType.SINGLE_CACHE, obj);
+            if (!Operators.ContainsKey(type)) return false;
+            Operators[type].InvokeOperator(CacheResponseType.SINGLE_CACHE, obj, aux_data);
             return true;
         }
 
@@ -72,11 +73,10 @@ namespace Lunalipse.Core.Cache
         /// <param name="obj">这堆对象的集合</param>
         /// <param name="type">要使用的缓存类型</param>
         /// <returns></returns>
-        public bool CacheObjects<T>(List<T> obj, CacheType type) where T : ICachable
+        public bool CacheObjects<T>(List<T> obj, CacheType type, params object[] aux_data)
         {
-            //string markName = CacheUtils.GenerateMarkName(Operators[type].OperatorUID());
-            //List<WinterWrapUp> ExistedCache = CacheWraps.FindAll(x => x.markName == markName);
-            Operators[type].InvokeOperator(CacheResponseType.BULK_CACHE, obj);
+            if (!Operators.ContainsKey(type)) return false;
+            Operators[type].InvokeOperator(CacheResponseType.BULK_CACHE, obj, aux_data);
             return true;
         }
 
@@ -90,8 +90,7 @@ namespace Lunalipse.Core.Cache
         /// <returns></returns>
         public bool CacheField<T>(T ancestor, CacheType type, string FieldName)
         {
-            Operators[type].InvokeOperator(CacheResponseType.FIELD_CACHE, ancestor, FieldName);
-            return true;
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -101,30 +100,40 @@ namespace Lunalipse.Core.Cache
         /// <param name="Conditions">匹配条件</param>
         /// <param name="type">缓存使用的缓存类型</param>
         /// <returns></returns>
-        public T RestoreObject<T>(Func<WinterWrapUp, bool> Conditions, CacheType type)
+        public T RestoreObject<T>(string id, CacheType type)
         {
-            return (T)Operators[type].InvokeOperator(CacheResponseType.SINGLE_RESTORE,
-                CacheWraps.Find(x => Conditions(x)));
+            if (!Operators.ContainsKey(type)) return default(T);
+            try
+            {
+                return (T)Operators[type].InvokeOperator(CacheResponseType.SINGLE_RESTORE, null,
+                new CacheFileInfo()
+                {
+                    id = id,
+                    cacheType = type
+                });
+            }
+            catch(Exception ex)
+            {
+                LunalipseLogger.GetLogger().Error("Unable to perform cache restoring. ");
+                LunalipseLogger.GetLogger().Error($"Error occurs: {ex.Message}");
+                LunalipseLogger.GetLogger().Error($"Stack trace:\n {ex.StackTrace}");
+                return default(T);
+            }
         }
 
         /// <summary>
-        /// 查找缓存记录，并从多个个缓存恢复多个实例对象
+        /// 查找缓存记录，恢复同一缓存类别中的所有类型相同的对象
         /// </summary>
         /// <typeparam name="T">这多个对象的共同所属类型</typeparam>
-        /// <param name="Conditions">匹配条件</param>
         /// <param name="type">缓存使用的缓存类型</param>
         /// <returns></returns>
-        public IEnumerable<T> RestoreObjects<T>(Func<WinterWrapUp, bool> Conditions, CacheType type)
+        public IEnumerable<T> RestoreObjects<T>(CacheType type)
         {
-            List<T> returns = (List<T>)Operators[type]
-                .InvokeOperator(CacheResponseType.BULK_RESTORE, 
-                    CacheWraps.FindAll(
-                        x => Conditions(x)
-                    )
-                );
-            foreach (object o in returns)
+            if (!Operators.ContainsKey(type)) yield break;
+            List<T> ts = (List<T>)Operators[type].InvokeOperator(CacheResponseType.BULK_RESTORE, null);
+            foreach(T t in ts)
             {
-                yield return (T)o;
+                yield return t;
             }
         }
 
@@ -137,8 +146,7 @@ namespace Lunalipse.Core.Cache
         /// <returns></returns>
         public object RestoreField(Func<WinterWrapUp, bool> Conditions, CacheType type, string FieldName)
         {
-            return Operators[type].InvokeOperator(CacheResponseType.FIELD_RESTORE,
-                CacheWraps.Find(x => Conditions(x)));
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -165,24 +173,17 @@ namespace Lunalipse.Core.Cache
         /// <param name="ctype">使用的缓存类型</param>
         /// <param name="suffies">额外的附加信息</param>
         /// <returns></returns>
-        public bool ComponentCacheExists(CacheType ctype,params string[] suffies)
+        public bool ComponentCacheExists(CacheType ctype, string id)
         {
-            if (!Operators.ContainsKey(ctype)) return false;
-            string markName = CacheUtils.GenerateMarkName(Operators[ctype].OperatorUID(), suffies);
-            return CacheWraps.FindIndex(x => x.markName.StartsWith(markName)) != -1;
+            return (bool)Operators[ctype].InvokeOperator(CacheResponseType.CACHE_EXIST, null, id, ctype);
         }
 
         /// <summary>
         /// 删除所有<seealso cref="WinterWrapUp.deletable"/>为<see cref="false"/>的缓存
         /// </summary>
-        /// <param name="forced">使用强制模式，在此模式下，无视<seealso cref="WinterWrapUp.deletable"/>约束</param>
-        public void DeleteCaches(bool forced = false)
+        public void DeleteCaches(CacheType cacheType)
         {
-            foreach (WinterWrapUp WWU in CacheWraps.FindAll(x => forced ? true : !x.deletable))
-            {
-                File.Delete("{0}//mcdata//{1}".FormateEx(baseDir, CacheUtils.GenerateName(WWU)));
-            }
-            CacheWraps.RemoveAll(x => forced ? true : !x.deletable);
+            Operators[cacheType].InvokeOperator(CacheResponseType.DELETE_ALL_CACHE, null, cacheType);
         }
 
         /// <summary>
@@ -190,15 +191,9 @@ namespace Lunalipse.Core.Cache
         /// </summary>
         /// <param name="FilterType">条件约束</param>
         /// <param name="forced">使用强制模式，在此模式下，无视<seealso cref="WinterWrapUp.deletable"/>约束</param>
-        public void DeleteCaches(CacheType FilterType,bool forced = false)
+        public void DeleteCache(CacheType cacheType, string id)
         {
-            string markName = CacheUtils.GenerateMarkName(Operators[FilterType].OperatorUID());
-            foreach (WinterWrapUp WWU in CacheWraps.FindAll(x => forced ? true : !x.deletable || x.markName == markName)) 
-            {
-                File.Delete("{0}//mcdata//{1}".FormateEx(baseDir, CacheUtils.GenerateName(WWU)));
-            }
-            CacheWraps.RemoveAll(x => forced ? true : !x.deletable);
+            Operators[cacheType].InvokeOperator(CacheResponseType.DELETE_CACHE, null, id, cacheType);
         }
-        
     }
 }

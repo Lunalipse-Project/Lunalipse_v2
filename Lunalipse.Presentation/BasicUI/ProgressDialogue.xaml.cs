@@ -40,7 +40,7 @@ namespace Lunalipse.Presentation.BasicUI
         {
             Dispatcher.Invoke(() =>
             {
-                Progress.CurrentValue = current;
+                if (current >= 0) Progress.CurrentValue = current;
                 Message.Content = message;
             });
         }
@@ -55,6 +55,10 @@ namespace Lunalipse.Presentation.BasicUI
             Dispatcher.Invoke(() =>
             {
                 Progress.MaximumValue = max;
+                if (max <= 0)
+                {
+                    Progress.Wait();
+                }
             });
         }
 
@@ -63,6 +67,13 @@ namespace Lunalipse.Presentation.BasicUI
             base.ThemeManagerBase_OnThemeApplying(obj);
             Progress.TrackBackgroundBrush = obj.Primary.SetOpacity(0.8).ToLuna();
             Progress.ProgressBackgroundBrush = obj.Secondary;
-        }       
+        }
+
+        
+
+        public void UpdateCaption(string caption)
+        {
+            Dispatcher.Invoke(() => Title = $"Loading: {caption}");
+        }
     }
 }

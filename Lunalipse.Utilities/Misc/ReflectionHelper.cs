@@ -73,7 +73,7 @@ namespace Lunalipse.Utilities.Misc
         public static Tuple<bool, object, Type> InvokeMethod(Type classobj, object ctx, string name, string[] parameters)
         {
             MethodInfo methodInfo = classobj.GetMethod(name);
-            return __InvokeMethod(ctx, StringArrToParamters(methodInfo.GetParameters(), parameters), methodInfo);
+            return __InvokeMethod(ctx, methodInfo == null ? null : StringArrToParamters(methodInfo.GetParameters(), parameters), methodInfo);
         }
         public static Tuple<bool, object, Type> InvokeMethod(Type classobj, object ctx, string name, object[] parameters)
         {

@@ -109,6 +109,9 @@
     <Compile Include="Pages\EntityEditDialoguePage.xaml.cs">
       <DependentUpon>EntityEditDialoguePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\InternetMusic.xaml.cs">
+      <DependentUpon>InternetMusic.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\LunalipseAbout.xaml.cs">
       <DependentUpon>LunalipseAbout.xaml</DependentUpon>
     </Compile>
@@ -196,6 +199,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\EntityEditDialoguePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\InternetMusic.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

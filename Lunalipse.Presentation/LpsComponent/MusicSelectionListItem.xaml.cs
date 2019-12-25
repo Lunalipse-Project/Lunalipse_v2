@@ -19,6 +19,28 @@ namespace Lunalipse.Presentation.LpsComponent
                                         typeof(Brush),
                                         typeof(MusicSelectionListItem),
                                         new PropertyMetadata(Application.Current.FindResource("ArtistName_List")));
+        public static readonly DependencyProperty PEnableAddToPlayList =
+            DependencyProperty.Register("EnableAddToPlayList", typeof(bool), typeof(MusicSelectionListItem), new PropertyMetadata(true));
+        public static readonly DependencyProperty PEnableEditOrSeeDetails =
+            DependencyProperty.Register("EnableEditOrSeeDetails", typeof(bool), typeof(MusicSelectionListItem), new PropertyMetadata(true));
+        public static readonly DependencyProperty PEnableDeletion =
+            DependencyProperty.Register("EnableDeletion", typeof(bool), typeof(MusicSelectionListItem), new PropertyMetadata(true));
+
+        public bool EnableAddToPlayList
+        {
+            get => (bool)GetValue(PEnableAddToPlayList);
+            set => SetValue(PEnableAddToPlayList, value);
+        }
+        public bool EnableEditOrSeeDetails
+        {
+            get => (bool)GetValue(PEnableEditOrSeeDetails);
+            set => SetValue(PEnableEditOrSeeDetails, value);
+        }
+        public bool EnableDeletion
+        {
+            get => (bool)GetValue(PEnableDeletion);
+            set => SetValue(PEnableDeletion, value);
+        }
         /// <summary>
         /// 选中标识颜色
         /// </summary>
@@ -33,6 +55,14 @@ namespace Lunalipse.Presentation.LpsComponent
             InitializeComponent();
             ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
             ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
+            Loaded += MusicSelectionListItem_Loaded;
+        }
+
+        private void MusicSelectionListItem_Loaded(object sender, RoutedEventArgs e)
+        {
+            AddToList.Visibility = EnableAddToPlayList ? Visibility.Visible : Visibility.Collapsed;
+            EditOrSeeDetails.Visibility = EnableEditOrSeeDetails ? Visibility.Visible : Visibility.Collapsed;
+            Deletion.Visibility = EnableDeletion ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)

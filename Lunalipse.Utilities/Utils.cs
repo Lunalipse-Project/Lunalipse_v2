@@ -15,7 +15,10 @@ namespace Lunalipse.Utilities
     };
     public class Utils
     {
-        private static string[] Prefixes = { "" ,"K", "M", "G", "T" };
+        private static readonly string[] Prefixes = { "" ,"K", "M", "G", "T" };
+        private const string characters = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private static Random random = new Random();
+        private const int ID_LEN = 16;
 
         /// <summary>
         /// 数据大小单位转换
@@ -68,6 +71,8 @@ namespace Lunalipse.Utilities
             return Second2Str(ms / 1000, seperator);
         }
 
+        
+
         public static string[] ParseCommand(string command)
         {
             List<string> arg = new List<string>();
@@ -115,6 +120,16 @@ namespace Lunalipse.Utilities
                     }
                 }
             }
+        }
+
+        public static string getRandomID()
+        {
+            string id = "";
+            for(int i = 0; i < ID_LEN; i++)
+            {
+                id += characters[random.Next(characters.Length)];
+            }
+            return id;
         }
 
         public static double RecalucteSpectrumBarWidth(int barCount, double BarSpacing, double WidthOfRegion)

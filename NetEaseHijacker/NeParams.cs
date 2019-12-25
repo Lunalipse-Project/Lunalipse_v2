@@ -15,7 +15,14 @@ namespace NetEaseHijacker
         /// <summary>
         /// 安全密钥，根据上述随机数生成
         /// </summary>
-        public const string encSecKey = "d123fac38adb3e3e326b672b73a865584f40dbb515c33c4b12d7092bf0a22695820742ed91a47b129bc4a7b62ee2166cb0a1b963c834a9807f4addd2bc9556e2c71f1fc90a9a0d158459494c36ca1887f2c6aa868d70e01c6c00ecfe14aac966a854c43730fe70ceec15e37211bd3c21940dec2b62d77f9cab5856d96fdc5e9a";
+        public const string encSecKey = "d123fac38adb3e3e326b672b73a86558" +
+                                        "4f40dbb515c33c4b12d7092bf0a22695" +
+                                        "820742ed91a47b129bc4a7b62ee2166c" +
+                                        "b0a1b963c834a9807f4addd2bc9556e2" +
+                                        "c71f1fc90a9a0d158459494c36ca1887" +
+                                        "f2c6aa868d70e01c6c00ecfe14aac966" +
+                                        "a854c43730fe70ceec15e37211bd3c21" +
+                                        "940dec2b62d77f9cab5856d96fdc5e9a";
         /// <summary>
         /// 第一次加密params所使用的秘钥
         /// </summary>

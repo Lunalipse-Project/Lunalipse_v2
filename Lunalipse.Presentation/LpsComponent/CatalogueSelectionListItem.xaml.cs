@@ -10,6 +10,9 @@ namespace Lunalipse.Presentation.LpsComponent
     /// </summary>
     public partial class CatalogueSelectionListItem : UserControl
     {
+
+        
+
         public Brush SelectedColor { get; set; }
         public Brush DefaultColor { get; set; }
         private bool isSelected=false;
@@ -51,6 +54,7 @@ namespace Lunalipse.Presentation.LpsComponent
 
         private void CATALOGUE_LIST_ITEM_Loaded(object sender, RoutedEventArgs e)
         {
+
             if (Tag != null)
             {
                 switch ((string)Tag)
@@ -70,8 +74,8 @@ namespace Lunalipse.Presentation.LpsComponent
                     case "MENU_DETAIL":
                         TagIcon.Content = FindResource("Menu");
                         break;
-                    case "ALL_MUSIC":
-                        TagIcon.Content = FindResource("PlayList");
+                    case "INTERNET_MUSIC":
+                        TagIcon.Content = FindResource("CloudMusic");
                         break;
                     default:
                         TagIcon.Content = FindResource("Music_Collection");

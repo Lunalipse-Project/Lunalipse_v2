@@ -1,6 +1,9 @@
 ﻿using Lunalipse.Common;
+using Lunalipse.Common.Data;
+using Lunalipse.Common.Generic.I18N;
 using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Common.Interfaces.IConsole;
+using Lunalipse.Common.Interfaces.II18N;
 using Lunalipse.Core.Console;
 using Lunalipse.Presentation.LpsWindow;
 using System;
@@ -70,6 +73,18 @@ namespace Lunalipse.Windows
         private void LpsConsoleWindow_Loaded(object sender, RoutedEventArgs e)
         {
             CommandInput.Focus();
+            TranslationManagerBase.OnI18NEnvironmentChanged += TranslationManagerBase_OnI18NEnvironmentChanged;
+            TranslationManagerBase_OnI18NEnvironmentChanged(TranslationManagerBase.AquireConverter());
+        }
+
+        private void TranslationManagerBase_OnI18NEnvironmentChanged(II18NConvertor obj)
+        {
+            Title = obj.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CONSOLE_TITLE");
+        }
+
+        private void LpsConsoleWindow_Unloaded(object sender, RoutedEventArgs e)
+        {
+            TranslationManagerBase.OnI18NEnvironmentChanged -= TranslationManagerBase_OnI18NEnvironmentChanged;
         }
     }
 }

@@ -1,6 +1,8 @@
-﻿using Lunalipse.Utilities;
+﻿using Lunalipse.Common.Generic.Cache;
+using Lunalipse.Utilities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -11,58 +13,46 @@ namespace Lunalipse.Core.Cache
 {
     public static class CacheUtils
     {
-        public static string GenerateName(this WinterWrapUp cw)
+        public const string CACHE_MAGIC_PREFIX = "maggie";
+        public static string GenerateName(this CacheFileInfo cfi)
         {
-            //return "cch_{3}_{0}_{1}{2}".FormateEx(cw.deletable ? "t" : "f", cw.uid, CACHE_FILE_EXT, cw.markName);
-            return "cch_{0}_{1}_{2}_{3}_{4}{5}".FormateEx(
-                cw.markName, 
-                cw.deletable ? "t" : "f",
-                cw.FileType, 
-                cw.LZ78Enc ? "t" : "f", 
-                cw.HashCode, 
-                CACHE_FILE_EXT);
+            return "{0}{1}{2}".FormateEx(CACHE_MAGIC_PREFIX, ((int)cfi.cacheType).ToString(),cfi.id);
         }
 
-        public static WinterWrapUp ConvertToWWU(string name)
+        public static CacheFileInfo ConvertToWWU(string name)
         {
-            string[] sequence = name.Split('_');
-            return new WinterWrapUp()
+            CacheFileInfo cacheFileInfo = new CacheFileInfo();
+            try
             {
-                markName = sequence[1],
-                deletable = sequence[2] == "t" ? true : false,
-                FileType = sequence[3],
-                LZ78Enc = sequence[4] == "t" ? true : false,
-                HashCode = sequence[5]
-            };
-        }
-
-        public static string GenerateMarkName(string type,params string[] additions)
-        {
-            string name = type;
-            foreach(string s in additions)
-            {
-                name += "@{0}".FormateEx(s);
+                if (name.StartsWith(CACHE_MAGIC_PREFIX))
+                {
+                    int type = int.Parse(name[CACHE_MAGIC_PREFIX.Length] + "");
+                    cacheFileInfo.cacheType = (CacheType)type;
+                    cacheFileInfo.id = name.Substring(CACHE_MAGIC_PREFIX.Length + 1);
+                }
             }
-            return name;
+            catch
+            {
+                // The cache name is invalid! (but has valid CACHE_MAGIC_PREFIX)
+            }
+            return cacheFileInfo;
         }
 
-        public static string[] GetMarkNames(this WinterWrapUp wwu)
+        public static IEnumerable<string> FindAllCaches(string baseDir, CacheType cacheType)
         {
-            return wwu.markName.Split('@');
-        }
-
-        public static string getMajorMark(string[] marknames)
-        {
-            return marknames[0];
+            string prefix = CACHE_MAGIC_PREFIX + ((int)cacheType).ToString();
+            foreach(string path in Directory.GetFiles(baseDir))
+            {
+                if (Path.GetFileName(path).StartsWith(prefix))
+                {
+                    yield return path;
+                }
+            }
         }
 
         public static bool IsNonValueType(this Type type)
         {
             return type.IsClass && !type.IsValueType && !type.Equals(typeof(String));
-        }
-        public static bool IsCachable(this Type type,string filter)
-        {
-            return type.IsClass && type.GetInterface(filter) != null;
         }
 
         //public static string CleanFormat(string ins)

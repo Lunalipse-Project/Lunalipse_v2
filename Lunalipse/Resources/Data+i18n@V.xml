@@ -28,7 +28,7 @@
       <Key name="CORE_PLAYLISTGUARD_MISSING_CONTENT">检测到先前保存的播放列表，但在恢复的时候出现了些问题：一些播放列表中保存的歌曲貌似不在本地磁盘中。有可能这些歌曲已被重命名或永久的移动到了新的位置。</Key>
 
       <Key name="CORE_CATALOGUE_ALL_LOCATION">所有位置</Key>
-      <Key name="CORE_CATALOGUE_ALL_MUSIC">所有歌曲</Key>
+      <Key name="CORE_CATALOGUE_INTERNET_MUSIC">联网乐库</Key>
       <Key name="CORE_CATALOGUE_ALBUM_COLLECTION">所有专辑</Key>
       <Key name="CORE_CATALOGUE_USER_PLAYLIST">我的歌单</Key>
       <Key name="CORE_CATALOGUE_ARTIST_COLLECTION">所有艺术家</Key>
@@ -254,7 +254,7 @@
     </Page>
     <!-- Online Music Library -->
     <Page key="CORE_CLOUD_LIB">
-
+      <Key name="CORE_CLOUD_LIB_SERACH">搜索</Key>
     </Page>
   </Lang>
 </LpsI18N>

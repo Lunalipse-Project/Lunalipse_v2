@@ -134,7 +134,7 @@
                     </EventTrigger>
                 </local:CatalogueSelectionListItem.Triggers>
             </local:CatalogueSelectionListItem>
-            <local:CatalogueSelectionListItem Grid.Row="4"  x:Name="AllMusic" Background="{StaticResource ItemUnhoverColorDefault}" Width="auto" Height="48" MouseDown="ItemConatiner_MouseDown" Tag="ALL_MUSIC">
+            <local:CatalogueSelectionListItem Grid.Row="4"  x:Name="InternetMusic" Background="{StaticResource ItemUnhoverColorDefault}" Width="auto" Height="48" MouseDown="ItemConatiner_MouseDown" Tag="INTERNET_MUSIC">
                 <local:CatalogueSelectionListItem.Triggers>
                     <EventTrigger RoutedEvent="UIElement.MouseEnter">
                         <EventTrigger.Actions>

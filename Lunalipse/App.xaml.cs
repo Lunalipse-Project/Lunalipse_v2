@@ -1,9 +1,7 @@
 ﻿using Lunalipse.Common;
-using Lunalipse.Common.Bus.Event;
 using Lunalipse.Common.Data;
 using Lunalipse.Common.Generic.Cache;
 using Lunalipse.Core;
-using Lunalipse.Core.BehaviorScript;
 using Lunalipse.Core.Cache;
 using Lunalipse.Core.GlobalSetting;
 using Lunalipse.Core.I18N;
@@ -44,6 +42,9 @@ namespace Lunalipse
             cacheSystem = CacheHub.Instance(currentFolder);
             resourcesHandler = new ResourcesHandler(Assembly.GetEntryAssembly().GetName().Version);
 
+            Log.Info($"Lunalipse Music Player (Version: {VersionHelper.Instance.getFullVersion()})");
+            Log.Info("Logger started");
+
             CheckResources();
             InitializeI18NEnvironemnt();
             RegisterOperators();
@@ -60,21 +61,25 @@ namespace Lunalipse
             Log.Exception(e.Exception);
             Log.Release();
             e.Handled = true;
-            MessageBox.Show(e.Exception.Message, "致命错误", MessageBoxButton.OK, MessageBoxImage.Error);
-            Application.Current.Shutdown();
+            MessageBox.Show(e.Exception.Message, "致命错误 (Fatal Error)", MessageBoxButton.OK, MessageBoxImage.Error);
+            Current.Shutdown();
         }
 
         void RegisterOperators()
         {
             Log.Info("Registering caching operators..");
-            cacheSystem.RegisterOperator(CacheType.MUSIC_CATALOGUE_CACHE, new MusicCacheIndexer()
+            cacheSystem.RegisterOperator(CacheType.WebAlbumPic, new AlbumCoverImageCacher()
             {
-                UseLZ78Compress = true
+                UseLZ78Compress = true,
+                Responsiblity = CacheType.WebAlbumPic
             });
-            cacheSystem.RegisterOperator(CacheType.LPS_SCRIPT_CACHE, new ScriptSerializor()
+            cacheSystem.RegisterOperator(CacheType.ALBUM_PIC, new AlbumCoverImageCacher()
             {
-                UseLZ78Compress = true
+                UseLZ78Compress = true,
+                Responsiblity = CacheType.ALBUM_PIC
             });
+            cacheSystem.RegisterOperator(CacheType.MusicList, new MusicPoolCache());
+            cacheSystem.RegisterOperator(CacheType.PlayList, new PlaylistCache());
         }
 
         void InitializeI18NEnvironemnt()

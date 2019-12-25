@@ -40,9 +40,12 @@ namespace NetEaseHijacker
         /// 绑定动作：单个请求得到相应
         /// </summary>
         /// <param name="e">接受动作的方法</param>
-        public void E_Responded(Action<string,RResult> e)
+        public void E_Responded(Action<string, string> e)
         {
-            r.Event_Responded((x, y) => e?.Invoke(x, y));
+            r.Event_Responded((senderID, result) =>
+            {
+                e?.Invoke(senderID, result.ResultData);
+            });
         }
 
         /// <summary>
@@ -63,7 +66,16 @@ namespace NetEaseHijacker
         /// <returns></returns>
         public async Task SearchSong(string keyw, int limit = 30, int offset = 0)
         {
-            await r.Get(SearchType.SONGS, keyw, limit.ToString(), (offset == 0 ? true : false).ToString().ToLowerInvariant(), offset+"");
+            await r.Get(
+                        SearchType.SONGS, 
+                        keyw, 
+                        limit.ToString(), 
+                        (offset == 0 ? 
+                            true : false)
+                                .ToString()
+                                .ToLowerInvariant(),
+                        offset+""
+                 );
         }
 
         /// <summary>
@@ -104,43 +116,7 @@ namespace NetEaseHijacker
         /// <returns></returns>
         public MetadataNE ParseSongList(string result)
         {
-            try
-            {
-                JObject jo = JObject.Parse(result);
-                MetadataNE mne = new MetadataNE()
-                {
-                    total = jo["result"]["songCount"].ToObject<int>(),
-                    list = new List<SongDetail>()
-                };
-                foreach (var v in jo["result"]["songs"])
-                {
-                    SongDetail sd = new SongDetail();
-                    sd.id = v["id"].ToString();
-                    sd.name = v["name"].ToString();
-                    sd.al_pic = v["al"]["picUrl"].ToString();
-                    sd.ar_name = v["ar"][0]["name"].ToString();
-                    sd.al_name = v["al"]["name"].ToString();
-                    sd.duration = v["dt"].ToObject<long>();
-                    int i = 0;
-
-                    foreach (char c in "lmh")
-                    {
-                        string c_ = c.ToString();
-                        if (v[c_].HasValues)
-                        {
-                            sd.sizes[i] = Convert.ToInt64(v[c_]["size"].ToString());
-                            sd.bitrate[i] = Convert.ToInt32(v[c_]["br"].ToString());
-                            i++;
-                        }
-                    }
-                    mne.list.Add(sd);
-                }
-                return mne;
-            }
-            catch
-            {
-                return null;
-            }
+            return JsonConvert.DeserializeObject<MetadataNE>(result);
         }
 
         /// <summary>

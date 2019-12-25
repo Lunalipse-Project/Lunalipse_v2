@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NetEaseHijacker</RootNamespace>
     <AssemblyName>libnehjk</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -57,7 +58,8 @@
     <Compile Include="Raw.cs" />
     <Compile Include="SearchType.cs" />
     <Compile Include="Types\MetadataNE.cs" />
-    <Compile Include="Types\SongDetail.cs" />
+    <Compile Include="Types\MusicBrief.cs" />
+    <Compile Include="Types\MusicDetail.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>

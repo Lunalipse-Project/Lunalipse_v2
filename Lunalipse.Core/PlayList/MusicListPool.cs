@@ -66,41 +66,115 @@ namespace Lunalipse.Core.PlayList
             Log = LunalipseLogger.GetLogger();
         }
 
-        public string AddToPool(string dirpath, IProgressIndicator indicator = null)
+        public string AddToPool(string dirpath, IProgressIndicator indicator = null, bool indicatorManuallyClose = false)
         {
             if (CPool.Exists(x => x.isLocationClassified == true && x.Name.Equals(dirpath)))
-                return "";
+                return string.Empty;
             if (!Directory.Exists(dirpath))
             {
                 Log.Error("Path {0} not exist locally.", dirpath);
-                return "";
+                return string.Empty;
             }
+            bool cacheAvailable = cacheSystem.ComponentCacheExists(CacheType.MusicList, dirpath);
             Catalogue pathCatalogue = new Catalogue(dirpath)
             {
                 isLocationClassified = true
             };
             Log.Info("Loading path \"{0}\"".FormateEx(dirpath));
-            string[] files = Directory.GetFiles(dirpath);
-            indicator?.SetRange(0, files.Length);
-            int counter = 0;
-            foreach (string fi in files)
+            indicator?.UpdateCaption(dirpath);
+            List<string> fileOnDisk = Directory.GetFiles(dirpath).ToList();
+            if (cacheAvailable)
             {
-                counter++;
-                if(SupportFormat.AllQualified(Path.GetExtension(fi)))
+                indicator?.SetRange(0, 0);
+                indicator?.ChangeCurrentVal(-1, $"Retrieving caches for {dirpath}");
+                LunalipseLogger.GetLogger().Info($"Retriving cache from cache. Component: {dirpath}");
+                List<MusicEntity> entities = cacheSystem.RestoreObject<List<MusicEntity>>(dirpath, CacheType.MusicList);
+                if (entities == null)
                 {
-                    MusicEntity me = immdr.CreateEntity(fi);
-                    AllMusic.AddMusic(me);
-                    pathCatalogue.AddMusic(me);
-                    indicator?.ChangeCurrentVal(counter, me.Name);
+                    LunalipseLogger.GetLogger().Warning($"Unable to retrieve cache. Component: {dirpath}");
+                    ReadMusicFromDisk(fileOnDisk, indicator, pathCatalogue);
+                }
+                else
+                {
+                    applyToPool(entities, fileOnDisk, pathCatalogue, indicator);
                 }
             }
-            indicator?.Complete();
+            else
+            {
+                LunalipseLogger.GetLogger().Warning($"Retrieving music from disk. Component: {dirpath}");
+                ReadMusicFromDisk(fileOnDisk, indicator, pathCatalogue);
+                LunalipseLogger.GetLogger().Warning($"Building cache. Component: {dirpath}");
+                cacheSystem.CacheObject(pathCatalogue.MusicList, CacheType.MusicList, dirpath);
+            }
+            if(!indicatorManuallyClose)
+            {
+                indicator?.Complete();
+            }
             Log.Debug("{0} musics loaded".FormateEx(pathCatalogue.GetCount()));
             CPool.AddCatalogue(pathCatalogue);
             return pathCatalogue.UUID;
         }
 
+        /// <summary>
+        /// Apply the music restored from cache to music pool.
+        /// And compare the cached with the musics in current location on disk.
+        /// If there are any mismatch, then solve it.
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <param name="files"></param>
+        private void applyToPool(List<MusicEntity> entities, List<string> files, Catalogue catalogue, IProgressIndicator indicator)
+        {
+            List<string> filesInCache = new List<string>();
+            entities.ForEach(x =>
+            {
+                if (File.Exists(x.Path))
+                {
+                    AllMusic.AddMusic(x);
+                    catalogue.AddMusic(x);
+                    filesInCache.Add(x.Path);
+                }
+                else
+                {
+                    //In this case, entry (music) recorded by cache but not exist in physical location (disk)
+                    //So we need not to add this entry to pool and catalogue. And delete the album cover cache if it has.
+                    if (x.HasImage)
+                    {
+                        cacheSystem.DeleteCache(CacheType.ALBUM_PIC, x.MusicID);
+                    }
+                }
+            });
+            // User may modify their music library without using Lunalipse.
+            // In this case, user may:
+            //      add or remove music only
+            //      remove N musics but also add another M musics (where N,M>=0)
 
+            // Extra: Extra music in the physical location.
+            List<string> Extra = files.Except(filesInCache).ToList();
+            if (Extra.Count != 0)
+            {
+                // Add extra musics to pool and catalogue from disk
+                ReadMusicFromDisk(Extra, indicator, catalogue);
+            }
+        }
+
+        private void ReadMusicFromDisk(List<string> pathes, IProgressIndicator indicator, Catalogue pathCatalogue)
+        {
+            indicator?.SetRange(0, pathes.Count);
+            int counter = 0;
+            foreach (string fi in pathes)
+            {
+                if (SupportFormat.AllQualified(Path.GetExtension(fi)))
+                {
+                    MusicEntity me = immdr.CreateEntity(fi);
+                    AllMusic.AddMusic(me);
+                    pathCatalogue.AddMusic(me);
+                    counter++;
+                    indicator?.ChangeCurrentVal(counter, me.Name);
+                }
+            }
+        }
+
+        [Obsolete]
         public List<string> AddToPool(string[] pathes)
         {
             List<string> uuids = new List<string>();
@@ -127,7 +201,6 @@ namespace Lunalipse.Core.PlayList
             return uuids;
         }
 
-        [AttrConsoleSupportable]
         public void CreateAlbumClasses()
         {
             if (AllMusic.MusicList.Count == 0) return;
@@ -164,7 +237,6 @@ namespace Lunalipse.Core.PlayList
             }
         }
 
-        [AttrConsoleSupportable]
         public void CreateArtistClasses()
         {
             //if (CPool.Exists(x => x.isArtistClassified == true)) return;
@@ -209,7 +281,6 @@ namespace Lunalipse.Core.PlayList
             AllMusic.DeleteMusic(entity);
         }
 
-        [AttrConsoleSupportable]
         public bool AddFileToPool(string MediaPath)
         {
             if (SupportFormat.AllQualified(Path.GetExtension(MediaPath)))
@@ -257,20 +328,20 @@ namespace Lunalipse.Core.PlayList
         [AttrConsoleSupportable]
         public void LoadAllMusics()
         {
-            if (cacheSystem.ComponentCacheExists(CacheType.MUSIC_CATALOGUE_CACHE))
-            {
-                foreach (Catalogue cat in cacheSystem.RestoreObjects<Catalogue>(
-                    x => x.markName == "CATALOGUE",
-                    CacheType.MUSIC_CATALOGUE_CACHE))
-                {
-                    CPool.AddCatalogue(cat);
-                }
-            }
-            else
-            {
-                //查看是否存在用户设置
-                //if(cacheSystem.ComponentCacheExists(CacheType.))
-            }
+            //if (cacheSystem.ComponentCacheExists(CacheType.MUSIC_CATALOGUE_CACHE))
+            //{
+            //    foreach (Catalogue cat in cacheSystem.RestoreObjects<Catalogue>(
+            //        x => x.markName == "CATALOGUE",
+            //        CacheType.MUSIC_CATALOGUE_CACHE))
+            //    {
+            //        CPool.AddCatalogue(cat);
+            //    }
+            //}
+            //else
+            //{
+            //    //查看是否存在用户设置
+            //    //if(cacheSystem.ComponentCacheExists(CacheType.))
+            //}
         }
 
         public void OnEnvironmentLoaded(ILunaConsole console)

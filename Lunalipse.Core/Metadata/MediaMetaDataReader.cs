@@ -7,12 +7,21 @@ using System.Windows.Media.Imaging;
 using Lunalipse.Common.Interfaces.IMetadata;
 using Lunalipse.Common.Interfaces.II18N;
 using System;
+using Lunalipse.Core.Cache;
+using Lunalipse.Common.Generic.Cache;
 
 namespace Lunalipse.Core.Metadata
 {
     public class MediaMetaDataReader : IMediaMetadataReader
     {
         const string LyricPathFormat = "{0}\\Lyrics\\{1}.lrc";
+        CacheHub cacheHub;
+
+        public MediaMetaDataReader()
+        {
+            cacheHub = CacheHub.Instance();
+        }
+
         public MusicEntity CreateEntity(string path)
         {
             MusicEntity me = new MusicEntity()
@@ -20,25 +29,30 @@ namespace Lunalipse.Core.Metadata
                 Extension = Path.GetExtension(path),
                 Name = Path.GetFileNameWithoutExtension(path),
                 Path = path,
+                MusicID = Utils.getRandomID()
             };
-            me.LyricPath = string.Format(LyricPathFormat, Path.GetDirectoryName(path), me.Name);
+            string lyricPath = string.Format(LyricPathFormat, Path.GetDirectoryName(path), me.Name);
             try
             {
                 TL.File media = TL.File.Create(path);
                 me.Album = media.Tag.Album;
                 me.Artist = media.Tag.Performers;
                 me.ID3Name = string.IsNullOrEmpty(media.Tag.Title) ? "" : media.Tag.Title;
-                me.Year = media.Tag.Year.ToString();
                 me.EstDuration = media.Properties.Duration;
-                me.HasLyricLocal = File.Exists(me.LyricPath);
+                me.LyricPath = File.Exists(lyricPath) ? lyricPath : null;
                 if (media.Tag.Pictures != null)
+                {
                     me.HasImage = media.Tag.Pictures.Length != 0;
+                    if(me.HasImage)
+                    {
+                        cacheHub.CacheObject(media.Tag.Pictures[0].Data.Data, CacheType.ALBUM_PIC, me.MusicID);
+                    }
+                }
                 media.Dispose();
             }
             catch (Exception)
             {
                 LunalipseLogger.GetLogger().Warning("Unable to load IDv3 tag, skipping...");
-                me.Year = "1900";
                 me.EstDuration = TimeSpan.Zero;
                 me.HasImage = false;
             }
@@ -60,20 +74,32 @@ namespace Lunalipse.Core.Metadata
             return TL.File.Create(path);
         }
 
-        public static BitmapSource GetPicture(string path)
+        public static void CacheCover(MusicEntity musicEntity)
         {
-            TL.File media = TL.File.Create(path);
-            BitmapSource bs = getPic(media.Tag);
-            media.Dispose();
-            return bs;
+            TL.File media = TL.File.Create(musicEntity.Path);
+            if (media.Tag.Pictures != null)
+            {
+                musicEntity.HasImage = media.Tag.Pictures.Length != 0;
+                if (musicEntity.HasImage)
+                {
+                    CacheHub.Instance().CacheObject(media.Tag.Pictures[0].Data.Data, CacheType.ALBUM_PIC, musicEntity.MusicID);
+                }
+            }
         }
 
-        private static BitmapSource getPic(TL.Tag tag)
+        public static BitmapSource GetPicture(MusicEntity entity)
         {
-            if (tag.Pictures == null || tag.Pictures.Length == 0) return null;
-            return Graphic.Byte2BitmapSource(tag.Pictures[0].Data.Data);
+            if (!entity.HasImage) return null;
+            return Graphic.Byte2BitmapSource(entity.AlbumPicture);
         }
 
-        
+        public static void RetrievePictureFromCache(MusicEntity entity)
+        {
+            if (!CacheHub.Instance().ComponentCacheExists(CacheType.ALBUM_PIC, entity.MusicID))
+            {
+                return;
+            }
+            entity.InitializePicture(CacheHub.Instance().RestoreObject<byte[]>(entity.MusicID, CacheType.ALBUM_PIC));
+        }
     }
 }

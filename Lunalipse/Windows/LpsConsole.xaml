@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:base1="clr-namespace:Lunalipse.Presentation.LpsWindow;assembly=Lunalipse.Presentation"
         xmlns:local="clr-namespace:Lunalipse.Windows"
-        mc:Ignorable="d" x:Name="LpsConsoleWindow" Loaded="LpsConsoleWindow_Loaded"
+        mc:Ignorable="d" x:Name="LpsConsoleWindow" Loaded="LpsConsoleWindow_Loaded" Unloaded="LpsConsoleWindow_Unloaded"
         Title="LpsConsole" Height="450" Width="700">
     <Grid>
         <ScrollViewer x:Name="contextScroll">
@@ -13,7 +13,8 @@
                 <ItemsControl ItemsSource="{Binding Outputs, Mode=OneWay}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Label Content="{Binding Path=.}" Foreground="{Binding ElementName=LpsConsoleWindow,Path=Foreground}" FontFamily="{StaticResource Consolas}"/>
+                            <TextBlock Text="{Binding Path=.}" Foreground="{Binding ElementName=LpsConsoleWindow,Path=Foreground}" FontFamily="{StaticResource Consolas}" Padding="3"
+                                       TextWrapping="WrapWithOverflow"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

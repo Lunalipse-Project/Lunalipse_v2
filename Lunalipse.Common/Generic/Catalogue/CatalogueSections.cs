@@ -12,6 +12,6 @@ namespace Lunalipse.Common.Generic.Catalogue
         ALBUM_COLLECTIONS,
         ARTIST_COLLECTIONS,
         USER_PLAYLISTS,
-        ALL_MUSIC
+        INTERNET_MUSIC
     }
 }
