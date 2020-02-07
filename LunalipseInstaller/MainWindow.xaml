@@ -47,7 +47,7 @@
                 </Viewbox>
                 <Label Grid.Column="2" FontSize="82" Margin="20 0 0 0" Content="Lunalipse" VerticalContentAlignment="Center" 
                    FontFamily="{StaticResource Equestria}" Foreground="White" Width="0" x:Name="Lunalipse"/>
-                <Label Grid.Column="3" Margin="-60 0 0 0" Content="Alpha 2.5.7" VerticalAlignment="Bottom" Foreground="White" x:Name="Version" Padding="0 0 0 15" Height="15"/>
+                <Label Grid.Column="3" Margin="-60 0 0 0" Content="Alpha 2.5.11" VerticalAlignment="Bottom" Foreground="White" x:Name="Version" Padding="0 0 0 15" Height="15"/>
             </Grid>
             <Frame x:Name="Operation" Height="0" Grid.Row="1" NavigationUIVisibility="Hidden"/>
         </Grid>

@@ -157,14 +157,21 @@ namespace Lunalipse.Core.PlayList
 
         public bool AddMusic(MusicEntity ME)
         {
-            foreach(MusicEntity me in MusicList)
-            {
-                if (me.Name.Equals(ME.Name)) return false;
-            }
+            if (MusicList.Exists(x => x.MusicID == ME.MusicID)) return false;
             MusicList.Add(ME);
             // '2' for entry added or removed.
             CatalogueChanges += 2;
             return true;
+        }
+
+        public bool AddMusicCollection(List<MusicEntity> MusicCollection)
+        {
+            bool allSuccess = true;
+            foreach(MusicEntity me in MusicCollection)
+            {
+                allSuccess = allSuccess && AddMusic(me);
+            }
+            return allSuccess;
         }
 
         public void SortByAlbum()
@@ -279,7 +286,10 @@ namespace Lunalipse.Core.PlayList
         {
             if (ImageIndex != -1)
             {
-                return MediaMetaDataReader.GetPicture(MusicList[ImageIndex]);
+                MediaMetaDataReader.RetrievePictureFromCache(MusicList[ImageIndex]);
+                BitmapSource btmap = MediaMetaDataReader.GetPicture(MusicList[ImageIndex]);
+                MusicList[ImageIndex].DisposePicture();
+                return btmap;
             }
             List<MusicEntity> PictureHolder = MusicList.FindAll(x => x.HasImage);
             if (PictureHolder.Count == 0) return null;
@@ -313,6 +323,11 @@ namespace Lunalipse.Core.PlayList
         public MusicEntity getCurrent()
         {
             return MusicList[Currently];
+        }
+
+        public bool IsLocationClassification()
+        {
+            return isLocationClassified;
         }
     }
 }

@@ -8,6 +8,11 @@ namespace Lunalipse.Common.Interfaces.IWebMusic
 {
     public interface IWebMusicDetail
     {
-        
+        string getID();
+        string getMusicName();
+        string getAlbumName();
+        string getAlbumPicture();
+        string getArtistName();
+        double getTotalSeconds();
     }
 }

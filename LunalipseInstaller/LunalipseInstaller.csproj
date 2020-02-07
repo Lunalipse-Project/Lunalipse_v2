@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>LunalipseInstaller</RootNamespace>
     <AssemblyName>LunalipseInstaller</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -44,10 +44,28 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\x86</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\x64</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -202,8 +220,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>if not exist "$(TargetDir)LunalipseEmbedder.exe" (copy "$(SolutionDir)LunalipseEmbedder\$(OutDir)LunalipseEmbedder.exe" "$(TargetDir)LunalipseEmbedder.exe")
-
-::"$(TargetDir)LunalipseEmbedder.exe" -dir "$(SolutionDir)$(SolutionName)\$(OutDir)" -mode "seal|compression|slience" --filters ".dll|.exe"  -mg AA24 -sign "Lunalipse Install Package" -o "$(ProjectDir)InstallPack\package_Lunalipse.clrss"  --excludes "policy.2.0.taglib-sharp.dll"</PreBuildEvent>
+    <PreBuildEvent>"$(SolutionDir)LunalipseEmbedder.exe" -dir "$(SolutionDir)\Lunalipse\bin\Release" -mode "seal|compression|slience" --filters ".dll|.exe"  -mg AA24 -sign "Lunalipse Install Package" -o "E:\Lunalipse\LunalipseInstaller\InstallPack\package_Lunalipse.clrss"  --excludes "policy.2.0.taglib-sharp.dll,LunalipseEmbedder.exe"</PreBuildEvent>
   </PropertyGroup>
 </Project>

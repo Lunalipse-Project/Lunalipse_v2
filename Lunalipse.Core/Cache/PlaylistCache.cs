@@ -57,7 +57,7 @@ namespace Lunalipse.Core.Cache
         public List<CatalogueMetadata> RestoreAllPlaylistMetaData()
         {
             List<CatalogueMetadata> catalogues = new List<CatalogueMetadata>();
-            foreach(string path in CacheUtils.FindAllCaches(CacheDir, CacheType.PlayList))
+            foreach(string path in CacheUtils.ListAllCaches(CacheDir, CacheType.PlayList))
             {
                 CacheFileInfo cfi = CacheUtils.ConvertToWWU(Path.GetFileNameWithoutExtension(path));
                 string json = Encoding.UTF8.GetString(Compression.Decompress(path, false));

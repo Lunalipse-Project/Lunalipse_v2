@@ -29,12 +29,16 @@ namespace Lunalipse.Presentation.LpsComponent
         private ICatalogue DisplayedCatalogue;
         private ICatalogue CatalogueInUse;
         private ObservableCollection<MusicEntity> Items = new ObservableCollection<MusicEntity>();
+        private Dictionary<int,MusicEntity> SelectedEntityIndex = new Dictionary<int, MusicEntity>();
         private int __index = -1;
         private Point startPoint;
+        private MusicSelectionListItem lastClickedSender;
 
         private string deleteTitle, deleteContent;
 
-        public event OnItemSelected<MusicEntity> ItemSelectionChanged;
+        public event Action OnBottomTouched;
+        public event Action<MusicEntity> OnEntrySideEffectInvoked;
+        public event Action<MusicEntity,object> OnMainEffectInvoked;
         public event Action<GeneratorStatus> OnListStatusChanged;
 
         public static readonly DependencyProperty ITEM_HOVER =
@@ -47,6 +51,12 @@ namespace Lunalipse.Presentation.LpsComponent
                                         typeof(Brush),
                                         typeof(MusicSelectionList),
                                         new PropertyMetadata(Application.Current.FindResource("ItemUnhoverColorDefault")));
+        public static readonly DependencyProperty IsNotWebMusicShowcase =
+            DependencyProperty.Register("MUSICLIST_IsNotWebMusicShowcase",
+                                        typeof(bool),
+                                        typeof(MusicSelectionList),
+                                        new PropertyMetadata(true));
+        DispatcherTimer timer = new DispatcherTimer();
 
         public Brush ItemHovered
         {
@@ -59,7 +69,21 @@ namespace Lunalipse.Presentation.LpsComponent
             set => SetValue(ITEM_UNHOVER, value);
         }
 
+        public bool isNotWebMusicShowcase
+        {
+            get => (bool)GetValue(IsNotWebMusicShowcase);
+            set => SetValue(IsNotWebMusicShowcase, value);
+        }
 
+        /// <summary>
+        /// Indicate the default behavior has filpped.
+        /// In default, single clicked is side while double clicked is main effect.
+        /// </summary>
+        public bool isBehaviorFipped
+        {
+            get;
+            set;
+        } = false;
 
         public MusicSelectionList()
         {
@@ -71,27 +95,57 @@ namespace Lunalipse.Presentation.LpsComponent
                 ITEMS.UpdateLayout();
             };
             //DragDrop.DoDragDrop
-            Delegation.RemovingItem += dctx =>
-            {
-                if (dctx is MusicEntity)
-                {
-                    MusicEntity removed = dctx as MusicEntity;
-                    EventBus.Instance.Multicast(EventBusTypes.ON_ACTION_REQ_DELETE, dctx, DisplayedCatalogue.Uid());
-                    Items.Remove(removed);
-                    if (IsMotherCatalogue)
-                    {
-                        // TODO 永久从母分类中删除歌曲（本地文件永久删除），包括：提醒
-                        CommonDialog commonDialog = new CommonDialog(deleteTitle, deleteContent.FormateEx(removed.MusicName), MessageBoxButton.YesNo);
-                        if(commonDialog.ShowDialog().Value)
-                        {
-                            //File.Delete(removed.Path);
-                        }
-                    }
-                }
-            };
+            Delegation.RemovingItem = RemoveItem;
             ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
             ThemeManagerBase_OnThemeApplying(ThemeManagerBase.AcquireSelectedTheme());
             ITEMS.ItemContainerGenerator.StatusChanged += (a, b) => OnListStatusChanged?.Invoke(ITEMS.ItemContainerGenerator.Status);
+            timer.Interval = TimeSpan.FromMilliseconds(250);
+            timer.Tick += Timer_Tick;
+        }
+
+        private void RemoveItem(object dctx)
+        {
+            if (dctx is MusicEntity)
+            {
+                DeselectAll();
+                MusicEntity removed = dctx as MusicEntity;
+                if (IsRootCatalogue)
+                {
+                    CommonDialog commonDialog = new CommonDialog(
+                        deleteTitle, 
+                        deleteContent.FormateEx(removed.MusicName, removed.Path), 
+                        MessageBoxButton.YesNo);
+                    if (commonDialog.ShowDialog().Value)
+                    {
+                        File.Delete(removed.Path);
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                EventBus.Instance.Multicast(EventBusTypes.ON_ACTION_REQ_DELETE, dctx, DisplayedCatalogue.Uid());
+                Items.Remove(removed);
+            }
+        }
+
+
+        /// <summary>
+        /// Single Clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            timer.Stop();
+            if(isBehaviorFipped)
+            {
+                MainEffect();
+            }
+            else
+            {
+                SideEffect();
+            }
         }
 
         private void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
@@ -102,7 +156,7 @@ namespace Lunalipse.Presentation.LpsComponent
         }
 
         [Obsolete]
-        private void Add(MusicEntity mie) => Items.Add(mie);
+        public void Add(MusicEntity mie) => Items.Add(mie);
         public void Clear()
         {
             TipMessage.Visibility = Visibility.Hidden;
@@ -120,79 +174,63 @@ namespace Lunalipse.Presentation.LpsComponent
                 {
                     Items.Clear();
                     DisplayedCatalogue = value;
+                    IsRootCatalogue = DisplayedCatalogue.IsLocationClassification();
                     if (CatalogueInUse == null) CatalogueInUse = value;
                     foreach (MusicEntity me in DisplayedCatalogue.GetAll())
                         Items.Add(me);
-                    CheckElemets();
+                    UpdateList();
                 }
             }
         }
 
-        public bool IsMotherCatalogue
+        /// <summary>
+        /// Indicate whether current loaded catalogue is root.
+        /// Meaning that other catalogue is derived from that such catalogue.
+        /// </summary>
+        public bool IsRootCatalogue
         {
             get;
             set;
         }
 
         public MusicEntity SelectedItem { get; private set; }
+        public List<MusicEntity> AllSelectedItems
+        {
+            get
+            {
+                return SelectedEntityIndex.Values.ToList();
+            }
+        }
 
+        // Change the visual effect of ListBox when selected something programatically
         public int SelectedIndex
         {
             get => __index;
             set
             {
-                if (__index == -1)
+                MusicSelectionListItem Temp;
+                if(__index != -1)   //If index is not -1, means we have already selected something before
                 {
+                    Temp = GetContainer(__index);
+                    Temp.Unchoose();
+                }
+                else if(value==-1) // value is -1, means unselect all
+                {
+                    __index = -1;
                     for (int i = 0; i < ITEMS.Items.Count; i++)
                     {
                         MusicSelectionListItem Container = GetContainer(i);
                         if (Container.Tag as Boolean? != false)
                         {
-                            Container.RemoveChosen();
+                            Container.Unchoose();
                             break;
                         }
                     }
+                    return;
                 }
-                else
-                {
-                    MusicSelectionListItem Temp = GetContainer(__index);
-                    Temp.RemoveChosen();
-                    Temp = GetContainer(__index = value);
-                    Temp.SetChosen();
-                    ItemSelectionChanged(Temp.DataContext as MusicEntity);
-                }
+                Temp = GetContainer(__index = value);
+                Temp.Choose();
             }
-        }
-
-        private void ItemConatiner_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (DisplayedCatalogue.Uid() != CatalogueInUse.Uid())
-            {
-                CatalogueInUse = DisplayedCatalogue;
-                __index = -1;
-            }
-
-            MusicSelectionListItem Item = (MusicSelectionListItem)sender;
-            MusicSelectionListItem Temp;
-            MusicEntity selected = Item.DataContext as MusicEntity;
-            if (__index != -1)
-            {
-                Temp = GetContainer(__index);
-                Temp.RemoveChosen();
-            }
-            if (selected != null)
-            {
-                __index = Items.IndexOf(selected);
-                Item.SetChosen();
-                ItemSelectionChanged(SelectedItem = selected);
-            }
-        }
-
-        private MusicSelectionListItem GetContainer(int index)
-        {
-            var container = (ITEMS.ItemContainerGenerator
-                        .ContainerFromIndex(index) as FrameworkElement);
-            return ITEMS.ItemTemplate.FindName("ItemConatiner",container) as MusicSelectionListItem;
         }
 
         public void Translate(II18NConvertor i8c)
@@ -220,6 +258,19 @@ namespace Lunalipse.Presentation.LpsComponent
             deleteContent = i8c.ConvertTo(SupportedPages.CORE_FUNC, "CORE_CATALOGUE_DELETE_PREM_CONTENT");
         }
 
+        public void DeselectAll()
+        {
+            foreach (int i in SelectedEntityIndex.Keys)
+            {
+                MusicSelectionListItem listItem = GetContainer(i);
+                if (listItem != null)
+                {
+                    listItem.Unchoose();
+                }
+            }
+            SelectedEntityIndex.Clear();
+        }
+
         public void StartWait()
         {
             Loading.Visibility = Visibility.Visible;
@@ -235,7 +286,7 @@ namespace Lunalipse.Presentation.LpsComponent
             return Dispatcher;
         }
 
-        private void CheckElemets()
+        public void UpdateList()
         {
             if (Items.Count == 0)
             {
@@ -269,6 +320,8 @@ namespace Lunalipse.Presentation.LpsComponent
             startPoint = e.GetPosition(null);
         }
 
+        // It seems useless but it looks like that is related to a feature that I planned years ago.
+        // I am not sure what happen if I delete this whole function.
         bool dragStart = false;
         private void ITEMS_MouseMove(object sender, MouseEventArgs e)
         {
@@ -300,6 +353,90 @@ namespace Lunalipse.Presentation.LpsComponent
             //}
         }
 
+        
+        private void ItemConatiner_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            lastClickedSender = sender as MusicSelectionListItem;
+            timer.Start();
+            if (e.ClickCount == 2)
+            {
+                if (!isBehaviorFipped)
+                {
+                    MainEffect();
+                }
+                else
+                {
+                    SideEffect();
+                }
+            }
+        }
+
+        private void MainEffect()
+        {
+            timer.Stop();
+            if (CatalogueInUse != null && DisplayedCatalogue != null)
+            {
+                if (DisplayedCatalogue.Uid() != CatalogueInUse.Uid())
+                {
+                    CatalogueInUse = DisplayedCatalogue;
+                    __index = -1;
+                }
+            }
+
+            MusicSelectionListItem Temp;
+            MusicEntity selected = lastClickedSender.DataContext as MusicEntity;
+            if (__index != -1)
+            {
+                Temp = GetContainer(__index);
+                Temp.Unchoose();
+            }
+            if (selected != null)
+            {
+                __index = Items.IndexOf(selected);
+                DeselectAll();
+                lastClickedSender.Choose();
+                OnMainEffectInvoked?.Invoke(SelectedItem = selected, null);
+            }
+            lastClickedSender = null;
+        }
+
+        private void SideEffect()
+        {
+            if (CatalogueInUse != null && DisplayedCatalogue != null)
+            {
+                if (DisplayedCatalogue.Uid() != CatalogueInUse.Uid())
+                {
+                    CatalogueInUse = DisplayedCatalogue;
+                    __index = -1;
+                }
+            }
+            MusicEntity selected = lastClickedSender.DataContext as MusicEntity;
+            if (selected != null)
+            {
+                __index = Items.IndexOf(selected);
+                if(!SelectedEntityIndex.ContainsKey(__index))
+                {
+                    SelectedEntityIndex.Add(__index,selected);
+                    lastClickedSender.Choose();
+                }
+                else
+                {
+                    SelectedEntityIndex.Remove(__index);
+                    lastClickedSender.Unchoose();
+                }
+                OnEntrySideEffectInvoked?.Invoke(selected);
+            }
+            lastClickedSender = null;
+        }
+
+        private void ScrollV_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (ScrollV.VerticalOffset == ScrollV.ScrollableHeight && ScrollV.VerticalOffset > 0)
+            {
+                OnBottomTouched?.Invoke();
+            }
+        }
+
         private static T FindAncestor<T>(DependencyObject current)  where T : DependencyObject
         {
             do
@@ -312,6 +449,13 @@ namespace Lunalipse.Presentation.LpsComponent
             }
             while (current != null);
             return null;
+        }
+
+        private MusicSelectionListItem GetContainer(int index)
+        {
+            var container = (ITEMS.ItemContainerGenerator
+                        .ContainerFromIndex(index) as FrameworkElement);
+            return ITEMS.ItemTemplate.FindName("ItemConatiner", container) as MusicSelectionListItem;
         }
     }
 }

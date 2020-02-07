@@ -73,6 +73,15 @@ namespace Lunalipse.Utilities
             return false;
         }
 
+        public static string LimitLength(this string str, int max_length)
+        {
+            if (str.Length > max_length)
+            {
+                return str.Substring(0, max_length) + "...";
+            }
+            return str;
+        }
+
         public static T Possible<T>(this T[] a, Func<T, bool> condition)
         {
             foreach (T t in a)

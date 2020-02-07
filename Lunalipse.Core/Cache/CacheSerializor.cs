@@ -27,23 +27,36 @@ namespace Lunalipse.Core.Cache
         public byte[] CacheToBin<T>(T instance, WinterWrapUp wwu)
         {
             byte[] content = UniversalObjectSerializor<T>.Serialize(instance);
-            wwu.dataSize = content.Length;
-            byte[] header = wwu.ToBytes();
+            return CachePureByteArray(content, wwu);
+        }
+
+        public byte[] CachePureByteArray(byte[] content, WinterWrapUp winterWrapUp)
+        {
+            byte[] header = winterWrapUp.ToBytes();
             byte[] file = new byte[content.Length + header.Length];
             Array.Copy(header, 0, file, 0, header.Length);
             Array.Copy(content, 0, file, header.Length, content.Length);
             return file;
         }
 
-        public T BinRestoreTo<T>(byte[] bytes)
+        public T BinRestoreTo<T>(byte[] bytes, out WinterWrapUp winterWrapUp)
         {
-            int headerSize = Marshal.SizeOf(typeof(WinterWrapUp));
-            //Since we do not need any information in header, so just skip it
-            byte[] content = new byte[bytes.Length - headerSize];
-            Array.Copy(bytes, headerSize, content, 0, content.Length);
-            return UniversalObjectSerializor<T>.Deserialize(content);
+            return UniversalObjectSerializor<T>.Deserialize(GetByteArrayContent(bytes, out winterWrapUp));
         }
 
+        public byte[] GetByteArrayContent(byte[] raw, out WinterWrapUp winterWrapUp)
+        {
+            int headerSize = Marshal.SizeOf(typeof(WinterWrapUp));
+            byte[] wwu = new byte[headerSize];
+            byte[] content = new byte[raw.Length - headerSize];
+
+            // Retrive WinterWrapUp header
+            Array.Copy(raw, 0, wwu, 0, headerSize);
+            winterWrapUp = wwu.ToStruct<WinterWrapUp>();
+
+            Array.Copy(raw, headerSize, content, 0, content.Length);
+            return content;
+        }
 
     }
 }

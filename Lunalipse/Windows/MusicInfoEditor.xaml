@@ -76,6 +76,26 @@
                                 Tag="CORE_MEEDITOR_CHANGELYRIC" Content="c" FontSize="{StaticResource FontNormal}" 
                                 HorizontalAlignment="Center" />
             </Grid>
+            <Grid Grid.Row="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height=".5*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height=".5*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="1" x:Name="DownloadRegion" Visibility="Visible">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <LpsComponent:LpsDropDown Grid.Column="1" Width="100" x:Name="QualityChoose" Foreground="{Binding ElementName=InfoEditor,Path=Foreground}"/>
+                    <Button Grid.Column="2" Style="{StaticResource GenericButton}" Name="Download" VerticalAlignment="Center" 
+                                Foreground="{Binding Foreground,ElementName=InfoEditor}"
+                                Background="#00FFFFFF" Width="120" Padding="0,5,0,5" Margin="20 0 0 0"
+                                Tag="CORE_MEEDITOR_DOWNLOAD" Content="c" FontSize="{StaticResource FontNormal}" 
+                                HorizontalAlignment="Center" Click="Download_Click"/>
+                </Grid>
+            </Grid>
         </Grid>
     </Grid>
 </base1:LunalipseDialogue>

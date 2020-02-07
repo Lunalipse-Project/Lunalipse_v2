@@ -17,14 +17,10 @@ using Lunalipse.Common.Interfaces.ILyric;
 using Lunalipse.Common.Interfaces.IConsole;
 using Lunalipse.Core.Console;
 using System.Windows;
-using System.IO;
 using Lunalipse.Core.Visualization;
-using System.Windows.Shapes;
 using Lunalipse.Common.Interfaces.IVisualization;
 using CSCore.DSP;
-
-
-
+using System.IO;
 
 namespace Lunalipse.Core.LpsAudio
 {
@@ -155,6 +151,13 @@ namespace Lunalipse.Core.LpsAudio
             initializeSoundSource(music);
         }
 
+        public void Load(MusicEntity music, byte[] audio_data)
+        {
+            bool LyrciPerpared = lEnum.AcquireLyric(music);
+            AudioDelegations.LyricLoadStatus?.Invoke(LyrciPerpared);
+            initializeSoundSource(music, audio_data);
+        }
+
         [AttrConsoleSupportable]
         public void MoveTo(double secs)
         {
@@ -180,9 +183,10 @@ namespace Lunalipse.Core.LpsAudio
             Counter = new Thread(new ThreadStart(CountTimerDelegate));
             SpectrumUpdater = new Thread(new ThreadStart(FFTSpectrumUpdateDelegate));
             isSoundThreadFinished = false;
-            SpectrumUpdater.Start();
-            Counter?.Start();
             wasapiOut.Play();
+            Counter?.Start();
+            SpectrumUpdater.Start();
+
             AudioDelegations.StatuesChanged?.Invoke(isPlaying);
         }
 
@@ -199,8 +203,8 @@ namespace Lunalipse.Core.LpsAudio
         {
             isPlaying = false;
             isLoaded = false;
-            wasapiOut.Stop();
             Counter?.Abort();
+            wasapiOut.Stop();
         }
 
         
@@ -223,23 +227,32 @@ namespace Lunalipse.Core.LpsAudio
 
 
         // Private Methods
-        private IWaveSource GetCodec(string type, string file)
+        private IWaveSource GetCodec(string type, string file, byte[] audioData = null)
         {
-            if (string.IsNullOrEmpty(file)) return null;
+            Stream audioStream = null;
+            if (audioData != null)
+            {
+                audioStream = new MemoryStream(audioData);
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(file)) return null;
+                audioStream = File.OpenRead(file);
+            }
             switch (type)
             {
                 case SupportFormat.MP3:
-                    return new DmoMp3Decoder(file);
+                    return new DmoMp3Decoder(audioStream);
                 case SupportFormat.FLAC:
-                    return new FlacFile(file);
+                    return new FlacFile(audioStream);
                 case SupportFormat.WAV:
-                    return new WaveFileReader(file);
+                    return new WaveFileReader(audioStream);
                 case SupportFormat.ACC:
-                    return new AacDecoder(file);
+                    return new AacDecoder(audioStream);
                 case SupportFormat.AIFF:
-                    return new AiffReader(file);
+                    return new AiffReader(audioStream);
                 case SupportFormat.OGG:
-                    return new NVorbisOggSource(file).ToWaveSource();
+                    return new NVorbisOggSource(audioStream).ToWaveSource();
                 default:
                     return null;
             }
@@ -250,7 +263,7 @@ namespace Lunalipse.Core.LpsAudio
             switch (type)
             {
                 case SupportFormat.MP3:
-                    return new Mp3WebStream(Address,true);
+                    return new Mp3WebStream(Address,false);
                 default:
                     return null;
             }
@@ -267,26 +280,18 @@ namespace Lunalipse.Core.LpsAudio
             return new DirectSoundOut(latency);
         }
 
-        private void initializeSoundSource(MusicEntity music)
+        private void initializeSoundSource(MusicEntity music, byte[] audioData = null)
         {
             iws?.Dispose();
-            if(!music.IsInternetLocation)
+            if(music.IsInternetLocation)
             {
-                iws = GetCodec(music.Extension, music.Path);
-                prepareSoundOut(music);
+                iws = GetCodec(music.Extension, music.Path, audioData);
             }
             else
             {
-                iws = GetCodecWebStream(music.Extension, music.Path);
-                if (iws == null)
-                {
-                    throw new Exception("Not supported format for the playback of this streamed audio.");
-                }
-                ((Mp3WebStream)iws).ConnectionEstablished += (sender, conn_establish) =>
-                {
-                    prepareSoundOut(music);
-                };
+                iws = GetCodec(music.Extension, music.Path);
             }
+            prepareSoundOut(music);
             lfw.FFTBufferSize = vManager.FftSize;
         }
 
@@ -312,10 +317,11 @@ namespace Lunalipse.Core.LpsAudio
             double totalMS = iws.GetLength().TotalMilliseconds;
             TimeSpan position;
             LyricToken p_lt = null;
-            while ((position = iws.GetPosition()).TotalMilliseconds < totalMS)
+            while (wasapiOut.PlaybackState != PlaybackState.Stopped)
             {
                 if (isPlaying)
                 {
+                    position = iws.GetPosition();
                     AudioDelegations.PostionChanged?.Invoke(position);
                     LyricToken lt = null;
                     if((lt = lEnum.Enumerating(position,lt))!= null)

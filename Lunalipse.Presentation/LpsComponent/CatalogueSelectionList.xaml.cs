@@ -112,6 +112,11 @@ namespace Lunalipse.Presentation.LpsComponent
                     csli = ArtistCollection;
                     TAG = CatalogueSections.ARTIST_COLLECTIONS;
                 }
+                else if (value == -5)
+                {
+                    csli = InternetMusic;
+                    TAG = CatalogueSections.INTERNET_MUSIC;
+                }
                 else
                 {
                     return;
@@ -137,7 +142,7 @@ namespace Lunalipse.Presentation.LpsComponent
 
             if (csli != null)
             {
-                if (__index != -5)
+                if (__index != -6)
                 {
                     // For Item in listbox
                     if (__index == -1)

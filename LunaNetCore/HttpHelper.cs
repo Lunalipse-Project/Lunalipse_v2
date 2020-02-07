@@ -22,6 +22,7 @@ namespace LunaNetCore
             HttpWebRequest request = null;
             request = WebRequest.Create(rBody.URL) as HttpWebRequest;
             request.Method = "GET";
+            request.UseDefaultCredentials = true;
             request.AutomaticDecompression = rBody.DecompressionMethods;
             request.ContentType = rBody.ContentType;
             request.UserAgent = USER_AGENT;
@@ -49,6 +50,7 @@ namespace LunaNetCore
         {
             HttpWebRequest request = null;
             request = WebRequest.Create(rBody.URL) as HttpWebRequest;
+            request.UseDefaultCredentials = true;
             request.Method = "POST";
             request.AutomaticDecompression = rBody.DecompressionMethods;
             request.ContentType = rBody.ContentType;
@@ -56,7 +58,7 @@ namespace LunaNetCore
             request.Accept = rBody.Accept;
             request.Referer = rBody.Referer;
             //设置代理UserAgent和超时
-            //request.UserAgent = userAgent;
+            request.UserAgent = USER_AGENT;
             request.Timeout = timeout;
             if (proxy != null)
             {

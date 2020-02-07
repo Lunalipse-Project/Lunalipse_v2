@@ -71,16 +71,16 @@ namespace Lunalipse.Presentation.LpsComponent
             Foreground = obj.Foreground;
             MarkColor = obj.Foreground;
             if (SelectedMark.Background != null)
-                SetChosen();
+                Choose();
         }
 
-        public void SetChosen()
+        public void Choose()
         {
             Tag = true;
             SelectedMark.Background = MarkColor;
         }
 
-        public void RemoveChosen()
+        public void Unchoose()
         {
             Tag = false;
             SelectedMark.Background = null;

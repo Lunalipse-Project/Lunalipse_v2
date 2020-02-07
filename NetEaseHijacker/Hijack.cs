@@ -1,21 +1,23 @@
-﻿using LunaNetCore.Bodies;
+﻿using Lunalipse.Common.Interfaces.IWebMusic;
+using LunaNetCore.Bodies;
 using NetEaseHijacker.Types;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace NetEaseHijacker
 {
-    public class Hijack
+    public class Hijack : MarshalByRefObject
     {
-        Raw r;
+        Raw raw;
         public Hijack()
         {
-            r = new Raw();
+            raw = new Raw();
         }
 
         /// <summary>
@@ -24,7 +26,8 @@ namespace NetEaseHijacker
         /// <param name="e">接受动作的方法</param>
         public void E_AllComplete(Action e)
         {
-            r.Event_AllComplete(() => e?.Invoke());
+            raw.NetworkCore.OnAllQueueRequestCompletely += 
+                new LunaNetCore.LNetC.AllQueueRequestCompletely(e);
         }
 
         /// <summary>
@@ -33,19 +36,18 @@ namespace NetEaseHijacker
         /// <param name="e">接受动作的方法</param>
         public void E_Requesting(Action<string> e)
         {
-            r.Event_Requesting((x) => e?.Invoke(x));
+            raw.NetworkCore.OnHttpRequesting += 
+                new LunaNetCore.LNetC.HttpRequesting(e);
         }
 
         /// <summary>
         /// 绑定动作：单个请求得到相应
         /// </summary>
         /// <param name="e">接受动作的方法</param>
-        public void E_Responded(Action<string, string> e)
+        public void E_Responded(Action<string,string> e)
         {
-            r.Event_Responded((senderID, result) =>
-            {
-                e?.Invoke(senderID, result.ResultData);
-            });
+            raw.NetworkCore.OnHttpResponded +=
+                new LunaNetCore.LNetC.HttpResponded((x, result) => e?.Invoke(x, result == null ? string.Empty : result.ResultData));
         }
 
         /// <summary>
@@ -54,7 +56,25 @@ namespace NetEaseHijacker
         /// <param name="e">接受动作的方法</param>
         public void E_TimeOut(Action e)
         {
-            r.Event_TimeOut(() => e?.Invoke());
+            raw.NetworkCore.OnHttpTimeOut += 
+                new LunaNetCore.LNetC.HttpTimeOut(e);
+        }
+
+        /// <summary>
+        /// 绑定动作：请求出错
+        /// </summary>
+        /// <param name="e">接受动作的方法</param>
+        public void E_ErrorOccured(Action<Exception> e)
+        {
+            raw.NetworkCore.OnErrorOccurs += new LunaNetCore.LNetC.ErrorOccurs(e);
+        }
+
+        public void ClearAllEventSubscribers() => raw.NetworkCore.ClearAllEventSubscribers();
+
+        public IWebProxy LNetWebProxy
+        {
+            get => raw.NetworkCore.LunaNetProxy;
+            set => raw.NetworkCore.LunaNetProxy = value;
         }
 
         /// <summary>
@@ -66,8 +86,8 @@ namespace NetEaseHijacker
         /// <returns></returns>
         public async Task SearchSong(string keyw, int limit = 30, int offset = 0)
         {
-            await r.Get(
-                        SearchType.SONGS, 
+            await raw.Get(
+                        SearchType.QUERY_SONGS_LIST, 
                         keyw, 
                         limit.ToString(), 
                         (offset == 0 ? 
@@ -85,7 +105,7 @@ namespace NetEaseHijacker
         /// <returns></returns>
         public async Task SongDetail(string id)
         {
-            await r.Get(SearchType.DETAIL, id);
+            await raw.Get(SearchType.QUERY_SONG_DETAIL, id);
         }
 
         /// <summary>
@@ -96,7 +116,7 @@ namespace NetEaseHijacker
         /// <returns></returns>
         public async Task DownloadURL(string id, string bitRate)
         {
-            await r.Get(SearchType.DOWNLOAD, id, bitRate);
+            await raw.Get(SearchType.QUERY_DOWNLOAD_URL, id, bitRate);
         }
 
         /// <summary>
@@ -106,7 +126,7 @@ namespace NetEaseHijacker
         /// <returns></returns>
         public async Task Lyric(string id)
         {
-            await r.Get(SearchType.LYRIC, id);
+            await raw.Get(SearchType.QUERY_LYRIC, id);
         }
 
         /// <summary>
@@ -116,7 +136,8 @@ namespace NetEaseHijacker
         /// <returns></returns>
         public MetadataNE ParseSongList(string result)
         {
-            return JsonConvert.DeserializeObject<MetadataNE>(result);
+            JObject jObject = JObject.Parse(result);
+            return JsonConvert.DeserializeObject<MetadataNE>(jObject["result"].ToString());
         }
 
         /// <summary>
@@ -131,8 +152,9 @@ namespace NetEaseHijacker
             {
                 return jo["lrc"]["lyric"] != null ? jo["lrc"]["lyric"].ToString() : null;
             }
-            catch (NullReferenceException)
+            catch (NullReferenceException nre)
             {
+
                 return null;
             }
         }
@@ -142,16 +164,16 @@ namespace NetEaseHijacker
         /// </summary>
         /// <param name="result">网易云返回的原始数据</param>
         /// <returns></returns>
-        public string ParseDownloadURL(string result)
+        public Tuple<string,string> ParseDownloadURL(string result)
         {
             try
             {
                 JToken jt = JObject.Parse(result)["data"][0];
-                return jt["url"] != null ? jt["url"].ToString() : "";
+                return new Tuple<string, string>(jt["url"] != null ? jt["url"].ToString() : "",jt["type"].ToString());
             }
             catch
             {
-                return "";
+                return null;
             }
         }
     }

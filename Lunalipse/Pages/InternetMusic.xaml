@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:presentation="clr-namespace:Lunalipse.Presentation.LpsComponent;assembly=Lunalipse.Presentation"
       xmlns:local="clr-namespace:Lunalipse.Pages"
       mc:Ignorable="d" x:Name="InternetMusicSearch"
       d:DesignHeight="450" d:DesignWidth="800" Loaded="InternetMusicSearch_Loaded" Unloaded="InternetMusicSearch_Unloaded"
@@ -51,7 +52,7 @@
                         </ControlTemplate>
                     </TextBox.Template>
                 </TextBox>
-                <Button Grid.Column="1" x:Name="SearchIt" Style="{StaticResource GenericButton}" Margin="0 5 10 5"
+                <Button Grid.Column="1" x:Name="SearchIt" Style="{StaticResource GenericButton}" Margin="0 5 10 5" Click="SearchIt_Click"
                         FontSize="{StaticResource FontMedium}" Tag="CORE_CLOUD_LIB_SERACH" Foreground="{Binding ElementName=InternetMusicSearch,Path=Foreground}">
                     <Button.Template>
                         <ControlTemplate TargetType="{x:Type Button}">
@@ -67,10 +68,15 @@
                 </Button>
             </Grid>
         </Grid>
-
+        <!-- Loading Spinner -->
+        <Grid Grid.Row="2">
+            <presentation:LpsSpinner Width="100" Height="100" Foreground="{Binding ElementName=InternetMusicSearch,Path=Foreground}"
+                                     Margin="0 30 0 5" x:Name="Loading"/>
+        </Grid>
         <!-- Display result -->
         <Grid Grid.Row="2">
-            
+            <presentation:MusicSelectionList x:Name="musicListBox" Height="340" Margin="0 30 0 5" isNotWebMusicShowcase="False">
+            </presentation:MusicSelectionList>
         </Grid>
     </Grid>
 </Page>

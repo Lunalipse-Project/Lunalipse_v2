@@ -5,7 +5,7 @@
     <AssemblyOriginatorKeyFile>Jint.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <LangVersion>latest</LangVersion>
-    <AssemblyName>Lunalipse.Jint</AssemblyName>
+    <AssemblyName>Lunalipse.LScriptEngine</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Esprima" Version="1.0.1251" />

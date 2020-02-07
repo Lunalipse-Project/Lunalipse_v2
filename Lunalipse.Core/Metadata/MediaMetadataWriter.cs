@@ -43,8 +43,9 @@ namespace Lunalipse.Core.Metadata
 
         public bool SetPicture(int index, byte[] picture)
         {
-            if (index > mfile.Tag.Pictures.Length - 1) return false;
-            mfile.Tag.Pictures[index] = new TL.Picture(new TL.ByteVector(picture));
+            TL.Picture[] pictures = new TL.Picture[index + 1];
+            pictures[index] = new TL.Picture(new TL.ByteVector(picture));
+            mfile.Tag.Pictures = pictures;
             return true;
         }
 

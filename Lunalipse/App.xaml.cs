@@ -7,9 +7,11 @@ using Lunalipse.Core.GlobalSetting;
 using Lunalipse.Core.I18N;
 using Lunalipse.Core.PlayList;
 using Lunalipse.Core.Theme;
+using Lunalipse.Core.WebMusic;
 using Lunalipse.I18N;
 using Lunalipse.Resource.Generic.Types;
 using Lunalipse.Utilities;
+using NetEaseHijacker;
 using System;
 using System.IO;
 using System.Reflection;
@@ -27,6 +29,7 @@ namespace Lunalipse
         CacheHub cacheSystem;
         CataloguePool cp;
         ResourcesHandler resourcesHandler;
+        SearchEngineManager engineManager;
         string currentFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
         LunalipseLogger Log;
 
@@ -40,7 +43,10 @@ namespace Lunalipse
             I18T = new I18NTokenizer();
             cp = CataloguePool.Instance;
             cacheSystem = CacheHub.Instance(currentFolder);
+            engineManager = SearchEngineManager.Instance;
             resourcesHandler = new ResourcesHandler(Assembly.GetEntryAssembly().GetName().Version);
+
+            engineManager.ApplicationBaseDir = currentFolder;
 
             Log.Info($"Lunalipse Music Player (Version: {VersionHelper.Instance.getFullVersion()})");
             Log.Info("Logger started");
@@ -50,10 +56,19 @@ namespace Lunalipse
             RegisterOperators();
 
             RestoringConfig();
+            InitializeWebSearchEngines();
 
             PerpearThemeColor();
 
             ReadLicenses();
+        }
+
+        private void InitializeWebSearchEngines()
+        {
+            Log.Info("Registering web music search engines...");
+            engineManager.RegisterEngine("Netease", new MainEngine());
+            engineManager.SelectEngine("Netease");
+            engineManager.UpdateProxySetting(GLS.INSTANCE.ProxySetting);
         }
 
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
@@ -77,6 +92,10 @@ namespace Lunalipse
             {
                 UseLZ78Compress = true,
                 Responsiblity = CacheType.ALBUM_PIC
+            });
+            cacheSystem.RegisterOperator(CacheType.WebAudioStuff, new WebAudioFileCacher()
+            {
+                UseLZ78Compress = true
             });
             cacheSystem.RegisterOperator(CacheType.MusicList, new MusicPoolCache());
             cacheSystem.RegisterOperator(CacheType.PlayList, new PlaylistCache());
@@ -111,6 +130,7 @@ namespace Lunalipse
 #endif
                 ;
             GLS.SetINSTANCE(GlobalSettingHelper<GLS>.Instance.ReadSetting());
+            GLS.INSTANCE.PrepareProxy();
         }
 
         void CheckResources()
@@ -127,6 +147,8 @@ namespace Lunalipse
             LThemeManager.Instance.SelectTheme(GLS.INSTANCE.DefaultThemeUUID);
         }
 
+
+        
         async void ReadLicenses()
         {
             foreach (LrssResource lrr in await resourcesHandler.getResourcesAsync(currentFolder + "\\" + AppConst.LUNALIPSE_LICENSES)) 
@@ -148,6 +170,11 @@ namespace Lunalipse
                         break;
                 }
             }
+        }
+
+        private void Application_Exit(object sender, ExitEventArgs e)
+        {
+            //engineManager.UnloadEngines();
         }
     }
 }

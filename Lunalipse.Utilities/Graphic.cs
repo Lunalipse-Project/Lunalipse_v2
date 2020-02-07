@@ -250,6 +250,7 @@ namespace Lunalipse.Utilities
 
         public static BitmapSource Byte2BitmapSource(byte[] b)
         {
+            if (b == null) return default(BitmapSource);
             try
             {
                 using (MemoryStream stream = new MemoryStream(b))

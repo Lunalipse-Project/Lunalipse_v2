@@ -89,6 +89,14 @@ namespace Jint.Runtime.Interop
 
         public JsValue GetPath(string path)
         {
+            //Check if any path is in our restricted namespace
+            if (_engine.Options._NamespaceRestrictions.Find(x => path.StartsWith(x)) != null)
+            {
+                ExceptionHelper.ThrowNotSupportedException($"The namespace {path} is not supported or it has been restricted.");
+                _engine.TypeCache.Add(path, null);
+                return new NamespaceReference(_engine, path);
+            }
+
             if (_engine.TypeCache.TryGetValue(path, out var type))
             {
                 if (type == null)

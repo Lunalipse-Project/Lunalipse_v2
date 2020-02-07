@@ -31,10 +31,10 @@ namespace NetEaseHijacker
         //URL
 
         //public const string NE_SEARCH = "http://music.163.com/weapi/search/suggest/web?csrf_token=";
-        public const string NE_SEARCH =   "http://music.163.com/weapi/cloudsearch/get/web?csrf_token=";
-        public const string NE_DETAIL =   "http://music.163.com/weapi/v3/song/detail?csrf_token=";
-        public const string NE_DOWNLOAD = "http://music.163.com/weapi/song/enhance/player/url?csrf_token=";
-        public const string NE_LYRIC =    "http://music.163.com/weapi/song/lyric?csrf_token=";
+        public const string NE_SEARCH =   "https://music.163.com/weapi/cloudsearch/get/web?csrf_token=";
+        public const string NE_DETAIL =   "https://music.163.com/weapi/v3/song/detail?csrf_token=";
+        public const string NE_DOWNLOAD = "https://music.163.com/weapi/song/enhance/player/url?csrf_token=";
+        public const string NE_LYRIC =    "https://music.163.com/weapi/song/lyric?csrf_token=";
 
         //Template
 

@@ -12,7 +12,8 @@ namespace Lunalipse.Common.Generic.Cache
         ALBUM_PIC = 1,
         WebAlbumPic = 2,
         PlayList = 3,
-        MusicList = 4
+        MusicList = 4,
+        WebAudioStuff = 5
     }
 
     public enum CacheResponseType

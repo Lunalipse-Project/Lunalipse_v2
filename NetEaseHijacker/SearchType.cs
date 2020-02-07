@@ -8,9 +8,9 @@ namespace NetEaseHijacker
 {
     public enum SearchType
     {
-        SONGS,
-        DETAIL,
-        DOWNLOAD,
-        LYRIC
+        QUERY_SONGS_LIST,
+        QUERY_SONG_DETAIL,
+        QUERY_DOWNLOAD_URL,
+        QUERY_LYRIC
     }
 }

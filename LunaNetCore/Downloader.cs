@@ -17,29 +17,19 @@ namespace LunaNetCore
         /// </summary>
         /// <param name="gotError">是否产生错误</param>
         /// <param name="e">如果有错误产生，错误的详情</param>
-        public delegate void ODF(bool gotError, Exception e);
-
-        /// <summary>
-        /// 委托：下载器已就位
-        /// </summary>
-        /// <param name="totalLength"></param>
-        public delegate void Prepared(long totalLength);
+        public delegate void ODF(Exception e);
 
         /// <summary>
         /// 委托：下载状态更新
         /// </summary>
         /// <param name="currentLength"></param>
-        public delegate void Update(long currentLength);
+        /// <param name="totalLength"></param>
+        public delegate void Update(long currentLength, long totalLength);
 
         /// <summary>
         /// 事件：下载完成
         /// </summary>
         public event ODF OnDownloadFinish;
-
-        /// <summary>
-        /// 事件：下载器准备就绪
-        /// </summary>
-        public event Prepared OnPrepared;
 
         /// <summary>
         /// 事件：下载状态更新
@@ -51,18 +41,19 @@ namespace LunaNetCore
         /// </summary>
         /// <param name="URL">文件URL</param>
         /// <param name="filename">文件保存路径</param>
-        public void DownloadFile(string URL, string filename)
+        /// <param name="webProxy">使用的代理</param>
+        public void DownloadFile(string URL, string filename, IWebProxy webProxy)
         {
             try
             {
                 HttpWebRequest Myrq = (HttpWebRequest)WebRequest.Create(URL);
-                Myrq.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:53.0) Gecko/20100101 Firefox/53.0";
+                Myrq.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36";
                 Myrq.Method = "GET";
+                Myrq.Proxy = webProxy;
                 Myrq.Credentials = CredentialCache.DefaultNetworkCredentials;
 
                 HttpWebResponse myrp = (HttpWebResponse)Myrq.GetResponse();
                 long totalBytes = myrp.ContentLength;
-                OnPrepared?.Invoke(totalBytes);
                 System.IO.Stream st = myrp.GetResponseStream();
                 System.IO.Stream so = new System.IO.FileStream(filename, System.IO.FileMode.Create);
                 long totalDownloadedByte = 0;
@@ -75,17 +66,17 @@ namespace LunaNetCore
                     {
                         totalDownloadedByte = osize + totalDownloadedByte;
                         so.Write(by, 0, osize);
-                        OnTaskUpdate?.Invoke(totalDownloadedByte);
+                        OnTaskUpdate?.Invoke(totalDownloadedByte, totalBytes);
                         osize = st.Read(by, 0, 1024);
                     }
                 }
                 so.Close();
                 st.Close();
-                OnDownloadFinish?.Invoke(false, null);
+                OnDownloadFinish?.Invoke(null);
             }
             catch (Exception e)
             {
-                OnDownloadFinish?.Invoke(true, e);
+                OnDownloadFinish?.Invoke(e);
             }
         }
     }

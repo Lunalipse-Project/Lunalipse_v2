@@ -36,7 +36,7 @@
       <Key name="CORE_CATALOGUE_GENERAL_CONFIG">设置</Key>
       
       <Key name="CORE_CATALOGUE_DELETE_PREM_TITLE">确认永久删除？</Key>
-      <Key name="CORE_CATALOGUE_DELETE_PREM_CONTENT">您正要删除位于主分类里的歌曲：{0}，这会导致Lunalipse执行永久删除操作（真正的删除文件！），您确定要继续？</Key>
+      <Key name="CORE_CATALOGUE_DELETE_PREM_CONTENT">您正要删除位于主分类里的歌曲：{0}&#xD;&#xA;这会导致Lunalipse删除歌曲文件：{1}&#xD;&#xA;您确定要继续？</Key>
       
       <Key name="CORE_MAINUI_MODE_LINEAR">全部循环</Key>
       <Key name="CORE_MAINUI_MODE_SINGLELOOP">单曲循环</Key>
@@ -45,11 +45,12 @@
 
       <Key name="CORE_ADDPLAYLIST_NOFAVCATA">没有心仪的播放列表？</Key>
       <Key name="CORE_ADDPLAYLIST_NEWONE">新建 …… </Key>
-      <Key name="CORE_ADDPLAYLIST_TITLE">添加至歌单</Key>
+      <Key name="CORE_ADDPLAYLIST_TITLE">将选中的{0}首歌曲添加至歌单</Key>
       <Key name="CORE_ADDPLAYLIST_CREATE_TITLE">新建一个歌单</Key>
       <Key name="CORE_ADDPLAYLIST_CREATE_HINT">为新增的歌单指定一个名字</Key>
-      <Key name="CORE_ADDPLAYLIST_EXIST_TITLE">播放列表已存在</Key>
+      <Key name="CORE_ADDPLAYLIST_EXIST_TITLE">对象已存在</Key>
       <Key name="CORE_ADDPLAYLIST_EXIST_CONTENT">很遗憾，亟待创建的播放列表 {0} 已经存在。</Key>
+      <Key name="CORE_ADDPLAYLIST_EXIST_MUSIC">所有歌曲已添加完成，已跳过一些存在的歌曲。</Key>
 
       <Key name="CORE_MUSICLIST_NO_ITEMS">此歌单中暂无歌曲</Key>
 
@@ -57,7 +58,8 @@
 
       <Key name="CORE_SETTING">配置 Lunalipse</Key>
       <Key name="CORE_SETTING_SETTING_GENERAL">通用</Key>
-      <Key name="CORE_SETTING_SETTING_PERFORMANCE">外观与性能</Key>
+      <Key name="CORE_SETTING_SETTING_PERFORMANCE">外观</Key>
+      <Key name="CORE_SETTING_SETTING_INPUT">输入</Key>
       <Key name="CORE_SETTING_SETTING_NETWORKING">网络</Key>
       <Key name="CORE_SETTING_SETTING_UPDATECHECK">检查更新</Key>
       <Key name="CORE_SETTING_SETTING_LICENSES">开源许可</Key>
@@ -124,7 +126,9 @@
       <Key name="CORE_BSCRIPTV2_ERROR_T_LEXICAL">行为脚本发生词法分析错误</Key>
       <Key name="CORE_BSCRIPTV2_ERROR_T_SEMANTIC">行为脚本发生语义分析错误</Key>
       <Key name="CORE_BSCRIPTV2_ERROR_T_RUNTIME">行为脚本发生运行时错误</Key>
-      
+
+      <Key name="CORE_UPDATE_AVAILABLE_TITLE">发现新版本</Key>
+      <Key name="CORE_UPDATE_AVAILABLE_CTN">Lunalipse现在可以升级至版本：{0}&#xD;&#xA;前往 设置 > 检查更新 以应用更新</Key>
     </Page>
     <Page key="CORE_MUSIC_DETAIL">
       <Key name="CORE_MUSIC_DETAIL_NOLYRIC">未找到与之匹配的歌词</Key>
@@ -185,10 +189,18 @@
       <Key name="CORE_SETTING_ALTER_RESTART">此配置的改动需要在Lunalipse下次启动时才会生效，确定更改？</Key>
       <Key name="CORE_SETTING_ALTER_FFTENABLE">音频可视化采用的FFT算法会导致CPU使用率的增加，对低配置电脑可能不是很友好，确定更改？</Key>
       
-
+    </Page>
+    <Page key="CORE_INPUT_SETTING">
+      <Key name="CORE_SETTING_MOUSE_IN">鼠标操控偏好</Key>
+      <Key name="CORE_SETTING_MOUSE_IN_HINT">设置鼠标操控偏好，以及其他动作触发设置。</Key>
+      <Key name="CORE_SETTING_MOUSE_KEY">翻转点击的主从功能</Key>
+      <Key name="CORE_SETTING_MOUSE_KEY_DESC">
+        ###鼠标主从功能&#xD;&#xA;鼠标的单双击动作对应着Lunalipse里不同的动作——主动作和从动作。具体的动作产生的影响随着不同的模块而不同。在默认情况下，单击触发主
+       动作，双击触发从动作。用户可根据自己的喜好而调整主从动作的按键映射。具体的动作细节可参考《Lunalipse音乐播放器使用指南》
+      </Key>
+      
       <Key name="CORE_SETTING_HOTKEY">快捷键设置</Key>
       <Key name="CORE_SETTING_HOTKEY_HINT">通过编辑现有的快捷键，或着添加新的快捷键然后绑定到任意一个功能上，您可以更加快速与方便的操控Lunalipse</Key>
-      
     </Page>
     <Page key="CORE_APPEARANCE_SETTING">
       <Key name="CORE_SETTING_APPR_THEME_CAP">请为Lunalipse选定一个主题（配色方案）</Key>
@@ -224,6 +236,12 @@
       <Key name="CORE_MEEDITOR_NONE">无法找到</Key>
       <Key name="CORE_MEEDITOR_ARTIST">艺术家</Key>
       <Key name="CORE_MEEDITOR_ERR_CAP">无法保存</Key>
+      <Key name="CORE_MEEDITOR_DOWNLOAD">下载到本地</Key>
+      <Key name="CORE_MEEDITOR_DOWNLOAD_LOCATION">Lunalipse将会把歌曲下载至……</Key>
+      <Key name="CORE_MEEDITOR_DOWNLOADING">正在下载</Key>
+      <Key name="CORE_MEEDITOR_QUALITY_LOW">低质量</Key>
+      <Key name="CORE_MEEDITOR_QUALITY_STANDARD">标准质量</Key>
+      <Key name="CORE_MEEDITOR_QUALITY_HIGH">无损质量</Key>
       <Key name="CORE_MEEDITOR_ERR_MSG_LOCAL">禁止编辑播放中的歌曲！&#xD;&#xA;该音频文件正在播放或已被其他应用打开，Lunalipse无法写入更新的元数据。</Key>
       <Key name="CORE_MEEDITOR_ERR_MSG_WEB">禁止编辑未缓存的歌曲！&#xD;&#xA;该音频文件并非本地缓存的文件，Lunalipse无法写入更新的元数据。</Key>
       <Key name="CORE_MEEDITOR_ISSVAE_CAP">写入到文件元数据</Key>
@@ -255,6 +273,11 @@
     <!-- Online Music Library -->
     <Page key="CORE_CLOUD_LIB">
       <Key name="CORE_CLOUD_LIB_SERACH">搜索</Key>
+      <Key name="CORE_CLOUD_LIB_MSG_LOADING_T">正在缓冲，请稍后</Key>
+      <Key name="CORE_CLOUD_LIB_MSG_LOADING_CIMG">正在下载专辑封面……</Key>
+      <Key name="CORE_CLOUD_LIB_MSG_LOADING_CDATA">正在缓冲音频……</Key>
+      <Key name="CORE_CLOUD_LIB_MSG_ERR_T">网络请求出错</Key>
+      <Key name="CORE_CLOUD_LIB_MSG_ERR_C">错误代号：{0}&#xD;&#xA;错误详情：{1}&#xD;&#xA;请检查您的网络连接或者代理设置后重试。&#xD;&#xA;如果您坚信您的网络是正常的，请联系开发者。</Key>
     </Page>
   </Lang>
 </LpsI18N>

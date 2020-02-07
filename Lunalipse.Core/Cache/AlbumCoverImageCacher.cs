@@ -31,8 +31,9 @@ namespace Lunalipse.Core.Cache
 
         public byte[] ReadCache(CacheFileInfo cacheFileInfo)
         {
+            WinterWrapUp winterWrapUp;
             byte[] content = Compression.Decompress($"{CacheDir}/{cacheFileInfo.GenerateName()}", UseLZ78Compress);
-            return caches.BinRestoreTo<byte[]>(content);
+            return caches.BinRestoreTo<byte[]>(content, out winterWrapUp);
         }
 
         public void CacheAlbumCoverImg(string id, byte[] image)
@@ -62,13 +63,13 @@ namespace Lunalipse.Core.Cache
                 case CacheResponseType.CACHE_EXIST:
                     return checkCacheExist(args[0] as string, (CacheType)args[1]);
                 case CacheResponseType.DELETE_ALL_CACHE:
-                    foreach(string path in CacheUtils.FindAllCaches(CacheDir, Responsiblity))
+                    foreach(string path in CacheUtils.ListAllCaches(CacheDir, Responsiblity))
                     {
                         File.Delete(path);
                     }
                     break;
                 case CacheResponseType.DELETE_CACHE:
-                    checkCacheExist(args[0] as string, (CacheType)args[1]);
+                    removeCache(args[0] as string, (CacheType)args[1]);
                     break;
             }
             return null;

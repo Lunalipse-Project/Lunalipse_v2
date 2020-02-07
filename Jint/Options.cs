@@ -26,6 +26,7 @@ namespace Jint
         private CultureInfo _culture = CultureInfo.CurrentCulture;
         private TimeZoneInfo _localTimeZone = TimeZoneInfo.Local;
         private List<Assembly> _lookupAssemblies = new List<Assembly>();
+        private List<string> _namspaceRestrictions = new List<string>();
         private Predicate<Exception> _clrExceptionsHandler;
         private IReferenceResolver _referenceResolver;
 
@@ -98,6 +99,18 @@ namespace Jint
             _allowClr = true;
             _lookupAssemblies.AddRange(assemblies);
             _lookupAssemblies = _lookupAssemblies.Distinct().ToList();
+            return this;
+        }
+
+        /// <summary>
+        /// Add access-restricted namespace which script will not allow to call.
+        /// </summary>
+        /// <param name="namespaceRestrictions">Namespaces in string</param>
+        /// <returns></returns>
+        public Options AddRestrictedNamespace(params string[] namespaceRestrictions)
+        {
+            _namspaceRestrictions.AddRange(namespaceRestrictions);
+            _namspaceRestrictions = _namspaceRestrictions.Distinct().ToList();
             return this;
         }
 
@@ -200,6 +213,7 @@ namespace Jint
         internal Predicate<Exception> _ClrExceptionsHandler => _clrExceptionsHandler;
 
         internal List<Assembly> _LookupAssemblies => _lookupAssemblies;
+        internal List<string> _NamespaceRestrictions => _namspaceRestrictions;
 
         internal List<IObjectConverter> _ObjectConverters => _objectConverters;
 

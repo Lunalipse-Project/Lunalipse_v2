@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 namespace Lunalipse.Common.Data
 {
     [Serializable]
-    public class MusicEntity :ICachable
+    public class MusicEntity :ICachable, ICloneable
     {
         /// <summary>
         /// This is the fucking FILE NAME!!!
@@ -24,6 +24,8 @@ namespace Lunalipse.Common.Data
         public byte[] AlbumPicture = null;
         [NonSerialized]
         public string LyricPath = "";
+        [NonSerialized]
+        public string LyricContent = "";
         [NonSerialized]
         public string Extension;
         
@@ -101,11 +103,36 @@ namespace Lunalipse.Common.Data
                                   Path, 
                                   Artist.Length == 0 ? "Unknown" : ArtistFrist, 
                                   Album, 
-                                  LyricPath!=null, 
+                                  LyricPath!= string.Empty, 
                                   EstimateDurSecond.ToString(@"hh\:mm\:ss"),
                                   GetType().Name,
                                   HasImage.ToString(),
                                   IsInternetLocation.ToString());
+        }
+
+        public object Clone()
+        {
+            MusicEntity me = new MusicEntity();
+            me.Album = Album;
+            me.AlbumClassfied = AlbumClassfied;
+            me.Artist = Artist;
+            me.ArtistClassfied = ArtistClassfied;
+            me.EstDuration = EstDuration;
+            me.Extension = Extension;
+            me.HasImage = HasImage;
+            me.ID3Name = ID3Name;
+            me.IsInternetLocation = IsInternetLocation;
+            me.LyricContent = LyricContent;
+            me.LyricPath = LyricPath;
+            me.MusicID = MusicID;
+            me.Name = Name;
+            me.Path = Path;
+            if (AlbumPicture != null)
+            {
+                me.AlbumPicture = new byte[AlbumPicture.Length];
+                Array.Copy(AlbumPicture, me.AlbumPicture, AlbumPicture.Length);
+            }
+            return me;
         }
     }
 }

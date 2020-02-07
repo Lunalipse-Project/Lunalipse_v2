@@ -148,6 +148,7 @@ namespace Lunalipse.Windows
             ShowInTaskbar = false;
             this.SetThroughableWindow();
             this.HideWindowFromAltTab();
+            this.SetWindowTopmost();
             MainWindow.DesktopDisplayIndicator += MainWindow_DesktopDisplayIndicator;
             AudioDelegations.OnFftDataUpdate += AudioDelegations_OnFftDataUpdate;
         }
@@ -170,6 +171,7 @@ namespace Lunalipse.Windows
             double screenWidth = SystemParameters.PrimaryScreenWidth;
             double screenHeight = SystemParameters.PrimaryScreenHeight;
             Taskbar tbar = new Taskbar();
+            
             System.Drawing.Size TBarSize = tbar.Size;
             Left = 0;
             switch (tbar.Position)

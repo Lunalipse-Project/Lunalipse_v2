@@ -5,6 +5,7 @@ using Lunalipse.Common.Interfaces.ISetting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -97,12 +98,12 @@ namespace Lunalipse
         /// <summary>
         /// 网络代理，IP地址
         /// </summary>
-        public string ProxyIPAddr = "";
+        public string ProxyIPAddr = string.Empty;
 
         /// <summary>
         /// 网络代理，端口
         /// </summary>
-        public int ProxyPort = 0;
+        public int ProxyPort = -1;
 
         /// <summary>
         /// 主题颜色跟随专辑封面
@@ -134,6 +135,24 @@ namespace Lunalipse
         public void InvokeSettingChange(string settingkey)
         {
             OnSettingUpdated?.Invoke(settingkey);
+        }
+
+        [field:NonSerialized]
+        private WebProxy _webProxy;
+
+        public WebProxy ProxySetting
+        {
+            get
+            {
+                if (EnableProxy) return _webProxy;
+                return null;
+            }
+        }
+        public void PrepareProxy()
+        {
+            if (ProxyIPAddr == string.Empty || ProxyPort <= 0) return;
+            _webProxy = new WebProxy(ProxyIPAddr, ProxyPort);
+            //_webProxy.UseDefaultCredentials = true;
         }
     }
 

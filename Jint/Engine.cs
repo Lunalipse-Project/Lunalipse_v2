@@ -225,10 +225,15 @@ namespace Jint
             if (Options._IsClrAllowed)
             {
                 Global._properties["System"] = new PropertyDescriptor(new NamespaceReference(this, "System"), false, false, false);
-                Global._properties["importNamespace"] = new PropertyDescriptor(new ClrFunctionInstance(
-                    this,
-                    "importNamespace",
-                    (thisObj, arguments) => new NamespaceReference(this, TypeConverter.ToString(arguments.At(0)))), false, false, false);
+                Global._properties["usingNamespace"] = new PropertyDescriptor(
+                    new ClrFunctionInstance(
+                        this,
+                        "usingNamespace",
+                        (thisObj, arguments) => new NamespaceReference(this, TypeConverter.ToString(arguments.At(0)))
+                    ), 
+                    false,
+                    false,
+                    false);
             }
 
             ClrTypeConverter = new DefaultTypeConverter(this);

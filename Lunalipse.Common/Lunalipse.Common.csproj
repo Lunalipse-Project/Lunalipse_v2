@@ -90,7 +90,9 @@
     <Compile Include="Generic\Cache\CacheFile.cs" />
     <Compile Include="Generic\Cache\SerializeInfo.cs" />
     <Compile Include="Generic\Cache\CacheType.cs" />
+    <Compile Include="Generic\Cache\WebAudioStuffs.cs" />
     <Compile Include="Generic\Catalogue\CatalogueSections.cs" />
+    <Compile Include="Generic\Catalogue\CatalogueType.cs" />
     <Compile Include="Generic\GeneralSetting\ControlList.cs" />
     <Compile Include="Generic\GeneralSetting\SettingCatalogue.cs" />
     <Compile Include="Generic\GeneralSetting\SettingCatalogues.cs" />
@@ -142,8 +144,10 @@
     <Compile Include="Interfaces\IVisualization\IV11nHelper.cs" />
     <Compile Include="Interfaces\IVisualization\IV11nManager.cs" />
     <Compile Include="Interfaces\IVisualization\VisualizationManagerBase.cs" />
+    <Compile Include="Interfaces\IWebMusic\EngineEntryPoint.cs" />
     <Compile Include="Interfaces\IWebMusic\ISearchResultMetadata.cs" />
     <Compile Include="Interfaces\IWebMusic\IWebMusicDetail.cs" />
+    <Compile Include="Interfaces\IWebMusic\IWebMusicSearchEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VersionHelper.cs" />
   </ItemGroup>

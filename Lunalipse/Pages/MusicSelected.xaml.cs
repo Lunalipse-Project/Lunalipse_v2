@@ -7,8 +7,10 @@ using Lunalipse.I18N;
 using Lunalipse.Presentation.BasicUI;
 using Lunalipse.Presentation.Generic;
 using Lunalipse.Presentation.LpsWindow;
+using Lunalipse.Utilities;
 using Lunalipse.Windows;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -37,7 +39,7 @@ namespace Lunalipse.Pages
         public MusicSelected()
         {
             InitializeComponent();
-            musicListbox.ItemSelectionChanged += MusicListbox_ItemSelectionChanged;
+            musicListbox.OnMainEffectInvoked += MusicListbox_ItemSelectionChanged;
             convertor = TranslationManagerBase.AquireConverter();
             controllerManager = SequenceControllerManager.Instance;
             TranslationManagerBase.OnI18NEnvironmentChanged += Translate;
@@ -49,10 +51,26 @@ namespace Lunalipse.Pages
 
         private void MusicAddedRequest(object obj)
         {
-            ChooseCatalogues chooseCataloguesPage = new ChooseCatalogues(obj as MusicEntity);
+            List<MusicEntity> selected = musicListbox.AllSelectedItems;
+            MusicEntity musicEntity = obj as MusicEntity;
+            if (musicEntity != null)
+            {
+                if (!selected.Exists(x => x.MusicID.Equals(musicEntity.MusicID)))
+                {
+                    selected.Add(musicEntity);
+                }
+            }
+            else if (selected.Count <= 0)
+            {
+                return;
+            }
+            ChooseCatalogues chooseCataloguesPage = new ChooseCatalogues(selected);
             UniversalDailogue ShowPage = new UniversalDailogue(chooseCataloguesPage,
-                AddToCatalogueTitle, MessageBoxButton.OK);
-            ShowPage.ShowDialog();
+                AddToCatalogueTitle.FormateEx(selected.Count), MessageBoxButton.OK);
+            if(ShowPage.ShowDialog().Value)
+            {
+                musicListbox.DeselectAll();
+            }
         }
 
         private void EditMetadataRequest(MusicEntity musicEntity)

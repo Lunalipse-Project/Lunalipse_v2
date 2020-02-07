@@ -1,14 +1,13 @@
-﻿using Lunalipse.Utilities;
-using Lunalipse.Common.Data;
-using TL = TagLib;
+﻿using System;
 using System.IO;
-using Lunalipse.Common;
 using System.Windows.Media.Imaging;
+using Lunalipse.Utilities;
+using Lunalipse.Common.Data;
 using Lunalipse.Common.Interfaces.IMetadata;
-using Lunalipse.Common.Interfaces.II18N;
-using System;
-using Lunalipse.Core.Cache;
 using Lunalipse.Common.Generic.Cache;
+using Lunalipse.Core.Cache;
+
+using TL = TagLib;
 
 namespace Lunalipse.Core.Metadata
 {
@@ -39,7 +38,7 @@ namespace Lunalipse.Core.Metadata
                 me.Artist = media.Tag.Performers;
                 me.ID3Name = string.IsNullOrEmpty(media.Tag.Title) ? "" : media.Tag.Title;
                 me.EstDuration = media.Properties.Duration;
-                me.LyricPath = File.Exists(lyricPath) ? lyricPath : null;
+                me.LyricPath = File.Exists(lyricPath) ? lyricPath : string.Empty;
                 if (media.Tag.Pictures != null)
                 {
                     me.HasImage = media.Tag.Pictures.Length != 0;
@@ -73,8 +72,13 @@ namespace Lunalipse.Core.Metadata
         {
             return TL.File.Create(path);
         }
-
-        public static void CacheCover(MusicEntity musicEntity)
+        
+        /// <summary>
+        /// Cache the album cover of music represent by <see cref="MusicEntity"/>
+        /// </summary>
+        /// <param name="musicEntity">Music</param>
+        /// <returns><see cref="byte[]"/> of cached cover</returns>
+        public static byte[] CacheCover(MusicEntity musicEntity)
         {
             TL.File media = TL.File.Create(musicEntity.Path);
             if (media.Tag.Pictures != null)
@@ -83,8 +87,10 @@ namespace Lunalipse.Core.Metadata
                 if (musicEntity.HasImage)
                 {
                     CacheHub.Instance().CacheObject(media.Tag.Pictures[0].Data.Data, CacheType.ALBUM_PIC, musicEntity.MusicID);
+                    return media.Tag.Pictures[0].Data.Data;
                 }
             }
+            return null;
         }
 
         public static BitmapSource GetPicture(MusicEntity entity)
@@ -95,11 +101,26 @@ namespace Lunalipse.Core.Metadata
 
         public static void RetrievePictureFromCache(MusicEntity entity)
         {
-            if (!CacheHub.Instance().ComponentCacheExists(CacheType.ALBUM_PIC, entity.MusicID))
+            CacheType cacheType = entity.IsInternetLocation ? CacheType.WebAlbumPic : CacheType.ALBUM_PIC;
+            byte[] cover = null;
+            if (!CacheHub.Instance().ComponentCacheExists(
+                cacheType,
+                entity.MusicID))
             {
-                return;
+                if (cacheType == CacheType.ALBUM_PIC)
+                {
+                    cover = CacheCover(entity);
+                }
+                else
+                {
+                    return;
+                }
             }
-            entity.InitializePicture(CacheHub.Instance().RestoreObject<byte[]>(entity.MusicID, CacheType.ALBUM_PIC));
+            else
+            {
+                cover = CacheHub.Instance().RestoreObject<byte[]>(entity.MusicID, cacheType);
+            }
+            entity.InitializePicture(cover);
         }
     }
 }

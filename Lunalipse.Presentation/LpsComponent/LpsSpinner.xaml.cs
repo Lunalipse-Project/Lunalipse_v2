@@ -47,7 +47,6 @@ namespace Lunalipse.Presentation.LpsComponent
         {
             InitializeComponent();
             this.Loaded += LpsSpinner_Loaded;
-            thread = new Thread(new ThreadStart(BeginSpinningAnimation));
         }
 
         public void StopSpinning()
@@ -58,19 +57,16 @@ namespace Lunalipse.Presentation.LpsComponent
         public void InitiateSpinning()
         {
             ResetAll();
-            if (thread.ThreadState != ThreadState.Running)
+            if (thread==null || thread.ThreadState != ThreadState.Running)
             {
+                thread = new Thread(new ThreadStart(BeginSpinningAnimation));
                 thread.Start();
             }
         }
 
         private void LpsSpinner_Loaded(object sender, RoutedEventArgs e)
         {
-            ResetAll();
-            if (thread.ThreadState != ThreadState.Running) 
-            {
-                thread.Start();
-            }
+            InitiateSpinning();
         }
 
         private void ResetAll()
@@ -82,11 +78,11 @@ namespace Lunalipse.Presentation.LpsComponent
             u = Math.Ceiling(2 * Math.Sqrt(r * g));
             u += u * 1e-3;
             Run = true;
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < movingPointThetas.Length; i++)
             {
                 movingPointThetas[i] = 0.28;
-                
             }
+            Draw(center, movingPointThetas.Length, 0);
         }
 
         void CalcTheta(int appi, int start)

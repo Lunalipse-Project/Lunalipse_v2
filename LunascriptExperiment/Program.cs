@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace LunascriptExperiment
 {
@@ -21,40 +22,52 @@ namespace LunascriptExperiment
             Program program = new Program();
             program.doScript();
         }
-
-        Assembly[] assemblies;
         Dictionary<string, ObjectInstance> api = new Dictionary<string, ObjectInstance>();
         Engine engine;
 
         public Program()
         {
-            assemblies = new Assembly[]
-            {
-                
-            };
         }
         void doScript()
         {
             engine = new Engine(opt=>
             {
-                opt.AllowClr();
+                opt.AllowClr(typeof(MessageBox).Assembly);
+                opt.AddRestrictedNamespace(
+                    "System.IO",
+                    "System.Net", 
+                    "System.Reflection",
+                    "System.Printing",
+                    "System.Runtime",
+                    "System.Web"
+                );
                 opt.LimitRecursion(100);
-                //opt.LimitMemory(1048576);   //Allow only 1 MB
             });
             engine.SetValue("Utils", TypeReference.CreateTypeReference(engine, typeof(Utils)));
+            engine.SetValue("testClass", TypeReference.CreateTypeReference(engine, typeof(testClass)));
             engine.SetValue("println", new Action<object>(write));
             engine.SetValue("register", new Action<string, JsValue>(AddToObjects));
             engine.Execute(readScript());
-            //InvokeMethod("pony", "sayName");
+            InvokeMemberMethod("pony", "sayName");
+            InvokeMemberMethod("pony", "sayType");
+            ObjectInstance instance = api["test"];
+            testClass obj = instance.ToObject() as testClass;
+            if(obj!=null)
+            {
+                Console.WriteLine(obj.testField);
+            }
             Console.Read();
         }
 
         string readScript()
         {
             string str = "";
-            using(StreamReader sr = new StreamReader("test.js"))
+            using (FileStream fs = new FileStream("test.js", FileMode.Open))
             {
-                str = sr.ReadToEnd();
+                using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
+                {
+                    str = sr.ReadToEnd();
+                }
             }
             return str;
         }
@@ -69,11 +82,18 @@ namespace LunascriptExperiment
             api.Add(id, instance.AsObject());
         }
 
-        void InvokeMethod(string id, string name,params object[] args)
+        void InvokeMemberMethod(string id, string name,params object[] args)
         {
-            Console.WriteLine(api[id].Get("name").AsString());
             ObjectInstance instance = api[id];
-            instance.Get(name).Invoke(instance, args.Select(x => JsValue.FromObject(engine, x)).ToArray());
+            JsValue jvalue = instance.Get(name);
+            if (jvalue != JsValue.Undefined)
+            {
+                jvalue.Invoke(instance, args.Select(x => JsValue.FromObject(engine, x)).ToArray());
+            }
+            else
+            {
+                Console.WriteLine($"{name} not exist");
+            }
         }
     }
 
@@ -84,5 +104,14 @@ namespace LunascriptExperiment
         {
             return random.Next(max);
         }
+    }
+    interface IInterface
+    {
+        void getStuff();
+    }
+
+    class testClass
+    {
+        public int testField = 0;
     }
 }

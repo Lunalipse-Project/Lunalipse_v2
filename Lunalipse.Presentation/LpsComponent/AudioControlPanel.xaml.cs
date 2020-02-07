@@ -15,7 +15,6 @@ namespace Lunalipse.Presentation.LpsComponent
     /// </summary>
     public partial class AudioControlPanel : UserControl
     {
-        bool isPaused = false;
         bool isFullscreen = false;
         bool LyricEnabled = true;
         bool SpectrumEnabled = true;
@@ -33,6 +32,8 @@ namespace Lunalipse.Presentation.LpsComponent
         public event ProgressChange OnProgressChanged;
         public event ProgressChange OnVolumeChanged;
         public event Action<bool> OnProfilePictureClicked;
+        public bool isPaused = false;
+
         private DoubleAnimation FadeIn,FadeOut;
         private DoubleAnimation FadeInDetail, FadeOutDetail;
 
@@ -192,15 +193,19 @@ namespace Lunalipse.Presentation.LpsComponent
 
         private void PlayOrPause(object sender, RoutedEventArgs e)
         {
-            Button bsender = sender as Button;
+            TriggerPlayPause();
+        }
+
+        public void TriggerPlayPause()
+        {
             if (isPaused)
             {
-                bsender.Content = FindResource("Pause");
+                Play.Content = FindResource("Pause");
                 isPaused = false;
             }
             else
             {
-                bsender.Content = FindResource("Play");
+                Play.Content = FindResource("Play");
                 isPaused = true;
             }
             OnTrigging?.Invoke(AudioPanelTrigger.PausePlay, isPaused);
@@ -316,6 +321,11 @@ namespace Lunalipse.Presentation.LpsComponent
             {
                 AlbProfile.BeginAnimation(OpacityProperty, FadeInDetail);
             }
+        }
+
+        private void MusicProgress_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

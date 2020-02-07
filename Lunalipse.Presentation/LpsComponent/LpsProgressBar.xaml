@@ -9,7 +9,7 @@
     <Grid Height="auto" MaxHeight="20">
         <Border CornerRadius="10" x:Name="Track">
             <Grid Height="auto" x:Name="ProgressBar" HorizontalAlignment="Left">
-                <Border CornerRadius="10" x:Name="ProgressBarBackground" Width="0">
+                <Border CornerRadius="10" x:Name="ProgressBarBackground">
                 </Border>
             </Grid>
         </Border>

@@ -42,7 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="policy.2.0.taglib-sharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
       <HintPath>..\packages\taglib.2.1.0.0\lib\policy.2.0.taglib-sharp.dll</HintPath>
@@ -88,6 +88,7 @@
     <Compile Include="Cache\MusicPoolCache.cs" />
     <Compile Include="Cache\PlaylistCache.cs" />
     <Compile Include="Cache\UniversalObjectSerializor.cs" />
+    <Compile Include="Cache\WebAudioFileCacher.cs" />
     <Compile Include="Console\CommandRegistry.cs" />
     <Compile Include="Console\ConsoleAdapter.cs" />
     <Compile Include="Console\ConsoleEnvironment.cs" />
@@ -127,7 +128,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Visualization\VisualizationManager.cs" />
     <Compile Include="Visualization\Wave.cs" />
-    <Compile Include="WebMusic\WebMusicHelper.cs" />
+    <Compile Include="WebMusic\SearchEngineManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSCore\CSCore.csproj">
@@ -149,10 +150,6 @@
     <ProjectReference Include="..\LunaNetCore\LunaNetCore.csproj">
       <Project>{0370c0cb-20b3-4e1a-9f5f-1a846bc1c1b8}</Project>
       <Name>LunaNetCore</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NetEaseHijacker\NetEaseHijacker.csproj">
-      <Project>{c2d12e12-331a-4fe5-ac87-fc9377c594c5}</Project>
-      <Name>NetEaseHijacker</Name>
     </ProjectReference>
     <ProjectReference Include="..\NVorbis\NVorbis.csproj">
       <Project>{a73f63cc-cf0a-4db2-b580-184cecd61888}</Project>

@@ -75,7 +75,7 @@ namespace Lunalipse.Auxiliary
 
         public void SavePlaylist()
         {
-            foreach (Catalogue catalogue in cataloguePool.GetUserDefined().FindAll(x => x.IsModified))
+            foreach (Catalogue catalogue in cataloguePool.GetUserDefined())
             {
                 cacheSystem.CacheObject(catalogue, CacheType.PlayList);
             }

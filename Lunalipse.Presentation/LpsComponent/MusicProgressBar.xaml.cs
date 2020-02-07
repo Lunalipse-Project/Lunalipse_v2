@@ -140,7 +140,7 @@ namespace Lunalipse.Presentation.LpsComponent
             {
                 Point p = Mouse.GetPosition(this);
                 double newVal = (p.X / ActualWidth) * MaxValue;
-                ValueInner = newVal;
+                ValueInner = newVal < 0 ? 0 : newVal;
                 isDown = false;
             }
             e.Handled = true;

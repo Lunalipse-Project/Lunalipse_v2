@@ -23,13 +23,26 @@ namespace Lunalipse.Core.Lyric
             {
                 return false;
             }
-            if (Music.LyricPath != null)
+            if (Music.LyricPath != string.Empty)
             {
                 tokens = Tokenizer.CreateTokensFromFile(Music.LyricPath);
             }
+            else if (Music.LyricContent != string.Empty)
+            {
+                tokens = Tokenizer.CreateTokens(Music.LyricContent);
+            }
             else
             {
-                tokens = null;
+                string lrc_path = $"{Path.GetDirectoryName(Music.Path)}/Lyrics/{Music.Name}.lrc";
+                if(File.Exists(lrc_path))
+                {
+                    Music.LyricPath = lrc_path;
+                    tokens = Tokenizer.CreateTokensFromFile(lrc_path);
+                }
+                else
+                {
+                    tokens = null;
+                }
             }
             OnLyricPrepared?.Invoke(tokens);
             if (tokens == null) return false;

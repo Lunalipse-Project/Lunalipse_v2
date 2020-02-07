@@ -16,7 +16,7 @@ namespace Lunalipse.Core.Cache
         public const string CACHE_MAGIC_PREFIX = "maggie";
         public static string GenerateName(this CacheFileInfo cfi)
         {
-            return "{0}{1}{2}".FormateEx(CACHE_MAGIC_PREFIX, ((int)cfi.cacheType).ToString(),cfi.id);
+            return $"{CACHE_MAGIC_PREFIX}{(int)cfi.cacheType}{cfi.id}";
         }
 
         public static CacheFileInfo ConvertToWWU(string name)
@@ -38,7 +38,7 @@ namespace Lunalipse.Core.Cache
             return cacheFileInfo;
         }
 
-        public static IEnumerable<string> FindAllCaches(string baseDir, CacheType cacheType)
+        public static IEnumerable<string> ListAllCaches(string baseDir, CacheType cacheType)
         {
             string prefix = CACHE_MAGIC_PREFIX + ((int)cacheType).ToString();
             foreach(string path in Directory.GetFiles(baseDir))

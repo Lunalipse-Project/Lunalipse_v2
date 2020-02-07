@@ -10,6 +10,6 @@ namespace Lunalipse.Common.Interfaces.ICache
     public interface ICache
     {
         byte[] CacheToBin<T>(T instance, WinterWrapUp wwu);
-        T BinRestoreTo<T>(byte[] bytes);
+        T BinRestoreTo<T>(byte[] bytes, out WinterWrapUp winterWrapUp);
     }
 }

@@ -12,30 +12,10 @@ namespace NetEaseHijacker
 {
     public class Raw
     {
-        LNetC lnc;
+        public LNetC NetworkCore { get; private set; }
         public Raw()
         {
-            lnc = new LNetC();
-        }
-
-        public void Event_AllComplete(LNetC.AllQueueRequestCompletely e)
-        {
-            lnc.OnAllQueueRequestCompletely += e;
-        }
-
-        public void Event_Requesting(LNetC.HttpRequesting e)
-        {
-            lnc.OnHttpRequesting += e;
-        }
-
-        public void Event_Responded(LNetC.HttpResponded e)
-        {
-            lnc.OnHttpResponded += e;
-        }
-
-        public void Event_TimeOut(LNetC.HttpTimeOut e)
-        {
-            lnc.OnHttpTimeOut += e;
+            NetworkCore = new LNetC();
         }
 
         public async Task Get(SearchType st,params string[] args)
@@ -46,22 +26,22 @@ namespace NetEaseHijacker
             //lnc.ClearReqSeq();
             switch(st)
             {
-                case SearchType.SONGS:
+                case SearchType.QUERY_SONGS_LIST:
                     param = NeParams.SEARCH.FormatE(args);
                     url = NeParams.NE_SEARCH;
                     id = st.ToString();
                     break;
-                case SearchType.DETAIL:
+                case SearchType.QUERY_SONG_DETAIL:
                     param = NeParams.DETAIL.FormatE(args);
                     url = NeParams.NE_DETAIL;
                     id = st.ToString();
                     break;
-                case SearchType.DOWNLOAD:
+                case SearchType.QUERY_DOWNLOAD_URL:
                     param = NeParams.DOWNLOAD.FormatE(args);
                     url = NeParams.NE_DOWNLOAD;
                     id = st.ToString();
                     break;
-                case SearchType.LYRIC:
+                case SearchType.QUERY_LYRIC:
                     param = NeParams.LYRIC.FormatE(args);
                     url = NeParams.NE_LYRIC;
                     id = st.ToString();
@@ -79,8 +59,8 @@ namespace NetEaseHijacker
             };
             r.AddParameter("params", param);
             r.AddParameter("encSecKey", NeParams.encSecKey);
-            lnc.AddRequestBody(r, id);
-            await lnc.RequestAsyn();
+            NetworkCore.AddRequestBody(r, id);
+            await NetworkCore.RequestAsyn();
         }
     }
 }

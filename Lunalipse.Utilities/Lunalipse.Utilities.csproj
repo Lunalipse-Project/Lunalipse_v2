@@ -81,11 +81,13 @@
     <Compile Include="Win32\DevBroadcastDeviceinterface.cs" />
     <Compile Include="Win32\GWL.cs" />
     <Compile Include="Win32\HOOK.cs" />
+    <Compile Include="Win32\HWND.cs" />
     <Compile Include="Win32\KeyboardHook.cs" />
     <Compile Include="Win32\KeyboardHookStruct.cs" />
     <Compile Include="Win32\LoadLibraryFlags.cs" />
     <Compile Include="Win32\NativeMethods.cs" />
     <Compile Include="Win32\RECT.cs" />
+    <Compile Include="Win32\SWP_FLAGS.cs" />
     <Compile Include="Win32\Taskbar.cs" />
     <Compile Include="Win32\TaskbarPosition.cs" />
     <Compile Include="Win32\USBDeviceNotification.cs" />

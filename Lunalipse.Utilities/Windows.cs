@@ -107,6 +107,12 @@ namespace Lunalipse.Utilities
             SetWindowLongPtr(wndHelper.Handle, Convert.ToInt32(GWL.EXSTYLE), (IntPtr)exStyle);
         }
 
+        public static void SetWindowTopmost(this Window win)
+        {
+            WindowInteropHelper wndHelper = new WindowInteropHelper(win);
+            NativeMethods.SetWindowPos(wndHelper.Handle, HWND.HWND_TOPMOST, 0, 0, 0, 0, SWP_FLAGS.SWP_NOSIZE | SWP_FLAGS.SWP_NOMOVE);
+        }
+
         public static void SetThroughableWindow(this Window win)
         {
             WindowInteropHelper wndHelper = new WindowInteropHelper(win);

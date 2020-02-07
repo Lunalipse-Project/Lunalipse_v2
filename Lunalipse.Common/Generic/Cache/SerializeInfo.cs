@@ -12,8 +12,8 @@ namespace Lunalipse.Common.Generic.Cache
         public const string CACHE_FILE_EXT = ".lce";
 
         /// <summary>
-        /// The snow of the winter.
-        /// We wrap 'em up together.
+        /// Tis snow of the winter.
+        /// We wrap them up together.
         /// For the clean of summer.
         /// And none upon the flower
         /// </summary>
@@ -22,8 +22,9 @@ namespace Lunalipse.Common.Generic.Cache
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
             public string comment;
             public uint createDate;
-            public byte reserved;
-            public int dataSize;
+            public byte num_of_sealed;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+            public int[] offsets;
         }
 
         public struct CacheFileInfo

@@ -40,10 +40,10 @@ namespace Lunalipse.Core
             versionHelper = VersionHelper.Instance;
         }
 
-        private void LunaNet_OnErrorOccurs(WebExceptionStatus webExceptionStatus, HttpStatusCode httpStatusCode, string Description, string message)
+        private void LunaNet_OnErrorOccurs(Exception exception)
         {
-            System.Console.WriteLine("Exception:{0}\n Status:{1} {2}", webExceptionStatus.ToString(), (int)httpStatusCode, Description);
-            OnErrorOccurs?.Invoke(webExceptionStatus, httpStatusCode, Description, message);
+            //System.Console.WriteLine("Exception:{0}\n Status:{1} {2}", webExceptionStatus.ToString(), (int)httpStatusCode, Description);
+            //OnErrorOccurs?.Invoke(webExceptionStatus, httpStatusCode, Description, message);
             OnQueryCompleted?.Invoke();
         }
 

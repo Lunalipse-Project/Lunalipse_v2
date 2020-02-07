@@ -1,24 +1,26 @@
 ﻿using Lunalipse.Common.Data;
 using Lunalipse.Common.Generic.I18N;
 using Lunalipse.Common.Generic.Themes;
+using Lunalipse.Common.Interfaces.ICommunicator;
 using Lunalipse.Common.Interfaces.IMetadata;
+using Lunalipse.Common.Interfaces.IWebMusic;
 using Lunalipse.Core.Metadata;
+using Lunalipse.Core.WebMusic;
+using Lunalipse.Pages;
 using Lunalipse.Presentation.BasicUI;
 using Lunalipse.Presentation.LpsWindow;
 using Lunalipse.Utilities;
+using LunaNetCore;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
+using System.Windows.Forms;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
+using CommonDialog = Lunalipse.Presentation.BasicUI.CommonDialog;
+
 namespace Lunalipse.Windows
 {
     /// <summary>
@@ -29,11 +31,14 @@ namespace Lunalipse.Windows
         MusicEntity musicEntity;
         ImageSource profileImage = null;
         IMediaMetadataWriter metadataWriter;
+        IWebMusicDetail webMusicDetail;
 
         string LyricOnLocal, LyricOnWeb, LyricNotFound;
         string SaveChangeTitle, SaveChangeBody;
         string NSaveTitle,NSaveWeb,NSaveInUse;
-        public MusicInfoEditor(MusicEntity musicEntity)
+        string Downloading, chooseALocation;
+        bool isReadonly;
+        public MusicInfoEditor(MusicEntity musicEntity, bool isReadonly = false, IWebMusicDetail webMusicDetail = null)
         {
             EnableFocused = musicEntity.HasImage;
             InitializeComponent();
@@ -41,12 +46,20 @@ namespace Lunalipse.Windows
             if (!musicEntity.IsInternetLocation)
             {
                 metadataWriter = new MediaMetadataWriter(musicEntity.Path);
+                DownloadRegion.Visibility = Visibility.Hidden;
             }
             this.musicEntity = musicEntity;
+            this.webMusicDetail = webMusicDetail;
             Unloaded += MusicInfoEditor_Unloaded;
             Title.Text = musicEntity.MusicName;
             Artist.Text = musicEntity.ArtistFrist;
-            Album.Text = musicEntity.Album;           
+            Album.Text = musicEntity.Album;
+
+            Title.IsReadOnly = isReadonly;
+            Artist.IsReadOnly = isReadonly;
+            Album.IsReadOnly = isReadonly;
+
+            this.isReadonly = isReadonly;
         }
 
         private void MusicInfoEditor_Unloaded(object sender, RoutedEventArgs e)
@@ -57,7 +70,103 @@ namespace Lunalipse.Windows
 
         private void InfoEditor_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            ApplyChange();
+            musicEntity.DisposePicture();
+            if (!isReadonly)
+            {
+                ApplyChange();
+            }
+        }
+
+        private void Download_Click(object sender, RoutedEventArgs e)
+        {
+            ChooseCatalogues chooseCatalogues = new ChooseCatalogues(Common.Generic.Catalogue.CatalogueType.LOCATION);
+            UniversalDailogue locationBroswer = new UniversalDailogue(chooseCatalogues, chooseALocation,MessageBoxButton.OK);
+            bool downloadSucc = false;
+            if (locationBroswer.ShowDialog() == true)
+            {
+                string path = chooseCatalogues.SelectedCatalogue.Name;
+                ProgressDialogue progressDialogue = new ProgressDialogue(indicator =>
+                {
+                    DownloadingMusic(indicator, path, out downloadSucc);
+                });
+                progressDialogue.ShowDialog();
+                if(downloadSucc)
+                {
+                    MusicEntity newme = musicEntity.Clone() as MusicEntity;
+                    newme.IsInternetLocation = false;
+                    newme.Path = $"{path}/{musicEntity.Name}{musicEntity.Extension}";
+                    newme.LyricPath = $"{path}/Lyrics/{musicEntity.Name}.lrc";
+                    //newme.MusicID = Utils.getRandomID();
+                    chooseCatalogues.SelectedCatalogue.AddMusic(newme);
+                }
+            }
+        }
+
+        private void DownloadingMusic(IProgressIndicator indicator, string path, out bool noerror)
+        {
+            indicator.UpdateCaption(Downloading);
+            indicator.SetRange(-1, -1);
+            IWebMusicsSearchEngine searchEngine = SearchEngineManager.Instance.CurrentSelected;
+            if (searchEngine == null)
+            {
+                noerror = false;
+                indicator.Complete();
+            }
+
+            //Getting meta data
+            Tuple<string, string> download_info =
+                    searchEngine.GetDownloadURL(webMusicDetail, (EngineAudioQuality)QualityChoose.SelectedItemValue);
+            string lyric = searchEngine.GetLyric(webMusicDetail);
+
+            if (!string.IsNullOrEmpty(lyric))
+            {
+                using (FileStream fs = new FileStream($"{path}/Lyrics/{musicEntity.Name}.lrc", FileMode.Create))
+                {
+                    byte[] lrc = Encoding.UTF8.GetBytes(lyric);
+                    fs.Write(lrc, 0, lrc.Length);
+                }
+            }
+
+            indicator.SetRange(0, 100);
+            if (download_info == null)
+            {
+                indicator.Complete();
+                noerror = false;
+            }
+            else
+            {
+                musicEntity.Path = download_info.Item1;
+                musicEntity.Extension = $".{download_info.Item2}";
+            }
+            Downloader downloader = new Downloader();
+            string filePath = $"{path}/{musicEntity.Name}{musicEntity.Extension}";
+            downloader.OnTaskUpdate += (downloaded, total) =>
+            {
+                double precentage = (double)downloaded / (double)total * 100;
+                indicator.ChangeCurrentVal(precentage, $"{Math.Round(precentage, 3)}% ");
+            };
+            downloader.OnDownloadFinish += (error) =>
+            {
+                if (error != null)
+                {
+                    System.Windows.Forms.MessageBox.Show(error.Message, "Download error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    if (File.Exists(filePath))
+                    {
+                        MediaMetadataWriter metadataWriter = new MediaMetadataWriter(filePath);
+                        metadataWriter.SetPicture(0, musicEntity.AlbumPicture);
+                        metadataWriter.SetArtist(0, musicEntity.ArtistFrist);
+                        metadataWriter.SetAlbum(musicEntity.Album);
+                        metadataWriter.SetTitle(musicEntity.MusicName);
+                        metadataWriter.Done();
+                    }
+                }
+                indicator.Complete();
+            };
+            downloader.DownloadFile(musicEntity.Path, filePath, GLS.INSTANCE.ProxySetting);
+            noerror = true;
         }
 
         private void TranslationManagerBase_OnI18NEnvironmentChanged(Common.Interfaces.II18N.II18NConvertor obj)
@@ -68,6 +177,17 @@ namespace Lunalipse.Windows
                 if (!(contentControl.Tag is string)) continue;
                 contentControl.Content = obj.ConvertTo(SupportedPages.CORE_MUSICENTITY_EDITOR, contentControl.Tag as string);
             }
+            if(musicEntity.IsInternetLocation)
+            {
+                QualityChoose.Clear();
+                foreach (EngineAudioQuality quality in Enum.GetValues(typeof(EngineAudioQuality)))
+                {
+                    QualityChoose.Add(
+                        obj.ConvertTo(SupportedPages.CORE_MUSICENTITY_EDITOR, 
+                        $"CORE_MEEDITOR_{quality.ToString()}"), quality);
+                }
+                QualityChoose.SelectedIndex = 1;
+            }
             LyricOnLocal = obj.ConvertTo(SupportedPages.CORE_MUSICENTITY_EDITOR, "CORE_MEEDITOR_ONLOCAL");
             LyricOnWeb = obj.ConvertTo(SupportedPages.CORE_MUSICENTITY_EDITOR, "CORE_MEEDITOR_ONWEB");
             LyricNotFound = obj.ConvertTo(SupportedPages.CORE_MUSICENTITY_EDITOR, "CORE_MEEDITOR_NONE");
@@ -76,6 +196,8 @@ namespace Lunalipse.Windows
             NSaveTitle = obj.ConvertTo(SupportedPages.CORE_MUSICENTITY_EDITOR, "CORE_MEEDITOR_ERR_CAP");
             NSaveWeb = obj.ConvertTo(SupportedPages.CORE_MUSICENTITY_EDITOR, "CORE_MEEDITOR_ERR_MSG_WEB");
             NSaveInUse = obj.ConvertTo(SupportedPages.CORE_MUSICENTITY_EDITOR, "CORE_MEEDITOR_ERR_MSG_LOCAL");
+            Downloading = obj.ConvertTo(SupportedPages.CORE_MUSICENTITY_EDITOR, "CORE_MEEDITOR_DOWNLOADING");
+            chooseALocation = obj.ConvertTo(SupportedPages.CORE_MUSICENTITY_EDITOR, "CORE_MEEDITOR_DOWNLOAD_LOCATION");
         }
 
         protected override void DialogueLoaded(object sender, EventArgs args)
@@ -89,7 +211,7 @@ namespace Lunalipse.Windows
                 MusicProfileImage.Background = new ImageBrush(profileImage);
                 SetFocusedBackground(profileImage);
             }
-            if (musicEntity.LyricPath != null)
+            if (musicEntity.LyricPath != string.Empty && File.Exists(musicEntity.LyricPath))
             {
                 LyricFileName.Content = LyricOnLocal;
             }
@@ -97,13 +219,14 @@ namespace Lunalipse.Windows
             {
                 LyricFileName.Content = LyricNotFound;
             }
-            musicEntity.DisposePicture();
         }
 
         protected override void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)
         {
             base.ThemeManagerBase_OnThemeApplying(obj);
             ChangeLyric.Background = obj.Secondary;
+            Download.Background = obj.Secondary;
+            QualityChoose.DropDownBackground = obj.Secondary;
         }
 
         void ApplyChange()

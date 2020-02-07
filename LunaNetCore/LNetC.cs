@@ -14,6 +14,7 @@ namespace LunaNetCore
     /// </summary>
     public class LNetC
     {
+        private const int TIME_OUT_MS = 5000;
         /// <summary>
         /// 声明HttpRequesting委托
         /// </summary>
@@ -29,7 +30,7 @@ namespace LunaNetCore
         /// 声明AllQueueRequestCompletely委托
         /// </summary>
         public delegate void AllQueueRequestCompletely();
-        public delegate void ErrorOccurs(WebExceptionStatus webExceptionStatus,HttpStatusCode httpStatusCode, string Description, string message);
+        public delegate void ErrorOccurs(Exception e);
 
 
         /// <summary>
@@ -70,10 +71,16 @@ namespace LunaNetCore
         public LNetC()
         {
             HttpRequestBuffer = new Dictionary<string, RBody>();
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
-                    | SecurityProtocolType.Tls11
-                    | SecurityProtocolType.Tls12
-                    | SecurityProtocolType.Ssl3;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+        }
+
+        public void ClearAllEventSubscribers()
+        {
+            OnHttpRequesting = null;
+            OnHttpResponded = null;
+            OnHttpTimeOut = null;
+            OnAllQueueRequestCompletely = null;
+            OnErrorOccurs = null;
         }
 
         /// <summary>
@@ -177,7 +184,7 @@ namespace LunaNetCore
 
         private RResult _request(RBody rb, string key, bool isAsync = true)
         {
-            string rs = "";
+            string rs = string.Empty;
             RResult rResult = null;
             HttpWebResponse wr = null;
             OnHttpRequesting?.Invoke(key);
@@ -185,11 +192,11 @@ namespace LunaNetCore
             {
                 if (rb.RequestMethod == HttpMethod.GET)
                 {
-                    wr = HttpHelper.CreateGetHttpResponse(rb, 10000, LunaNetProxy);
+                    wr = HttpHelper.CreateGetHttpResponse(rb, TIME_OUT_MS, LunaNetProxy);
                 }
                 else
                 {
-                    wr = HttpHelper.CreatePostHttpResponse(rb, 10000, LunaNetProxy);
+                    wr = HttpHelper.CreatePostHttpResponse(rb, TIME_OUT_MS, LunaNetProxy);
                 }
             }
             catch (WebException TE)
@@ -197,12 +204,11 @@ namespace LunaNetCore
 #if DEBUG
                 System.Console.WriteLine(TE.StackTrace);
 #endif
-                HttpWebResponse httpWebResponse = (HttpWebResponse)TE.Response;
                 if(TE.Status == WebExceptionStatus.Timeout)
                 {
                     OnHttpTimeOut?.Invoke();
                 }
-                OnErrorOccurs(TE.Status,httpWebResponse.StatusCode, httpWebResponse.StatusDescription, TE.Message);
+                OnErrorOccurs?.Invoke(TE);
                 return rResult;
             }
             using (Stream stream = wr.GetResponseStream())
@@ -213,7 +219,7 @@ namespace LunaNetCore
                 }
             }
             
-            if (rs != "")
+            if (rs != string.Empty)
             {
                 rResult = new RResult(rb.URL, rb.RequestMethod, rs, rb.BodyBundle);
                 if (isAsync)

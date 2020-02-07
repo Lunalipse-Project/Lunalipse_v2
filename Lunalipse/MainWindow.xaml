@@ -10,7 +10,6 @@
         WindowStyle="None"
         mc:Ignorable="d" EnableBlur="True"
         Title="MainWindow" Height="600" Width="1040" Loaded="Window_Loaded" MouseMove="Window_MouseMove" Closed="Window_Closed" Closing="LunalipseMainWindow_Closing">
-
     <Grid MouseDown="Grid_MouseDown">
         <Grid.RowDefinitions>
             <RowDefinition Height="10"/>

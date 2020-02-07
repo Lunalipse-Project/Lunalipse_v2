@@ -9,9 +9,9 @@ namespace NetEaseHijacker.Types
 {
     public class MetadataNE
     {
-        [JsonProperty(PropertyName = "songCount", Required = Required.Always)]
+        [JsonProperty(PropertyName = "songCount", Required = Required.Default)]
         public int total = 0;
-        [JsonProperty(PropertyName = "songs", Required = Required.Always)]
+        [JsonProperty(PropertyName = "songs", Required = Required.Default)]
         public List<MusicDetail> list;
     }
 }

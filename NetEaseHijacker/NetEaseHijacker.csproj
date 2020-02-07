@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NetEaseHijacker</RootNamespace>
-    <AssemblyName>libnehjk</AssemblyName>
+    <AssemblyName>NetEaseHijacker</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -38,8 +38,8 @@
     <AssemblyOriginatorKeyFile>Lunaxisky.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -54,15 +54,19 @@
   <ItemGroup>
     <Compile Include="Hijack.cs" />
     <Compile Include="NeParams.cs" />
+    <Compile Include="MainEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Raw.cs" />
     <Compile Include="SearchType.cs" />
     <Compile Include="Types\MetadataNE.cs" />
-    <Compile Include="Types\MusicBrief.cs" />
     <Compile Include="Types\MusicDetail.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Lunalipse.Common\Lunalipse.Common.csproj">
+      <Project>{61478C16-44F2-4333-8209-FAB113BEBD4B}</Project>
+      <Name>Lunalipse.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LunaNetCore\LunaNetCore.csproj">
       <Project>{0370C0CB-20B3-4E1A-9F5F-1A846BC1C1B8}</Project>
       <Name>LunaNetCore</Name>
@@ -73,4 +77,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>

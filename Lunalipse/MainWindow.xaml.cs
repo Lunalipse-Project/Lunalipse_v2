@@ -112,6 +112,7 @@ namespace Lunalipse
             BasePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             InitializeComponent();
             InitializeModules();
+            RegisteringCommands();
             ExpandPanel = new DoubleAnimation(48, sliderSize, elapseTime);
             MinimizePanel = new DoubleAnimation(sliderSize, 48, elapseTime);
 
@@ -225,6 +226,8 @@ namespace Lunalipse
             NextSongHint = converter.ConvertTo(SupportedPages.CORE_FUNC, "CORE_MAINUI_TOAST_SONGHINT");
             SaveSettingContent = converter.ConvertTo(SupportedPages.CORE_FUNC, "CORE_SETTING_SAVE_SETTING_CONTENT");
             SaveSettingTitle = converter.ConvertTo(SupportedPages.CORE_FUNC, "CORE_SETTING_SAVE_SETTING_TITLE");
+            update_ok_title = converter.ConvertTo(SupportedPages.CORE_FUNC, "CORE_UPDATE_AVAILABLE_TITLE");
+            update_ok_content = converter.ConvertTo(SupportedPages.CORE_FUNC, "CORE_UPDATE_AVAILABLE_CTN");
         }
 
         /// <summary>
@@ -290,6 +293,24 @@ namespace Lunalipse
 
             controllerManager = SequenceControllerManager.Instance;
             controllerManager.SetController(GlobalSetting.SelectedController);
+        }
+
+        private void RegisteringCommands()
+        {
+            this.CommandBindings.Add(new CommandBinding(MediaCommands.TogglePlayPause, (sender, evt_args) =>
+            {
+                ControlPanel.TriggerPlayPause();
+            }));
+
+            this.CommandBindings.Add(new CommandBinding(MediaCommands.NextTrack, (sender, evt_args) =>
+            {
+                ControlPanel_OnTrigging(AudioPanelTrigger.SkipNext, null);
+            }));
+
+            this.CommandBindings.Add(new CommandBinding(MediaCommands.PreviousTrack, (sender, evt_args) =>
+            {
+                ControlPanel_OnTrigging(AudioPanelTrigger.SkipPrev, null);
+            }));
         }
 
         private void CurrentLoader_OnErrorArised(Exception obj)
@@ -422,6 +443,9 @@ namespace Lunalipse
         }
 
         bool desktopEnable = true;
+        private string update_ok_title;
+        private string update_ok_content;
+
         /// <summary>
         /// 音乐控制面板开关选项发生状态改变触发事件
         /// </summary>
@@ -581,7 +605,7 @@ namespace Lunalipse
 #elif RELEASE
             this.SetVersion(versionHelper.getGenerationTypedVersion(LunalipseGeneration.Release));
 #endif
-
+            RunVersionCheck();
         }
 
 
@@ -620,6 +644,24 @@ namespace Lunalipse
         {
             SaveSettings();
             core.Pause();
+        }
+
+        void RunVersionCheck()
+        {
+            UpdateHelper updateHelper = new UpdateHelper();
+            updateHelper.OnQueryCompleted += () =>
+            {
+                ReleaseInfo releaseInfo = updateHelper.UpdateAvailability();
+                if (releaseInfo != null)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        CommonDialog update_ava = new CommonDialog(update_ok_title, update_ok_content.FormateEx(releaseInfo.Tag), MessageBoxButton.OK);
+                        update_ava.ShowDialog();
+                    });
+                }
+            };
+            updateHelper.QueryLatestUpdate();
         }
 
         private void SaveSettings()

@@ -8,5 +8,6 @@ namespace Lunalipse.Common.Interfaces.IWebMusic
 {
     public interface ISearchResultMetadata
     {
+        List<IWebMusicDetail> GetMusics();
     }
 }

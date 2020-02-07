@@ -69,6 +69,7 @@ namespace Lunalipse.Core
 
         public void GeneralSeqController(Action<MusicEntity> prepareFunc, ICatalogue catalogue, PlayMode playmode, bool isNext)
         {
+            if (catalogue == null) return;
             if(isNext)
             {
                 switch (MusicPlayMode)
@@ -160,6 +161,20 @@ namespace Lunalipse.Core
             CurrentPlaying = entity;
             MediaMetaDataReader.RetrievePictureFromCache(CurrentPlaying);
             AudioOut.Load(entity);
+            AudioOut.Play();
+        }
+
+        public void PrepareMusicBytesRepresentation(MusicEntity representative, byte[] audio_data)
+        {
+            CurrentPlaying?.DisposePicture();
+            if (AudioOut.Playing || AudioOut.isLoaded) AudioOut.Stop();
+            if (!bsManager.CurrentLoader.isScriptLoaded)
+            {
+                currentCatalogue?.SetMusic(representative);
+            }
+            CurrentPlaying = representative;
+            MediaMetaDataReader.RetrievePictureFromCache(CurrentPlaying);
+            AudioOut.Load(representative,audio_data);
             AudioOut.Play();
         }
 

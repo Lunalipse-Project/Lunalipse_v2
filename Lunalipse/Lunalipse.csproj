@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;ALPHA</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS;BETA</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
@@ -34,7 +34,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;ALPHA</DefineConstants>
+    <DefineConstants>TRACE;BETA</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -105,9 +105,6 @@
     <Compile Include="Pages\ConfigPage\Structures\MusicPathSturc.cs" />
     <Compile Include="Pages\ConfigPage\UpdateCheck.xaml.cs">
       <DependentUpon>UpdateCheck.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\EntityEditDialoguePage.xaml.cs">
-      <DependentUpon>EntityEditDialoguePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\InternetMusic.xaml.cs">
       <DependentUpon>InternetMusic.xaml</DependentUpon>
@@ -195,10 +192,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\ConfigPage\UpdateCheck.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\EntityEditDialoguePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -327,6 +320,10 @@
     <ProjectReference Include="..\LunaNetCore\LunaNetCore.csproj">
       <Project>{0370C0CB-20B3-4E1A-9F5F-1A846BC1C1B8}</Project>
       <Name>LunaNetCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetEaseHijacker\NetEaseHijacker.csproj">
+      <Project>{C2D12E12-331A-4FE5-AC87-FC9377C594C5}</Project>
+      <Name>NetEaseHijacker</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

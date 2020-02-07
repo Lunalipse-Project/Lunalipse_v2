@@ -40,7 +40,8 @@ namespace Lunalipse.Presentation.BasicUI
         {
             Dispatcher.Invoke(() =>
             {
-                if (current >= 0) Progress.CurrentValue = current;
+                if (current >= 0)
+                    Progress.CurrentValue = current;
                 Message.Content = message;
             });
         }

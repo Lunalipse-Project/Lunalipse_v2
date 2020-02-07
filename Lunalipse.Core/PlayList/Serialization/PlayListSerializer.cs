@@ -47,6 +47,7 @@ namespace Lunalipse.Core.PlayList.Serialization
                 jsonTextWriter.WriteValue(musicEntity.MusicID);
                 jsonTextWriter.WritePropertyName("name");
                 jsonTextWriter.WriteValue(musicEntity.Name);
+                jsonTextWriter.WriteEndObject();
             }
             jsonTextWriter.WriteEndArray();
             jsonTextWriter.WriteEndObject();
@@ -75,7 +76,7 @@ namespace Lunalipse.Core.PlayList.Serialization
             CatalogueMetadata metadata = new CatalogueMetadata();
             metadata.Musics = new List<Tuple<string, string>>();
             metadata.Name = jobj["name"].Value<string>();
-            foreach (JObject o in jobj["entris"].Children<JObject>())
+            foreach (JObject o in jobj["entries"].Children<JObject>())
             {
                 metadata.Musics.Add(new Tuple<string, string>
                 (
@@ -140,7 +141,7 @@ namespace Lunalipse.Core.PlayList.Serialization
 
             musicEntity.Name = Path.GetFileNameWithoutExtension(musicEntity.Path);
             musicEntity.Extension = Path.GetExtension(musicEntity.Path);
-            musicEntity.LyricPath = $"{Path.GetPathRoot(musicEntity.Path)}\\Lyrics\\{musicEntity.Name}.lrc";
+            musicEntity.LyricPath = $"{Path.GetDirectoryName(musicEntity.Path)}\\Lyrics\\{musicEntity.Name}.lrc";
             if (string.IsNullOrEmpty(musicEntity.Artist[0]))
             {
                 musicEntity.DefaultArtist = "CORE_PRESENTOR_UNKNOW_ARTIST";

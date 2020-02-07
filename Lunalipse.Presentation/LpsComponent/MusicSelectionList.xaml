@@ -39,25 +39,15 @@
             </Label>
             <Label Grid.Row="1" x:Name="Hint" Content="CORE_LOADING" Margin="0,0,0,0" Foreground="{Binding Path=Foreground,ElementName=MUSIC_LIST}" FontSize="{StaticResource FontNormal}" VerticalContentAlignment="Top" HorizontalContentAlignment="Center"/>
         </Grid>
-        <ScrollViewer x:Name="ScrollV">
+        <ScrollViewer x:Name="ScrollV" ScrollChanged="ScrollV_ScrollChanged">
             <Grid>
-                <!--<Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="220"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Border CornerRadius="5" Width="200" Height="200" Grid.Column="0" Margin="10"></Border>
-                </Grid>-->
                 <ItemsControl x:Name="ITEMS" ItemsSource="{Binding}" AllowDrop="True" Drop="ITEMS_Drop" PreviewMouseDown="ITEMS_PreviewMouseDown" MouseMove="ITEMS_MouseMove">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <local:MusicSelectionListItem x:Name="ItemConatiner" 
-                                                      Background="#00FFFFFF"
-                                                      MouseDoubleClick="ItemConatiner_MouseDown">
+                                                      Background="#00FFFFFF" EnableDeletion="{Binding ElementName=MUSIC_LIST, Path=isNotWebMusicShowcase}" 
+                                                          EnableEditOrSeeDetails="{Binding ElementName=MUSIC_LIST, Path=isNotWebMusicShowcase}"
+                                                      MouseLeftButtonDown="ItemConatiner_MouseDown">
                                 <local:MusicSelectionListItem.Triggers>
                                     <EventTrigger RoutedEvent="UIElement.MouseEnter">
                                         <EventTrigger.Actions>

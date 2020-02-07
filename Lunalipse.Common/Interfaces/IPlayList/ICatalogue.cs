@@ -19,6 +19,7 @@ namespace Lunalipse.Common.Interfaces.IPlayList
         bool DeleteMusic(int index);
         bool DeleteMusic(int start, int count);
         bool IsUserDefined();
+        bool IsLocationClassification();
         int GetCount();
         MusicEntity getMusic(int index);
         MusicEntity getMusic(string name);
