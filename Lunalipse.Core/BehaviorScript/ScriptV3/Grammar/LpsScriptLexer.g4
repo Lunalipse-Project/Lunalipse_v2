@@ -15,12 +15,12 @@ CATALOGUE_CHOOSE: 'For the stuff in ';
 PLAY: 'I play music called ';
 PLAY_NUM: 'I play music numbered ';
 SET_EQULAIZER: 'And I would like to set my equalizer using ';
-DO_BUILDIN_FUNC: [Cc] 'sting a magic spell called ';
+DO_BUILDIN_FUNC: [Cc] 'asting a magic spell called ';
 PROGRAM_GROUP_START: 'I made up an checklist with the following items';
 PROGRAM_GROUP_END: 'and that is all about checklist of ';
 DO_ACTIONS: 'I start checking the checklist called ';
 INDEXING_PREFIX: 'I ask ';
-INDEXING_INDEX: ' for his stuff at position of ';
+INDEXING_INDEX: ' for the stuff at position of ';
 ASSIGN_PREFIX: 'I told ';
 MAKE_CONSTANT: 'that I have made a Pinkie promise';
 ASSIGN_TO: ' about ';
@@ -29,6 +29,7 @@ PARAMETER_SPLIT: ' with constraints:';
 END_PROGRAM: 'And that is my adventure in today';
 AUTHUR_NAME: 'Your loyal citizen:';
 
+DECLR: 'I have ';
 
 FULLSTOP: '.';
 WITH_ACTION: 'for ';

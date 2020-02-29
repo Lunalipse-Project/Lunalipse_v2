@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace Lunalipse.Core.BehaviorScript.ScriptV3
 {
@@ -28,7 +29,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
 
         public LpsInterpreter(InterpreterConfig config)
         {
-            frontEnd = new LpsFrontEnd(Configuration.GlobalSymbolTable);
+            frontEnd = new LpsFrontEnd(config.GlobalSymbolTable);
             ExecutionStack = new Stack<ExecutionContext>();
             Configuration = config;
 
@@ -107,9 +108,10 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
             if(toPrincessLuna == null)
             {
                 //TODO throw : no program to run
-                throw new RuntimeException("CORE_LBS_RT_NO_PROGRAM");
+                OnRuntimeExceptionThrown?.Invoke(new RuntimeException("CORE_LBS_RT_NO_PROGRAM"));
+                return;
             }
-            if(ExecutionThread==null || ExecutionThread.ThreadState == ThreadState.Aborted)
+            if(ExecutionThread==null || ExecutionThread.ThreadState != ThreadState.Running)
             {
                 IsStopped = false;
                 ExecutionStack.Clear();
@@ -127,7 +129,8 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
                 {
                     if (ExecutionStack.Count >= Configuration.MaximumContextDepth)
                     {
-                        throw new RuntimeException("CORE_LBS_RT_MAX_RECURSION");
+                        OnRuntimeExceptionThrown?.Invoke(new RuntimeException("CORE_LBS_RT_MAX_RECURSION"));
+                        break;
                     }
                     ExecutionContext context = ExecutionStack.Peek();
                     if (context.IsEndOfContext())
@@ -138,6 +141,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
                     try
                     {
                         context.RunNextInstruction();
+                        OnInstructionFinished?.Invoke();
                     }
                     catch(RuntimeException rte)
                     {
@@ -145,13 +149,13 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
                         if (!Configuration.AutoRuntimeErrorRecovery)
                             break;
                     }
-                    OnInstructionFinished?.Invoke();
+                    OnProgramComplete?.Invoke();
                 }
                 Thread.Sleep(1000 / Configuration.InstructionsPreSecond);
             }
+            IsStopped = true;
             ExecutionStack.Clear();
             OnProgramComplete?.Invoke();
-            IsStopped = true;
         }
 
         public string GetWriter
@@ -209,7 +213,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
                 }
                 else if(IsHalted)
                 {
-                    return InterpreterStatus.PAUSED;
+                    return InterpreterStatus.HALTED;
                 }
                 else
                 {

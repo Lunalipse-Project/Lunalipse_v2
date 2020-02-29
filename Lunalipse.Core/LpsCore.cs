@@ -17,7 +17,6 @@ namespace Lunalipse.Core
     {
 
         public volatile static Dictionary<string, LpsCore> lpsCoresSessions = new Dictionary<string, LpsCore>();
-        private static string active;
 
         private BehaviorScriptManager bsManager;
         private SequenceControllerManager controllerManager;

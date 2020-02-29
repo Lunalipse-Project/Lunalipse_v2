@@ -8,7 +8,7 @@
     </Page>
     <Page key="CORE_FUNC">
       <Key name="CORE_LBS_SY">行为脚本：语法错误</Key>
-      <Key name="CORE_LBS_SY_MISMATCH">“我在你的信件中发现了一个语法错误。” Princess Luna如是说道，“在第{0}行第{1}列出现‘{2}’，这很显然超出了我的预料。”</Key>
+      <Key name="CORE_LBS_SY_MISMATCH">“我在你的信件中发现了一个语法错误。” Princess Luna如是说道，“在第{0}行第{1}列出现 ‘{2}’，这很显然超出了我的预料。”</Key>
       <Key name="CORE_LBS_SE">行为脚本：语义错误</Key>
       <Key name="CORE_LBS_SE_SPELL_NOT_FOUND">我在信件的第{0}行第{1}列发现你使用了一个叫做“{2}”的不存在的魔法，白胡子星旋从未发明过此魔法！</Key>
       <Key name="CORE_LBS_SE_NOT_A_SPELL">“你写信给公主时必须认真对待！” Princess Luna生气的说道，“我在信件的第{0}行第{1}列发现了一个错误。从上下文来看，‘{2}’很显然不是一个魔法。”</Key>
@@ -19,12 +19,15 @@
       <Key name="CORE_LBS_SE_PARAMETER_MISMATCH_L">“你在信件的第{0}行第{1}列使用了一个魔法。”Princess Luna以教育的口吻说道，“确实是有这个魔法，但是像‘{2}’的这类魔法如果使用太多约束的话将会变得无效果。在这里，你需要用{3}个约束，可你却用{4}个。”</Key>
       <Key name="CORE_LBS_RT">行为脚本：发生运行时错误</Key>
       <Key name="CORE_LBS_RT_CATA_NFOUND">未找到名为"{0}"的歌曲分类</Key>
+      <Key name="CORE_LBS_RT_UNABLE_TO_ASSIGN">在信件的第{0}行第{1}列，你已经对‘{2}’作出了Pinkie Promise，所以你不能够擅自违约！</Key>
       <Key name="CORE_LBS_RT_ME_NFOUND">无法在当前选中的歌曲分类找到名称为"{0}"的歌曲</Key>
       <Key name="CORE_LBS_RT_MEI_NFOUND">无法在当前选中的歌曲分类找到编号为"{0}"的歌曲</Key>
-      <Key name="CORE_LBS_RT_MAX_RECURSION">Princess Luna说到：“你信件中进行的递归深度超出了我的想象！你以为我是电脑吗？”</Key>
+      <Key name="CORE_LBS_RT_MAX_RECURSION">Princess Luna气愤的说到：“你信件中进行的递归深度超出了我的想象！你以为我是电脑吗？我已经读不下去了！”</Key>
       <Key name="CORE_LBS_RT_NO_PROGRAM">Princess Luna说到：“如果你不给我寄信的话，那我可永远都不知道你究竟写了什么。”</Key>
       <Key name="CORE_LBS_RT_INDEXING_NOT_SUPPORT">Princess Luna说到：“你在信件的第{0}行第{1}列犯了个严重的错误。‘{2}’不是数组，你不能对一个非数组类型做索引操作！”</Key>
       <Key name="CORE_LBS_RT_INDEX_OUT_OF_RANGE">Princess Luna说到：“你在信件的第{0}行第{1}列对数组‘{2}’的索引操作越界了。”</Key>
+      <Key name="CORE_LBS_RT_NEVER_INITIALIZE">Princess Luna说到：“你在信件的第{0}行第{1}列使用了一个不明意义的 ‘{2}’。你在使用前必须得要告诉我这个东西究竟代表什么！”</Key>
+      <Key name="CORE_LBS_RT_UNDEFINED">Princess Luna说到：“嗯……Undefined，有点意思。”</Key>
       
       
       <Key name="CORE_CONSOLE_TITLE">Lunalipse控制台</Key>
@@ -109,12 +112,14 @@
       <Key name="CORE_BSLOADER_ADD">添加一个脚本</Key>
       <Key name="CORE_BSLOADER_DELETE">删除选定</Key>
       <Key name="CORE_BSLOADER_LOAD">加载选定</Key>
-      <Key name="CORE_BSLOADER_RUNNING">正在运行</Key>
-      <Key name="CORE_BSLOADER_STOPPED">未运行</Key>
-      <Key name="CORE_BSLOADER_HALTED">已挂起</Key>
-      <Key name="CORE_BSLOADER_CTX_ID">当前语境：</Key>
-      <Key name="CORE_BSLOADER_CTX_PTR">当前语境指针：</Key>
-      <Key name="CORE_BSLOADER_STK_DEPTH">堆栈深度：</Key>
+      <Key name="CORE_BSLOADER_UNLOAD">终止运行</Key>
+      <Key name="CORE_BSLOADER_INTRP_STATUS">解释器状态</Key>
+      <Key name="CORE_BSLOADER_INTRP_RUNNING">正在运行</Key>
+      <Key name="CORE_BSLOADER_INTRP_STOPPED">未运行</Key>
+      <Key name="CORE_BSLOADER_INTRP_HALTED">已挂起</Key>
+      <Key name="CORE_BSLOADER_CTX_ID">当前语境</Key>
+      <Key name="CORE_BSLOADER_CTX_PTR">语境指针</Key>
+      <Key name="CORE_BSLOADER_STK_DEPTH">堆栈深度</Key>
       <Key name="CORE_BSLOADER_FUNC_CTRLLER_UNLOAD_TITLE">不支持的控制器</Key>
       <Key name="CORE_BSLOADER_FUNC_CTRLLER_UNLOAD_CONTENT">无法加载选定脚本因为检测到当前的控制器不支持Lunalipse行为脚本。&#xD;&#xA;请您务必先到“设置” -> “通用” -> “行为控制与行为脚本”处将“脚本行为”设为默认控制器。</Key>
 

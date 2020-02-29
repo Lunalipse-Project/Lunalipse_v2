@@ -17,5 +17,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.Exceptions
             this.OffendingToken = OffendingToken;
             customMessageFormat = messageFormat;
         }
+
+        public override string Message => customMessageFormat;
     }
 }

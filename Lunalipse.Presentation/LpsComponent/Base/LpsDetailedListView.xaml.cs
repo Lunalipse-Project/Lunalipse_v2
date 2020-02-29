@@ -132,7 +132,7 @@ namespace Lunalipse.Presentation.LpsComponent.Base
         {
             get
             {
-                if (_index != -1)
+                if (_index >= 0)
                 {
                     return Items[_index];
                 }

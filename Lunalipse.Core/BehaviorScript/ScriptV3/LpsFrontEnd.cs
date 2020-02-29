@@ -56,14 +56,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
             ASTVisitor visitor = new ASTVisitor(GST);
             IParseTree tree = lpsScriptParser.prg();
             LetterToPrincessLuna letterToPrincessLuna = null;
-            try
-            {
-                letterToPrincessLuna = visitor.Visit(tree) as LetterToPrincessLuna;
-            }
-            catch (FrontEndExceptionBase e)
-            {
-                //Console.WriteLine("Error: "+e.Message);
-            }
+            letterToPrincessLuna = visitor.Visit(tree) as LetterToPrincessLuna;
             return letterToPrincessLuna;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Lunalipse.Common;
 using Lunalipse.Common.Data;
 using Lunalipse.Common.Data.BehaviorScript;
+using Lunalipse.Common.Interfaces.IAudio;
 using Lunalipse.Common.Interfaces.IBehaviorScript;
 using Lunalipse.Common.Interfaces.IPlayList;
 using Lunalipse.Core.BehaviorScript.ScriptV3;
@@ -19,7 +20,7 @@ namespace Lunalipse.Core.BehaviorScript
         static volatile BehaviorScriptManager bsManagerInstance = null;
         static readonly object InstanceLock = new object();
 
-        public static BehaviorScriptManager Instance(LpsCore audioCore = null)
+        public static BehaviorScriptManager Instance(IAudioContext audioCore = null)
         {
             if(bsManagerInstance==null)
             {
@@ -44,9 +45,9 @@ namespace Lunalipse.Core.BehaviorScript
 
         string scriptPath;
 
-        LpsCore audioCore;
+        IAudioContext audioCore;
 
-        private BehaviorScriptManager(LpsCore core)
+        private BehaviorScriptManager(IAudioContext core)
         {
             if (scriptPath != "")
             {
@@ -56,9 +57,8 @@ namespace Lunalipse.Core.BehaviorScript
                 {
                     Directory.CreateDirectory(scriptPath);
                 }
-                //interpreter = Interpreter.INSTANCE(scriptPath);
-                //CurrentLoader = ScriptLoader.Instance;
-                foreach (string script in Directory.GetFiles(scriptPath).Where(x => x.EndsWith(".lbs")))
+                CurrentLoader = new LetterEngineV3(audioCore);
+                foreach (string script in Directory.GetFiles(scriptPath).Where(x => x.EndsWith(".letter")))
                 {
                     ScriptCollection.Add(new BScriptLocation(Path.GetFileNameWithoutExtension(script), script));
                 }

@@ -250,7 +250,7 @@ namespace Lunalipse.Core.PlayList
 
         public MusicEntity getMusic(string name)
         {
-            MusicEntity me = MusicList.Find(e => e.Name == name);
+            MusicEntity me = MusicList.Find(e => e.Name.Equals(name) || e.Name.Equals(name));
             Currently = MusicList.IndexOf(me);
             return me;
         }

@@ -37,6 +37,18 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.SyntaxParser
             return toPrincessLuna;
         }
 
+        public override LetterValue VisitDeclare_ids([NotNull] LpsScriptParser.Declare_idsContext context)
+        {
+            ITerminalNode terminalNode = context.ID();
+            if (terminalNode != null)
+            {
+                // Put a placeholder in symbol table;
+                symbolTable.AddSymbolAsPending(terminalNode);
+                return null;
+            }
+            return base.VisitDeclare_ids(context);
+        }
+
         public override LetterValue VisitPrg_start([NotNull] LpsScriptParser.Prg_startContext context)
         {
             // Program name is a valid symbol
@@ -326,7 +338,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.SyntaxParser
         {
             if (context.ID() != null)
             {
-                return symbolTable.GetSymbol(context.ID(), true);
+                return symbolTable.GetSymbol(context.ID());
             }
             else
             {
@@ -339,9 +351,13 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.SyntaxParser
             string name = id_node.Symbol.Text;
             if (symbolTable.HasSymbol(name))
             {
-                throw new DuplicateSymbolException(symbolTable.GetSymbol(id_node).GetLetterElementType(), 
-                    TokenInfo.CreateTokenInfo(id_node.Symbol),
-                    "CORE_LBS_SE_DUPL_DECLARE");
+                if (symbolTable[name].GetLetterElementType() != ElementType.PENDING)
+                {
+                    throw new DuplicateSymbolException(symbolTable.GetSymbol(id_node).GetLetterElementType(),
+                                                        TokenInfo.CreateTokenInfo(id_node.Symbol),
+                                                        "CORE_LBS_SE_DUPL_DECLARE");
+                }
+                symbolTable.RemoveSymbol(name);
             }
             symbolTable.AddSymbol(name, symbol);
             return symbolTable.GetSymbol(id_node);

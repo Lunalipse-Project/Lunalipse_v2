@@ -14,6 +14,8 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.Exceptions
         {
             this.param_actual = param_actual;
             this.param_expected = param_expected;
+            Data.Add("expected", param_expected);
+            Data.Add("actual", param_actual);
         }
     }
 }

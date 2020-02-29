@@ -115,9 +115,9 @@ namespace Lunalipse.Core.PlayList
             return CatalogueBase[index];
         }
 
-        public Catalogue GetCatalogueFirst(string Name)
+        public Catalogue GetCatalogueFirst(string Name, bool includeMotherCatalogue = false)
         {
-            return CatalogueBase.Find(x => x.Name.Equals(Name) && !x.MainCatalogue);
+            return CatalogueBase.Find(x => x.Name.Equals(Name) && (!x.MainCatalogue || includeMotherCatalogue));
         }
 
         public List<Catalogue> GetAlbumClassfied()

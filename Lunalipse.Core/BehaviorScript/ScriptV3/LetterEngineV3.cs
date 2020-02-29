@@ -7,10 +7,6 @@ using Lunalipse.Core.BehaviorScript.ScriptV3.Exceptions.Runtime;
 using Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements;
 using Lunalipse.Core.PlayList;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lunalipse.Core.BehaviorScript.ScriptV3
 {
@@ -19,18 +15,21 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
         LpsInterpreter interpreter;
         IAudioContext AudioCoreContext;
         CataloguePool cataloguePool;
-        public LetterEngineV3()
+        Random random;
+        public LetterEngineV3(IAudioContext AudioCoreContext)
         {
             interpreter = new LpsInterpreter(InterpreterConfig.CreateDefaultConfig());
             cataloguePool = CataloguePool.Instance;
+            this.AudioCoreContext = AudioCoreContext;
             interpreter.OnProgramComplete += () => OnScriptCompleted?.Invoke();
             interpreter.OnRuntimeExceptionThrown += (e) => OnRuntimeErrorArised?.Invoke(e);
             RegisterAction();
+            RegisterMagicSpell();
         }
 
-        public bool isScriptLoaded => throw new NotImplementedException();
+        public bool isScriptLoaded => interpreter.GetInterpreterStatus != InterpreterStatus.STOPPED;
 
-        public IInterpreter ScriptInterpreter => throw new NotImplementedException();
+        public IInterpreter ScriptInterpreter => interpreter;
 
         public event Action<Exception> OnRuntimeErrorArised;
         public event Action<Exception> OnSyntaxErrorArised;
@@ -41,6 +40,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
         {
             try
             {
+                random = new Random();
                 interpreter.Prepare(bScriptLocation.ScriptLocation);
                 interpreter.Execute();
             }
@@ -64,7 +64,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
             interpreter.RegisterAction(LetterActionType.ACT_CATA_CHOOSE,
                 new Action<string>(cata_name =>
                 {
-                    Catalogue catalogue = cataloguePool.GetCatalogueFirst(cata_name);
+                    Catalogue catalogue = cataloguePool.GetCatalogueFirst(cata_name, true);
                     if (catalogue == null)
                     {
                         throw new RuntimeException("CORE_LBS_RT_CATA_NFOUND", cata_name);
@@ -111,6 +111,30 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
                     }
                     AudioCoreContext.ApplyEqualizerSetting(equalizer_values);
                 }));
+        }
+
+        public void RegisterMagicSpell()
+        {
+            interpreter.RegisterSpell("randm", new Func<int, int>(max =>
+             {
+                 return random.Next(max);
+             }));
+            interpreter.RegisterSpell("randim", new Func<int,int, int>((min,max) =>
+            {
+                return random.Next(min, max);
+            }));
+            interpreter.RegisterSpell("randd", new Func<double>(() =>
+            {
+                return random.NextDouble();
+            }));
+            interpreter.RegisterSpell("getMusicCount", new Func<int>(() =>
+            {
+                if (AudioCoreContext.GetCurrentCatalogue() == null)
+                {
+                    return 0;
+                }
+                return AudioCoreContext.GetCurrentCatalogue().GetCount();
+            }));
         }
 
         public void Resume()

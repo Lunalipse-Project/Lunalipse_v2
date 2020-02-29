@@ -104,6 +104,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
 
         public override T getValueAt<T>(int i)
         {
+            ResolvePendingAt(i);
             return (T)getValueByTypeAt(i, typeof(T));
         }
 
@@ -113,6 +114,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
             {
                 return null;
             }
+            ResolvePendingAt(i);
             return arrayContent[i].EvaluateByType(t);
         }
 
@@ -131,6 +133,15 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
             LetterArrayList array = new LetterArrayList();
             array.arrayContent.AddRange(arrayContent);
             return array;
+        }
+
+        private void ResolvePendingAt(int i)
+        {
+            if (arrayContent[i].GetLetterElementType() == ElementType.PENDING)
+            {
+                LetterValue value = (arrayContent[i] as LetterPendingSymbol).ResolvePending();
+                arrayContent[i] = value;
+            }
         }
     }
 }

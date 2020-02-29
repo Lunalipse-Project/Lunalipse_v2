@@ -110,7 +110,7 @@ namespace Lunalipse
 
         public MainWindow() : base()
         {
-            BasePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            BasePath = AppConst.APP_EXE_DIRECTORY;
             InitializeComponent();
             InitializeModules();
             RegisteringCommands();
@@ -316,14 +316,28 @@ namespace Lunalipse
 
         private void CurrentLoader_OnRuntimeErrorArised(Exception obj)
         {
-            RuntimeException runtimeError = obj as RuntimeException;
-            if (runtimeError == null)
+            Dispatcher.Invoke(() =>
             {
-                return;
-            }
-            string body = i18NConvertor.ConvertTo(SupportedPages.CORE_FUNC, runtimeError.Message, runtimeError.Arguements);
-            string caption = i18NConvertor.ConvertTo(SupportedPages.CORE_FUNC, "CORE_LBS_RT");
-            new CommonDialog(caption, body, MessageBoxButton.OK).ShowDialog();
+                RuntimeException runtimeError = obj as RuntimeException;
+                if (runtimeError == null)
+                {
+                    return;
+                }
+                string body;
+                if (runtimeError.Arguements != null)
+                {
+                    body = i18NConvertor.ConvertTo(SupportedPages.CORE_FUNC, runtimeError.Message, runtimeError.Arguements);
+                }
+                else
+                {
+                    body = i18NConvertor.ConvertTo(SupportedPages.CORE_FUNC, runtimeError.Message,
+                        runtimeError.Location.Line,
+                        runtimeError.Location.Column,
+                        runtimeError.Location.TokenText);
+                }
+                string caption = i18NConvertor.ConvertTo(SupportedPages.CORE_FUNC, "CORE_LBS_RT");
+                new CommonDialog(caption, body, MessageBoxButton.OK).ShowDialog();
+            });
         }
 
         private void ControlPanel_OnModeChange(PlayMode mode, object append)

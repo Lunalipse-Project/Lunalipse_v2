@@ -63,6 +63,24 @@ public interface ILpsScriptParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitStatements([NotNull] LpsScriptParser.StatementsContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="LpsScriptParser.declares"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitDeclares([NotNull] LpsScriptParser.DeclaresContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LpsScriptParser.declare"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitDeclare([NotNull] LpsScriptParser.DeclareContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LpsScriptParser.declare_ids"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitDeclare_ids([NotNull] LpsScriptParser.Declare_idsContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="LpsScriptParser.statement"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

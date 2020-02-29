@@ -98,6 +98,7 @@
     <Compile Include="BehaviorScript\ScriptV3\Runtime\LetterArrayList.cs" />
     <Compile Include="BehaviorScript\ScriptV3\Runtime\LetterAssign.cs" />
     <Compile Include="BehaviorScript\ScriptV3\Runtime\LetterBool.cs" />
+    <Compile Include="BehaviorScript\ScriptV3\Runtime\LetterPendingSymbol.cs" />
     <Compile Include="BehaviorScript\ScriptV3\Runtime\LetterValue.cs" />
     <Compile Include="BehaviorScript\ScriptV3\Runtime\LetterExpression.cs" />
     <Compile Include="BehaviorScript\ScriptV3\Runtime\LetterFunctionCall.cs" />

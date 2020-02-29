@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Lunalipse.Core.BehaviorScript.ScriptV2
 {
-    public class Executor : IInterpreter
+    public class Executor
     {
         LexicalLibs lexicalLibs = LexicalLibs.Instance;
         MusicEntity musicEntity;

@@ -35,7 +35,6 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV2
         public event Action<Exception> OnRuntimeErrorArised;
         public event Action OnScriptCompleted;
 
-        public IInterpreter ScriptInterpreter { get=> executor; }
 
         public bool isScriptLoaded { get; private set; } = false;
 

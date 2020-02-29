@@ -8,10 +8,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lunalipse.Windows"
         mc:Ignorable="d" Tag="CORE_BSLOADER_TITLE" x:Name="BS_LOADER" Foreground="White"
-        Title="LpsScriptLoader" Height="300" Width="500">
+        Title="LpsScriptLoader" Height="370" Width="500">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="250"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
@@ -36,8 +36,10 @@
                             Foreground="{Binding ElementName=BS_LOADER, Path=Foreground}" Background="#00ffffff"
                             Padding="0,5,0,5" Click="Button_Click" x:Name="Load" Margin="10"
                             Tag="CORE_BSLOADER_LOAD"/>
-                <Grid Margin="10" x:Name="Pointers" Visibility="Hidden">
+                <Grid Margin="10" Visibility="Visible" Height="auto">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
@@ -46,16 +48,32 @@
                             <ColumnDefinition Width=".6*"/>
                             <ColumnDefinition Width=".4*"/>
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Tag="CORE_BSLOADER_OUTERPTR" Foreground="{Binding ElementName=BS_LOADER, Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
-                        <Label Grid.Column="1" Name="outerPtr" HorizontalContentAlignment="Right" FontFamily="{StaticResource Consolas}" Foreground="{Binding ElementName=BS_LOADER, Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
+                        <Label Grid.Column="0" Tag="CORE_BSLOADER_INTRP_STATUS" Foreground="{Binding ElementName=BS_LOADER, Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
+                        <Label Grid.Column="1" Name="IntrpStatus" HorizontalContentAlignment="Right" FontFamily="{StaticResource Consolas}" Foreground="{Binding ElementName=BS_LOADER, Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
                     </Grid>
-                    <Grid Grid.Row="1" Margin="0 10 0 0">
+                    <Grid Grid.Row="1" Margin="0 0 0 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width=".6*"/>
                             <ColumnDefinition Width=".4*"/>
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Tag="CORE_BSLOADER_INNERPTR" Foreground="{Binding ElementName=BS_LOADER, Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
-                        <Label Grid.Column="1" Name="innerPtr" HorizontalContentAlignment="Right" FontFamily="{StaticResource Consolas}" Foreground="{Binding ElementName=BS_LOADER, Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
+                        <Label Grid.Column="0" Tag="CORE_BSLOADER_STK_DEPTH" Foreground="{Binding ElementName=BS_LOADER, Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
+                        <Label Grid.Column="1" Name="stackDepth" HorizontalContentAlignment="Right" FontFamily="{StaticResource Consolas}" Foreground="{Binding ElementName=BS_LOADER, Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
+                    </Grid>
+                    <Grid Grid.Row="2" Margin="0 0 0 0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Tag="CORE_BSLOADER_CTX_ID" Foreground="{Binding ElementName=BS_LOADER, Path=Foreground}" FontSize="{StaticResource FontNormal}" Margin="0 0 0 -5"/>
+                        <Label Grid.Row="1" Name="ctxID" HorizontalContentAlignment="Right" FontFamily="{StaticResource Consolas}" Foreground="{Binding ElementName=BS_LOADER, Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
+                    </Grid>
+                    <Grid Grid.Row="3" Margin="0 0 0 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width=".6*"/>
+                            <ColumnDefinition Width=".4*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Tag="CORE_BSLOADER_CTX_PTR" Foreground="{Binding ElementName=BS_LOADER, Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
+                        <Label Grid.Column="1" Name="ctxPtr" HorizontalContentAlignment="Right" FontFamily="{StaticResource Consolas}" Foreground="{Binding ElementName=BS_LOADER, Path=Foreground}" FontSize="{StaticResource FontNormal}"/>
                     </Grid>
                 </Grid>
             </StackPanel>

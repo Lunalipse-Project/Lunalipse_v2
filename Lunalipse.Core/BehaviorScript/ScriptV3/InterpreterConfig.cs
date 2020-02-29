@@ -40,6 +40,8 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
                 LetterValue.CreateLetterValue(new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, typeof(int[])));
             config.GlobalSymbolTable.AddSymbol("DefaultVolume",
                 LetterValue.CreateLetterValue(70, typeof(double)));
+            config.GlobalSymbolTable.AddSymbol("DefaultCatalogue",
+                LetterValue.CreateLetterValue("CORE_CATALOGUE_AllMusic", typeof(string)));
             return config;
         }
     }

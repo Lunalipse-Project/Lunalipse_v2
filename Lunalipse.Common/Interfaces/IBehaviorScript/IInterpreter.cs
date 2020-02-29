@@ -11,9 +11,11 @@ namespace Lunalipse.Common.Interfaces.IBehaviorScript
     public interface IInterpreter
     {
         event Action OnInstructionFinished;
+        event Action OnProgramComplete;
         int ExecutionStackDepth { get; }
         int CurrentStackPointer { get; }
         string CurrentContextIdentifier { get; }
         InterpreterStatus GetInterpreterStatus { get; }
+        void StopExecution();
     }
 }

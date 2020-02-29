@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
 {
@@ -44,7 +46,18 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
                 Type paraType = parameterInfo[i].ParameterType;
                 parameters[i] = @params.getValueByTypeAt(i, paraType);
             }
-            object returnVal = starSwirlSpell.Method.Invoke(starSwirlSpell.Target, parameters);
+            object returnVal = null;
+            try
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    returnVal = starSwirlSpell.Method.Invoke(starSwirlSpell.Target, parameters);
+                });
+            }
+            catch(Exception e)
+            {
+                throw e.InnerException;
+            }
             return CreateLetterValue(returnVal, starSwirlSpell.Method.ReturnType);
         }
     }

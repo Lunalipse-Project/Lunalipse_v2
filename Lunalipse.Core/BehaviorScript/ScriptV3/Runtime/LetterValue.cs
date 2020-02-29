@@ -88,9 +88,9 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
             if (t.IsArray)
             {
                 Type array_element_type = t.GetElementType();
-                Array array = (Array)Convert.ChangeType(value, typeof(Array));
+                Array array = (Array)value;
                 LetterArrayList larray = new LetterArrayList();
-                for (int i = 0; i > array.Length; i++)
+                for (int i = 0; i < array.Length; i++)
                 {
                     larray.AddToElementList(CreateLetterValue(array.GetValue(i), array_element_type));
                 }

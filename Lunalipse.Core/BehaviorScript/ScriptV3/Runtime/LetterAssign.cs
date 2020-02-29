@@ -22,13 +22,22 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
         {
             if(identifier.CanAssign)
             {
+                ResolvePending();
                 identifier.assign(value.EvaluateAs<LetterValue>());
             }
             else
             {
                 throw new RTInvalidOperationException(
-                    $"[Error]: You can't change your Pinkie promise once you have made!",
+                    "CORE_LBS_RT_UNABLE_TO_ASSIGN",
                     ElementTokenInfo);
+            }
+        }
+
+        private void ResolvePending()
+        {
+            if(value.GetLetterElementType()==ElementType.PENDING)
+            {
+                value = (value as LetterPendingSymbol).ResolvePending();
             }
         }
     }

@@ -9,13 +9,23 @@ prg: prg_start prg_content prg_end;
 prg_start: PROG_START PROG_NAME_DECLARE ID FULLSTOP;
 prg_end: END_PROGRAM FULLSTOP AUTHUR_NAME STRING FULLSTOP;
 
-prg_content: group_statemnt FULLSTOP prg_content
-            | statements
+prg_content: declares group_statemnt FULLSTOP prg_content
+            |declares statements
             | ;
 
 statements: statements statement
             |
             ;
+
+declares: declares declare
+          |declare
+          |;
+
+declare: DECLR declare_ids FULLSTOP;
+
+declare_ids: ID
+            |declare_ids COMMA declare_ids;
+
 statement: cata_choose FULLSTOP					
          | play_actions conditions? FULLSTOP	
          | set_eqzr FULLSTOP					

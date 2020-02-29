@@ -8,8 +8,8 @@ namespace Lunalipse.Common.Interfaces.IBehaviorScript
 {
     public enum InterpreterStatus
     {
-        RUNNING,
-        PAUSED,
-        STOPPED
+        RUNNING = 0,
+        HALTED = 1,
+        STOPPED = 2
     }
 }

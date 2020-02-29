@@ -11,6 +11,10 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
         {
             get
             {
+                if (Context.ElementTokenInfo == null)
+                {
+                    return string.Empty;
+                }
                 return Context.ElementTokenInfo.TokenText;
             }
         }

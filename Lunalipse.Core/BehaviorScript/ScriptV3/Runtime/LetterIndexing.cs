@@ -20,12 +20,14 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
 
         public override T EvaluateAs<T>()
         {
+            ReslovePending();
             TypeCheck();
             return identifier.getValueAt<T>(IndexCheck());
         }
 
         public override LetterValue EvaluateWith(LetterValue operand, RelationType relationType)
         {
+            ReslovePending();
             TypeCheck();
             return identifier.getValueAt<LetterValue>(IndexCheck()).EvaluateWith(operand, relationType);
         }
@@ -52,6 +54,18 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
                 throw new RTInvalidOperationException("CORE_LBS_RT_INDEX_OUT_OF_RANGE", ElementTokenInfo);
             }
             return i;
+        }
+
+        private void ReslovePending()
+        {
+            if(index.GetLetterElementType() == ElementType.PENDING)
+            {
+                index = (index as LetterPendingSymbol).ResolvePending();
+            }
+            if (identifier.GetLetterElementType() == ElementType.PENDING)
+            {
+                identifier = (identifier as LetterPendingSymbol).ResolvePending();
+            }
         }
     }
 }

@@ -7,7 +7,7 @@
       xmlns:local="clr-namespace:Lunalipse.Pages.ConfigPage"
       mc:Ignorable="d"  Name="GeneralConfigPage"
       xmlns:LpsComponentUI="clr-namespace:Lunalipse.Presentation.LpsComponent;assembly=Lunalipse.Presentation"
-      Height="1700" Width="800" Loaded="GeneralConfigPage_Loaded"
+      Height="1800" Width="800" Loaded="GeneralConfigPage_Loaded"
       Title="GeneralConfig">
 
     <Page.Resources>

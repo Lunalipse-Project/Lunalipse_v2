@@ -41,34 +41,33 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
         public override object EvaluateByType(Type type)
         {
             EvalStack.Clear();
-            try
+            for (int i = 0; i < RPNExpression.Count; i++)
             {
-                foreach (LetterValue elementBase in RPNExpression)
+                LetterValue value = RPNExpression[i];
+                if (value.GetLetterElementType() == ElementType.PENDING)
                 {
-                    LetterValue operand1 = null, operand2 = null;
-                    if (elementBase.GetLetterElementType() == ElementType.RELATION)
+                    value = (value as LetterPendingSymbol).ResolvePending();
+                    RPNExpression[i] = value;
+                }
+                LetterValue operand1 = null, operand2 = null;
+                if (value.GetLetterElementType() == ElementType.RELATION)
+                {
+                    LetterRelation relation = value as LetterRelation;
+                    if (!relation.isUnary)
                     {
-                        LetterRelation relation = elementBase as LetterRelation;
-                        if (!relation.isUnary)
-                        {
-                            operand1 = EvalStack.Pop();
-                            operand2 = EvalStack.Pop();
-                        }
-                        else
-                        {
-                            operand2 = EvalStack.Pop();
-                        }
-                        EvalStack.Push(operand2.EvaluateWith(operand1, relation.GetRelationType()));
+                        operand1 = EvalStack.Pop();
+                        operand2 = EvalStack.Pop();
                     }
                     else
                     {
-                        EvalStack.Push(elementBase);
+                        operand2 = EvalStack.Pop();
                     }
+                    EvalStack.Push(operand2.EvaluateWith(operand1, relation.GetRelationType()));
                 }
-            }
-            catch (Exception e)
-            {
-
+                else
+                {
+                    EvalStack.Push(value);
+                }
             }
             return EvalStack.Peek().EvaluateByType(type);
         }

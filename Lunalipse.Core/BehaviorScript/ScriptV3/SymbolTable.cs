@@ -27,6 +27,11 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
             string name = terminal.Symbol.Text;
             if (HasSymbol(name))
             {
+                // We have declare it but not initialize
+                if (table[name].GetLetterElementType() == ElementType.PENDING && with_create)
+                {
+                    table[name] = new LetterVariable(name);
+                }
                 return table[name];
             }
             else if (!with_create)
@@ -41,6 +46,12 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
                 table.Add(name, new LetterVariable(name));
                 return table[name];
             }
+        }
+
+        public void AddSymbolAsPending(ITerminalNode symbol)
+        {
+            string name = symbol.Symbol.Text;
+            AddSymbol(name, new LetterPendingSymbol(name, this, TokenInfo.CreateTokenInfo(symbol.Symbol)));
         }
 
         public void AddSymbol(string identifier, LetterValue body)

@@ -17,7 +17,7 @@ namespace Lunalipse.Common.Interfaces.IPlayList
         List<T> SearchCatalogue(string Name);
         T GetCatalogue(string uuid);
         T GetCatalogue(int index);
-        T GetCatalogueFirst(string Name);
+        T GetCatalogueFirst(string Name, bool includeMotherCatalogue = false);
         void AddMusic(string uuid, MusicEntity music);
         void RemoveMusic(string uuid, MusicEntity music);
         void RemoveMusic(string uuid, string MusicUUID);
