@@ -36,7 +36,8 @@ using Lunalipse.Auxiliary;
 using Lunalipse.Utilities;
 using Lunalipse.Utilities.Misc;
 using Lunalipse.Core.BehaviorScript;
-using Lunalipse.Core.BehaviorScript.ScriptV2;
+using Lunalipse.Core.BehaviorScript.ScriptV3;
+using Lunalipse.Core.BehaviorScript.ScriptV3.Exceptions.Runtime;
 
 namespace Lunalipse
 {
@@ -58,7 +59,7 @@ namespace Lunalipse
                   ,udB@@@@@@@@@@@@QU|-                                                                                                                          
                       `_^r?\(r>:`                                                                                                                               
                                                                                                                                                                               
-        Copyright Lunaixsky 2019
+                                                                           Copyright Lunaixsky 2019
      */
 
     public partial class MainWindow : LunalipseMainWindow, ITranslatable
@@ -78,7 +79,7 @@ namespace Lunalipse
         private LThemeManager themeManager;
         private BitmapAnalyser bitmapAnalyser;
         private VisualizationManager vManager;
-        private BScriptManager bsManager;
+        private BehaviorScriptManager bsManager;
         private SequenceControllerManager controllerManager;
         private II18NConvertor i18NConvertor;
         
@@ -288,8 +289,8 @@ namespace Lunalipse
 
             this.OnMinimizClicked += MainWindow_OnMinimizClicked;
 
-            bsManager = BScriptManager.Instance();
-            bsManager.CurrentLoader.OnErrorArised += CurrentLoader_OnErrorArised;
+            bsManager = BehaviorScriptManager.Instance();
+            bsManager.CurrentLoader.OnRuntimeErrorArised += CurrentLoader_OnRuntimeErrorArised;
 
             controllerManager = SequenceControllerManager.Instance;
             controllerManager.SetController(GlobalSetting.SelectedController);
@@ -313,16 +314,16 @@ namespace Lunalipse
             }));
         }
 
-        private void CurrentLoader_OnErrorArised(Exception obj)
+        private void CurrentLoader_OnRuntimeErrorArised(Exception obj)
         {
-            ScriptException scriptException = obj as ScriptException;
-            if (scriptException == null)
+            RuntimeException runtimeError = obj as RuntimeException;
+            if (runtimeError == null)
             {
                 return;
             }
-            string body = i18NConvertor.ConvertTo(SupportedPages.CORE_FUNC, scriptException.Message, scriptException.Args);
-            string caption = i18NConvertor.ConvertTo(SupportedPages.CORE_FUNC, "CORE_BSCRIPTV2_ERROR_T_" + scriptException.ExceptionType.ToString());
-            (new CommonDialog(caption, body, MessageBoxButton.OK)).ShowDialog();
+            string body = i18NConvertor.ConvertTo(SupportedPages.CORE_FUNC, runtimeError.Message, runtimeError.Arguements);
+            string caption = i18NConvertor.ConvertTo(SupportedPages.CORE_FUNC, "CORE_LBS_RT");
+            new CommonDialog(caption, body, MessageBoxButton.OK).ShowDialog();
         }
 
         private void ControlPanel_OnModeChange(PlayMode mode, object append)

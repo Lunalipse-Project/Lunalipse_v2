@@ -20,26 +20,28 @@ namespace Lunalipse.Windows
     /// </summary>
     public partial class LpsScriptLoader : LunalipseDialogue
     {
-        BScriptManager bScriptManager;
+        BehaviorScriptManager bScriptManager;
         SequenceControllerManager controllerManager;
-        IExecutor currentExecutor;
+        IInterpreter currentExecutor;
         string loaded;
 
         string unsupportControlerT, unsupportControlerC;
         public LpsScriptLoader()
         {
             InitializeComponent();
-            bScriptManager = BScriptManager.Instance();
+            bScriptManager = BehaviorScriptManager.Instance();
             controllerManager = SequenceControllerManager.Instance;
-            currentExecutor = bScriptManager.CurrentLoader.ScriptExecutor;
+            currentExecutor = bScriptManager.CurrentLoader.ScriptInterpreter;
             Loaded += LpsScriptLoader_Loaded;
             Unloaded += LpsScriptLoader_Unloaded;
         }
 
         private void LpsScriptLoader_Unloaded(object sender, RoutedEventArgs e)
         {
-            bScriptManager.CurrentLoader.ScriptExecutor.OnMovingNext -= ScriptExecutor_OnMovingNext;
+            bScriptManager.CurrentLoader.ScriptInterpreter.OnInstructionFinished -= ScriptExecutor_OnMovingNext;
             TranslationManagerBase.OnI18NEnvironmentChanged -= TranslationManagerBase_OnI18NEnvironmentChanged;
+            bScriptManager.CurrentLoader.OnSemanticErrorArised -= CurrentLoader_OnSemanticErrorArised;
+            bScriptManager.CurrentLoader.OnSyntaxErrorArised -= CurrentLoader_OnSyntaxErrorArised;
             Loaded -= LpsScriptLoader_Loaded;
             Unloaded -= LpsScriptLoader_Unloaded;
         }
@@ -47,6 +49,8 @@ namespace Lunalipse.Windows
         private void LpsScriptLoader_Loaded(object sender, RoutedEventArgs e)
         {
             TranslationManagerBase.OnI18NEnvironmentChanged += TranslationManagerBase_OnI18NEnvironmentChanged;
+            bScriptManager.CurrentLoader.OnSemanticErrorArised += CurrentLoader_OnSemanticErrorArised;
+            bScriptManager.CurrentLoader.OnSyntaxErrorArised += CurrentLoader_OnSyntaxErrorArised;
             foreach(BScriptLocation script in bScriptManager.ScriptCollection)
             {
                 if(bScriptManager.LoadedScript!=null)
@@ -60,11 +64,21 @@ namespace Lunalipse.Windows
                 ScriptLocations.Add(new BScriptLocationStruc(script));
             }
             TranslationManagerBase_OnI18NEnvironmentChanged(TranslationManagerBase.AquireConverter());
-            currentExecutor.OnMovingNext += ScriptExecutor_OnMovingNext;
+            currentExecutor.OnInstructionFinished += ScriptExecutor_OnMovingNext;
             if(bScriptManager.CurrentLoader.isScriptLoaded)
             {
                 ScriptExecutor_OnMovingNext();
             }
+        }
+
+        private void CurrentLoader_OnSyntaxErrorArised(System.Exception obj)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void CurrentLoader_OnSemanticErrorArised(System.Exception obj)
+        {
+            throw new System.NotImplementedException();
         }
 
         private void ScriptExecutor_OnMovingNext()
@@ -72,6 +86,12 @@ namespace Lunalipse.Windows
             ScriptStatus.Visibility = Visibility.Visible;
             Pointers.Visibility = Visibility.Visible;
             Status.Content = loaded.FormateEx(bScriptManager.LoadedScript.ScriptName);
+            // TODO UI rework needed
+            // Building blocks --
+            // currentExecutor.CurrentContextIdentifier;
+            // currentExecutor.CurrentStackPointer;
+            // currentExecutor.ExecutionStackDepth;
+            // currentExecutor.GetInterpreterStatus;
             innerPtr.Content = currentExecutor.currentInnerPointer;
             outerPtr.Content = currentExecutor.currentPointer;
             currentFunc.Content = currentExecutor.CurrentCode;

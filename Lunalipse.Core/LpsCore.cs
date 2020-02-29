@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using Lunalipse.Common.Data;
 using Lunalipse.Common.Generic.AudioControlPanel;
-using Lunalipse.Common.Interfaces.II18N;
+using Lunalipse.Common.Interfaces.IAudio;
 using Lunalipse.Common.Interfaces.IPlayList;
 using Lunalipse.Core.BehaviorScript;
 using Lunalipse.Core.LpsAudio;
@@ -15,12 +13,13 @@ using Lunalipse.Utilities.Misc;
 
 namespace Lunalipse.Core
 {
-    public class LpsCore: IDisposable
+    public class LpsCore: IAudioContext, IDisposable
     {
 
         public volatile static Dictionary<string, LpsCore> lpsCoresSessions = new Dictionary<string, LpsCore>();
+        private static string active;
 
-        private BScriptManager bsManager;
+        private BehaviorScriptManager bsManager;
         private SequenceControllerManager controllerManager;
         private UnrepeatedRandom random;
         //private MusicEntity CurrentPlaying = null;
@@ -45,7 +44,7 @@ namespace Lunalipse.Core
         protected LpsCore(bool immersed, int latency)
         {
             AudioOut = LpsAudio.LpsAudio.Instance(immersed,latency);
-            bsManager = BScriptManager.Instance(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)+"/Scripts");
+            bsManager = BehaviorScriptManager.Instance(this);
             controllerManager = SequenceControllerManager.Instance;
             AudioOut.LyricTokenzier = LyricTokenizer.INSTANCE;
             random = new UnrepeatedRandom();
@@ -106,7 +105,7 @@ namespace Lunalipse.Core
         {
             if (isNext)
             {
-                prepareFunc(bsManager.StepToNext());
+                bsManager.ResumeExecution();
             }
         }
 
@@ -182,11 +181,11 @@ namespace Lunalipse.Core
         /// Set playing catalogue
         /// </summary>
         /// <param name="catalogue"></param>
-        public void SetCatalogue(Catalogue catalogue)
+        public void SetCatalogue(ICatalogue catalogue)
         {
             if (currentCatalogue != catalogue)
             {
-                currentCatalogue = catalogue;
+                currentCatalogue = catalogue as Catalogue;
                 random.Update(0, catalogue.GetCount());
             }
         }
@@ -220,7 +219,19 @@ namespace Lunalipse.Core
             AudioOut.Dispose();
         }
 
+        public ICatalogue GetCurrentCatalogue()
+        {
+            return currentCatalogue;
+        }
 
-        //TODO 增加LPScript加载方法
+        public void SetVolume(double volume)
+        {
+            AudioOut.Volume = (float)volume;
+        }
+
+        public void ApplyEqualizerSetting(double[] equalizer_values)
+        {
+            AudioOut.SetEqualizer(equalizer_values);
+        }
     }
 }

@@ -46,6 +46,8 @@ namespace Lunalipse
             engineManager = SearchEngineManager.Instance;
             resourcesHandler = new ResourcesHandler(Assembly.GetEntryAssembly().GetName().Version);
 
+            AppConst.APP_EXE_DIRECTORY = currentFolder;
+
             engineManager.ApplicationBaseDir = currentFolder;
 
             Log.Info($"Lunalipse Music Player (Version: {VersionHelper.Instance.getFullVersion()})");

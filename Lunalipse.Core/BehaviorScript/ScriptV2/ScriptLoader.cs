@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Lunalipse.Core.BehaviorScript.ScriptV2
 {
-    public class ScriptLoader : IScriptLoader
+    public class ScriptLoader
     {
         static volatile ScriptLoader loader = null;
         static readonly object lock_object = new object();
@@ -32,10 +32,10 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV2
         SemanticAnalyzer semanticAnalyzer;
         private Executor executor;
 
-        public event Action<Exception> OnErrorArised;
+        public event Action<Exception> OnRuntimeErrorArised;
         public event Action OnScriptCompleted;
 
-        public IExecutor ScriptExecutor { get=> executor; }
+        public IInterpreter ScriptInterpreter { get=> executor; }
 
         public bool isScriptLoaded { get; private set; } = false;
 
@@ -60,12 +60,12 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV2
             }
             catch(ScriptException se)
             {
-                OnErrorArised?.Invoke(se);
+                OnRuntimeErrorArised?.Invoke(se);
                 isScriptLoaded = false;
             }
         }
 
-        public void GoNext()
+        public void Resume()
         {
             try
             {
@@ -80,7 +80,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV2
             }
             catch (ScriptException se)
             {
-                OnErrorArised?.Invoke(se);
+                OnRuntimeErrorArised?.Invoke(se);
                 isScriptLoaded = true;
                 executor.forcedStepping();
             }

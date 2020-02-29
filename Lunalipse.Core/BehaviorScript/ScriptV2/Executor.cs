@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Lunalipse.Core.BehaviorScript.ScriptV2
 {
-    public class Executor : IExecutor
+    public class Executor : IInterpreter
     {
         LexicalLibs lexicalLibs = LexicalLibs.Instance;
         MusicEntity musicEntity;
@@ -41,7 +41,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV2
         public int currentPtr = 0;
         public int currentInnerPtr = 0, blockLoopTarget = 0;
 
-        public event Action OnMovingNext;
+        public event Action OnInstructionFinished;
 
         public void ResetExecutor()
         {
@@ -97,7 +97,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV2
                 CurrentCode = fx.ToExpressionString();
                 CurrentCodeParsed = fx.ToParsedFuncString();
                 currentInnerPtr++;
-                OnMovingNext?.Invoke();
+                OnInstructionFinished?.Invoke();
                 if ((fx.functionType & FunctionType.NON_PLAYABLE_FUNCTION) == FunctionType.NON_PLAYABLE_FUNCTION)
                 {
                     return BlockExe(codeBlock);

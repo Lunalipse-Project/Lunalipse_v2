@@ -1,9 +1,9 @@
-﻿using Lunalipse.Common.Data;
+﻿using Lunalipse.Common;
+using Lunalipse.Common.Data;
 using Lunalipse.Common.Data.BehaviorScript;
 using Lunalipse.Common.Interfaces.IBehaviorScript;
 using Lunalipse.Common.Interfaces.IPlayList;
-using Lunalipse.Core.BehaviorScript.ScriptV1;
-using Lunalipse.Core.BehaviorScript.ScriptV2;
+using Lunalipse.Core.BehaviorScript.ScriptV3;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,40 +14,50 @@ using System.Threading.Tasks;
 
 namespace Lunalipse.Core.BehaviorScript
 {
-    public class BScriptManager
+    public class BehaviorScriptManager
     {
-        static volatile BScriptManager bsManagerInstance = null;
+        static volatile BehaviorScriptManager bsManagerInstance = null;
         static readonly object InstanceLock = new object();
 
-        public static BScriptManager Instance(string scriptPath = "")
+        public static BehaviorScriptManager Instance(LpsCore audioCore = null)
         {
             if(bsManagerInstance==null)
             {
                 lock(InstanceLock)
                 {
-                    bsManagerInstance = bsManagerInstance ?? new BScriptManager(scriptPath);
+                    if (bsManagerInstance == null)
+                    {
+                        if(audioCore == null)
+                        {
+                            throw new ArgumentNullException("Script Manager must be initialized with an instance of LpsCore.");
+                        }
+                        bsManagerInstance = new BehaviorScriptManager(audioCore);
+                    }
                 }
             }
             return bsManagerInstance;
         }
 
         public List<BScriptLocation> ScriptCollection { get; private set; } = new List<BScriptLocation>();
-        public IScriptLoader CurrentLoader { get; private set; }
+        public IScriptEngine CurrentLoader { get; private set; }
         public BScriptLocation LoadedScript { get; private set; }
 
         string scriptPath;
 
-        private BScriptManager(string scriptPath)
+        LpsCore audioCore;
+
+        private BehaviorScriptManager(LpsCore core)
         {
             if (scriptPath != "")
             {
-                this.scriptPath = scriptPath;
+                this.scriptPath = AppConst.APP_EXE_DIRECTORY + "/Scripts/";
+                audioCore = core;
                 if (!Directory.Exists(scriptPath))
                 {
                     Directory.CreateDirectory(scriptPath);
                 }
                 //interpreter = Interpreter.INSTANCE(scriptPath);
-                CurrentLoader = ScriptLoader.Instance;
+                //CurrentLoader = ScriptLoader.Instance;
                 foreach (string script in Directory.GetFiles(scriptPath).Where(x => x.EndsWith(".lbs")))
                 {
                     ScriptCollection.Add(new BScriptLocation(Path.GetFileNameWithoutExtension(script), script));
@@ -73,15 +83,9 @@ namespace Lunalipse.Core.BehaviorScript
             LpsAudio.AudioDelegations.PlayingFinished?.Invoke();
         }
 
-        public MusicEntity StepToNext()
+        public void ResumeExecution()
         {
-            CurrentLoader.GoNext();
-            return CurrentLoader.ScriptExecutor.CurrentMusicEntity;
-        }
-
-        public ICatalogue UsingCatalogue
-        {
-            get => CurrentLoader.ScriptExecutor.CurrentCatalogue;
+            CurrentLoader.Resume();
         }
     }
 }

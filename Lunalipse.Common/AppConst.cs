@@ -12,6 +12,7 @@ namespace Lunalipse.Common
         public static string LICENSE_GUNLGPL_TAGLIB = "";
         public static string LICENSE_MIT_JSON = "";
         public static string LICENSE_MS_PL_CSCORE = "";
+        public static string APP_EXE_DIRECTORY = "";
 
         public const string LUNALIPSE_LICENSES = "Data/licenses.lrss";
     }

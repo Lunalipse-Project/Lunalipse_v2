@@ -1,4 +1,5 @@
 ﻿using Lunalipse.Common.Data;
+using Lunalipse.Common.Interfaces.IPlayList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace Lunalipse.Common.Interfaces.IBehaviorScript
 {
     public interface IInterpreter
     {
-        bool Load(string ScriptID);
-        bool LoadPath(string ScriptPath);
-        bool SaveAs(string path);
-        MusicEntity Stepping();
-
+        event Action OnInstructionFinished;
+        int ExecutionStackDepth { get; }
+        int CurrentStackPointer { get; }
+        string CurrentContextIdentifier { get; }
+        InterpreterStatus GetInterpreterStatus { get; }
     }
 }
