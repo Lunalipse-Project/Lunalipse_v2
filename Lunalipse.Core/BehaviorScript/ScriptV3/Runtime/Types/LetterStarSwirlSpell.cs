@@ -10,7 +10,7 @@ using System.Windows.Threading;
 namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
 {
     /// <summary>
-    /// Represent spell invented by Star Swirl the Breaded. (Delegation to predefine functions)
+    /// Represent spell invented by Star Swirl the Breaded. (Wrapping of CLR functions)
     /// </summary>
     public class LetterStarSwirlSpell : LetterValue
     {
@@ -59,6 +59,14 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
                 throw e.InnerException;
             }
             return CreateLetterValue(returnVal, starSwirlSpell.Method.ReturnType);
+        }
+
+        public override void Evaluate()
+        {
+            if (ParameterNumber == 0)
+            {
+                CastTheSpell(null);
+            }
         }
     }
 }

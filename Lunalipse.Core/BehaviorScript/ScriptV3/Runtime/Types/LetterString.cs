@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Antlr4.Runtime.Tree;
+using Lunalipse.Core.BehaviorScript.ScriptV3.Exceptions.Runtime;
 using Lunalipse.Core.BehaviorScript.ScriptV3.SyntaxParser;
 
 namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
@@ -24,11 +25,29 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
 
         public override LetterValue EvaluateWith(LetterValue operand, RelationType relationType)
         {
-            if(operand is LetterString)
+            if(relationType == RelationType.ADD)
             {
-                return new LetterString(str_content + (operand as LetterString).str_content);
+                if (operand is LetterString)
+                {
+                    return new LetterString(str_content + (operand as LetterString).str_content);
+                }
+                return new LetterString(str_content + operand.EvaluateAs<string>());
             }
-            return new LetterString(str_content + operand.EvaluateAs<string>());
+            else
+            {
+                if(operand is LetterString)
+                {
+                    LetterString opr = operand as LetterString;
+                    switch (relationType)
+                    {
+                        case RelationType.CP_EQ:
+                            return new LetterBool(str_content.Equals(opr));
+                        case RelationType.CP_NEQ:
+                            return new LetterBool(!str_content.Equals(opr));
+                    }
+                }
+            }
+            throw new RuntimeException("CORE_LBS_RT_INVALID_OPERATION", GetLetterElementType().ToString(), relationType.ToString());
         }
         
         public override T EvaluateAs<T>()

@@ -19,6 +19,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
         CP_L,   // <
         CP_LE,  // <=
         CP_GE,  // >=
-        CP_EQ   // ==
+        CP_EQ,   // ==
+        CP_NEQ   // !=
     }
 }

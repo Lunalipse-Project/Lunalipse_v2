@@ -328,12 +328,16 @@ namespace Lunalipse
                 {
                     body = i18NConvertor.ConvertTo(SupportedPages.CORE_FUNC, runtimeError.Message, runtimeError.Arguements);
                 }
-                else
+                else if (runtimeError.Location != null)
                 {
                     body = i18NConvertor.ConvertTo(SupportedPages.CORE_FUNC, runtimeError.Message,
                         runtimeError.Location.Line,
                         runtimeError.Location.Column,
                         runtimeError.Location.TokenText);
+                }
+                else
+                {
+                    body = i18NConvertor.ConvertTo(SupportedPages.CORE_FUNC, runtimeError.Message);
                 }
                 string caption = i18NConvertor.ConvertTo(SupportedPages.CORE_FUNC, "CORE_LBS_RT");
                 new CommonDialog(caption, body, MessageBoxButton.OK).ShowDialog();

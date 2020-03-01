@@ -80,26 +80,41 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
                     return this;
                 }
             }
-            throw new RTInvalidOperationException();
+            if (relationType == RelationType.CP_EQ)
+            {
+                return new LetterBool(operand.GetLetterElementType() == ElementType.ARRAY);
+            }
+            else if (relationType == RelationType.CP_NEQ)
+            {
+                return new LetterBool(operand.GetLetterElementType() != ElementType.ARRAY);
+            }
+            throw new RuntimeException("CORE_LBS_RT_INVALID_OPERATION", GetLetterElementType().ToString(), relationType.ToString());
         }
 
         public override object EvaluateByType(Type type)
         {
-            if (type.IsArray)
+            try
             {
-                Type elementType = type.GetElementType();
-                Array array = Array.CreateInstance(elementType, arrayContent.Count);
-                for (int i = 0; i < arrayContent.Count; i++)
+                if (type.IsArray)
                 {
-                    array.SetValue(Convert.ChangeType(arrayContent[i].EvaluateAs<object>(), elementType), i);
+                    Type elementType = type.GetElementType();
+                    Array array = Array.CreateInstance(elementType, arrayContent.Count);
+                    for (int i = 0; i < arrayContent.Count; i++)
+                    {
+                        array.SetValue(Convert.ChangeType(arrayContent[i].EvaluateAs<object>(), elementType), i);
+                    }
+                    return Convert.ChangeType(array, type);
                 }
-                return Convert.ChangeType(array, type);
+                if (type == GetType() || type == typeof(LetterValue))
+                {
+                    return Clone();
+                }
             }
-            if (type == GetType() || type == typeof(LetterValue))
+            catch(InvalidCastException)
             {
-                return Clone();
+                throw new RuntimeException("CORE_LBS_RT_INVALID_CAST", GetLetterElementType().ToString(), Type.GetTypeCode(type).ToString());
             }
-            throw new InvalidCastException();
+            throw new RuntimeException("CORE_LBS_RT_INVALID_CAST", GetLetterElementType().ToString(), Type.GetTypeCode(type).ToString());
         }
 
         public override T getValueAt<T>(int i)

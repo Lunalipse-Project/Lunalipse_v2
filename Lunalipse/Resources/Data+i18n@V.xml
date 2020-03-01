@@ -18,16 +18,19 @@
       <Key name="CORE_LBS_SE_PARAMETER_MISMATCH_M">“你在信件的第{0}行第{1}列使用了一个魔法。”Princess Luna以教育的口吻说道，“确实是有这个魔法，但是像‘{2}’的这类魔法如果没有约束的话将会变得不可控。在这里，你需要用{3}个约束，但是我只看到{4}个。”</Key>
       <Key name="CORE_LBS_SE_PARAMETER_MISMATCH_L">“你在信件的第{0}行第{1}列使用了一个魔法。”Princess Luna以教育的口吻说道，“确实是有这个魔法，但是像‘{2}’的这类魔法如果使用太多约束的话将会变得无效果。在这里，你需要用{3}个约束，可你却用{4}个。”</Key>
       <Key name="CORE_LBS_RT">行为脚本：发生运行时错误</Key>
-      <Key name="CORE_LBS_RT_CATA_NFOUND">未找到名为"{0}"的歌曲分类</Key>
+      <Key name="CORE_LBS_RT_CATA_NFOUND">我找不到名为"{0}"的歌曲分类</Key>
       <Key name="CORE_LBS_RT_UNABLE_TO_ASSIGN">在信件的第{0}行第{1}列，你已经对‘{2}’作出了Pinkie Promise，所以你不能够擅自违约！</Key>
-      <Key name="CORE_LBS_RT_ME_NFOUND">无法在当前选中的歌曲分类找到名称为"{0}"的歌曲</Key>
-      <Key name="CORE_LBS_RT_MEI_NFOUND">无法在当前选中的歌曲分类找到编号为"{0}"的歌曲</Key>
-      <Key name="CORE_LBS_RT_MAX_RECURSION">Princess Luna气愤的说到：“你信件中进行的递归深度超出了我的想象！你以为我是电脑吗？我已经读不下去了！”</Key>
+      <Key name="CORE_LBS_RT_ME_NFOUND">我无法在当前选中的歌曲分类找到名称为"{0}"的歌曲</Key>
+      <Key name="CORE_LBS_RT_MEI_NFOUND">我无法在当前选中的歌曲分类找到编号为"{0}"的歌曲</Key>
+      <Key name="CORE_LBS_RT_MAX_RECURSION">“堆、栈、溢、出——！” Princess Luna以坎特洛特皇家口吻说道。</Key>
       <Key name="CORE_LBS_RT_NO_PROGRAM">Princess Luna说到：“如果你不给我寄信的话，那我可永远都不知道你究竟写了什么。”</Key>
       <Key name="CORE_LBS_RT_INDEXING_NOT_SUPPORT">Princess Luna说到：“你在信件的第{0}行第{1}列犯了个严重的错误。‘{2}’不是数组，你不能对一个非数组类型做索引操作！”</Key>
       <Key name="CORE_LBS_RT_INDEX_OUT_OF_RANGE">Princess Luna说到：“你在信件的第{0}行第{1}列对数组‘{2}’的索引操作越界了。”</Key>
       <Key name="CORE_LBS_RT_NEVER_INITIALIZE">Princess Luna说到：“你在信件的第{0}行第{1}列使用了一个不明意义的 ‘{2}’。你在使用前必须得要告诉我这个东西究竟代表什么！”</Key>
-      <Key name="CORE_LBS_RT_UNDEFINED">Princess Luna说到：“嗯……Undefined，有点意思。”</Key>
+      <Key name="CORE_LBS_RT_UNDEFINED">Princess Luna说到：“嗯……我发现了一个地方出现Undefined，有点意思。我相信这可能是无序搞得鬼。”</Key>
+      <Key name="CORE_LBS_RT_INVALID_CAST">类型{0}很显然和类型{1}不是一回事。</Key>
+      <Key name="CORE_LBS_RT_INVALID_OPERATION">类型{0}不支持运算{1}。</Key>
+      <Key name="CORE_LBS_RT_CATALOGUE_NOTSET">Princess Luna不清楚你要播放的音乐是在哪一个分类里，请先指明！</Key>
       
       
       <Key name="CORE_CONSOLE_TITLE">Lunalipse控制台</Key>

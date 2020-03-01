@@ -49,6 +49,11 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
             return id_value.EvaluateAs<T>();
         }
 
+        public override LetterValue EvaluateWith(LetterValue operand, RelationType relationType)
+        {
+            return id_value.EvaluateWith(operand, relationType);
+        }
+
         public override object EvaluateByType(Type type)
         {
             if(type == GetType() || type == typeof(LetterValue))

@@ -49,6 +49,11 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
                 ExecutionStack.Clear();
                 EnterNewContext(toPrincessLuna.MainProgram);
             }));
+
+            RegisterSpell("ContextLeave", new Action(() =>
+            {
+                LeaveCurrentContext();
+            }));
         }
         public bool IsHalted { get; private set; } = false;
         public bool IsStopped { get; private set; } = true;
@@ -140,7 +145,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
                     }
                     try
                     {
-                        context.RunNextInstruction();
+                        context.RunNextInstruction(this);
                         OnInstructionFinished?.Invoke();
                     }
                     catch(RuntimeException rte)
@@ -222,9 +227,17 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
             }
         }
 
-        private void EnterNewContext(LetterParagraph context)
+        public void EnterNewContext(LetterParagraph context)
         {
             ExecutionStack.Push(new ExecutionContext(context));
+        }
+
+        public void LeaveCurrentContext()
+        {
+            if (ExecutionStack.Count > 0)
+            {
+                ExecutionStack.Pop();
+            }
         }
     }
 }

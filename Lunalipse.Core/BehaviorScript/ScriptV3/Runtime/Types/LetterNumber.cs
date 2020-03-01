@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Antlr4.Runtime.Tree;
+using Lunalipse.Core.BehaviorScript.ScriptV3.Exceptions.Runtime;
 using Lunalipse.Core.BehaviorScript.ScriptV3.SyntaxParser;
 
 namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
@@ -41,8 +42,6 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
                         return new LetterNumber(number);
                     case RelationType.MINUS:
                         return new LetterNumber(-number);
-                    default:
-                        throw new NotSupportedException();
                 }
             }
             else if(operand is LetterNumber)
@@ -60,6 +59,8 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
                         return new LetterNumber(number / op.number);
                     case RelationType.CP_EQ:
                         return new LetterBool(number == op.number);
+                    case RelationType.CP_NEQ:
+                        return new LetterBool(number != op.number);
                     case RelationType.CP_G:
                         return new LetterBool(number > op.number);
                     case RelationType.CP_L:
@@ -70,7 +71,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
                         return new LetterBool(number <= op.number);
                 }
             }
-            throw new NotSupportedException();
+            throw new RuntimeException("CORE_LBS_RT_INVALID_OPERATION", GetLetterElementType().ToString(), relationType.ToString());
         }
 
         public override object EvaluateByType(Type type)

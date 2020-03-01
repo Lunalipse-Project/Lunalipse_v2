@@ -74,6 +74,10 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
             interpreter.RegisterAction(LetterActionType.ACT_PLAY,
                 new Action<string>(music_name =>
                 {
+                    if (AudioCoreContext.GetCurrentCatalogue() == null)
+                    {
+                        throw new RuntimeException("CORE_LBS_RT_CATALOGUE_NOTSET");
+                    }
                     MusicEntity musicEntity = AudioCoreContext.GetCurrentCatalogue().getMusic(music_name);
                     if(musicEntity == null)
                     {
@@ -85,6 +89,10 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
             interpreter.RegisterAction(LetterActionType.ACT_PLAY_BY_NUM,
                 new Action<int>(music_index =>
                 {
+                    if (AudioCoreContext.GetCurrentCatalogue() == null)
+                    {
+                        throw new RuntimeException("CORE_LBS_RT_CATALOGUE_NOTSET");
+                    }
                     MusicEntity musicEntity = AudioCoreContext.GetCurrentCatalogue().getMusic(music_index);
                     if (musicEntity == null)
                     {

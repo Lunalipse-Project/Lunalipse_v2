@@ -110,6 +110,14 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.SyntaxParser
             {
                 statement = Visit(context.assign());
             }
+            else if (context.BREAK() != null)
+            {
+                statement = symbolTable["ContextLeave"];
+            }
+            else if (context.if_branch()!=null)
+            {
+                statement = Visit(context.if_branch());
+            }
             else
             {
                 statement = Visit(context.func_call());
@@ -119,6 +127,24 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.SyntaxParser
                 (statement as ISuffixable).SetSuffixActions(Visit(context.conditions()) as LetterSuffixActions);
             }
             return statement;
+        }
+
+        public override LetterValue VisitIf_branch([NotNull] LpsScriptParser.If_branchContext context)
+        {
+            LetterParagraph elseBranch = null;
+            if(context.else_branch()!=null)
+            {
+                elseBranch = Visit(context.else_branch()) as LetterParagraph;
+            }
+            return new LetterIf(Visit(context.statements()) as LetterParagraph, 
+                                elseBranch, 
+                                Visit(context.expr_wrap()) as LetterExpression,
+                                TokenInfo.CreateTokenInfo(context.IF().Symbol));
+        }
+
+        public override LetterValue VisitElse_branch([NotNull] LpsScriptParser.Else_branchContext context)
+        {
+            return Visit(context.statements());
         }
 
         public override LetterValue VisitFunc_call([NotNull] LpsScriptParser.Func_callContext context)
@@ -242,11 +268,37 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.SyntaxParser
                                  Visit(context.expr(1)) as LetterRPN);
         }
 
+        public override LetterValue VisitExprP3([NotNull] LpsScriptParser.ExprP3Context context)
+        {
+            return new LetterRPN(Visit(context.expr(0)) as LetterRPN,
+                                 Visit(context.optr_P3()) as LetterRelation,
+                                 Visit(context.expr(1)) as LetterRPN);
+        }
+
+        public override LetterValue VisitExprP4([NotNull] LpsScriptParser.ExprP4Context context)
+        {
+            return new LetterRPN(Visit(context.expr(0)) as LetterRPN,
+                                 Visit(context.optr_P4()) as LetterRelation,
+                                 Visit(context.expr(1)) as LetterRPN);
+        }
+
+        public override LetterValue VisitExprP5([NotNull] LpsScriptParser.ExprP5Context context)
+        {
+            return new LetterRPN(Visit(context.expr(0)) as LetterRPN,
+                                 Visit(context.optr_P5()) as LetterRelation,
+                                 Visit(context.expr(1)) as LetterRPN);
+        }
+
+        public override LetterValue VisitExprP6([NotNull] LpsScriptParser.ExprP6Context context)
+        {
+            return new LetterRPN(Visit(context.expr(0)) as LetterRPN,
+                                 Visit(context.optr_P6()) as LetterRelation,
+                                 Visit(context.expr(1)) as LetterRPN);
+        }
+
         public override LetterValue VisitExprUnary([NotNull] LpsScriptParser.ExprUnaryContext context)
         {
-            LetterRelation letterRelation = Visit(context.optr_P2()) as LetterRelation;
-            letterRelation.SetUnary();
-            return new LetterRPN(letterRelation,
+            return new LetterRPN(Visit(context.optr_P0()) as LetterRelation,
                                  Visit(context.expr()) as LetterRPN);
         }
 
@@ -258,6 +310,22 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.SyntaxParser
         public override LetterValue VisitExprInd([NotNull] LpsScriptParser.ExprIndContext context)
         {
             return new LetterRPN(Visit(context.GetChild(0)));
+        }
+
+        public override LetterValue VisitOptr_P0([NotNull] LpsScriptParser.Optr_P0Context context)
+        {
+            if (context.MINUS() != null)
+            {
+                return LetterRelation.Create(context.MINUS().Symbol.Type, true);
+            }
+            else if (context.ADD() != null)
+            {
+                return LetterRelation.Create(context.ADD().Symbol.Type, true);
+            }
+            else
+            {
+                return LetterRelation.Create(context.NOT().Symbol.Type, true);
+            }
         }
 
         public override LetterValue VisitOptr_P1([NotNull] LpsScriptParser.Optr_P1Context context)
@@ -282,6 +350,48 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.SyntaxParser
             {
                 return LetterRelation.Create(context.MINUS().Symbol.Type, false);
             }
+        }
+
+        public override LetterValue VisitOptr_P3([NotNull] LpsScriptParser.Optr_P3Context context)
+        {
+            if (context.GE() != null)
+            {
+                return LetterRelation.Create(context.GE().Symbol.Type, false);
+            }
+            else if (context.GR() != null)
+            {
+                return LetterRelation.Create(context.GR().Symbol.Type, false);
+            }
+            else if (context.LE() != null)
+            {
+                return LetterRelation.Create(context.LE().Symbol.Type, false);
+            }
+            else
+            {
+                return LetterRelation.Create(context.LS().Symbol.Type, false);
+            }
+        }
+
+        public override LetterValue VisitOptr_P4([NotNull] LpsScriptParser.Optr_P4Context context)
+        {
+            if (context.EQ() != null)
+            {
+                return LetterRelation.Create(context.EQ().Symbol.Type, false);
+            }
+            else
+            {
+                return LetterRelation.Create(context.NEQ().Symbol.Type, false);
+            }
+        }
+
+        public override LetterValue VisitOptr_P5([NotNull] LpsScriptParser.Optr_P5Context context)
+        {
+            return LetterRelation.Create(context.AND().Symbol.Type, false);
+        }
+
+        public override LetterValue VisitOptr_P6([NotNull] LpsScriptParser.Optr_P6Context context)
+        {
+            return LetterRelation.Create(context.OR().Symbol.Type, false);
         }
 
         public override LetterValue VisitSet_eqzr([NotNull] LpsScriptParser.Set_eqzrContext context)

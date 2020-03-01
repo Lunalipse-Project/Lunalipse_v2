@@ -39,6 +39,24 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
                     return new LetterRelation(RelationType.MULT, isUnary);
                 case LpsScriptLexer.DIV:
                     return new LetterRelation(RelationType.DIV, isUnary);
+                case LpsScriptLexer.GE:
+                    return new LetterRelation(RelationType.CP_GE, isUnary);
+                case LpsScriptLexer.LE:
+                    return new LetterRelation(RelationType.CP_LE, isUnary);
+                case LpsScriptLexer.GR:
+                    return new LetterRelation(RelationType.CP_G, isUnary);
+                case LpsScriptLexer.LS:
+                    return new LetterRelation(RelationType.CP_L, isUnary);
+                case LpsScriptLexer.NOT:
+                    return new LetterRelation(RelationType.LG_NOT, isUnary);
+                case LpsScriptLexer.EQ:
+                    return new LetterRelation(RelationType.CP_EQ, isUnary);
+                case LpsScriptLexer.NEQ:
+                    return new LetterRelation(RelationType.CP_NEQ, isUnary);
+                case LpsScriptLexer.AND:
+                    return new LetterRelation(RelationType.LG_AND, isUnary);
+                case LpsScriptLexer.OR:
+                    return new LetterRelation(RelationType.LG_OR, isUnary);
             }
             return null;
         }

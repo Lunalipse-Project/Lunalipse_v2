@@ -16,6 +16,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
         NUMBER,
         BOOL,
         ASSIGN,
+        IF_ELSE,
         ARRAY,
         PENDING,
         INDEXING,

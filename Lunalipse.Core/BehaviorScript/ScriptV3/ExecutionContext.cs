@@ -37,22 +37,22 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
             return Context.GetStatementAt(ContextPointer);
         }
 
-        public void RunNextInstruction()
+        public void RunNextInstruction(LpsInterpreter interpreter)
         {
             if(LoopCount > 1)
             {
-                ExecuteStatement();
+                ExecuteStatement(interpreter);
                 LoopCount--;
                 return;
             }
             ContextPointer++;
             if(!IsEndOfContext())
             {
-                LoopCount = ExecuteStatement();
+                LoopCount = ExecuteStatement(interpreter);
             }
         }
 
-        private int ExecuteStatement()
+        private int ExecuteStatement(LpsInterpreter interpreter)
         {
             int loopCount = 1;
             LetterValue letterElement = this.getCurrentContextStatement();
@@ -70,6 +70,14 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
                             ExecuteAction(action);
                             break;
                     }
+                }
+            }
+            else if(letterElement.GetLetterElementType() == ElementType.IF_ELSE)
+            {
+                LetterParagraph context = (letterElement as LetterIf).Decision();
+                if(context != null)
+                {
+                    interpreter.EnterNewContext(context);
                 }
             }
             letterElement.Evaluate();
