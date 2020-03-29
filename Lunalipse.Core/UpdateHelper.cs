@@ -5,7 +5,8 @@ using System.Text.RegularExpressions;
 using Lunalipse.Common;
 using LunaNetCore;
 using LunaNetCore.Bodies;
-using Newtonsoft.Json;
+using MinJSON.JSON;
+using MinJSON.Serialization;
 
 namespace Lunalipse.Core
 {
@@ -51,15 +52,16 @@ namespace Lunalipse.Core
         {
             if(rrs!=null)
             {
+                JsonObject result = JsonObject.Parse(rrs.ResultData);
                 if (RequestID == "UPDATE_QUERY_LATEST")
                 {
-                    ReleaseInfo releaseInfo = JsonConvert.DeserializeObject<ReleaseInfo>(rrs.ResultData);
+                    ReleaseInfo releaseInfo = JsonConversion.DeserializeJsonObject<ReleaseInfo>(result);
                     releaseInfos = new List<ReleaseInfo>() { releaseInfo };
                     OnQueryCompleted?.Invoke();
                 }
                 else if (RequestID == "UPDATE_QUERY_ALL")
                 {
-                    releaseInfos = JsonConvert.DeserializeObject<List<ReleaseInfo>>(rrs.ResultData);
+                    releaseInfos = JsonConversion.DeserializeJsonObject<List<ReleaseInfo>>(result);
                     OnQueryCompleted?.Invoke();
                 }
             }
@@ -141,7 +143,8 @@ namespace Lunalipse.Core
      * Tag formate:
      *      v{VERSION_NUMBER}-{POSTFIX}
      */
-
+    
+    [JsonSerializable]
     public class ReleaseInfo
     {
         [JsonProperty("tag_name")]
@@ -164,7 +167,7 @@ namespace Lunalipse.Core
         /// </summary>
         public string postFix = "";
     }
-
+    [JsonSerializable]
     public class Asset
     {
         [JsonProperty("name")]

@@ -1,35 +1,30 @@
 ﻿using Lunalipse.Common.Interfaces.IWebMusic;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MinJSON.Serialization;
 
 namespace NetEaseHijacker.Types
 {
     public class MusicDetail : IWebMusicDetail
     {
 
-        [JsonProperty(PropertyName = "id")]
+        [JsonProperty("id")]
         public int ID;
-        [JsonProperty(PropertyName = "name")]
+        [JsonProperty("name")]
         public string MusicName;
-        [JsonProperty(PropertyName = "ar")]
+        [JsonProperty("ar")]
         public MusicArtist[] Artists;
-        [JsonProperty(PropertyName = "al")]
+        [JsonProperty("al")]
         public MusicAlbum Album;
 
-        [JsonProperty(PropertyName = "h")]
+        [JsonProperty("h")]
         public MusicSource SourceHighQ;
-        [JsonProperty(PropertyName = "m")]
+        [JsonProperty("m")]
         public MusicSource SourceMediumQ;
-        [JsonProperty(PropertyName = "l")]
+        [JsonProperty("l")]
         public MusicSource SourceLowQ;
 
-        [JsonProperty(PropertyName = "dt")]
+        [JsonProperty("dt")]
         public long DurationMillisecond;
-        [JsonProperty(PropertyName = "publishTime")]
+        [JsonProperty("publishTime")]
         public long TimeStampMillisecond;
 
         public string getAlbumName()
@@ -66,24 +61,24 @@ namespace NetEaseHijacker.Types
 
     public class MusicSource
     {
-        [JsonProperty(PropertyName = "br")]
+        [JsonProperty("br")]
         public int BitRate;
-        [JsonProperty(PropertyName = "size")]
+        [JsonProperty("size")]
         public long SizeInByte;
     }
     public class MusicArtist
     {
-        [JsonProperty(PropertyName = "name")]
+        [JsonProperty("name")]
         public string name;
     }
 
     public class MusicAlbum
     {
-        [JsonProperty(PropertyName = "id")]
+        [JsonProperty("id")]
         public int AlbumID;
-        [JsonProperty(PropertyName = "name")]
+        [JsonProperty("name")]
         public string AlbumName;
-        [JsonProperty(PropertyName = "picUrl", Required = Required.Default)]
+        [JsonProperty("picUrl")]
         public string AlbumPicUrl;
     }
 }

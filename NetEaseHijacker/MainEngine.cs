@@ -55,11 +55,11 @@ namespace NetEaseHijacker
 
         public List<IWebMusicDetail> GetMusics()
         {
-            if (metadata != null)
+            if (metadata != null && metadata.list != null)
             {
                 return metadata.list.ConvertAll<IWebMusicDetail>(x => x);
             }
-            return null;
+            return new List<IWebMusicDetail>(); //empty
         }
 
         public void OnLoad()

@@ -1,21 +1,14 @@
-﻿using Lunalipse.Common.Data.Attribute;
-using Lunalipse.Common.Data.Errors;
-using Lunalipse.Common.Interfaces.ICache;
-using Lunalipse.Common.Interfaces.IConsole;
+﻿using Lunalipse.Common.Interfaces.IConsole;
 using Lunalipse.Common.Interfaces.ISetting;
 using Lunalipse.Core.Cache;
 using Lunalipse.Core.Console;
 using Lunalipse.Utilities;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using MinJSON.JSON;
+using MinJSON.Serialization;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
 
 namespace Lunalipse.Core.GlobalSetting
 {
@@ -41,9 +34,7 @@ namespace Lunalipse.Core.GlobalSetting
         {
             VERSION = Assembly.GetEntryAssembly().GetName().Version.ToString();
             ConsoleAdapter.Instance.RegisterComponent("GlobalSettingHelper", this);
-            //Set default value
             OutputFile = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "/config.lps";
-            //USerializor = new UniversalSerializor<NonConfigField, IGlobalSetting>();
         }
 
         public T ReadSetting(string path="")
@@ -51,11 +42,10 @@ namespace Lunalipse.Core.GlobalSetting
             if (path == "")
                 path = OutputFile;
             if (!File.Exists(path)) return default(T);
-            SettingSaveFile<T> restored = JsonConvert.DeserializeObject<SettingSaveFile<T>>(
-                Encoding.UTF8.GetString(
-                    Compression.Decompress(path, UseLZ78Compress)
-                    )
-                );
+            JsonObject jo = JsonObject.Parse(Encoding.UTF8.GetString(
+                        Compression.Decompress(path, UseLZ78Compress)
+                    ));
+            SettingSaveFile<T> restored = JsonConversion.DeserializeJsonObject<SettingSaveFile<T>>(jo);
             if(VERSION != restored.version)
             {
                 // TODO Add warning dialog
@@ -72,7 +62,7 @@ namespace Lunalipse.Core.GlobalSetting
             saveFile.setting = instance;
             return Compression.Compress(
                         Encoding.UTF8.GetBytes(
-                            JsonConvert.SerializeObject(saveFile)
+                            JsonConversion.SerializeJsonObject(saveFile).ToString()
                             ), OutputFile, UseLZ78Compress);
         }
 
@@ -99,7 +89,7 @@ namespace Lunalipse.Core.GlobalSetting
         #endregion
     }
 
-    [Serializable]
+    [JsonSerializable]
     public class SettingSaveFile<T>
     {
         public string version;

@@ -38,9 +38,6 @@
     <AssemblyOriginatorKeyFile>Lunaxisky.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -63,6 +60,10 @@
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\桌面工作目录\正在进行的\Projects\MinJSON\MinJsonNetFramework\MinJsonNetFramework.csproj">
+      <Project>{e890b241-ab0d-4506-91a5-9a9292da2aad}</Project>
+      <Name>MinJsonNetFramework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lunalipse.Common\Lunalipse.Common.csproj">
       <Project>{61478C16-44F2-4333-8209-FAB113BEBD4B}</Project>
       <Name>Lunalipse.Common</Name>

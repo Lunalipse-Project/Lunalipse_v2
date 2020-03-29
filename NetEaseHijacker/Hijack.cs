@@ -1,13 +1,8 @@
-﻿using Lunalipse.Common.Interfaces.IWebMusic;
-using LunaNetCore.Bodies;
+﻿using MinJSON.JSON;
+using MinJSON.Serialization;
 using NetEaseHijacker.Types;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NetEaseHijacker
@@ -136,8 +131,8 @@ namespace NetEaseHijacker
         /// <returns></returns>
         public MetadataNE ParseSongList(string result)
         {
-            JObject jObject = JObject.Parse(result);
-            return JsonConvert.DeserializeObject<MetadataNE>(jObject["result"].ToString());
+            JsonObject jObject = JsonObject.Parse(result);
+            return JsonConversion.DeserializeJsonObject<MetadataNE>(jObject["result"].As<JsonObject>());
         }
 
         /// <summary>
@@ -147,14 +142,14 @@ namespace NetEaseHijacker
         /// <returns></returns>
         public string ParseLyric(string result)
         {
-            JObject jo = JObject.Parse(result);
+            JsonObject jo = JsonObject.Parse(result);
+            JsonObject lrc = jo["lrc"].As<JsonObject>();
             try
             {
-                return jo["lrc"]["lyric"] != null ? jo["lrc"]["lyric"].ToString() : null;
+                return lrc["lyric"] != null ? lrc["lyric"].ToString() : null;
             }
-            catch (NullReferenceException nre)
+            catch (NullReferenceException)
             {
-
                 return null;
             }
         }
@@ -168,8 +163,10 @@ namespace NetEaseHijacker
         {
             try
             {
-                JToken jt = JObject.Parse(result)["data"][0];
-                return new Tuple<string, string>(jt["url"] != null ? jt["url"].ToString() : "",jt["type"].ToString());
+                JsonObject jt = JsonObject.Parse(result)["data"]
+                                    .As<JsonArray>()[0]
+                                    .As<JsonObject>();
+                return new Tuple<string, string>(jt["url"] != null ? jt["url"].As<string>() : "",jt["type"].As<string>());
             }
             catch
             {

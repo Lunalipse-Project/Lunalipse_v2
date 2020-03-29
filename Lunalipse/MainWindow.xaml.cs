@@ -171,15 +171,21 @@ namespace Lunalipse
         #region Reflesh the list
         private void CataloguesRefleshAll()
         {
-            Task.Factory.StartNew(() =>
-            {
-                mlp.CreateAlbumClasses();
-                mlp.CreateArtistClasses();
-                ByLocation = CPOOL.GetLocationClassified();
-                ByAlbum = CPOOL.GetAlbumClassfied();
-                ByArtist = CPOOL.GetArtistClassfied();
-                ByUserDefined = CPOOL.GetUserDefined();
-            });
+            //Task.Factory.StartNew(() =>
+            //{
+            //    mlp.CreateAlbumClasses();
+            //    mlp.CreateArtistClasses();
+            //    ByLocation = CPOOL.GetLocationClassified();
+            //    ByAlbum = CPOOL.GetAlbumClassfied();
+            //    ByArtist = CPOOL.GetArtistClassfied();
+            //    ByUserDefined = CPOOL.GetUserDefined();
+            //});
+            mlp.CreateAlbumClasses();
+            mlp.CreateArtistClasses();
+            ByLocation = CPOOL.GetLocationClassified();
+            ByAlbum = CPOOL.GetAlbumClassfied();
+            ByArtist = CPOOL.GetArtistClassfied();
+            ByUserDefined = CPOOL.GetUserDefined();
         }
 
         private void CataloguesRefleshAlbum()

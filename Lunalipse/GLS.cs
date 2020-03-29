@@ -2,14 +2,12 @@
 using Lunalipse.Common.Data.Attribute;
 using Lunalipse.Common.Generic.Audio;
 using Lunalipse.Common.Interfaces.ISetting;
+using MinJSON.Serialization;
+using MinJsonNetFramework.Serialization.Converter;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
-using System.Xml.Serialization;
 
 namespace Lunalipse
 {
@@ -23,6 +21,7 @@ namespace Lunalipse
 
         [field: NonSerialized]
         [NonConfigField]
+        [JsonNotSerialize]
         public event Action<string> OnSettingUpdated;
         public static GLS INSTANCE
         {
@@ -51,7 +50,7 @@ namespace Lunalipse
             SpectrumDisplayers = new Dictionary<string, SpectrumDisplayCfg>();
         }
 
-        [field: NonSerialized]
+        [field: JsonNotSerialize]
         public string UpdateArguments = string.Empty;
 
         public List<string> MusicBaseDirs;
@@ -71,6 +70,7 @@ namespace Lunalipse
 
         public string LyricFontFamily = "Microsoft YaHei UI";
 
+        [JsonNotSerialize]
         [field: NonSerialized]
         public FontFamily LyricFontFamilyInternal;
 
@@ -112,8 +112,10 @@ namespace Lunalipse
 
         public bool ImmerseMode = false;
 
+        [JsonProperty(typeof(IntEnumConverter))]
         public ScalingStrategy scalingStrategy = ScalingStrategy.Decibel;
 
+        [JsonProperty(typeof(IntEnumConverter))]
         public FftSize fftSize = FftSize.Fft4096;
 
         public int SpectrumFPS = 64;

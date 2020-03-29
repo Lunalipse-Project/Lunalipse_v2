@@ -1,14 +1,14 @@
-﻿using Lunalipse.Common;
-using Lunalipse.Common.Generic.Themes;
+﻿using Lunalipse.Common.Generic.Themes;
 using Lunalipse.Common.Interfaces.IThemes;
 using Lunalipse.Utilities;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
+using MinJSON.JSON;
+using MinJSON.Serialization;
+using MinJSON.Serialization.Converter;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Windows.Media;
 
@@ -44,12 +44,8 @@ namespace Lunalipse.Core.Theme
                         ThemeContainer tc = CreateThemeFromJson(file);
                         Tuples.Add(tc);
                         LunalipseLogger.GetLogger().Info("Loaded Theme " + tc.Name);
-                        //if (Path.GetExtension(file) == ".lstyle")
-                        //{
-                        // TODO
-                        //}
                     }
-                    catch (JsonSerializationException e)
+                    catch (SerializationException e)
                     {
                         Log.Error(e.Message, e.StackTrace);
                         Log.Warning("Error to load selected theme, skipping...");
@@ -80,7 +76,8 @@ namespace Lunalipse.Core.Theme
 
         private ThemeContainer CreateThemeFromJson(string path)
         {
-            ThemeBody themeBody = JsonConvert.DeserializeObject<ThemeBody>(_load_j(path));
+            JsonObject jo = JsonObject.Parse(_load_j(path));
+            ThemeBody themeBody = JsonConversion.DeserializeJsonObject<ThemeBody>(jo);
             ThemeContainer themeContainer = new ThemeContainer()
             {
                 author = themeBody.themeInfo.Author,
@@ -174,6 +171,7 @@ namespace Lunalipse.Core.Theme
 
     }
 
+    [JsonSerializable]
     class ThemeBody
     {
         [JsonProperty("Theme")]
@@ -187,6 +185,8 @@ namespace Lunalipse.Core.Theme
         [JsonProperty("gDefinitions")]
         public Dictionary<string,Gradient> gradients;
     }
+
+    [JsonSerializable]
     class ThemeInfo
     {
         [JsonProperty("Name")]
@@ -198,6 +198,8 @@ namespace Lunalipse.Core.Theme
         [JsonProperty("Uid")]
         public string UUID;
     }
+
+    [JsonSerializable]
     class Gradient
     {
         //[JsonProperty("gKey")]
@@ -206,20 +208,19 @@ namespace Lunalipse.Core.Theme
         public TPoint Start;
         [JsonProperty("gEnd")]
         public TPoint End;
-        [JsonProperty("gInterpolation")]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonProperty("gInterpolation", typeof(StringEnumConverter))]
         public ColorInterpolationMode colorInterpolationMode = ColorInterpolationMode.SRgbLinearInterpolation;
-        [JsonProperty("gSpread")]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonProperty("gSpread", typeof(StringEnumConverter))]
         public GradientSpreadMethod gradientSpreadMethod = GradientSpreadMethod.Pad;
-        [JsonProperty("gMapping")]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonProperty("gMapping", typeof(StringEnumConverter))]
         public BrushMappingMode gradientMappingMode = BrushMappingMode.RelativeToBoundingBox;
         [JsonProperty("gStops")]
         public ThemeColor[] GradientStops;
         [JsonProperty("gOpacity")]
         public double ColorOpacity = 1d;
     }
+
+    [JsonSerializable]
     class ThemeColor
     {
         /// <summary>
@@ -234,6 +235,8 @@ namespace Lunalipse.Core.Theme
         [JsonProperty("gOffset")]
         public double GradientOffset;
     }
+
+    [JsonSerializable]
     class TPoint
     {
         [JsonProperty("x")]

@@ -1,17 +1,13 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using MinJSON.Serialization;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetEaseHijacker.Types
 {
     public class MetadataNE
     {
-        [JsonProperty(PropertyName = "songCount", Required = Required.Default)]
+        [JsonProperty("songCount")]
         public int total = 0;
-        [JsonProperty(PropertyName = "songs", Required = Required.Default)]
+        [JsonProperty("songs")]
         public List<MusicDetail> list;
     }
 }

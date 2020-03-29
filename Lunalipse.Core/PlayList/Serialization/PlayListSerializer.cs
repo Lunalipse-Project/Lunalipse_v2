@@ -1,12 +1,9 @@
 ﻿using Lunalipse.Common.Data;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using MinJSON.JSON;
+using MinJSON.Writer;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lunalipse.Core.PlayList.Serialization
 {
@@ -33,55 +30,53 @@ namespace Lunalipse.Core.PlayList.Serialization
 
         public static string PlaylistSerializer(Catalogue catalogue)
         {
-            StringWriter sw = new StringWriter();
-            JsonTextWriter jsonTextWriter = new JsonTextWriter(sw);
-            jsonTextWriter.WriteStartObject();
-            jsonTextWriter.WritePropertyName("name");
-            jsonTextWriter.WriteValue(catalogue.Name);
-            jsonTextWriter.WritePropertyName("entries");
-            jsonTextWriter.WriteStartArray();
+            ISeqentialWriter jsonTextWriter = new JsonTextWriter();
+            jsonTextWriter.WriteObjectBegin();
+            jsonTextWriter.WriteProperty("name");
+            jsonTextWriter.WriteString(catalogue.Name);
+            jsonTextWriter.WriteProperty("entries");
+            jsonTextWriter.WriteArrayBegin();
             foreach (MusicEntity musicEntity in catalogue.GetAll())
             {
-                jsonTextWriter.WriteStartObject();
-                jsonTextWriter.WritePropertyName("id");
-                jsonTextWriter.WriteValue(musicEntity.MusicID);
-                jsonTextWriter.WritePropertyName("name");
-                jsonTextWriter.WriteValue(musicEntity.Name);
-                jsonTextWriter.WriteEndObject();
+                jsonTextWriter.WriteObjectBegin();
+                jsonTextWriter.WriteProperty("id");
+                jsonTextWriter.WriteString(musicEntity.MusicID);
+                jsonTextWriter.WriteProperty("name");
+                jsonTextWriter.WriteString(musicEntity.Name);
+                jsonTextWriter.WriteObjectEnd();
             }
-            jsonTextWriter.WriteEndArray();
-            jsonTextWriter.WriteEndObject();
-            return sw.ToString();
+            jsonTextWriter.WriteArrayEnd();
+            jsonTextWriter.WriteObjectEnd();
+            return jsonTextWriter.ToString();
         }
 
         public static string MusicListSerializer(List<MusicEntity> musicEntities)
         {
-            StringWriter sw = new StringWriter();
-            JsonTextWriter jsonTextWriter = new JsonTextWriter(sw);
-            jsonTextWriter.WriteStartObject();
-            jsonTextWriter.WritePropertyName("entries");
-            jsonTextWriter.WriteStartArray();
+            ISeqentialWriter jsonTextWriter = new JsonTextWriter();
+            jsonTextWriter.WriteObjectBegin();
+            jsonTextWriter.WriteProperty("entries");
+            jsonTextWriter.WriteArrayBegin();
             foreach (MusicEntity musicEntity in musicEntities)
             {
                 WriteEntry(musicEntity, jsonTextWriter);
             }
-            jsonTextWriter.WriteEndArray();
-            jsonTextWriter.WriteEndObject();
-            return sw.ToString();
+            jsonTextWriter.WriteArrayEnd();
+            jsonTextWriter.WriteObjectEnd();
+            return jsonTextWriter.ToString();
         }
 
         public static CatalogueMetadata CatalogueDeserializer(string jsonObject)
         {
-            JObject jobj = JObject.Parse(jsonObject);
+            JsonObject jobj = JsonObject.Parse(jsonObject);
             CatalogueMetadata metadata = new CatalogueMetadata();
             metadata.Musics = new List<Tuple<string, string>>();
-            metadata.Name = jobj["name"].Value<string>();
-            foreach (JObject o in jobj["entries"].Children<JObject>())
+            metadata.Name = jobj["name"].As<string>();
+            foreach (JsonObject o in (jobj["entries"] as JsonArray))
             {
                 metadata.Musics.Add(new Tuple<string, string>
                 (
-                    o["id"].Value<string>(),
-                    o["name"].Value<string>()
+                    o["id"].As<string>(),
+                    o["name"].As<string>()
                 ));
             }
             return metadata;
@@ -89,53 +84,53 @@ namespace Lunalipse.Core.PlayList.Serialization
 
         public static List<MusicEntity> MusicListDeserializer(string jsonObject)
         {
-            JObject jobj = JObject.Parse(jsonObject);
+            JsonObject jobj = JsonObject.Parse(jsonObject);
             List<MusicEntity> musicEntities = new List<MusicEntity>();
-            foreach(JObject token in jobj["entries"].Children<JObject>())
+            foreach(JsonObject token in jobj["entries"] as JsonArray)
             {
                 musicEntities.Add(restoreEntity(token));
             }
             return musicEntities;
         }
 
-        private static void WriteEntry(MusicEntity musicEntity, JsonTextWriter jsonTextWriter)
+        private static void WriteEntry(MusicEntity musicEntity, ISeqentialWriter jsonTextWriter)
         {
             byte flag = 0x00;
             flag += (byte)(musicEntity.HasImage ? 0xf0 : 0x00);
             flag += (byte)(musicEntity.IsInternetLocation ? 0x0f : 0x00);
-            jsonTextWriter.WriteStartObject();
-            jsonTextWriter.WritePropertyName("id");
-            jsonTextWriter.WriteValue(musicEntity.MusicID);
-            jsonTextWriter.WritePropertyName("path");
-            jsonTextWriter.WriteValue(musicEntity.Path);
-            jsonTextWriter.WritePropertyName("flag");
-            jsonTextWriter.WriteValue(flag);
-            jsonTextWriter.WritePropertyName("aritists");
-            jsonTextWriter.WriteStartArray();
+            jsonTextWriter.WriteObjectBegin();
+            jsonTextWriter.WriteProperty("id");
+            jsonTextWriter.WriteString(musicEntity.MusicID);
+            jsonTextWriter.WriteProperty("path");
+            jsonTextWriter.WriteString(musicEntity.Path);
+            jsonTextWriter.WriteProperty("flag");
+            jsonTextWriter.WriteByte(flag);
+            jsonTextWriter.WriteProperty("aritists");
+            jsonTextWriter.WriteArrayBegin();
             for (int i = 0; i < musicEntity.Artist.Length; i++)
             {
-                jsonTextWriter.WriteValue(musicEntity.Artist[i]);
+                jsonTextWriter.WriteString(musicEntity.Artist[i]);
             }
-            jsonTextWriter.WriteEndArray();
-            jsonTextWriter.WritePropertyName("duration");
-            jsonTextWriter.WriteValue((int)musicEntity.EstDuration.TotalMilliseconds);
-            jsonTextWriter.WritePropertyName("id3n");
-            jsonTextWriter.WriteValue(musicEntity.ID3Name);
-            jsonTextWriter.WritePropertyName("album");
-            jsonTextWriter.WriteValue(musicEntity.Album);
-            jsonTextWriter.WriteEndObject();
+            jsonTextWriter.WriteArrayEnd();
+            jsonTextWriter.WriteProperty("duration");
+            jsonTextWriter.WriteInteger((int)musicEntity.EstDuration.TotalMilliseconds);
+            jsonTextWriter.WriteProperty("id3n");
+            jsonTextWriter.WriteString(musicEntity.ID3Name);
+            jsonTextWriter.WriteProperty("album");
+            jsonTextWriter.WriteString(musicEntity.Album);
+            jsonTextWriter.WriteObjectEnd();
         }
 
-        private static MusicEntity restoreEntity(JObject obj)
+        private static MusicEntity restoreEntity(JsonObject obj)
         {
             MusicEntity musicEntity = new MusicEntity();
-            byte flag = obj["flag"].Value<byte>();
-            musicEntity.MusicID = obj["id"].Value<string>();
-            musicEntity.Path = obj["path"].Value<string>();
-            musicEntity.Artist = obj["aritists"].Select(x => (string)x).ToArray();
-            musicEntity.EstDuration = TimeSpan.FromMilliseconds(obj["duration"].Value<int>());
-            musicEntity.ID3Name = obj["id3n"].Value<string>();
-            musicEntity.Album = obj["album"].Value<string>();
+            byte flag = obj["flag"].As<byte>();
+            musicEntity.MusicID = obj["id"].As<string>();
+            musicEntity.Path = obj["path"].As<string>();
+            musicEntity.Artist = obj["aritists"].As<string[]>();
+            musicEntity.EstDuration = TimeSpan.FromMilliseconds(obj["duration"].As<int>());
+            musicEntity.ID3Name = obj["id3n"].As<string>();
+            musicEntity.Album = obj["album"].As<string>();
             musicEntity.IsInternetLocation = (flag & 0x0f) == 0x0f;
             musicEntity.HasImage = (flag & 0xf0) == 0xf0;
 
