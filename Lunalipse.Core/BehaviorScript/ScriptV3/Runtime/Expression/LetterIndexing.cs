@@ -20,9 +20,14 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
 
         public override T EvaluateAs<T>()
         {
+            return (T)EvaluateByType(typeof(T));
+        }
+
+        public override object EvaluateByType(Type type)
+        {
             ReslovePending();
             TypeCheck();
-            return identifier.getValueAt<T>(IndexCheck());
+            return identifier.getValueByTypeAt(IndexCheck(), type);
         }
 
         public override LetterValue EvaluateWith(LetterValue operand, RelationType relationType)
@@ -34,7 +39,13 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
 
         private void TypeCheck()
         {
-            if (identifier.GetLetterElementType() != ElementType.ARRAY)
+            ElementType type = identifier.GetLetterElementType();
+            if (type == ElementType.VAR)
+            {
+                type = (identifier as LetterVariable).GetValueType();
+                identifier = identifier.EvaluateAs<LetterValue>();
+            }
+            if (type != ElementType.ARRAY)
             {
                 throw new RTInvalidOperationException("CORE_LBS_RT_INDEXING_NOT_SUPPORT", ElementTokenInfo);
             }

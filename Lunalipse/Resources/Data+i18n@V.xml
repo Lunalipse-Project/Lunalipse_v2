@@ -14,7 +14,7 @@
       <Key name="CORE_LBS_SE_NOT_A_SPELL">“你写信给公主时必须认真对待！” Princess Luna生气的说道，“我在信件的第{0}行第{1}列发现了一个错误。从上下文来看，‘{2}’很显然不是一个魔法。”</Key>
       <Key name="CORE_LBS_SE_INVALID_ASSIGN">Princess Luna说道：“在你信件的第{0}行第{1}列，‘{2}’很显然不是变量——你可不能擅自修改白胡子星旋的魔法、你自己定义的清单或者是这封信件的内容。”</Key>
       <Key name="CORE_LBS_SE_DUPL_DECLARE">Princess Luna说道：“我在信件的第{0}行第{1}列发现了一个问题。你已经在前面定义了‘{2}’为类型‘{3}’了，不能够再用来定义成别的类型。”</Key>
-      <Key name="CORE_LBS_SE_NOT_DEFINE">Princess Luna不能够理解你在第{0}行第{1}列写的‘{3}’究竟是什么意思。你必须要先声明再使用。</Key>
+      <Key name="CORE_LBS_SE_NOT_DEFINE">Princess Luna不能够理解你在第{0}行第{1}列写的‘{2}’究竟是什么意思。你必须要先声明再使用。</Key>
       <Key name="CORE_LBS_SE_PARAMETER_MISMATCH_M">“你在信件的第{0}行第{1}列使用了一个魔法。”Princess Luna以教育的口吻说道，“确实是有这个魔法，但是像‘{2}’的这类魔法如果没有约束的话将会变得不可控。在这里，你需要用{3}个约束，但是我只看到{4}个。”</Key>
       <Key name="CORE_LBS_SE_PARAMETER_MISMATCH_L">“你在信件的第{0}行第{1}列使用了一个魔法。”Princess Luna以教育的口吻说道，“确实是有这个魔法，但是像‘{2}’的这类魔法如果使用太多约束的话将会变得无效果。在这里，你需要用{3}个约束，可你却用{4}个。”</Key>
       <Key name="CORE_LBS_RT">行为脚本：发生运行时错误</Key>

@@ -63,6 +63,12 @@ public interface ILpsScriptParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitStatements([NotNull] LpsScriptParser.StatementsContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="LpsScriptParser.statements_loop"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitStatements_loop([NotNull] LpsScriptParser.Statements_loopContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="LpsScriptParser.if_branch"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -74,6 +80,24 @@ public interface ILpsScriptParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitElse_branch([NotNull] LpsScriptParser.Else_branchContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LpsScriptParser.if_branch_loop"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIf_branch_loop([NotNull] LpsScriptParser.If_branch_loopContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LpsScriptParser.else_branch_loop"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitElse_branch_loop([NotNull] LpsScriptParser.Else_branch_loopContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LpsScriptParser.loop"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLoop([NotNull] LpsScriptParser.LoopContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="LpsScriptParser.declares"/>.
 	/// </summary>
@@ -98,6 +122,12 @@ public interface ILpsScriptParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitStatement([NotNull] LpsScriptParser.StatementContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LpsScriptParser.statement_loop"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitStatement_loop([NotNull] LpsScriptParser.Statement_loopContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="LpsScriptParser.cata_choose"/>.
 	/// </summary>
@@ -272,6 +302,12 @@ public interface ILpsScriptParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitAny_number([NotNull] LpsScriptParser.Any_numberContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="LpsScriptParser.bool"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitBool([NotNull] LpsScriptParser.BoolContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="LpsScriptParser.optr_P0"/>.
 	/// </summary>

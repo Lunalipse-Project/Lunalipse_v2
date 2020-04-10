@@ -7,6 +7,8 @@ using Lunalipse.Core.BehaviorScript.ScriptV3.Exceptions.Runtime;
 using Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements;
 using Lunalipse.Core.PlayList;
 using System;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace Lunalipse.Core.BehaviorScript.ScriptV3
 {
@@ -142,6 +144,18 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
                     return 0;
                 }
                 return AudioCoreContext.GetCurrentCatalogue().GetCount();
+            }));
+            interpreter.RegisterSpell("getUserCatalogues", new Func<string[]>(() =>
+            {
+                if (AudioCoreContext.GetCurrentCatalogue() == null)
+                {
+                    return new string[] { };
+                }
+                return cataloguePool.GetUserDefined().Select(x => x.Name).ToArray();
+            }));
+            interpreter.RegisterSpell("DEBUG_Show", new Action<string>((text) =>
+            {
+                MessageBox.Show(text);
             }));
         }
 

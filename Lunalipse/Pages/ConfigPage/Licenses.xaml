@@ -25,7 +25,7 @@
                 <Button Style="{StaticResource GenericButton}" Tag="CORE_OPENSOURCE_LICENSE_VIEW" x:Name="ViewLicense_Taglib" Grid.Column="1" Margin="5" Padding="5" Click="ViewLicense_Click" 
                         Foreground="{Binding ElementName=OPENSOURLICENSE,Path=Foreground}"/>
             </Grid>
-            <Grid Margin="20 0 20 20">
+            <!--<Grid Margin="20 0 20 20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.8*"/>
                     <ColumnDefinition Width="0.3*"/>
@@ -33,7 +33,7 @@
                 <Label Grid.Column="0" Tag="CORE_OPENSOURCE_LICENSE_JSON" Margin="10 0 0 0" FontSize="{StaticResource FontNormal}" Foreground="{Binding ElementName=OPENSOURLICENSE,Path=Foreground}"/>
                 <Button Style="{StaticResource GenericButton}" Tag="CORE_OPENSOURCE_LICENSE_VIEW" x:Name="ViewLicense_Json" Grid.Column="1" Margin="5" Padding="5" Click="ViewLicense_Click"
                             Foreground="{Binding ElementName=OPENSOURLICENSE,Path=Foreground}"/>
-            </Grid>
+            </Grid>-->
             <Grid Margin="20 0 20 20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.8*"/>

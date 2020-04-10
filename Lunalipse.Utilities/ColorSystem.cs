@@ -42,9 +42,15 @@ namespace Lunalipse.Utilities
         /// <returns></returns>
         public static Color GetForeground(this Color background,double tolerance=0)
         {
-            if (tolerance < 0 && tolerance > 100) tolerance = 0;
-            if (background.Distance() > 220.8*(1- tolerance)) return Colors.White;
-            else return Colors.Black;
+            //if (tolerance < 0 && tolerance > 100) tolerance = 0;
+            //if (background.Distance() > 220.8*(1- tolerance)) return Colors.White;
+            //else return Colors.Black;
+            
+            double ratio = background.Distance() / 442d;
+            int r = (int)Math.Round(ratio * 255);
+            int g = (int)Math.Round(ratio * 255);
+            int b = (int)Math.Round(ratio * 255);
+            return Color.FromRgb((byte)r, (byte)g, (byte)b);
         }
 
         public static System.Drawing.Color GetForeground(this System.Drawing.Color background, double tolerance = 0)

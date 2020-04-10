@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
 {
-    public class LetterArrayList : LetterValue, IEnumerable<LetterValue>, ICloneable
+    public class LetterArrayList : LetterValue, IEnumerable<LetterValue>
     {
         List<LetterValue> arrayContent;
         public LetterArrayList(LetterValue firstElement = null) : base(ElementType.ARRAY)
@@ -105,9 +105,13 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
                     }
                     return Convert.ChangeType(array, type);
                 }
+                else if (type.Equals(typeof(string)))
+                {
+                    return $"[{string.Join(",", arrayContent.Select(x => x.EvaluateAs<string>()))}]";
+                }
                 if (type == GetType() || type == typeof(LetterValue))
                 {
-                    return Clone();
+                    return this;
                 }
             }
             catch(InvalidCastException)
@@ -143,12 +147,12 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
             return arrayContent.GetEnumerator();
         }
 
-        public object Clone()
-        {
-            LetterArrayList array = new LetterArrayList();
-            array.arrayContent.AddRange(arrayContent);
-            return array;
-        }
+        //public object Clone()
+        //{
+        //    LetterArrayList array = new LetterArrayList();
+        //    array.arrayContent.AddRange(arrayContent);
+        //    return array;
+        //}
 
         private void ResolvePendingAt(int i)
         {

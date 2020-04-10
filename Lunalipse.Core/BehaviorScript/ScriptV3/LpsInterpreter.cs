@@ -35,7 +35,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
 
             RegisterAction(LetterActionType.ACT_DO_CHECKLIST, new Action<LetterParagraph>(paragraph =>
             {
-                EnterNewContext(paragraph);
+                EnterNewContext(paragraph, ContextType.TwilightChecklist);
             }));
 
             RegisterSpell("DoTimeTravel", new Action(() =>
@@ -47,12 +47,17 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
                 // Then push a stack frame of main program into it.
                 // So we are back to the very initial time far far away before Equestria was founded.
                 ExecutionStack.Clear();
-                EnterNewContext(toPrincessLuna.MainProgram);
+                EnterNewContext(toPrincessLuna.MainProgram, ContextType.Main);
             }));
 
-            RegisterSpell("ContextLeave", new Action(() =>
+            RegisterSpell("ContextLeaveFunc", new Action(() =>
             {
-                LeaveCurrentContext();
+                LeaveFuncContext();
+            }));
+
+            RegisterSpell("ContextLeaveLoop", new Action(() =>
+            {
+                LeaveLoopContext();
             }));
         }
         public bool IsHalted { get; private set; } = false;
@@ -120,7 +125,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
             {
                 IsStopped = false;
                 ExecutionStack.Clear();
-                EnterNewContext(toPrincessLuna.MainProgram);
+                EnterNewContext(toPrincessLuna.MainProgram, ContextType.Main);
                 ExecutionThread = new Thread(new ThreadStart(_executeProgram));
                 ExecutionThread.Start();
             }
@@ -227,14 +232,35 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
             }
         }
 
-        public void EnterNewContext(LetterParagraph context)
+        public void EnterNewContext(LetterParagraph context, ContextType type)
         {
-            ExecutionStack.Push(new ExecutionContext(context));
+            ExecutionStack.Push(new ExecutionContext(context, type));
         }
 
         public void LeaveCurrentContext()
         {
-            if (ExecutionStack.Count > 0)
+            ExecutionStack.Pop();
+        }
+
+        public void LeaveFuncContext()
+        {
+            while(ExecutionStack.Count > 0 && ExecutionStack.Peek().Type != ContextType.TwilightChecklist)
+            {
+                ExecutionStack.Pop();
+            }
+            if(ExecutionStack.Peek().Type == ContextType.TwilightChecklist)
+            {
+                ExecutionStack.Pop();
+            }
+        }
+
+        public void LeaveLoopContext()
+        {
+            while (ExecutionStack.Count > 0 && ExecutionStack.Peek().Type != ContextType.Loop)
+            {
+                ExecutionStack.Pop();
+            }
+            if (ExecutionStack.Peek().Type == ContextType.Loop)
             {
                 ExecutionStack.Pop();
             }

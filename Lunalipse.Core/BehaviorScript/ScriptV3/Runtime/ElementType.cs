@@ -21,6 +21,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
         PENDING,
         INDEXING,
         RELATION,
+        LOOP,
         EXPRESSION,
         SUFX_ACT_COLLECTION,
         SUFX_ACT,

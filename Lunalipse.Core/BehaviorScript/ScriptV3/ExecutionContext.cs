@@ -6,6 +6,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
     {
         public LetterParagraph Context { get; private set; }
         public int ContextPointer { get; set; }
+        public ContextType Type { get; }
 
         public string ContextIdentifier
         {
@@ -21,10 +22,11 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
 
         public int LoopCount { get; private set; } = 1;
 
-        public ExecutionContext(LetterParagraph context)
+        public ExecutionContext(LetterParagraph context, ContextType type)
         {
             Context = context;
             ContextPointer = -1;
+            Type = type;
         }
 
         public bool IsEndOfContext()
@@ -50,6 +52,11 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
             {
                 LoopCount = ExecuteStatement(interpreter);
             }
+            else if(Type == ContextType.Loop)
+            {
+                ContextPointer = -1;
+                LoopCount = 1;
+            }
         }
 
         private int ExecuteStatement(LpsInterpreter interpreter)
@@ -72,12 +79,17 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
                     }
                 }
             }
+            else if(letterElement.GetLetterElementType() == ElementType.LOOP)
+            {
+                LetterLoop loop = letterElement as LetterLoop;
+                interpreter.EnterNewContext(loop.Paragraph, ContextType.Loop);
+            }
             else if(letterElement.GetLetterElementType() == ElementType.IF_ELSE)
             {
                 LetterParagraph context = (letterElement as LetterIf).Decision();
                 if(context != null)
                 {
-                    interpreter.EnterNewContext(context);
+                    interpreter.EnterNewContext(context, ContextType.GAMMY);
                 }
             }
             letterElement.Evaluate();
@@ -94,5 +106,13 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3
                     break;
             }
         }
+    }
+
+    public enum ContextType
+    {
+        TwilightChecklist,
+        Loop,
+        Main,
+        GAMMY
     }
 }

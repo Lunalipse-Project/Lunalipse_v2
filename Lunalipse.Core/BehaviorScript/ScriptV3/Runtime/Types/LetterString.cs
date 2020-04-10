@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Antlr4.Runtime.Tree;
 using Lunalipse.Core.BehaviorScript.ScriptV3.Exceptions.Runtime;
@@ -14,7 +15,7 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
         string str_content;
         public LetterString(string str) : base(ElementType.STRING)
         {
-            str_content = str.Trim('"');
+            str_content = Regex.Unescape(str.Trim('"'));
         }
 
         public static LetterValue Create(ITerminalNode node)

@@ -78,13 +78,34 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.SyntaxParser
             return lparagraph;
         }
 
-
+        public override LetterValue VisitStatements_loop([NotNull] LpsScriptParser.Statements_loopContext context)
+        {
+            if (context.ChildCount == 0)
+            {
+                return new LetterParagraph();
+            }
+            else if (context.ChildCount == 1)
+            {
+                LetterParagraph paragraph = new LetterParagraph();
+                paragraph.addStatement(Visit(context.statement_loop()));
+                return paragraph;
+            }
+            LetterParagraph lparagraph = Visit(context.statements_loop()) as LetterParagraph;
+            lparagraph.addStatement(Visit(context.statement_loop()));
+            return lparagraph;
+        }
 
         public override LetterValue VisitGroup_statemnt([NotNull] LpsScriptParser.Group_statemntContext context)
         {
             LetterValue letterValue = Visit(context.statements());
             letterValue.SetElementTokenInfo(TokenInfo.CreateTokenInfo(context.ID().Symbol));
             return AddSymbol(context.ID(), letterValue);
+        }
+
+        public override LetterValue VisitLoop([NotNull] LpsScriptParser.LoopContext context)
+        {
+            LetterLoop loop = new LetterLoop(Visit(context.statements_loop()) as LetterParagraph);
+            return loop;
         }
 
         public override LetterValue VisitStatement([NotNull] LpsScriptParser.StatementContext context)
@@ -112,11 +133,15 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.SyntaxParser
             }
             else if (context.BREAK() != null)
             {
-                statement = symbolTable["ContextLeave"];
+                statement = symbolTable["ContextLeaveFunc"];
             }
             else if (context.if_branch()!=null)
             {
                 statement = Visit(context.if_branch());
+            }
+            else if (context.loop() != null)
+            {
+                statement = Visit(context.loop());
             }
             else
             {
@@ -125,6 +150,24 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.SyntaxParser
             if (context.conditions() != null)
             {
                 (statement as ISuffixable).SetSuffixActions(Visit(context.conditions()) as LetterSuffixActions);
+            }
+            return statement;
+        }
+
+        public override LetterValue VisitStatement_loop([NotNull] LpsScriptParser.Statement_loopContext context)
+        {
+            LetterValue statement;
+            if (context.if_branch_loop() != null)
+            {
+                statement = Visit(context.if_branch_loop());
+            }
+            else if (context.BREAK_LOOP() != null)
+            {
+                statement = symbolTable["ContextLeaveLoop"];
+            }
+            else
+            {
+                statement = Visit(context.statement());
             }
             return statement;
         }
@@ -142,9 +185,27 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.SyntaxParser
                                 TokenInfo.CreateTokenInfo(context.IF().Symbol));
         }
 
+        public override LetterValue VisitIf_branch_loop([NotNull] LpsScriptParser.If_branch_loopContext context)
+        {
+            LetterParagraph elseBranch = null;
+            if (context.else_branch_loop() != null)
+            {
+                elseBranch = Visit(context.else_branch_loop()) as LetterParagraph;
+            }
+            return new LetterIf(Visit(context.statements_loop()) as LetterParagraph,
+                                elseBranch,
+                                Visit(context.expr_wrap()) as LetterExpression,
+                                TokenInfo.CreateTokenInfo(context.IF().Symbol));
+        }
+
         public override LetterValue VisitElse_branch([NotNull] LpsScriptParser.Else_branchContext context)
         {
             return Visit(context.statements());
+        }
+
+        public override LetterValue VisitElse_branch_loop([NotNull] LpsScriptParser.Else_branch_loopContext context)
+        {
+            return Visit(context.statements_loop());
         }
 
         public override LetterValue VisitFunc_call([NotNull] LpsScriptParser.Func_callContext context)
@@ -176,17 +237,9 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.SyntaxParser
 
         public override LetterValue VisitArray_indexing([NotNull] LpsScriptParser.Array_indexingContext context)
         {
-            LetterValue index;
-            if (context.ID(1) != null)
-            {
-                index = symbolTable.GetSymbol(context.ID(1));
-            }
-            else
-            {
-                index = LetterNumber.Create(context.INT());
-            }
-            return new LetterIndexing(symbolTable.GetSymbol(context.ID(0)) as LetterVariable, index,
-                                      TokenInfo.CreateTokenInfo(context.ID(0).Symbol));
+            LetterValue index = Visit(context.expr_wrap());
+            return new LetterIndexing(symbolTable.GetSymbol(context.ID()) as LetterVariable, index,
+                                      TokenInfo.CreateTokenInfo(context.ID().Symbol));
         }
 
         public override LetterValue VisitArrayDeclr([NotNull] LpsScriptParser.ArrayDeclrContext context)
@@ -454,6 +507,11 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.SyntaxParser
             {
                 return new LetterString(context.STRING().Symbol.Text);
             }
+        }
+
+        public override LetterValue VisitBool([NotNull] LpsScriptParser.BoolContext context)
+        {
+            return new LetterBool(context.TRUE() != null);
         }
 
         private LetterValue AddSymbol(ITerminalNode id_node, LetterValue symbol)

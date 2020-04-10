@@ -94,6 +94,7 @@
     <Compile Include="BehaviorScript\ScriptV3\Runtime\Expression\LetterIf.cs" />
     <Compile Include="BehaviorScript\ScriptV3\Runtime\ISuffixable.cs" />
     <Compile Include="BehaviorScript\ScriptV3\Runtime\LetterActionType.cs" />
+    <Compile Include="BehaviorScript\ScriptV3\Runtime\LetterLoop.cs" />
     <Compile Include="BehaviorScript\ScriptV3\Runtime\Types\LetterArrayList.cs" />
     <Compile Include="BehaviorScript\ScriptV3\Runtime\Expression\LetterAssign.cs" />
     <Compile Include="BehaviorScript\ScriptV3\Runtime\Types\LetterBool.cs" />
@@ -202,14 +203,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="BehaviorScript\ScriptV3\Grammar\LpsScriptLexer.g4">
+    <Antlr4 Include="BehaviorScript\ScriptV3\Grammar\LpsScriptLexer.g4">
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>Lunalipse.Core.BehaviorScript.ScriptV3.Grammar</CustomToolNamespace>
-    </None>
-    <None Include="BehaviorScript\ScriptV3\Grammar\LpsScriptParser.g4">
+    </Antlr4>
+    <Antlr4 Include="BehaviorScript\ScriptV3\Grammar\LpsScriptParser.g4">
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>Lunalipse.Core.BehaviorScript.ScriptV3.Grammar</CustomToolNamespace>
-    </None>
+    </Antlr4>
     <None Include="Lunaxisky.pfx" />
     <None Include="packages.config" />
   </ItemGroup>

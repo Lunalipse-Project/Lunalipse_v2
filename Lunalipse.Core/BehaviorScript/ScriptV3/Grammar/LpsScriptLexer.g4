@@ -24,7 +24,18 @@ INDEXING_INDEX: ' for the stuff at position of ';
 ASSIGN_PREFIX: 'I told ';
 MAKE_CONSTANT: 'that I have made a Pinkie promise';
 ASSIGN_TO: ' about ';
-PARAMETER_SPLIT: ' with constraints:';
+PARAMETER_SPLIT: ' with constraints';
+TRUE: 'true';
+FALSE: 'false';
+
+DO: 'I do the following';
+IF: 'when ';
+IF_SUFX: ' becomes true';
+ELSE: 'otherwise it should be';
+END_IF: 'that is the decision I made';
+BREAK: 'I want to stop here';
+LOOP: 'I started a loop';
+END_LOOP: 'that is my loop';
 
 END_PROGRAM: 'And that is my adventure in today';
 AUTHUR_NAME: 'Your loyal citizen:';
@@ -32,8 +43,9 @@ AUTHUR_NAME: 'Your loyal citizen:';
 DECLR: 'I have ';
 
 FULLSTOP: '.';
+COLON: ':';
 WITH_ACTION: 'for ';
-VOLUM: ' precent of awesomeness';
+VOLUM: ' percent of awesomeness';
 REPEAT_TIMES: ' times';
 
 LSQUARE: '[';
@@ -48,11 +60,12 @@ DIV : '/';
 AND: 'and';
 OR: 'or';
 NOT: 'not';
-GR: 'larger than';
+GR: 'greater than';
 LS: 'less than';
-GE: 'larger than or equal to';
-LE: 'less than or to';
-EQ: 'equal to';
+GE: 'greater than or equals to';
+LE: 'less than or equals to';
+EQ: 'equals to';
+NEQ: 'not equals to';
 
 RQUOTE: '"' -> more, mode(STR);
 INT: DIGIT+;

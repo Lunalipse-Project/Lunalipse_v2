@@ -56,9 +56,13 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
 
         public override object EvaluateByType(Type type)
         {
-            if(type == GetType() || type == typeof(LetterValue))
+            if(type == GetType())
             {
                 return this;
+            }
+            else if(type == typeof(LetterValue))
+            {
+                return id_value;
             }
             return id_value.EvaluateByType(type);
         }

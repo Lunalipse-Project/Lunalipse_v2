@@ -55,12 +55,12 @@ namespace Lunalipse.Core.BehaviorScript.ScriptV3.LetterElements
                     LetterRelation relation = value as LetterRelation;
                     if (!relation.isUnary)
                     {
-                        operand1 = EvalStack.Pop();
-                        operand2 = EvalStack.Pop();
+                        operand1 = EvalStack.Pop().EvaluateAs<LetterValue>();
+                        operand2 = EvalStack.Pop().EvaluateAs<LetterValue>();
                     }
                     else
                     {
-                        operand2 = EvalStack.Pop();
+                        operand2 = EvalStack.Pop().EvaluateAs<LetterValue>();
                     }
                     EvalStack.Push(operand2.EvaluateWith(operand1, relation.GetRelationType()));
                 }

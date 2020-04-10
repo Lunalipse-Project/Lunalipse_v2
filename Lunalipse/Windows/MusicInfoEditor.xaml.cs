@@ -13,7 +13,6 @@ using Lunalipse.Utilities;
 using LunaNetCore;
 using System;
 using System.IO;
-using System.Net;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
