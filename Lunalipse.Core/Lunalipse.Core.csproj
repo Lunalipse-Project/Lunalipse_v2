@@ -173,7 +173,7 @@
     <Compile Include="WebMusic\SearchEngineManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\桌面工作目录\正在进行的\Projects\MinJSON\MinJsonNetFramework\MinJsonNetFramework.csproj">
+    <ProjectReference Include="..\..\..\桌面工作目录\正在进行的\Projects\MinJSON\MinJsonNetFramework\MinJsonNetFramework.csproj">
       <Project>{e890b241-ab0d-4506-91a5-9a9292da2aad}</Project>
       <Name>MinJsonNetFramework</Name>
     </ProjectReference>

@@ -293,8 +293,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\桌面工作目录\正在进行的\Projects\MinJSON\MinJsonNetFramework\MinJsonNetFramework.csproj">
-      <Project>{E890B241-AB0D-4506-91A5-9A9292DA2AAD}</Project>
+    <ProjectReference Include="..\..\..\桌面工作目录\正在进行的\Projects\MinJSON\MinJsonNetFramework\MinJsonNetFramework.csproj">
+      <Project>{e890b241-ab0d-4506-91a5-9a9292da2aad}</Project>
       <Name>MinJsonNetFramework</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSCore\CSCore.csproj">

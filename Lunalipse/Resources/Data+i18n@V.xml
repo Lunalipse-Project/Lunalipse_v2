@@ -31,6 +31,7 @@
       <Key name="CORE_LBS_RT_INVALID_CAST">类型{0}很显然和类型{1}不是一回事。</Key>
       <Key name="CORE_LBS_RT_INVALID_OPERATION">类型{0}不支持运算{1}。</Key>
       <Key name="CORE_LBS_RT_CATALOGUE_NOTSET">Princess Luna不清楚你要播放的音乐是在哪一个分类里，请先指明！</Key>
+
       
       
       <Key name="CORE_CONSOLE_TITLE">Lunalipse控制台</Key>
@@ -123,6 +124,9 @@
       <Key name="CORE_BSLOADER_CTX_ID">当前语境</Key>
       <Key name="CORE_BSLOADER_CTX_PTR">语境指针</Key>
       <Key name="CORE_BSLOADER_STK_DEPTH">堆栈深度</Key>
+      <Key name="CORE_BSLOADER_OPENFILE_LETTER_EXT">Letter 源文件</Key>
+      <Key name="CORE_BSLOADER_OPENFILE_DELETE_TITLE">删除文件</Key>
+      <Key name="CORE_BSLOADER_OPENFILE_DELETE_CONTENT">确认永久删除（真的很久！）脚本{0}吗？</Key>
       <Key name="CORE_BSLOADER_FUNC_CTRLLER_UNLOAD_TITLE">不支持的控制器</Key>
       <Key name="CORE_BSLOADER_FUNC_CTRLLER_UNLOAD_CONTENT">无法加载选定脚本因为检测到当前的控制器不支持Lunalipse行为脚本。&#xD;&#xA;请您务必先到“设置” -> “通用” -> “行为控制与行为脚本”处将“脚本行为”设为默认控制器。</Key>
 

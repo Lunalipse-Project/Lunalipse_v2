@@ -11,9 +11,11 @@ using Lunalipse.Pages.ConfigPage.Structures;
 using Lunalipse.Presentation.BasicUI;
 using Lunalipse.Presentation.LpsWindow;
 using Lunalipse.Utilities;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using WinForm = System.Windows.Forms;
 
 namespace Lunalipse.Windows
 {
@@ -29,9 +31,10 @@ namespace Lunalipse.Windows
         string loaded;
         string[] status = new string[3];
 
-        string run, terminate;
+        string run, terminate, openfile_ext_desc;
 
         string unsupportControlerT, unsupportControlerC;
+        string deleteT, deleteC;
         public LpsScriptLoader()
         {
             InitializeComponent();
@@ -152,6 +155,9 @@ namespace Lunalipse.Windows
             terminate = obj.ConvertTo(SupportedPages.CORE_FUNC, "CORE_BSLOADER_UNLOAD");
             unsupportControlerT = obj.ConvertTo(SupportedPages.CORE_FUNC, "CORE_BSLOADER_FUNC_CTRLLER_UNLOAD_TITLE");
             unsupportControlerC = obj.ConvertTo(SupportedPages.CORE_FUNC, "CORE_BSLOADER_FUNC_CTRLLER_UNLOAD_CONTENT");
+            openfile_ext_desc = obj.ConvertTo(SupportedPages.CORE_FUNC, "CORE_BSLOADER_OPENFILE_LETTER_EXT");
+            deleteT = obj.ConvertTo(SupportedPages.CORE_FUNC, "CORE_BSLOADER_OPENFILE_DELETE_TITLE");
+            deleteC = obj.ConvertTo(SupportedPages.CORE_FUNC, "CORE_BSLOADER_OPENFILE_DELETE_CONTENT");
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -183,8 +189,21 @@ namespace Lunalipse.Windows
                     }
                     break;
                 case "Delete":
+                    bool? result = (new CommonDialog(deleteT, deleteC.FormateEx(bScriptLocationStruc.bScriptLocation.ScriptName), MessageBoxButton.YesNo)).ShowDialog();
+                    if (result.HasValue && result.Value)
+                    {
+                        File.Delete(bScriptLocationStruc.bScriptLocation.ScriptLocation);
+                        ScriptLocations.Remove(ScriptLocations.SelectedItem);
+                    }
                     break;
                 case "Add":
+                    WinForm.OpenFileDialog openFile = new WinForm.OpenFileDialog();
+                    openFile.Filter = $"{openfile_ext_desc} (*.letter)|*.letter";
+                    if(openFile.ShowDialog() == WinForm.DialogResult.OK)
+                    {
+                        BScriptLocation location = bScriptManager.AddScript(openFile.FileName);
+                        ScriptLocations.Add(new BScriptLocationStruc(location));
+                    }
                     break;
             }
         }

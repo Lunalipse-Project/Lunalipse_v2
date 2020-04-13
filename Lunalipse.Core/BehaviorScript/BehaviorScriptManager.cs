@@ -70,9 +70,11 @@ namespace Lunalipse.Core.BehaviorScript
             ScriptCollection.RemoveAt(ScriptCollection.FindIndex(x => x.ScriptName.Equals(scriptName)));
         }
 
-        public void AddScript(string scriptPath)
+        public BScriptLocation AddScript(string scriptPath)
         {
-            ScriptCollection.Add(new BScriptLocation(Path.GetFileNameWithoutExtension(scriptPath), scriptPath));
+            BScriptLocation scriptLocation = new BScriptLocation(Path.GetFileNameWithoutExtension(scriptPath), scriptPath);
+            ScriptCollection.Add(scriptLocation);
+            return scriptLocation;
         }
 
         public void LoadScript(string Name)
