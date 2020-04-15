@@ -220,6 +220,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>"$(SolutionDir)LunalipseEmbedder.exe" -dir "$(SolutionDir)\Lunalipse\bin\Release" -mode "seal|compression|slience" --filters ".dll|.exe"  -mg AA24 -sign "Lunalipse Install Package" -o "E:\Lunalipse\LunalipseInstaller\InstallPack\package_Lunalipse.clrss"  --excludes "policy.2.0.taglib-sharp.dll,LunalipseEmbedder.exe"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

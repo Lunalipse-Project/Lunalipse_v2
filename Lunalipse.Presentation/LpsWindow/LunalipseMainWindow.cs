@@ -28,6 +28,7 @@ namespace Lunalipse.Presentation.LpsWindow
             this.Style = (Style)Application.Current.Resources["LunalipseMainWindow"];
             Loaded += MainWindowLoaded;
             ThemeManagerBase.OnThemeApplying += ThemeManagerBase_OnThemeApplying;
+            
         }
 
         protected virtual void ThemeManagerBase_OnThemeApplying(ThemeTuple obj)

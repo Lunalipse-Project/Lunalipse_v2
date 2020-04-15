@@ -23,7 +23,12 @@ namespace LunalipseEmbedder
             try
             {
                 LoadAsm();
+                foreach (var item in args)
+                {
+                    Console.WriteLine(item);
+                }
                 Core(args);
+                
                 Console.WriteLine("\npress any key to countinue...");
                 Console.ReadKey();
             }
@@ -45,6 +50,7 @@ namespace LunalipseEmbedder
             {
                 string command = args[i];
                 string body = args[i + 1];
+                
                 switch (command)
                 {
                     case "-i":

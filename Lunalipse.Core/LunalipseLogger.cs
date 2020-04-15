@@ -51,8 +51,13 @@ namespace Lunalipse.Core
 #else
             LogLevel = LogLevel.INFO;
 #endif
-            logWriter.Write(SystemHelper.GetProcessorInfo());
-            logWriter.Write(SystemHelper.GetOSInfo());
+            // Fix: WMI service not found on windows 7.
+            // Log processor info only on windows 10
+            if (Environment.OSVersion.Version.Major == 10) 
+            {
+                logWriter.Write(SystemHelper.GetProcessorInfo());
+                logWriter.Write(SystemHelper.GetOSInfo());
+            }
             logWriter.WriteLine();
             logWriter.Flush();
         }
